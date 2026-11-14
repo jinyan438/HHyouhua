@@ -151,16 +151,30 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 				node.style.backgroundColor = "rgba(0,0,0,0.5)";
 				node.style.backgroundSize = "100% 100%";
 				ui.create.div(".resumedbg", node).style.backgroundSize = "100% 100%";
-				_status.pausing = true;
-				setTimeout(() => {
+				let closed = false;
+				const closeHistory = event => {
+					// 筛选和滚动记录不关闭面板；右侧关闭不受游戏残留的点击/拖动标记影响。
+					if (event.target.closest(".bigbgjilu, .historybg, #sidebar, #sidebar3")) return;
+					event.stopPropagation();
+					if (event.cancelable) event.preventDefault();
+					if (closed) return;
+					closed = true;
+					node.remove();
 					_status.pausing = false;
-				}, 500);
-				if (lib.config.touchscreen) {
-					setTimeout(() => node.addEventListener("touchend", ui.click.resume), 500);
-				} else {
-					node.addEventListener("click", ui.click.resume);
-					node.oncontextmenu = ui.click.resume;
-				}
+					_status.clicked = false;
+					_status.dragged = false;
+					ui.system.show();
+					ui.time.show();
+					ui.historybar.classList.remove("paused");
+					ui.arena.classList.remove("paused");
+					ui.window.classList.remove("touchinfohidden");
+					game.resume2();
+					game.onresume?.();
+				};
+				// 同时支持鼠标和触屏；捕获阶段处理，避免子元素拦截关闭事件。
+				node.addEventListener("click", closeHistory, true);
+				node.addEventListener("touchend", closeHistory, { capture: true, passive: false });
+				node.addEventListener("contextmenu", closeHistory, true);
 				return node;
 			};
 
