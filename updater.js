@@ -1,31 +1,23 @@
-import { checkRemote, installUpdate, loadInstalled, markInstalled, planUpdate, readRemoteInfo, recoverUpdate } from './updater-core.js';
+import { checkRemote, formatUpdateError, installUpdate, loadInstalled, markInstalled, planUpdate, readRemoteInfo, recoverUpdate } from './updater-core.js';
+import { createGameFileSystem } from './updater-fs.js';
+export { createGameFileSystem } from './updater-fs.js';
 
-export function createGameFileSystem(game) {
-	if (!['readFile', 'writeFile', 'checkFile', 'removeFile', 'removeDir'].every(key => typeof game[key] === 'function')) {
-		throw new Error('当前环境未开放文件读写，无法安装更新。请使用支持文件访问的无名杀客户端。');
-	}
-	const root = 'extension/HH优化/';
-	const path = value => {
-		if (typeof value !== 'string' || /[\\:\x00-\x1f]/.test(value) || value.split('/').some(part => !part || part === '..' || part === '.')) throw new Error('无效的更新文件路径。');
-		return root + value;
-	};
-	return {
-		exists: async value => await game.promises.checkFile(path(value)) === 1,
-		read: async value => new Uint8Array(await game.promises.readFile(path(value))),
-		write: async (value, data) => {
-			const target = path(value), split = target.lastIndexOf('/');
-			await game.promises.writeFile(data, target.slice(0, split), target.slice(split + 1));
-		},
-		remove: value => game.promises.removeFile(path(value)),
-		clean: async () => {
-			if (await game.promises.checkDir(root + '.hh-update') === 1) await game.promises.removeDir(root + '.hh-update');
-		},
-	};
+export async function recoverPendingUpdate(game, environment = globalThis) {
+	if (typeof game.readFile !== 'function' || typeof game.writeFile !== 'function') return;
+	try { await recoverUpdate(createGameFileSystem(game, environment)); }
+	catch (error) { return new Error(formatUpdateError(error)); }
 }
 
-export async function recoverPendingUpdate(game) {
-	if (typeof game.readFile !== 'function' || typeof game.writeFile !== 'function') return;
-	await recoverUpdate(createGameFileSystem(game));
+export function createRecoveryExtension(lib, game, ui, status, error) {
+	const info = { name: 'HH优化', version: '恢复模式', intro: '更新恢复未完成，HH优化已暂停加载。请用离线完整包修复。' };
+	console.error('[HH优化] 更新恢复失败，已暂停扩展加载：', error);
+	return {
+		name: 'HH优化', editable: false, package: info,
+		config: {
+			recovery_notice: { name: info.intro, clear: true },
+			...updateConfig(lib, game, ui, status, info),
+		},
+	};
 }
 
 let activePanel;
@@ -64,7 +56,7 @@ export async function showUpdater(lib, game, ui, status, localInfo) {
 		actions.appendChild(node); return node;
 	};
 	const showError = error => {
-		message.textContent = error.message || String(error);
+		message.textContent = formatUpdateError(error);
 		progress.hidden = true; actions.replaceChildren(); button('关闭', close);
 	};
 	button('关闭', close);

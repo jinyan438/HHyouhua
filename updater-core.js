@@ -3,6 +3,25 @@ const api = `https://api.github.com/repos/${repository}`;
 const journalPath = '.hh-update/transaction.json';
 const statePath = '.hh-update-state.json';
 
+export function formatUpdateError(error) {
+	const detail = error?.target?.error || error?.error || error;
+	if (typeof detail?.message === 'string' && detail.message) return detail.message;
+	if (typeof detail === 'string' && detail && detail !== 'undefined') return detail;
+	const reasons = { 1: '文件不存在', 2: '没有文件访问权限', 3: '操作已中断', 4: '文件无法读取', 5: '文件编码错误',
+		6: '文件不可写', 7: '文件正在写入或状态无效', 8: '文件路径无效', 9: '不允许修改此文件', 10: '存储空间不足', 11: '文件类型不匹配', 12: '文件已存在' };
+	if (detail?.code !== undefined) return `${reasons[detail.code] || '文件操作失败'}（代码 ${detail.code}）`;
+	return '文件操作失败，请检查存储空间和文件访问权限。';
+}
+
+async function writeVerified(fs, path, data) {
+	await fs.write(path, data);
+	const expected = typeof data === 'string' ? new TextEncoder().encode(data) : data;
+	const actual = await fs.read(path);
+	if (actual.length !== expected.length || actual.some((byte, index) => byte !== expected[index])) {
+		throw new Error(`写入校验失败：${path}，文件内容与预期不一致。`);
+	}
+}
+
 export function isManagedPath(path) {
 	if (typeof path !== 'string' || !path || /[\\:\x00-\x1f]/.test(path)) return false;
 	const parts = path.split('/');
@@ -67,7 +86,7 @@ export function planUpdate(installed, remote) {
 }
 
 export async function markInstalled(fs, remote) {
-	await fs.write(statePath, JSON.stringify({ commit: remote.commit, branch: remote.branch, files: remote.files }));
+	await writeVerified(fs, statePath, JSON.stringify({ commit: remote.commit, branch: remote.branch, files: remote.files }));
 }
 
 async function downloadFile(fetcher, remote, path) {
@@ -84,7 +103,7 @@ async function downloadFile(fetcher, remote, path) {
 			return bytes;
 		} catch (error) { lastError = error; }
 	}
-	throw new Error(`下载失败：${path}（${lastError?.message || '网络异常'}）`);
+	throw new Error(`下载失败：${path}（${formatUpdateError(lastError)}）`);
 }
 
 export async function readRemoteInfo(remote, fetcher = fetch) {
@@ -95,13 +114,20 @@ export async function readRemoteInfo(remote, fetcher = fetch) {
 
 async function restore(fs, journal) {
 	for (const item of journal.changes) {
-		if (!isManagedPath(item.path) || typeof item.existed !== 'boolean') throw new Error('更新恢复清单无效。');
+		if (!item || !isManagedPath(item.path) || typeof item.existed !== 'boolean') throw new Error('更新恢复清单无效。');
 	}
+	// 先检查全部备份，避免缺少某一备份时已经覆盖了一部分可用文件。
 	for (const item of journal.changes) {
-		if (item.existed) await fs.write(item.path, await fs.read(`.hh-update/backup/${item.path}`));
+		if (!item.existed) continue;
+		const backup = await fs.read(`.hh-update/backup/${item.path}`);
+		if (item.hash && await gitBlobHash(backup) !== item.hash) throw new Error(`恢复备份校验失败：${item.path}`);
+	}
+	if (journal.hadState) await fs.read('.hh-update/previous-state.json');
+	for (const item of journal.changes) {
+		if (item.existed) await writeVerified(fs, item.path, await fs.read(`.hh-update/backup/${item.path}`));
 		else if (await fs.exists(item.path)) await fs.remove(item.path);
 	}
-	if (journal.hadState) await fs.write(statePath, await fs.read('.hh-update/previous-state.json'));
+	if (journal.hadState) await writeVerified(fs, statePath, await fs.read('.hh-update/previous-state.json'));
 	else if (await fs.exists(statePath)) await fs.remove(statePath);
 	await fs.clean();
 }
@@ -109,7 +135,10 @@ async function restore(fs, journal) {
 export async function recoverUpdate(fs) {
 	const journal = await readJSON(fs, journalPath, null);
 	if (!journal) return false;
-	if (journal.phase === 'complete') { await fs.clean(); return false; }
+	if (journal.phase === 'complete') {
+		try { await fs.clean(); } catch { /* 已验证安装成功，缓存清理失败不应阻止游戏启动。 */ }
+		return false;
+	}
 	if (journal.phase !== 'prepared' || !Array.isArray(journal.changes)) throw new Error('更新恢复记录无效。');
 	await restore(fs, journal);
 	return true;
@@ -126,7 +155,7 @@ export async function installUpdate(fs, remote, { fetcher = fetch, onProgress = 
 		const workers = Array.from({ length: Math.min(4, plan.changed.length) }, async () => {
 			while (cursor < plan.changed.length) {
 				const path = plan.changed[cursor++];
-				await fs.write(`.hh-update/stage/${path}`, await downloadFile(fetcher, remote, path));
+				await writeVerified(fs, `.hh-update/stage/${path}`, await downloadFile(fetcher, remote, path));
 				onProgress({ phase: 'download', done: ++completed, total: plan.changed.length, path });
 			}
 		});
@@ -134,33 +163,40 @@ export async function installUpdate(fs, remote, { fetcher = fetch, onProgress = 
 		const failed = results.find(result => result.status === 'rejected');
 		if (failed) throw failed.reason;
 		journal = { phase: 'prepared', changes: [], hadState: await fs.exists(statePath) };
-		if (journal.hadState) await fs.write('.hh-update/previous-state.json', await fs.read(statePath));
+		if (journal.hadState) await writeVerified(fs, '.hh-update/previous-state.json', await fs.read(statePath));
 		for (const path of [...plan.changed, ...plan.removed]) {
 			const existed = await fs.exists(path);
-			if (existed) await fs.write(`.hh-update/backup/${path}`, await fs.read(path));
-			journal.changes.push({ path, existed });
+			let hash;
+			if (existed) {
+				const original = await fs.read(path);
+				hash = await gitBlobHash(original);
+				await writeVerified(fs, `.hh-update/backup/${path}`, original);
+			}
+			journal.changes.push({ path, existed, ...(hash ? { hash } : {}) });
 		}
-		await fs.write(journalPath, JSON.stringify(journal));
+		await writeVerified(fs, journalPath, JSON.stringify(journal));
 		const rank = path => path === 'extension.js' ? 3 : path === 'updater.js' || path === 'updater-core.js' ? 2 : path === 'info.json' ? 1 : 0;
 		const ordered = [...plan.changed].sort((a, b) => rank(a) - rank(b));
 		completed = 0;
 		for (const path of ordered) {
-			await fs.write(path, await fs.read(`.hh-update/stage/${path}`));
+			const staged = await fs.read(`.hh-update/stage/${path}`);
+			if (await gitBlobHash(staged) !== remote.files[path]) throw new Error(`暂存文件校验失败：${path}`);
+			await writeVerified(fs, path, staged);
 			onProgress({ phase: 'install', done: ++completed, total: ordered.length, path });
 		}
 		for (const path of plan.removed) if (await fs.exists(path)) await fs.remove(path);
 		await markInstalled(fs, remote);
-		await fs.write(journalPath, JSON.stringify({ ...journal, phase: 'complete' }));
+		await writeVerified(fs, journalPath, JSON.stringify({ ...journal, phase: 'complete' }));
 		committed = true;
 		try { await fs.clean(); } catch { /* A completed journal can be cleaned on the next launch. */ }
 		return plan;
 	} catch (error) {
 		if (journal && !committed && await fs.exists(journalPath)) {
 			try { await restore(fs, journal); }
-			catch (recoveryError) { throw new Error(`${error.message}\n恢复尚未完成，请重启游戏重试：${recoveryError.message}`); }
+			catch (recoveryError) { throw new Error(`${formatUpdateError(error)}\n恢复尚未完成：${formatUpdateError(recoveryError)}。请使用离线完整包修复扩展。`); }
 		} else if (!journal) {
 			try { await fs.clean(); } catch { /* Staged downloads never modify installed files. */ }
 		}
-		throw error;
+		throw new Error(formatUpdateError(error));
 	}
 }

@@ -118,3 +118,58 @@ test('相同文件清单不下载文件', async () => {
 	await installUpdate(fs, remote, { fetcher: () => { throw Error('should not download'); } });
 	assert.equal(text(fs.files.get('extension.js')), 'same');
 });
+
+test('暂存写入静默损坏时校验失败，不碰当前扩展文件', async () => {
+	const fs = memoryFS({ 'extension.js': 'original' });
+	const write = fs.write;
+	fs.write = async (path, data) => write(path, path.startsWith('.hh-update/stage/') ? 'damaged' : data);
+	await assert.rejects(installUpdate(fs, await revision({ 'extension.js': 'new' }), { fetcher: transport({ 'extension.js': 'new' }) }), /写入校验失败/);
+	assert.equal(text(fs.files.get('extension.js')), 'original');
+	assert.equal(fs.files.has('.hh-update-state.json'), false);
+});
+
+test('备份写入静默损坏时停止安装，原文件保持完整', async () => {
+	const fs = memoryFS({ 'extension.js': 'original' });
+	const write = fs.write;
+	fs.write = async (path, data) => write(path, path.startsWith('.hh-update/backup/') ? 'damaged' : data);
+	await assert.rejects(installUpdate(fs, await revision({ 'extension.js': 'new' }), { fetcher: transport({ 'extension.js': 'new' }) }), /写入校验失败/);
+	assert.equal(text(fs.files.get('extension.js')), 'original');
+	assert.equal(fs.files.has('.hh-update/transaction.json'), false);
+});
+
+test('安装覆盖静默损坏时恢复旧文件，不能报告安装成功', async () => {
+	const fs = memoryFS({ 'extension.js': 'original' });
+	const write = fs.write;
+	let corrupt = true;
+	fs.write = async (path, data) => {
+		if (corrupt && path === 'extension.js') { corrupt = false; return write(path, 'damaged'); }
+		return write(path, data);
+	};
+	await assert.rejects(installUpdate(fs, await revision({ 'extension.js': 'new' }), { fetcher: transport({ 'extension.js': 'new' }) }), /写入校验失败/);
+	assert.equal(text(fs.files.get('extension.js')), 'original');
+	assert.equal(fs.files.has('.hh-update-state.json'), false);
+});
+
+test('重启恢复前校验备份哈希，拒绝损坏备份且保留可用文件', async () => {
+	const fs = memoryFS({ 'extension.js': 'still usable', '.hh-update/backup/extension.js': 'damaged',
+		'.hh-update/transaction.json': JSON.stringify({ phase: 'prepared', hadState: false,
+			changes: [{ path: 'extension.js', existed: true, hash: await gitBlobHash(bytes('original')) }] }),
+	});
+	await assert.rejects(recoverUpdate(fs), /恢复备份校验失败/);
+	assert.equal(text(fs.files.get('extension.js')), 'still usable');
+});
+
+test('安装及恢复均失败时保留事务和备份供下次重试，显示普通 FileError 的原因', async () => {
+	const fs = memoryFS({ 'extension.js': 'original' });
+	const write = fs.write;
+	fs.write = async (path, data) => {
+		if (path === 'extension.js') throw { code: 6 };
+		return write(path, data);
+	};
+	await assert.rejects(installUpdate(fs, await revision({ 'extension.js': 'new' }), { fetcher: transport({ 'extension.js': 'new' }) }), /文件不可写.*恢复尚未完成.*文件不可写/s);
+	assert.equal(text(fs.files.get('.hh-update/backup/extension.js')), 'original');
+	assert.equal(fs.files.has('.hh-update/transaction.json'), true);
+	fs.write = write;
+	assert.equal(await recoverUpdate(fs), true);
+	assert.equal(text(fs.files.get('extension.js')), 'original');
+});

@@ -1,6 +1,6 @@
 {
 	"schema": 1,
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"files": {
 		"assets/animation/aar_chupaizhishi.atlas": "d4c4e49c3ebe40a116e267f4804c52bd9ad73904",
 		"assets/animation/aar_chupaizhishi.png": "23036383c43d60656e11e9e14e6c280f7116b3d6",
@@ -683,7 +683,7 @@
 		"effect/hpLossSund.mp3": "c6592b5cae50935ad87f2caaaa92800df1f56d6f",
 		"effect/loseHp.mp3": "c6592b5cae50935ad87f2caaaa92800df1f56d6f",
 		"effect/README.txt": "7c5e617d63ac060e0a28e3ce396ce7d48504e0e5",
-		"extension.js": "ff9749770ec28dbc594252334028175d1030cc61",
+		"extension.js": "4ba6f0dfcf567665ad0944f45ebe4f63817e0071",
 		"hh-features.js": "78c2c46ee7f7b9a67bde62db59cfc91bc14487c4",
 		"identity-selection.css": "052c42c6a762e28fa62d25d90ddcac7f2aa59a0f",
 		"identity-selection.js": "02c21a3433bfbc0a595b5b8b4da34cc6f3dda70a",
@@ -2391,10 +2391,10 @@
 		"image/ui/tnode/tnode-C2.png": "8d11a7f6a5686141b5bb9955f3c0f5dc13210940",
 		"image/ui/tnode/tnode-C3.png": "d8413810fed3364979dbfc0265996efad5a7f652",
 		"image/ui/tnode/tnode-C4.png": "5f67a27fc5b2b33d2a3af1fbb449738f671339fe",
-		"info.json": "1f3bdcabf737c5a12803cf1b460bad4647a8e094",
+		"info.json": "486c6a88535c9f2d5252dbe8e8c3d8b744f2982f",
 		"LICENSE": "818433ecc0e094a4db1023c68b33f24344643ad8",
 		"preferences.js": "9fa11fa9714bc0ddfce241c00a6ac4f6c9aa8060",
-		"README.md": "06f7ccccef77321979cbe0023688d20d0ce43727",
+		"README.md": "bb8805bbeae26af00c66544439cc0ff70b194c9f",
 		"src/animation/AnimationPlayer.js": "616180366d16b1ab17b67d89aacff484bf2be772",
 		"src/animation/AnimationPlayerPool.js": "619db7635ff2bb931440943c3c101f414e05b306",
 		"src/animation/APNode.js": "8d4ff35c277707294483c8759b53a4d814862ee6",
@@ -3653,8 +3653,9 @@
 		"ui/styles/skill/window/xinsha.css": "ac9ea05cdf738998b654293e25c117c22acf9dfd",
 		"ui/styles/skill/xinsha.css": "7eb77661ee1e95c0ba13ef395dde6925abcaa115",
 		"ui/utils.js": "3102e60e150195ab0209799a5db4134a27cce03a",
-		"updater-core.js": "8d4558aba64139d4b2d0a1274fe32f3b29dbbe4b",
+		"updater-core.js": "d04c680a6a9d6b8face65bae45a487a3d98ddd51",
+		"updater-fs.js": "2958783ba9e52b6de9960e03ec66dfbb237fc78c",
 		"updater.css": "daf1ffe6ff0fdfeeb5eb11e4c59c69a72b9c186b",
-		"updater.js": "bdb6c229f19f51b6a35a6c5b8e54195e2c790e32"
+		"updater.js": "d9444dcfdecb4196da513a33a8fdc6ef23bb7f20"
 	}
 }

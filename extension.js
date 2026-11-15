@@ -1,10 +1,13 @@
 import { lib, game, ui, get, ai, _status } from 'noname';
-import { recoverPendingUpdate, updateConfig } from './updater.js';
+import { createRecoveryExtension, recoverPendingUpdate, updateConfig } from './updater.js';
 
 export const type = 'extension';
 
 export default async function () {
-	if (!_status.importingExtension) await recoverPendingUpdate(game);
+	if (!_status.importingExtension) {
+		const recoveryError = await recoverPendingUpdate(game);
+		if (recoveryError) return createRecoveryExtension(lib, game, ui, _status, recoveryError);
+	}
 	const [{ createHHFeatures }, { applyMenuDefaults, migratePreferences }] = await Promise.all([
 		import('./hh-features.js'), import('./preferences.js'),
 	]);
