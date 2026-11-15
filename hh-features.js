@@ -1,5 +1,6 @@
 import { createKillComboPlayer } from './src/effects/killCombo.js';
 import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
+import { setupRescueFlow } from './src/features/rescueFlow.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
 	const HH_finishSkill = function(skill) {
@@ -182,6 +183,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			};
 			const HH_getAIThinkPace = function(player, event) {
 				const result = event.result || {};
+				if (event._HH_rescueQuestion) return event.dying === player ? 'quick' : 'deliberate';
 				// 脚本指定的结果没有交互；引擎代选/唯一选项仍保留人的确认点击时间。
 				if (event.responded || event.directresult) return 'instant';
 				if (result.autochoose) return 'quick';
@@ -307,6 +309,14 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				if (!event || !HH_AI_THINK_EVENTS.includes(event.name) || event._HH_aiThinkDelayed || event.responded) return false;
 				player = player || event.player;
 				if (!player) return false;
+				let rescueParent = event;
+				const seenRescueParents = new Set();
+				while (rescueParent && !seenRescueParents.has(rescueParent)) {
+					seenRescueParents.add(rescueParent);
+					if (rescueParent._HH_rescueThought && rescueParent.player === player) return false;
+					if (['useCard', 'useSkill', 'respond', 'phaseUse'].includes(rescueParent.name)) break;
+					rescueParent = rescueParent.getParent && rescueParent.getParent();
+				}
 				if (player.isUnderControl && player.isUnderControl() && !_status.auto) return false;
 				if (event.isMine && event.isMine()) return false;
 				if (event.isOnline && event.isOnline()) return false;
@@ -378,6 +388,14 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				wrapContentMap(lib.element.contents);
 			};
 			HH_hookAIThinkDelay();
+
+			// ========== 濒死逐人求桃 ==========
+			setupRescueFlow({ lib, game, ui, get, _status }, {
+				getThinkDelay(player, dying, parent) {
+					const question = { name: 'chooseToUse', type: 'dying', player, dying, _HH_rescueQuestion: true, getParent: () => parent };
+					return HH_shouldDelayAI(question, player) ? HH_calcAIThinkDelay(player, question) : 0;
+				},
+			});
 
 			// ========== HH优化样式覆盖功能 ==========
 			// 创建或获取自定义样式标签 - 添加到body末尾确保最高优先级
@@ -2458,7 +2476,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_ai_think_delay: {
 				name: "启用AI思考延迟",
 				init: false,
-				intro: "无中生有、自用桃、自救酒、装备空栏及简单选项保留短暂点击时间；正常出牌需思考，火攻展示/弃牌、拆顺选牌、借刀选择和五谷选牌分别思考；纯系统结算不额外等待"
+				intro: "濒死时依次显示“桃 思考中…”并模拟救人取舍；自救保留短暂点击时间。出牌、火攻、拆顺、借刀及五谷等选择分别思考；纯系统结算不额外等待"
 			},
 			ai_think_delay_popup: {
 				name: "显示思考提示",

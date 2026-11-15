@@ -1,0 +1,39 @@
+{
+  "source": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+  "image": {
+    "path": "/res/assets/animate/game/neweffect/jiuwo.png",
+    "cacheKey": "51167e64",
+    "sha256": "7ff711698f74831ba777ba946ffff339171b050fd24b4cccb77b583b5ed63b19"
+  },
+  "atlas": {
+    "path": "/res/assets/animate/game/neweffect/jiuwo.atlas.txt",
+    "cacheKey": "f6cfc914"
+  },
+  "frames": [
+    "binsi/binsi_00002"
+  ],
+  "decode": "Restore the non-rotated binsi_00002 atlas region at (23,10) in a 200x200 canvas, then crop [0,80,200,200] to a single complete static badge.",
+  "output": {
+    "file": "jiuwo-static.png",
+    "size": [
+      200,
+      120
+    ],
+    "sha256": "0c1923f3cfb0eb9bdd12fc87f20f6e9af9dff078d38f14d3eba74a07ff3e0bf8"
+  },
+  "region": {
+    "bounds": [
+      362,
+      93,
+      147,
+      184
+    ],
+    "offsets": [
+      23,
+      6,
+      200,
+      200
+    ],
+    "rotate": 0
+  }
+}

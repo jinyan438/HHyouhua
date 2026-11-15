@@ -4,6 +4,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 import ts from 'typescript';
 import { setupSourceCardAnimations } from '../src/effects/sourceCardAnimations.js';
+import { setupRescueFlow } from '../src/features/rescueFlow.js';
 
 function engineHarness() {
 	const calls = [];
@@ -113,4 +114,20 @@ test('compiled equipAfter emits one equipment sound even when the use animation 
 	assert.equal(hook.filter(event), false);
 	await h.run('_hh_source_card_equip', event);
 	assert.deepEqual(sounds, [event.card]); assert.equal(h.calls.length, 0);
+});
+
+test('sequential rescue runs through the actual AsyncCompiler and preserves its prompt/controller closure', async () => {
+	const h = engineHarness(), turns = [];
+	h.lib.element = { content: { _save: async () => {} } };
+	h.lib.config.mode = 'identity'; h.get.translation = () => '濒死角色';
+	h.actor.isIn = () => true; h.actor.canSave = () => false; h.actor.next = h.actor;
+	h.actor.chooseToUse = () => ({ forResult: async () => ({ bool: false }) });
+	const dying = { hp: 0, isDead: () => false, isAlive: () => true, isOut: () => false };
+	setupRescueFlow(h, { getThinkDelay: () => 700, prompt: {
+		beginRound(target) { turns.push(['dying', target]); return target; }, endRound(target) { turns.push(['ended', target]); },
+		begin(player) { turns.push(player); return { wait: async () => true }; }, end() {},
+	} });
+	h.lib.skill._hh_test_rescue = { content: h.lib.element.content._save };
+	const compiled = await h.run('_hh_test_rescue', { player: dying });
+	assert.equal(compiled.type, 'async'); assert.deepEqual(turns, [['dying', dying], h.actor, ['ended', dying]]);
 });

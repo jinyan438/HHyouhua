@@ -6,6 +6,7 @@
 import { lib, game, ui, get, ai, _status } from "noname";
 import { initGTBB } from "./gtbb.js";
 import { initPhaseTipsSkills } from "./phase-tips.js";
+import { createPlayerTip } from "./playerTip.js";
 
 // ==================== 常量定义 ====================
 
@@ -231,13 +232,7 @@ const createAIProgressBar = isPhase => {
  * @returns {HTMLImageElement}
  */
 const createTipImg = (className, imgName) => {
-	const img = document.createElement("img");
-	img.classList.add("tipshow", className);
-	img.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/shoushatip/${imgName}`;
-	img.style.cssText = isShoushaSyle()
-		? "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"
-		: "display:block;position:absolute;z-index:92;--w:129px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-20px;transform:scale(1.2);";
-	return img;
+	return createPlayerTip(lib, className, imgName);
 };
 
 // ==================== 预加载UI初始化 ====================
@@ -463,6 +458,7 @@ const setupWatcher = config => {
 
 	const check = () => {
 		const event = _status.event;
+		if (game.hhRescueFlow?.active) { hidePlayer(); hideAllAI(); return; }
 		const waiting = event?.player && (_status.paused || _status.imchoosing);
 		const isWuxie = event?.type === "wuxie";
 

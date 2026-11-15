@@ -7,6 +7,7 @@ import ts from 'typescript';
 
 const extension = readFileSync(new URL('../hh-features.js', import.meta.url), 'utf8');
 const thinkCode = extension.slice(extension.indexOf('const HH_parseNumberConfig'), extension.indexOf('HH_hookAIThinkDelay();') + 'HH_hookAIThinkDelay();'.length);
+const rescueBridge = extension.slice(extension.indexOf('// ========== 濒死逐人求桃'), extension.indexOf('// ========== HH优化样式覆盖功能'));
 const coreSource = readFileSync(new URL('../../../noname/library/element/content.ts', import.meta.url), 'utf8');
 const coreCode = ts.transpileModule(coreSource.slice(coreSource.indexOf('export const Content')).replace('export const Content', 'const Content') + '\nglobalThis.coreContent = Content;', {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
@@ -37,7 +38,9 @@ function setup({ config = {}, random = 0.5, content } = {}) {
     };
     const math = Object.create(Math);
     math.random = () => random;
+    let rescueOptions;
     const context = vm.createContext({ lib, game, ui, get, ai: { basic: { chooseCard: () => true, chooseButton: () => true } }, _status: status, Math: math, Date,
+        setupRescueFlow(_context, options) { rescueOptions = options; },
         delay: () => Promise.resolve(),
         setTimeout(callback, ms) { waits.push(ms); callback(); },
     });
@@ -52,6 +55,7 @@ function setup({ config = {}, random = 0.5, content } = {}) {
     vm.runInContext(coreCode, context);
     lib.element.content = content || context.coreContent;
     vm.runInContext(thinkCode + '\nglobalThis.think = { delay: HH_aiThinkDelay, calc: HH_calcAIThinkDelay, pace: HH_getAIThinkPace, hook: HH_hookAIThinkDelay };', context);
+    vm.runInContext(rescueBridge, context);
     function event(name = 'chooseToUse', options = {}) {
         const evt = { name, player, type: name == 'chooseToUse' ? 'phase' : undefined,
             isMine: () => false, isOnline: () => false, resume() {}, async trigger() {}, ...options };
@@ -97,8 +101,44 @@ function setup({ config = {}, random = 0.5, content } = {}) {
         vm.runInContext(source.slice(source.indexOf('export default')).replace('export default', 'globalThis.testCardPack ='), context);
         return context.testCardPack.card;
     }
-    return { lib, game, ui, get, status, player, hand, waits, popups, actions, event, use, run, choice, loadCardPack, think: context.think };
+    return { lib, game, ui, get, status, player, hand, waits, popups, actions, event, use, run, choice, loadCardPack, think: context.think, rescueDelay: (...args) => rescueOptions.getThinkDelay(...args) };
 }
+
+test('求桃预思考沿用救人长考和自救点击节奏，不预先查询是否有桃', () => {
+    const h = setup(), dying = { hp: 0 }, parent = { name: '_save' };
+    h.player.canSave = () => { throw new Error('不能提前探测救人能力'); };
+    const hasCards = h.rescueDelay(h.player, dying, parent);
+    h.hand.length = 0;
+    const noCards = h.rescueDelay(h.player, dying, parent);
+    assert.ok(hasCards >= 600 && noCards >= 600);
+    const selfSave = h.rescueDelay(h.player, h.player, parent);
+    assert.ok(selfSave > 0 && selfSave < 600);
+    assert.deepEqual(h.popups, []);
+});
+
+test('求桃等待遵守思考总开关、零时长、联机及真人/手动控制限制', () => {
+    for (const mode of ['disabled', 'zero', 'connect', 'online', 'mine', 'controlled']) {
+        const h = setup();
+        if (mode === 'disabled') h.lib.config.extension_HH优化_enable_ai_think_delay = false;
+        if (mode === 'zero') { h.lib.config.extension_HH优化_ai_think_delay_min = 0; h.lib.config.extension_HH优化_ai_think_delay_max = 0; }
+        if (mode === 'connect') h.status.connectMode = true;
+        if (mode === 'online') h.game.online = true;
+        if (mode === 'mine') h.player.isMine = () => true;
+        if (mode === 'controlled') h.player.isUnderControl = () => true;
+        assert.equal(h.rescueDelay(h.player, { hp: 0 }, { name: '_save' }), 0, mode);
+    }
+});
+
+test('求桃预思考后不重复等待出牌/转化子选择，出牌结算中的独立响应仍正常计时', async () => {
+    const h = setup(), dying = { hp: 0 };
+    const parent = h.use('tao', { type: 'dying', dying, _HH_rescueThought: true });
+    await h.think.delay(parent);
+    await h.think.delay(h.event('chooseButton', { parent, result: { bool: true, links: [1] } }));
+    assert.equal(h.waits.length, 0);
+    const resolution = h.event('useCard', { parent });
+    await h.think.delay(h.use('shan', { name: 'chooseToRespond', type: undefined, parent: resolution }));
+    assert.equal(h.waits.length, 1);
+});
 
 test('实际 chooseToUse：无中生有保留点击时间，不受10秒思考下限影响，并保持出牌结果', async () => {
     const h = setup({ config: { extension_HH优化_ai_think_delay_min: 10000 } });
