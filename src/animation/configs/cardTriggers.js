@@ -99,10 +99,10 @@ export const cardTriggers = {
 	bingliang: {
 		effect() {
 			if (result.bool === false) {
+				lib.animate.skill.bingliang.call(player, "bingliang");
 				if (get.is.changban()) {
 					player.addTempSkill("bingliang_changban");
 				} else {
-					lib.animate.skill.bingliang.call(player, "bingliang");
 					player.skip("phaseDraw");
 				}
 			}

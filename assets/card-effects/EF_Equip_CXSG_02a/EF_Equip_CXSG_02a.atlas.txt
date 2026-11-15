@@ -1,0 +1,88 @@
+EF_Equip_CXSG_02a.png
+size:1024,1024
+filter:Linear,Linear
+scale:0.98
+EF_Equip_CXSG_02a/Pre-comp 1_79
+bounds:671,272,272,191
+offsets:63,5,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_80
+bounds:2,599,356,192
+offsets:8,27,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_81
+bounds:360,591,338,200
+offsets:14,26,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_82
+bounds:346,390,323,199
+offsets:25,27,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_83
+bounds:700,465,326,190
+offsets:25,32,367,231
+rotate:90
+EF_Equip_CXSG_02a/Pre-comp 1_84
+bounds:2,408,342,189
+offsets:3,32,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_85
+bounds:2,245,314,161
+offsets:6,47,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_86
+bounds:318,235,305,153
+offsets:6,46,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_87
+bounds:625,122,288,148
+offsets:7,47,367,231
+EF_Equip_CXSG_02a/Pre-comp 1_88
+bounds:2,118,270,125
+offsets:6,61,367,231
+EF_Equip_CXSG_02a/jian02_77
+bounds:127,2,147,51
+offsets:245,77,393,159
+EF_Equip_CXSG_02a/jian02_78
+bounds:915,97,173,80
+offsets:214,76,393,159
+rotate:90
+EF_Equip_CXSG_02a/jian02_79
+bounds:274,156,285,77
+offsets:76,62,393,159
+EF_Equip_CXSG_02a/jian02_80
+bounds:274,106,332,48
+offsets:18,59,393,159
+EF_Equip_CXSG_02a/jian02_81
+bounds:892,528,263,53
+offsets:2,55,393,159
+rotate:90
+EF_Equip_CXSG_02a/jian02_82
+bounds:127,55,210,49
+offsets:17,32,393,159
+EF_Equip_CXSG_02a/jian02_83
+bounds:947,611,180,67
+offsets:25,16,393,159
+rotate:90
+EF_Equip_CXSG_02a/jian02_84
+bounds:945,376,150,77
+offsets:36,8,393,159
+rotate:90
+EF_Equip_CXSG_02a/jian02_85
+bounds:608,37,136,83
+offsets:40,4,393,159
+EF_Equip_CXSG_02a/jian02_86
+bounds:746,35,130,85
+offsets:42,2,393,159
+EF_Equip_CXSG_02a/jian02_87
+bounds:2,28,123,88
+offsets:44,1,393,159
+EF_Equip_CXSG_02a/jian02_88
+bounds:339,16,116,88
+offsets:44,2,393,159
+EF_Equip_CXSG_02a/jian02_89
+bounds:457,17,110,87
+offsets:44,3,393,159
+EF_Equip_CXSG_02a/jian02_90
+bounds:878,21,105,74
+offsets:45,6,393,159
+EF_Equip_CXSG_02a/jian02_91
+bounds:945,277,97,62
+offsets:51,16,393,159
+rotate:90
+EF_Equip_CXSG_02a/jian02_92
+bounds:947,570,67,39
+offsets:53,26,393,159

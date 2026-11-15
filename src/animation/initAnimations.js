@@ -7,6 +7,7 @@
 import { lib, game, ui, get, ai, _status } from "noname";
 import { skillDefines, cardDefines, chupaiAnimations } from "./configs/skillAnimations.js";
 import { cardTriggers } from "./configs/cardTriggers.js";
+import { setupSourceCardAnimations } from "../effects/sourceCardAnimations.js";
 
 /**
  * 初始化技能动画定义和绑定
@@ -106,6 +107,8 @@ export function initSkillAnimations(animation) {
 			});
 		};
 	}
+
+	setupSourceCardAnimations({ lib, game, ui, get, ai, _status });
 
 	// 应用卡牌触发器
 	for (const [cardName, triggers] of Object.entries(cardTriggers)) {

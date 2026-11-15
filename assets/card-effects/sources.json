@@ -1,0 +1,1377 @@
+{
+  "apk": "yoka.game_g_android_4.0.2.apk",
+  "files": [
+    {
+      "file": "EFF_LBSS/EFF_LBSS.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_LBSS.atlas.txt",
+      "cache_key": "7be30204",
+      "bytes": 3137,
+      "sha256": "8883c8a9e03856ec24e2d6ca4cec711fb2fd724f3b9a7016c6271f7c2a824073"
+    },
+    {
+      "file": "EFF_LBSS/EFF_LBSS.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_LBSS.skel",
+      "cache_key": "96de052d",
+      "bytes": 6021,
+      "sha256": "a95cb985b6077d8ddd2f3acf9b5c11f618c5a44f181ccfe1640fa7a064795bad"
+    },
+    {
+      "file": "EFF_LBSS/EFF_LBSS.png",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_LBSS.png",
+      "cache_key": "49f8f830",
+      "bytes": 282386,
+      "sha256": "517399c718b2692b1e36da98256178d5ed1c18d5343347e49905d4c7bc5d63a8"
+    },
+    {
+      "file": "EFF_NanManRuQing/EFF_NanManRuQing.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_NanManRuQing.atlas.txt",
+      "cache_key": "57d07a8a",
+      "bytes": 2390,
+      "sha256": "773c906bd1f257417d3c0c35232e2303e4a5d68ce7be786eba3f3fbeb4023b94"
+    },
+    {
+      "file": "EFF_NanManRuQing/EFF_NanManRuQing.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_NanManRuQing.skel",
+      "cache_key": "e9460d2a",
+      "bytes": 246374,
+      "sha256": "93346fa5cd16f98d65bd1394da2731462628dda1199fe09ed0d29a6ffc239d01"
+    },
+    {
+      "file": "EFF_NanManRuQing/EFF_NanManRuQing.png",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_NanManRuQing.png",
+      "cache_key": "bbfd447c",
+      "bytes": 765490,
+      "sha256": "cce5c3ba279ec4b4e2f31b0605682590f7a7334872dbe97342eb230a41bcf8a1"
+    },
+    {
+      "file": "EFF_Plot_BLCD/EFF_Plot_BLCD.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_Plot_BLCD.atlas.txt",
+      "cache_key": "511cbd1f",
+      "bytes": 6790,
+      "sha256": "b0b7fdee97d1ece279708516e64c985809b8ebd953a0e0327ba1b3324c4acac6"
+    },
+    {
+      "file": "EFF_Plot_BLCD/EFF_Plot_BLCD.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_Plot_BLCD.skel",
+      "cache_key": "586d002b",
+      "bytes": 6018,
+      "sha256": "c036d8bde1763bfeb1d5204af7b17b1f1b1e8a95018af4c84187edf827b47d11"
+    },
+    {
+      "file": "EFF_Plot_BLCD/EFF_Plot_BLCD.png",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_Plot_BLCD.png",
+      "cache_key": "9b196147",
+      "bytes": 340263,
+      "sha256": "90c7ff1d1576d07572179a9d08ebb6a3df4e88a459c9cf66dee02b1d3ba03e22"
+    },
+    {
+      "file": "EFF_jiu/EFF_jiu.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_jiu.atlas.txt",
+      "cache_key": "7055f3c8",
+      "bytes": 3203,
+      "sha256": "f1948f01ee1cfbc66a3b3907c36015c092809d4fbc81e546b6f7d9efe0f7af1b"
+    },
+    {
+      "file": "EFF_jiu/EFF_jiu.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_jiu.skel",
+      "cache_key": "36dea77f",
+      "bytes": 3069,
+      "sha256": "49a42c43c8546df91817094bd231b78dc1271fbd8a2e2dae197bab1d333fbe18"
+    },
+    {
+      "file": "EFF_jiu/EFF_jiu.png",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_jiu.png",
+      "cache_key": "43b8d2d0",
+      "bytes": 380495,
+      "sha256": "4796880e4debdc3411276c33c0d67f207b9f78c19abceca01f921eb962f2a76f"
+    },
+    {
+      "file": "EFF_shan/EFF_shan.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_shan.atlas.txt",
+      "cache_key": "146c7115",
+      "bytes": 1040,
+      "sha256": "62b16c4e188aa08fa97f8b95157d5cb1973e0bbb39938714dae2ad3fc8d65132"
+    },
+    {
+      "file": "EFF_shan/EFF_shan.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_shan.skel",
+      "cache_key": "88f8d4b8",
+      "bytes": 1208,
+      "sha256": "b8718a4d2bb795e2d3d3ce19881b0a42dbfc60ab09f1743fc217f00d041a60b1"
+    },
+    {
+      "file": "EFF_shan/EFF_shan.png",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_shan.png",
+      "cache_key": "6edb05a2",
+      "bytes": 491330,
+      "sha256": "b3a2156c8d925576f740283d15b40ed0f12f58369aec94b4d7d53e900c990467"
+    },
+    {
+      "file": "EFF_shandian_01/EFF_shandian_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_shandian_01.atlas.txt",
+      "cache_key": "dad1406e",
+      "bytes": 2189,
+      "sha256": "3739affc3c2216be7a79944790800b2f7aa5b4617cda1645d89c5a6ca4cd03b4"
+    },
+    {
+      "file": "EFF_shandian_01/EFF_shandian_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_shandian_01.skel",
+      "cache_key": "27fae581",
+      "bytes": 2375,
+      "sha256": "00dce14ca660ee8e6daad912d13bdd5181f0a3c164d56cd28f489965fed608fe"
+    },
+    {
+      "file": "EFF_shandian_01/EFF_shandian_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_shandian_01.png",
+      "cache_key": "66f1700b",
+      "bytes": 238360,
+      "sha256": "531664d86459204c9f7306070aecf82b68be3160945645271ca8923aa6257dd2"
+    },
+    {
+      "file": "EFF_tao/EFF_tao.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_tao.atlas.txt",
+      "cache_key": "74e1b313",
+      "bytes": 3556,
+      "sha256": "f734ceff4ddea990a6bf35fbe5ef87f20f0e6893fcdd6cc1a2ab6c91eda9358f"
+    },
+    {
+      "file": "EFF_tao/EFF_tao.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_tao.skel",
+      "cache_key": "ce4debfc",
+      "bytes": 3520,
+      "sha256": "19c9b474f9b46201f850bfd56114c79d864bbe0cb34e8e54479a98c31bc1ecb9"
+    },
+    {
+      "file": "EFF_tao/EFF_tao.png",
+      "original_path": "/res/assets/animate/game/neweffect/EFF_tao.png",
+      "cache_key": "b25a380d",
+      "bytes": 747274,
+      "sha256": "9904f855cdbd4c01536763ac217ca090b8aedc20fa48e84ee13d98e4cefa4a1f"
+    },
+    {
+      "file": "EF_Basic_Sha_01/EF_Basic_Sha_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01.atlas.txt",
+      "cache_key": "35ffe638",
+      "bytes": 1138,
+      "sha256": "eda80aed6b060f515f8c57025aa112a5357e242fac5bcba5e221f58f8bb04e49"
+    },
+    {
+      "file": "EF_Basic_Sha_01/EF_Basic_Sha_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01.skel",
+      "cache_key": "f703a296",
+      "bytes": 1420,
+      "sha256": "b4795677e042ff9ed7b89fc1667cacf3b033a139910a40b6c32721f8eabcc527"
+    },
+    {
+      "file": "EF_Basic_Sha_01/EF_Basic_Sha_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01.png",
+      "cache_key": "ffa090ee",
+      "bytes": 145924,
+      "sha256": "a2fd2c6ba4cbc3fc6c04ff0072c3c15aa69ee623152793dc1343896e7362082d"
+    },
+    {
+      "file": "EF_Basic_Sha_01_bing/EF_Basic_Sha_01_bing.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_bing.atlas.txt",
+      "cache_key": "1c0f749c",
+      "bytes": 4775,
+      "sha256": "67cdc408c85ad92f3202f137a41ad21ec582857cfed51a3ab85c77624f844886"
+    },
+    {
+      "file": "EF_Basic_Sha_01_bing/EF_Basic_Sha_01_bing.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_bing.skel",
+      "cache_key": "b11f2e97",
+      "bytes": 6731,
+      "sha256": "ae39ab43ca1fe5aca9d7ed0517acefc4fcc137c5b82eec8a20bf51173f176c3f"
+    },
+    {
+      "file": "EF_Basic_Sha_01_bing/EF_Basic_Sha_01_bing.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_bing.png",
+      "cache_key": "8a92e841",
+      "bytes": 457680,
+      "sha256": "e2625a523f74872657ab136c6a597d05982656690d6a223c0352c42eb0e22d7e"
+    },
+    {
+      "file": "EF_Basic_Sha_01_huo/EF_Basic_Sha_01_huo.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_huo.atlas.txt",
+      "cache_key": "c6a332c0",
+      "bytes": 4384,
+      "sha256": "63ffade5f3639936e52259a90de83dcd5ab591af563406ac03f31479c8097769"
+    },
+    {
+      "file": "EF_Basic_Sha_01_huo/EF_Basic_Sha_01_huo.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_huo.skel",
+      "cache_key": "78a17003",
+      "bytes": 4668,
+      "sha256": "c3753592bc73e7e41fd355c163f41fbd2b6c664d002bdee4e2105fdcc7fefe12"
+    },
+    {
+      "file": "EF_Basic_Sha_01_huo/EF_Basic_Sha_01_huo.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_huo.png",
+      "cache_key": "38ecfa32",
+      "bytes": 327651,
+      "sha256": "180a47b00e66ada38b45d7b3af7220ac1b7cef21f87e258ba332ac39f1f7755c"
+    },
+    {
+      "file": "EF_Basic_Sha_01_lei/EF_Basic_Sha_01_lei.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_lei.atlas.txt",
+      "cache_key": "e2b77fe9",
+      "bytes": 1719,
+      "sha256": "764308c4db20069378287f12426c8ac84f3280f8c570813db09f9d89294a5db8"
+    },
+    {
+      "file": "EF_Basic_Sha_01_lei/EF_Basic_Sha_01_lei.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_lei.skel",
+      "cache_key": "4d6c012a",
+      "bytes": 2054,
+      "sha256": "97560aea0dd57a21837be446de99b6d520115fa8e822e7c40cd7d566991b796e"
+    },
+    {
+      "file": "EF_Basic_Sha_01_lei/EF_Basic_Sha_01_lei.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_01_lei.png",
+      "cache_key": "4035291a",
+      "bytes": 267191,
+      "sha256": "024786070dc672ad9fa888dda107e02664fe439571e6e6e51c194c28bdd65f44"
+    },
+    {
+      "file": "EF_Basic_Sha_03_WD/EF_Basic_Sha_03_WD.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_WD.atlas.txt",
+      "cache_key": "857e1ec0",
+      "bytes": 1884,
+      "sha256": "dbccaf1c70b184fecedab124ecb23b36345aa57c4cc732a2a3312a3a5d9bf2fd"
+    },
+    {
+      "file": "EF_Basic_Sha_03_WD/EF_Basic_Sha_03_WD.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_WD.skel",
+      "cache_key": "bfb63953",
+      "bytes": 2059,
+      "sha256": "00de3135d34dac7685f6dc5a3fc01ea55b2c784619e60e0ef0a844fe9c3f8005"
+    },
+    {
+      "file": "EF_Basic_Sha_03_WD/EF_Basic_Sha_03_WD.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_WD.png",
+      "cache_key": "f80d1e49",
+      "bytes": 452035,
+      "sha256": "647fe60a08cff0c3219edc4bc7d02a2c3019151dd3885b3bbb5f49d522290af5"
+    },
+    {
+      "file": "EF_Basic_Sha_03_bing/EF_Basic_Sha_03_bing.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_bing.atlas.txt",
+      "cache_key": "9baf51ff",
+      "bytes": 3815,
+      "sha256": "bb200fa0e1e3078f7d213b00de7e2d25cae7f111d97f58ac14c86da6c2caa57c"
+    },
+    {
+      "file": "EF_Basic_Sha_03_bing/EF_Basic_Sha_03_bing.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_bing.skel",
+      "cache_key": "e9739756",
+      "bytes": 3585,
+      "sha256": "a658b457ff0415ee9ab99189aa0cfaa2d12c2584c10a2f261410260b554c7ad8"
+    },
+    {
+      "file": "EF_Basic_Sha_03_bing/EF_Basic_Sha_03_bing.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_bing.png",
+      "cache_key": "8e67387c",
+      "bytes": 1838620,
+      "sha256": "de8c7567c2831a3fbec7a176cfbf091b4f8d844a6e905a5d8b4535f1f045454f"
+    },
+    {
+      "file": "EF_Basic_Sha_03_huo/EF_Basic_Sha_03_huo.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_huo.atlas.txt",
+      "cache_key": "6e258351",
+      "bytes": 3973,
+      "sha256": "dfd697fe108b092c4461f4f6457eabd318a937efaf400f328d6749aa44e4027b"
+    },
+    {
+      "file": "EF_Basic_Sha_03_huo/EF_Basic_Sha_03_huo.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_huo.skel",
+      "cache_key": "7c54a03e",
+      "bytes": 3535,
+      "sha256": "34a38e0ac5093bb568105d3788aa7c01291401d3e4b49fd7f61dcdd195b70021"
+    },
+    {
+      "file": "EF_Basic_Sha_03_huo/EF_Basic_Sha_03_huo.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_huo.png",
+      "cache_key": "161ad2b4",
+      "bytes": 482108,
+      "sha256": "1ddbdc1b16074d36fbdc5a026243e2a7448480fbd1f23dcc8d78df49e2477b92"
+    },
+    {
+      "file": "EF_Basic_Sha_03_lei/EF_Basic_Sha_03_lei.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_lei.atlas.txt",
+      "cache_key": "4a31ce78",
+      "bytes": 4998,
+      "sha256": "80702a5027b4bcc7e30a61c5f1b13af35840de11c34ddc61d1105d5877cf2810"
+    },
+    {
+      "file": "EF_Basic_Sha_03_lei/EF_Basic_Sha_03_lei.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_lei.skel",
+      "cache_key": "4999d117",
+      "bytes": 4778,
+      "sha256": "52076da8d5e567beedeba14b5174ca53dd744cb4496457fed8344eef6a4ff751"
+    },
+    {
+      "file": "EF_Basic_Sha_03_lei/EF_Basic_Sha_03_lei.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_lei.png",
+      "cache_key": "6ec3019c",
+      "bytes": 1766595,
+      "sha256": "a9467dd9a63b17cbbfd819e86dd357522146cc05728b999020c817c98a3fcdbc"
+    },
+    {
+      "file": "EF_Equip_BGZ_01/EF_Equip_BGZ_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BGZ_01.atlas.txt",
+      "cache_key": "2b28fb6e",
+      "bytes": 2664,
+      "sha256": "b4ccbe72109a215e88e5fe114e18075b5ae2fb0d7c7c0a7b36a78078426a446f"
+    },
+    {
+      "file": "EF_Equip_BGZ_01/EF_Equip_BGZ_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BGZ_01.skel",
+      "cache_key": "67cbe3fc",
+      "bytes": 2397,
+      "sha256": "7ae9285a691812cdc7400de6427a04f580729e36cd28adfab5d0cfe80753b745"
+    },
+    {
+      "file": "EF_Equip_BGZ_01/EF_Equip_BGZ_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BGZ_01.png",
+      "cache_key": "88fc6be1",
+      "bytes": 572837,
+      "sha256": "df781a16390048be063bb0ac0ab53907e077162915576eb269b95ab1e537c14f"
+    },
+    {
+      "file": "EF_Equip_BGZ_02/EF_Equip_BGZ_02.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BGZ_02.atlas.txt",
+      "cache_key": "b2ca9d6f",
+      "bytes": 2684,
+      "sha256": "3ac5acc5b729e6d4732f4b2243481a6b5ec5bb38a53ff7e7976acb6fc3cb63dd"
+    },
+    {
+      "file": "EF_Equip_BGZ_02/EF_Equip_BGZ_02.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BGZ_02.skel",
+      "cache_key": "e15f9152",
+      "bytes": 2414,
+      "sha256": "5d8ca7dd0f2abb558614447c4c0e9069c81fb766b813829fbccae859feb67e77"
+    },
+    {
+      "file": "EF_Equip_BGZ_02/EF_Equip_BGZ_02.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BGZ_02.png",
+      "cache_key": "cf5c1131",
+      "bytes": 794984,
+      "sha256": "0174dbe1911af9e434eb1bbc29a5311533b511bf3f5fe4c01736f8bb74c7c0a3"
+    },
+    {
+      "file": "EF_Equip_BGZ_02/EF_Equip_BGZ_02_2.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BGZ_02_2.png",
+      "cache_key": "a5ac70b4",
+      "bytes": 170548,
+      "sha256": "0e23f5b822e3ded1e0db8daf3697fc0ad72e421c12e6d1ea11af5c41067e7315"
+    },
+    {
+      "file": "EF_Equip_BYSZ_01/EF_Equip_BYSZ_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BYSZ_01.atlas.txt",
+      "cache_key": "5cfa1d3b",
+      "bytes": 2737,
+      "sha256": "1a33c37fa39abbb1d91a9bdd158ff74dba3c1603f9cff1b491e7bb1d741ada70"
+    },
+    {
+      "file": "EF_Equip_BYSZ_01/EF_Equip_BYSZ_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BYSZ_01.skel",
+      "cache_key": "bb26ddc6",
+      "bytes": 2370,
+      "sha256": "b8ec43c7ebdd358177adcb3a78842ed84cad1e5b242840eef4200539ebbc6ac4"
+    },
+    {
+      "file": "EF_Equip_BYSZ_01/EF_Equip_BYSZ_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BYSZ_01.png",
+      "cache_key": "b3cf9ecf",
+      "bytes": 552199,
+      "sha256": "5fa94786312a3d918085b6ab4596a9258be9b816982ed933de8fb1f4a75734f2"
+    },
+    {
+      "file": "EF_Equip_BYSZ_01/EF_Equip_BYSZ_01_2.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BYSZ_01_2.png",
+      "cache_key": "52945ea5",
+      "bytes": 867612,
+      "sha256": "0f53a8b9a5f886c56cfeedb2c8319b681c883ef4c8449226d1758675a577e0eb"
+    },
+    {
+      "file": "EF_Equip_BYSZ_CF/EF_Equip_BYSZ_CF.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BYSZ_CF.atlas.txt",
+      "cache_key": "d837094f",
+      "bytes": 4476,
+      "sha256": "6af02ff40b888324486cd206e6d7178e56af98e2b665348c5525b008e8e468c9"
+    },
+    {
+      "file": "EF_Equip_BYSZ_CF/EF_Equip_BYSZ_CF.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BYSZ_CF.skel",
+      "cache_key": "70812a09",
+      "bytes": 10828,
+      "sha256": "28486bc9129a8b27fe903b7c91d915478991f46fc4699450435865f2dfb47de9"
+    },
+    {
+      "file": "EF_Equip_BYSZ_CF/EF_Equip_BYSZ_CF.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_BYSZ_CF.png",
+      "cache_key": "758bdd7f",
+      "bytes": 415814,
+      "sha256": "0cd77aa896b9824fa6d9da0b5e8800f778547f118143dfc1893f1f180183cbfe"
+    },
+    {
+      "file": "EF_Equip_CT_01/EF_Equip_CT_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CT_01.atlas.txt",
+      "cache_key": "5a91824a",
+      "bytes": 4967,
+      "sha256": "e2ba4eb7c28b2033e7424569d80c1ec9917232347086b62b92eac47cbb297be9"
+    },
+    {
+      "file": "EF_Equip_CT_01/EF_Equip_CT_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CT_01.skel",
+      "cache_key": "b3b30458",
+      "bytes": 4191,
+      "sha256": "1f1cf8c628a4839d648dcd7120c6a93327dea154ad07105cfd1086bfb4461263"
+    },
+    {
+      "file": "EF_Equip_CT_01/EF_Equip_CT_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CT_01.png",
+      "cache_key": "4b2b2d82",
+      "bytes": 430419,
+      "sha256": "2055a7ca634d3465d67a8ab3b79ffaf3026d5eb992a76e4ed267a3d0ca194734"
+    },
+    {
+      "file": "EF_Equip_CXSG_01/EF_Equip_CXSG_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CXSG_01.atlas.txt",
+      "cache_key": "a47c0bde",
+      "bytes": 4865,
+      "sha256": "14813dffff33fc3209cb658930ad29fdb4a66f43f89c702c273e3de86210b56c"
+    },
+    {
+      "file": "EF_Equip_CXSG_01/EF_Equip_CXSG_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CXSG_01.skel",
+      "cache_key": "bc82eb4f",
+      "bytes": 4510,
+      "sha256": "bf2f592b5d7355fda534a88b9ae11d61eb119c32272f1e2c228ba1f7dead732c"
+    },
+    {
+      "file": "EF_Equip_CXSG_01/EF_Equip_CXSG_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CXSG_01.png",
+      "cache_key": "7a3d0ecb",
+      "bytes": 281850,
+      "sha256": "b0cdea9b0acc9d04f0606ae4ed897c373bf65d3b9088bfeb8eef1195de52b163"
+    },
+    {
+      "file": "EF_Equip_CXSG_02a/EF_Equip_CXSG_02a.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CXSG_02a.atlas.txt",
+      "cache_key": "1e6607a0",
+      "bytes": 2104,
+      "sha256": "8d9d96457dec3ed490ed2aa7a7b89f2cd42ad2f1ccb94cd18ec9555085a41788"
+    },
+    {
+      "file": "EF_Equip_CXSG_02a/EF_Equip_CXSG_02a.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CXSG_02a.skel",
+      "cache_key": "314d5c79",
+      "bytes": 2226,
+      "sha256": "7042ea006b2e6119f407b347ed045eb0d8b99e451bd7f4edf2ef02549dc0bc55"
+    },
+    {
+      "file": "EF_Equip_CXSG_02a/EF_Equip_CXSG_02a.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_CXSG_02a.png",
+      "cache_key": "bd87cdd4",
+      "bytes": 108456,
+      "sha256": "f3ce0713785a7bb25db725adb131396f13d321a75ccbdc5ba238cf3b0442a4b8"
+    },
+    {
+      "file": "EF_Equip_DL_01/EF_Equip_DL_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_DL_01.atlas.txt",
+      "cache_key": "947baf0a",
+      "bytes": 4683,
+      "sha256": "b3e04943e573a301c8eec235362ec0c80a3a9bb4bdc36b3e0c3336bb60c78ed2"
+    },
+    {
+      "file": "EF_Equip_DL_01/EF_Equip_DL_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_DL_01.skel",
+      "cache_key": "4677ff48",
+      "bytes": 4237,
+      "sha256": "1a127e6477ef0375c048d9df7f7e95ada8e6999849c6bf8f4a7c26e2c0c7c3bb"
+    },
+    {
+      "file": "EF_Equip_DL_01/EF_Equip_DL_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_DL_01.png",
+      "cache_key": "80146ad5",
+      "bytes": 441605,
+      "sha256": "47d3a7b6258c84895405d5390e04b924717ee4361aa77c264c2d0650f4e3e255"
+    },
+    {
+      "file": "EF_Equip_DW_01/EF_Equip_DW_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_DW_01.atlas.txt",
+      "cache_key": "bdf1a88b",
+      "bytes": 4855,
+      "sha256": "c770a5509ab0c733a3f8bac5fa3761689a6505d879dab97c26db5ffec141db04"
+    },
+    {
+      "file": "EF_Equip_DW_01/EF_Equip_DW_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_DW_01.skel",
+      "cache_key": "68e223e4",
+      "bytes": 4237,
+      "sha256": "0e2d72006a6fc45298b60ac4f4097dc2d1a956edaaf71d4a43ef60d9e10c4872"
+    },
+    {
+      "file": "EF_Equip_DW_01/EF_Equip_DW_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_DW_01.png",
+      "cache_key": "a1c547a8",
+      "bytes": 596436,
+      "sha256": "b5d0bd5e385cadd8140590d134feed98ae33370b93444536cd312464c32a8691"
+    },
+    {
+      "file": "EF_Equip_FTHJ_01/EF_Equip_FTHJ_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_FTHJ_01.atlas.txt",
+      "cache_key": "da9c7d70",
+      "bytes": 3133,
+      "sha256": "fdad79e00612e7fe7203c46c3a3fdae900bbbf2c7d1908be6c23c1b0cabe1838"
+    },
+    {
+      "file": "EF_Equip_FTHJ_01/EF_Equip_FTHJ_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_FTHJ_01.skel",
+      "cache_key": "003a93d0",
+      "bytes": 2901,
+      "sha256": "d32a2982f9bbef0ffb37d5d40752d4de90217f831855f552c9d06b175c1e6389"
+    },
+    {
+      "file": "EF_Equip_FTHJ_01/EF_Equip_FTHJ_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_FTHJ_01.png",
+      "cache_key": "a4c68b7a",
+      "bytes": 415867,
+      "sha256": "05c2c030086fcaaa72e5c18aa28dd4bde334a7674baf1be3619a810ffd80e7aa"
+    },
+    {
+      "file": "EF_Equip_FTHJ_02_a/EF_Equip_FTHJ_02_a.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_FTHJ_02_a.atlas.txt",
+      "cache_key": "aa054df3",
+      "bytes": 3905,
+      "sha256": "96f04a3f8e08527c776be9143018c7ce76ae9547918b8849d0b9153b3c87d733"
+    },
+    {
+      "file": "EF_Equip_FTHJ_02_a/EF_Equip_FTHJ_02_a.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_FTHJ_02_a.skel",
+      "cache_key": "9fc911a6",
+      "bytes": 3577,
+      "sha256": "df59c6a2845aa22a64abf3051f645036ffd6c5d675efa6b1a080653b59a4b0dd"
+    },
+    {
+      "file": "EF_Equip_FTHJ_02_a/EF_Equip_FTHJ_02_a.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_FTHJ_02_a.png",
+      "cache_key": "e8a0583c",
+      "bytes": 1814057,
+      "sha256": "35bad2ece817a48a37f65f9949f7a67bbed8c4b4fcfcba436c4e4453fbe0beb3"
+    },
+    {
+      "file": "EF_Equip_GDD_01/EF_Equip_GDD_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_GDD_01.atlas.txt",
+      "cache_key": "ed2525ed",
+      "bytes": 3356,
+      "sha256": "06b4bc46d489475be6cac265b983d0ccd85203e63212e0343b5987d865cabbc2"
+    },
+    {
+      "file": "EF_Equip_GDD_01/EF_Equip_GDD_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_GDD_01.skel",
+      "cache_key": "99a96d5e",
+      "bytes": 3183,
+      "sha256": "c6c7c950cf3e8e1fe7d95151980750a95a9b5d1b67d004d91dba3013ffebb0fa"
+    },
+    {
+      "file": "EF_Equip_GDD_01/EF_Equip_GDD_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_GDD_01.png",
+      "cache_key": "3e69bf79",
+      "bytes": 595505,
+      "sha256": "2170247628cc17735d3109fd7b44bf4141b44c81e203d637568baa4f849d5328"
+    },
+    {
+      "file": "EF_Equip_GDD_02/EF_Equip_GDD_02.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_GDD_02.atlas.txt",
+      "cache_key": "74c743ec",
+      "bytes": 5188,
+      "sha256": "20a012193131f3cbd18cb23bdd43e61a3fae91eae8f4d9bbd21337f378545518"
+    },
+    {
+      "file": "EF_Equip_GDD_02/EF_Equip_GDD_02.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_GDD_02.skel",
+      "cache_key": "1f3d1ff0",
+      "bytes": 11241,
+      "sha256": "e376867ed90f922967d10910d56d1856f6ba47c15e702d5a1340e74ed5f2f677"
+    },
+    {
+      "file": "EF_Equip_GDD_02/EF_Equip_GDD_02.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_GDD_02.png",
+      "cache_key": "79c9c5a9",
+      "bytes": 346924,
+      "sha256": "9dbbbfba76b240a4b18f025aa3c985822d79bd883565059cef038dc6ce312d41"
+    },
+    {
+      "file": "EF_Equip_HBJ_01/EF_Equip_HBJ_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HBJ_01.atlas.txt",
+      "cache_key": "8aaec3a5",
+      "bytes": 3906,
+      "sha256": "ae27f988bb69a92e0c7098c8071a411e75b7a91bc6865313ba1af9c7fbf0d59e"
+    },
+    {
+      "file": "EF_Equip_HBJ_01/EF_Equip_HBJ_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HBJ_01.skel",
+      "cache_key": "cf8d324d",
+      "bytes": 3567,
+      "sha256": "6acb03a9fa9c59e0bf51b698857ce4f31855c07882663545b4ccd7c143b34323"
+    },
+    {
+      "file": "EF_Equip_HBJ_01/EF_Equip_HBJ_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HBJ_01.png",
+      "cache_key": "a9f28f4c",
+      "bytes": 409335,
+      "sha256": "a3e87b359e7daeb4523e82a20b8edca81512abbfdcf76171a9308dfd78b320b5"
+    },
+    {
+      "file": "EF_Equip_HBJ_02a/EF_Equip_HBJ_02a.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HBJ_02a.atlas.txt",
+      "cache_key": "d99f7ddc",
+      "bytes": 3930,
+      "sha256": "b26b6fea220563036e72eabfdddb6a6e4937f61f9c3dab5eb7adae0d89271dec"
+    },
+    {
+      "file": "EF_Equip_HBJ_02a/EF_Equip_HBJ_02a.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HBJ_02a.skel",
+      "cache_key": "df30328c",
+      "bytes": 3644,
+      "sha256": "6edd4d74e3027ca6afef70d029ad68c8959143235324361d13b6ab58942a8562"
+    },
+    {
+      "file": "EF_Equip_HBJ_02a/EF_Equip_HBJ_02a.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HBJ_02a.png",
+      "cache_key": "ce8814d6",
+      "bytes": 296710,
+      "sha256": "cad5651171ce6b22aa48bf94ea1ecd61dc36ea1525b368082e697671e3a5951d"
+    },
+    {
+      "file": "EF_Equip_HL_01/EF_Equip_HL_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HL_01.atlas.txt",
+      "cache_key": "d18e06ee",
+      "bytes": 4841,
+      "sha256": "98d394b7db684e9d870e9f816ef2637a1ab9cf950f8e10d4af8d72e4b1b3d262"
+    },
+    {
+      "file": "EF_Equip_HL_01/EF_Equip_HL_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HL_01.skel",
+      "cache_key": "5c4b1fc6",
+      "bytes": 4237,
+      "sha256": "73b6f1533c3d8b06429129de3e6266f01d8830025299c10127bebd8c6f318784"
+    },
+    {
+      "file": "EF_Equip_HL_01/EF_Equip_HL_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_HL_01.png",
+      "cache_key": "662099c1",
+      "bytes": 503834,
+      "sha256": "1ea89f06129d4dd927e66b2baea92815d832577f5600ffe726bcaa60c655b883"
+    },
+    {
+      "file": "EF_Equip_JY_01/EF_Equip_JY_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_JY_01.atlas.txt",
+      "cache_key": "9b19e57e",
+      "bytes": 4826,
+      "sha256": "2c61f633b2c49e70dd1c7f60f6665bd5140d84230a775fc2444974df7ef22e12"
+    },
+    {
+      "file": "EF_Equip_JY_01/EF_Equip_JY_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_JY_01.skel",
+      "cache_key": "bee9c8c5",
+      "bytes": 4237,
+      "sha256": "99e7c9bbaa7c6afd36ab1105819191b82bf73b9482c89d16fd9616f164ec98f3"
+    },
+    {
+      "file": "EF_Equip_JY_01/EF_Equip_JY_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_JY_01.png",
+      "cache_key": "7c8d8e08",
+      "bytes": 483944,
+      "sha256": "044c952cb172827ae5f2f0f8d45cc4dca82c9cd7cdf4a6e169c8c261f720c959"
+    },
+    {
+      "file": "EF_Equip_MNNM_01/EF_Equip_MNNM_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_MNNM_01.atlas.txt",
+      "cache_key": "3ab593ea",
+      "bytes": 6095,
+      "sha256": "81b152cded733ef97ec34f70cc9d0ce06afd4b3483abaee8ff656a747105b091"
+    },
+    {
+      "file": "EF_Equip_MNNM_01/EF_Equip_MNNM_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_MNNM_01.skel",
+      "cache_key": "548eb61f",
+      "bytes": 5536,
+      "sha256": "79ab910598b98b6c3109e51935a4384505f5b2b6021b1d4326d1a57bf1167c97"
+    },
+    {
+      "file": "EF_Equip_MNNM_01/EF_Equip_MNNM_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_MNNM_01.png",
+      "cache_key": "ceb46d8c",
+      "bytes": 748774,
+      "sha256": "1eefd8c397e627c0001789452b7a0c6d4ceb3d610157d792816918a6ed8a6617"
+    },
+    {
+      "file": "EF_Equip_QGJ_01/EF_Equip_QGJ_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QGJ_01.atlas.txt",
+      "cache_key": "82754d6e",
+      "bytes": 9816,
+      "sha256": "ae1a96bb99ceb1237a09c6fba9da5293e01ea2987a7c8bdbb12c2eec2ccbf458"
+    },
+    {
+      "file": "EF_Equip_QGJ_01/EF_Equip_QGJ_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QGJ_01.skel",
+      "cache_key": "fc1f0347",
+      "bytes": 8991,
+      "sha256": "7e81f8cba01d86fc5bdc6b0ac2d813dbf193243b9add1f16c5f09aac99388880"
+    },
+    {
+      "file": "EF_Equip_QGJ_01/EF_Equip_QGJ_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QGJ_01.png",
+      "cache_key": "38de6021",
+      "bytes": 563173,
+      "sha256": "90c8151acad0319d895cf9207cbb384c6df8dde0a610b6240df8bfe325b2c8ee"
+    },
+    {
+      "file": "EF_Equip_QGJ_02a/EF_Equip_QGJ_02a.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QGJ_02a.atlas.txt",
+      "cache_key": "d521bd6a",
+      "bytes": 10406,
+      "sha256": "96947e3b9aa5cc0e9085e38c20821329bad3247bf2778615335d15202c90b15d"
+    },
+    {
+      "file": "EF_Equip_QGJ_02a/EF_Equip_QGJ_02a.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QGJ_02a.skel",
+      "cache_key": "3fd649a3",
+      "bytes": 9386,
+      "sha256": "9281bd907b654095da892f3d83fa0b2cfdd9654293628d2452cc1c1beec34591"
+    },
+    {
+      "file": "EF_Equip_QGJ_02a/EF_Equip_QGJ_02a.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QGJ_02a.png",
+      "cache_key": "fd1a25dc",
+      "bytes": 659690,
+      "sha256": "9d8da4d606a0a31635ebfc4160ca2de319b883d5477d0b49f7d1ad27d00455e9"
+    },
+    {
+      "file": "EF_Equip_QLG_01/EF_Equip_QLG_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLG_01.atlas.txt",
+      "cache_key": "eb7b9bcb",
+      "bytes": 8977,
+      "sha256": "7eb9a017bcc07339b329224b1e4c236a8500a96e964e97bc4fb715e55b3aaceb"
+    },
+    {
+      "file": "EF_Equip_QLG_01/EF_Equip_QLG_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLG_01.skel",
+      "cache_key": "f5b01fe7",
+      "bytes": 8057,
+      "sha256": "9f10aedfec05e6446604e3dd76febb85aa624597bb06bbc70698a273240e4866"
+    },
+    {
+      "file": "EF_Equip_QLG_01/EF_Equip_QLG_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLG_01.png",
+      "cache_key": "218eeb2d",
+      "bytes": 1676527,
+      "sha256": "9dc6b4c408cb7bbbfb172681b215765d7e4be69ab6462c8ba60a0f029a47e7af"
+    },
+    {
+      "file": "EF_Equip_QLG_02/EF_Equip_QLG_02.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLG_02.atlas.txt",
+      "cache_key": "7299fdca",
+      "bytes": 6814,
+      "sha256": "08913bc444d81d7110cd9c2c4c9fa9fc330034b6bec12e03ac5794518d382a72"
+    },
+    {
+      "file": "EF_Equip_QLG_02/EF_Equip_QLG_02.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLG_02.skel",
+      "cache_key": "73246d49",
+      "bytes": 6789,
+      "sha256": "c33bcd7aab2ecfe8ed0fee66651e1b193e4c6592167ca51cd185240291c8fe10"
+    },
+    {
+      "file": "EF_Equip_QLG_02/EF_Equip_QLG_02.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLG_02.png",
+      "cache_key": "662e91fd",
+      "bytes": 1700227,
+      "sha256": "b28c6e79bde0b7c4a60f1119dbe6209f5a004f56b08132504aeb72e434f71eb0"
+    },
+    {
+      "file": "EF_Equip_QLYY_01/EF_Equip_QLYY_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLYY_01.atlas.txt",
+      "cache_key": "9f216487",
+      "bytes": 5245,
+      "sha256": "492c303dd7e092da8ee23d662ffddd09172c2c282ce295db5485c6cd935f269a"
+    },
+    {
+      "file": "EF_Equip_QLYY_01/EF_Equip_QLYY_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLYY_01.skel",
+      "cache_key": "31ae264f",
+      "bytes": 4898,
+      "sha256": "cfb60844d78127ab9243e0d60d66acd18589d623fbb59951236da3d9fd3960e6"
+    },
+    {
+      "file": "EF_Equip_QLYY_01/EF_Equip_QLYY_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLYY_01.png",
+      "cache_key": "5efdfbd4",
+      "bytes": 1640304,
+      "sha256": "07772275cd3436a6b32240b50e866d230ad1d1fc54d189a282aca08d2c6f6fe5"
+    },
+    {
+      "file": "EF_Equip_QLYY_02a/EF_Equip_QLYY_02a.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLYY_02a.atlas.txt",
+      "cache_key": "0ceab39f",
+      "bytes": 5419,
+      "sha256": "c36b6ab956fff0aabed2140811cfed2a4ee2ded3c5978be38e0a83ec13e47b3a"
+    },
+    {
+      "file": "EF_Equip_QLYY_02a/EF_Equip_QLYY_02a.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLYY_02a.skel",
+      "cache_key": "31c070b4",
+      "bytes": 9258,
+      "sha256": "b0bf3a5f8706820136222797b17ea0e4c6fd0189cf8b2caf0ef22867835d2b44"
+    },
+    {
+      "file": "EF_Equip_QLYY_02a/EF_Equip_QLYY_02a.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_QLYY_02a.png",
+      "cache_key": "30ab00d4",
+      "bytes": 155340,
+      "sha256": "a5ff27607bbb527bcd98f2db6c6883cf6e27e98f0797248734c1c8b9af38381d"
+    },
+    {
+      "file": "EF_Equip_RWD_01/EF_Equip_RWD_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_RWD_01.atlas.txt",
+      "cache_key": "24443353",
+      "bytes": 6451,
+      "sha256": "144b958780e9cb35d9ed13091febc23762827b67e02caf30cc946835307403b0"
+    },
+    {
+      "file": "EF_Equip_RWD_01/EF_Equip_RWD_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_RWD_01.skel",
+      "cache_key": "8a913f3c",
+      "bytes": 5943,
+      "sha256": "068df6984b4cc146f630b5efeace7a6f5b6e98c556006b7ea1da9c085fd00143"
+    },
+    {
+      "file": "EF_Equip_RWD_01/EF_Equip_RWD_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_RWD_01.png",
+      "cache_key": "6aa38b61",
+      "bytes": 3734034,
+      "sha256": "cadab1e0ea7cbc613a1d7420bed7065350de571474bac4b09300cd595a962480"
+    },
+    {
+      "file": "EF_Equip_RWD_02/EF_Equip_RWD_02.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_RWD_02.atlas.txt",
+      "cache_key": "bda65552",
+      "bytes": 5105,
+      "sha256": "2ba5d3c8d40d46f1aee6fb47d06085dfa44ef9b0358267287bada34c44022983"
+    },
+    {
+      "file": "EF_Equip_RWD_02/EF_Equip_RWD_02.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_RWD_02.skel",
+      "cache_key": "0c054d92",
+      "bytes": 5287,
+      "sha256": "e8ecc8f9d23b5e04fe356a9b13f08b075de62eaf8a9367a0a4c226486c38f4a3"
+    },
+    {
+      "file": "EF_Equip_RWD_02/EF_Equip_RWD_02.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_RWD_02.png",
+      "cache_key": "2d03f1b1",
+      "bytes": 3352023,
+      "sha256": "bf10dec6d605c453f3bf36a09d8fadb9d4459bb272984916559cfba2d09f6367"
+    },
+    {
+      "file": "EF_Equip_TJ_01/EF_Equip_TJ_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_01.atlas.txt",
+      "cache_key": "28db7bf3",
+      "bytes": 4392,
+      "sha256": "d5075262e9ea83aa2ac7602616618f0e0d01de2ceef01c96392cb42e9e653255"
+    },
+    {
+      "file": "EF_Equip_TJ_01/EF_Equip_TJ_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_01.skel",
+      "cache_key": "12c3072a",
+      "bytes": 4341,
+      "sha256": "4d31528c2fe57d5094e58089586ead1f3c598f7cff2544688cee0bdb11717ca3"
+    },
+    {
+      "file": "EF_Equip_TJ_01/EF_Equip_TJ_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_01.png",
+      "cache_key": "eabb2123",
+      "bytes": 592172,
+      "sha256": "c83607ca343ee33ccae52edacec4f10f95da70dc2f7cf303f8050cbb1dd52344"
+    },
+    {
+      "file": "EF_Equip_TJ_02a/EF_Equip_TJ_02a.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_02a.atlas.txt",
+      "cache_key": "5b35fca5",
+      "bytes": 5542,
+      "sha256": "f4670f70c710ad1c9750be4b735649cf6d7334438f6b8514e081534ffecac4f0"
+    },
+    {
+      "file": "EF_Equip_TJ_02a/EF_Equip_TJ_02a.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_02a.skel",
+      "cache_key": "0c3b8842",
+      "bytes": 5245,
+      "sha256": "002b7697b5dad887915623666a268409e0732a3bdc49f12843b670aee56faa3b"
+    },
+    {
+      "file": "EF_Equip_TJ_02a/EF_Equip_TJ_02a.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_02a.png",
+      "cache_key": "13c621b1",
+      "bytes": 720735,
+      "sha256": "17b926b19ad571b1ec4124e7b085d4d3ae5ffd44c7a3cbd9c1af5ee549ca2594"
+    },
+    {
+      "file": "EF_Equip_TJ_02b/EF_Equip_TJ_02b.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_02b.atlas.txt",
+      "cache_key": "c2d79aa4",
+      "bytes": 6369,
+      "sha256": "be30f7f909ca8f499da81bc450dd9a6aa8319c47d2e94e4515347217344da234"
+    },
+    {
+      "file": "EF_Equip_TJ_02b/EF_Equip_TJ_02b.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_02b.skel",
+      "cache_key": "8aaffaec",
+      "bytes": 5514,
+      "sha256": "94bee7970aceff7e47ad1de46f1a380f4b9e356dc0377e6111cbfb88fd81a9cb"
+    },
+    {
+      "file": "EF_Equip_TJ_02b/EF_Equip_TJ_02b.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_TJ_02b.png",
+      "cache_key": "54665b61",
+      "bytes": 675184,
+      "sha256": "fd616a25f3141914074ca6511299374cfa910d7fcc82633436b907bd599eb836"
+    },
+    {
+      "file": "EF_Equip_ZBSM_01/EF_Equip_ZBSM_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZBSM_01.atlas.txt",
+      "cache_key": "12384857",
+      "bytes": 13097,
+      "sha256": "b915584f8d76c6cc84b3716522dbc48903d92235a9623116b0959993007fa3aa"
+    },
+    {
+      "file": "EF_Equip_ZBSM_01/EF_Equip_ZBSM_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZBSM_01.skel",
+      "cache_key": "f4442af3",
+      "bytes": 12657,
+      "sha256": "63c16d2f08d499db96f1ac544b8f9e9130c5d93abddee7f509b741b286f14b84"
+    },
+    {
+      "file": "EF_Equip_ZBSM_01/EF_Equip_ZBSM_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZBSM_01.png",
+      "cache_key": "0ecaf96c",
+      "bytes": 407315,
+      "sha256": "b4cb34a6151ff6e66a18a3174ae882d13d5798fbb648db9d269e8fb54fd5dba8"
+    },
+    {
+      "file": "EF_Equip_ZBSM_01/EF_Equip_ZBSM_01_2.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZBSM_01_2.png",
+      "cache_key": "0468f871",
+      "bytes": 76919,
+      "sha256": "c51db20be52caca37a354707f181ab48fb61f5ec7810041af9db2dce6f84cf43"
+    },
+    {
+      "file": "EF_Equip_ZHFD_01/EF_Equip_ZHFD_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZHFD_01.atlas.txt",
+      "cache_key": "3f382cff",
+      "bytes": 5101,
+      "sha256": "4d9d520964b6a13dae810c065b712d8b86cf0dfa36be2aa4443ce673ee627f1f"
+    },
+    {
+      "file": "EF_Equip_ZHFD_01/EF_Equip_ZHFD_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZHFD_01.skel",
+      "cache_key": "7bcf8e80",
+      "bytes": 4405,
+      "sha256": "a1a62b59b0e760c5264754e51988d9c63c3201247025dacfe94b1453939d42aa"
+    },
+    {
+      "file": "EF_Equip_ZHFD_01/EF_Equip_ZHFD_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZHFD_01.png",
+      "cache_key": "e0f075b0",
+      "bytes": 508066,
+      "sha256": "aafec9390bea78a9448f2cbd6c3a63f9dc9c0af64671a085c65902376b447e37"
+    },
+    {
+      "file": "EF_Equip_ZQYS_01/EF_Equip_ZQYS_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZQYS_01.atlas.txt",
+      "cache_key": "17f1d6c1",
+      "bytes": 13699,
+      "sha256": "8037b1314069254543bafcf702cbd34cceec2fb01a9cda8016d84f06328c5d40"
+    },
+    {
+      "file": "EF_Equip_ZQYS_01/EF_Equip_ZQYS_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZQYS_01.skel",
+      "cache_key": "b0708113",
+      "bytes": 11466,
+      "sha256": "8f8516372e6f0338b49a3dd858cae3875d0ebd918f61488aeb3b0463547cd5bc"
+    },
+    {
+      "file": "EF_Equip_ZQYS_01/EF_Equip_ZQYS_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZQYS_01.png",
+      "cache_key": "3e4c6a00",
+      "bytes": 693970,
+      "sha256": "14cbcfeff7869ca112b134f0132632ddc82c74313b6c74abfdb165814c694531"
+    },
+    {
+      "file": "EF_Equip_ZQYS_02a/EF_Equip_ZQYS_02a.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZQYS_02a.atlas.txt",
+      "cache_key": "93dd8788",
+      "bytes": 17286,
+      "sha256": "e878718e43b42cc18fec00f798a187d1b634d5aa1317cd60162904ad09d95359"
+    },
+    {
+      "file": "EF_Equip_ZQYS_02a/EF_Equip_ZQYS_02a.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZQYS_02a.skel",
+      "cache_key": "539cb3cc",
+      "bytes": 23649,
+      "sha256": "a90ce1ad0e642201e7271182be75795fd4e001dac87e49affd0218fee4e18865"
+    },
+    {
+      "file": "EF_Equip_ZQYS_02a/EF_Equip_ZQYS_02a.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZQYS_02a.png",
+      "cache_key": "b175a788",
+      "bytes": 509936,
+      "sha256": "a26b281676209fb6ff10f938e1e960f8f14b3ff1233b5b0dd3b6fd82a63c40f4"
+    },
+    {
+      "file": "EF_Equip_ZX_01/EF_Equip_ZX_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZX_01.atlas.txt",
+      "cache_key": "42749b47",
+      "bytes": 4669,
+      "sha256": "f864987494c60edd9a4b9acc5d66ab0eb07644bff96bf66d84fe27bd6a8ff15c"
+    },
+    {
+      "file": "EF_Equip_ZX_01/EF_Equip_ZX_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZX_01.skel",
+      "cache_key": "8e3c5d6e",
+      "bytes": 4237,
+      "sha256": "aaca97eb60cd2aaa950468ec98dda7500ba879a75550b0f3bc461f770b524b79"
+    },
+    {
+      "file": "EF_Equip_ZX_01/EF_Equip_ZX_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_ZX_01.png",
+      "cache_key": "1ce7cce7",
+      "bytes": 463349,
+      "sha256": "e85c272b30162b928a04c190900ddaeb737cd7824e7b74ddae6b1499e58c01fa"
+    },
+    {
+      "file": "EF_Equip_guanshifu_01/EF_Equip_guanshifu_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_guanshifu_01.atlas.txt",
+      "cache_key": "3a36a434",
+      "bytes": 8527,
+      "sha256": "0b0fe24e64259c6f1e1ebe3c3512399024698741a7de17ea5856f536870cf918"
+    },
+    {
+      "file": "EF_Equip_guanshifu_01/EF_Equip_guanshifu_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_guanshifu_01.skel",
+      "cache_key": "03473f95",
+      "bytes": 7646,
+      "sha256": "03b4f364fd6923a7d664dc4076afcbb179b2b6a02c7c0efdd133e0bf389a7b71"
+    },
+    {
+      "file": "EF_Equip_guanshifu_01/EF_Equip_guanshifu_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_guanshifu_01.png",
+      "cache_key": "6f88c2f8",
+      "bytes": 1563121,
+      "sha256": "d9c6061cc008ce641e2ae5221debce84931bd336211fa9ca1cac2b74653b2bda"
+    },
+    {
+      "file": "EF_Equip_liannu_01/EF_Equip_liannu_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_liannu_01.atlas.txt",
+      "cache_key": "2620fd55",
+      "bytes": 3830,
+      "sha256": "e37b6087f99287baaaddf3eb4ef62a44eaae90fd8c4dc1f9cd2c4b6310d773d9"
+    },
+    {
+      "file": "EF_Equip_liannu_01/EF_Equip_liannu_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_liannu_01.skel",
+      "cache_key": "5ab80d57",
+      "bytes": 10891,
+      "sha256": "a3a290158cd17f72b392d262b03c3238c652363eedb12a58a83119552e6176de"
+    },
+    {
+      "file": "EF_Equip_liannu_01/EF_Equip_liannu_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_liannu_01.png",
+      "cache_key": "23871784",
+      "bytes": 255282,
+      "sha256": "56efc193d181a9179080b3244b1aeb801837cd6d677269406024bc16365935a1"
+    },
+    {
+      "file": "EF_Equip_liannu_02/EF_Equip_liannu_02.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_liannu_02.atlas.txt",
+      "cache_key": "bfc29b54",
+      "bytes": 4022,
+      "sha256": "259f32f8edad9900b01aee65fe27f0c76328c86ae0145b6d0120c9a34b0d4a3a"
+    },
+    {
+      "file": "EF_Equip_liannu_02/EF_Equip_liannu_02.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_liannu_02.skel",
+      "cache_key": "dc2c7ff9",
+      "bytes": 16314,
+      "sha256": "cc3c32042026969167ab95cda482cef22c42bffa819efe9a7571e52ab1e316d6"
+    },
+    {
+      "file": "EF_Equip_liannu_02/EF_Equip_liannu_02.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Equip_liannu_02.png",
+      "cache_key": "64276d54",
+      "bytes": 349504,
+      "sha256": "7624216c4853abe4775b2c435ff36927c2eb1b7bddd33c9c570da37d0e931648"
+    },
+    {
+      "file": "EF_Plot_JDSR/EF_Plot_JDSR.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_JDSR.atlas.txt",
+      "cache_key": "ef0c3748",
+      "bytes": 3581,
+      "sha256": "e961de21c73f2aecebfdf152692aee49535903140070aa0ca775f33ce0d07dd6"
+    },
+    {
+      "file": "EF_Plot_JDSR/EF_Plot_JDSR.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_JDSR.skel",
+      "cache_key": "d83ea7fc",
+      "bytes": 46119,
+      "sha256": "6f3b852a0fcdfc2462a660fa879dc6c8936403724342f872c94180541263b885"
+    },
+    {
+      "file": "EF_Plot_JDSR/EF_Plot_JDSR.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_JDSR.png",
+      "cache_key": "add97dd2",
+      "bytes": 1055412,
+      "sha256": "88fe7f0e5ae779572c598ecbc2559f31dada3df170b08d6dd2e5e81ec44d49c5"
+    },
+    {
+      "file": "EF_Plot_JDSR/EF_Plot_JDSR_2.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_JDSR_2.png",
+      "cache_key": "94fb9f6d",
+      "bytes": 822428,
+      "sha256": "f80cd72f21eabdb40d250ce5eafd0469e8de8f5de4f25a8c54d8a25d0a3645dc"
+    },
+    {
+      "file": "EF_Plot_SSQY_01/EF_Plot_SSQY_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_SSQY_01.atlas.txt",
+      "cache_key": "d54ecf1e",
+      "bytes": 346,
+      "sha256": "0fbc8780326d0731f4d2de1148f44c9eac14d94a690634f53640ebdf08557b37"
+    },
+    {
+      "file": "EF_Plot_SSQY_01/EF_Plot_SSQY_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_SSQY_01.skel",
+      "cache_key": "743d4184",
+      "bytes": 11474,
+      "sha256": "2100b9058b661965eb9a6c71365d8b4c56957ae12d088c32251aa56768ab6be7"
+    },
+    {
+      "file": "EF_Plot_SSQY_01/EF_Plot_SSQY_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_SSQY_01.png",
+      "cache_key": "12c645f9",
+      "bytes": 62092,
+      "sha256": "81cc2c2430d77a152216f425d6554c9faf1e958ac44362d379bbc86aa2511609"
+    },
+    {
+      "file": "EF_Plot_TSLH1/EF_Plot_TSLH1.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH1.atlas.txt",
+      "cache_key": "d75729dd",
+      "bytes": 2702,
+      "sha256": "24a61920c3ac3c907e8ece09e645513ff95028b979a0d798af545b3697bed196"
+    },
+    {
+      "file": "EF_Plot_TSLH1/EF_Plot_TSLH1.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH1.skel",
+      "cache_key": "c9d46e8d",
+      "bytes": 15923,
+      "sha256": "b39d5d4d6d57b6e93b2cd1a7e8cfdd569c363b2a007d180bc3248eaa95d56829"
+    },
+    {
+      "file": "EF_Plot_TSLH1/EF_Plot_TSLH1.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH1.png",
+      "cache_key": "461b5009",
+      "bytes": 1058676,
+      "sha256": "601ddebb06fcb2bcbf904635e9a1d0651dfe065718fc831ec0cc981b36a81bce"
+    },
+    {
+      "file": "EF_Plot_TYJY/EF_Plot_TYJY.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TYJY.atlas.txt",
+      "cache_key": "039ec829",
+      "bytes": 11432,
+      "sha256": "36c2bcbc8a976936efcdb6be7e05edb3beb31c071927940e01e6cb126d198d1d"
+    },
+    {
+      "file": "EF_Plot_TYJY/EF_Plot_TYJY.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TYJY.skel",
+      "cache_key": "c303333b",
+      "bytes": 167372,
+      "sha256": "e71c0d9175e3a33a532dbe5b9c7ed7ffb9ec26407f8c95aea045aac80ce3ed3e"
+    },
+    {
+      "file": "EF_Plot_TYJY/EF_Plot_TYJY.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TYJY.png",
+      "cache_key": "91e8c187",
+      "bytes": 667382,
+      "sha256": "fa1d58f99f87f79764d01b6c9b98545c01c4ac2199e862d68b6a53e9adda4441"
+    },
+    {
+      "file": "EF_Plot_TYJY/EF_Plot_TYJY_2.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TYJY_2.png",
+      "cache_key": "91e0f5ea",
+      "bytes": 491281,
+      "sha256": "c120142b9a5a43bbc341034a9b7fb1a1ed5e02a4c34db89d7b5f68840fa4c59b"
+    },
+    {
+      "file": "EF_Plot_WGFD_01/EF_Plot_WGFD_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_WGFD_01.atlas.txt",
+      "cache_key": "9a7b46aa",
+      "bytes": 1693,
+      "sha256": "1e78223968ff62f060f7e796f813565562a2dd96518f2eb828e4dcfcd14e3466"
+    },
+    {
+      "file": "EF_Plot_WGFD_01/EF_Plot_WGFD_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_WGFD_01.skel",
+      "cache_key": "f1e9f205",
+      "bytes": 31573,
+      "sha256": "9bba2268c7ad180e8dc11a7f40453483666f52ea895128e571ddfd513afb3008"
+    },
+    {
+      "file": "EF_Plot_WGFD_01/EF_Plot_WGFD_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_WGFD_01.png",
+      "cache_key": "a3451cab",
+      "bytes": 554951,
+      "sha256": "0b528ec16259a30cb45c195414baf1ef85691eb97b37b867942bf6cc8f384e67"
+    },
+    {
+      "file": "EF_Plot_WuXieKeJi/EF_Plot_WuXieKeJi.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_WuXieKeJi.atlas.txt",
+      "cache_key": "0a96002e",
+      "bytes": 2994,
+      "sha256": "1f95a7b0b1490429c9627e97b4028f8ddba2ec786d859fceed7ca5b66571bc3a"
+    },
+    {
+      "file": "EF_Plot_WuXieKeJi/EF_Plot_WuXieKeJi.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_WuXieKeJi.skel",
+      "cache_key": "1d46a095",
+      "bytes": 3958,
+      "sha256": "9bfcca6be1df775c26981220cf61972375c5bf34cb9d295370396f039d3ae88d"
+    },
+    {
+      "file": "EF_Plot_WuXieKeJi/EF_Plot_WuXieKeJi.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_WuXieKeJi.png",
+      "cache_key": "6fe5aa6a",
+      "bytes": 259150,
+      "sha256": "3e0d13ef5b11ac36d03730656342fdab4959d33dce68596a058aeab5f232b3b2"
+    },
+    {
+      "file": "EF_Plot_juedou/EF_Plot_juedou.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_juedou.atlas.txt",
+      "cache_key": "0ab4bd21",
+      "bytes": 12003,
+      "sha256": "52e7578f92e7f5ed32a673737cb54fbf36aade5466732f3b79510d64bf49b626"
+    },
+    {
+      "file": "EF_Plot_juedou/EF_Plot_juedou.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_juedou.skel",
+      "cache_key": "26c331f6",
+      "bytes": 89967,
+      "sha256": "ae9a28be35e937eef08082f6a954f44a2e99385382addab0597b2d8ca1b4508f"
+    },
+    {
+      "file": "EF_Plot_juedou/EF_Plot_juedou.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_juedou.png",
+      "cache_key": "8454014a",
+      "bytes": 790500,
+      "sha256": "cb4fb210c57ec08116b44687523240af7762ec66ad432782c404d37617da11a7"
+    },
+    {
+      "file": "EF_Plot_juedou/EF_Plot_juedou_2.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_juedou_2.png",
+      "cache_key": "74d08be5",
+      "bytes": 433731,
+      "sha256": "b6bb5b307a107d9c40084dbd85836a3c303d304a0ceb833d5558a36cd36218a8"
+    },
+    {
+      "file": "EF_Plot_wanjianqifa_Hit01/EF_Plot_wanjianqifa_Hit01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_wanjianqifa_Hit01.atlas.txt",
+      "cache_key": "60c217f7",
+      "bytes": 1611,
+      "sha256": "8377048bb62f1f55357b8c7f3e5bdc9a18137924a78a86faf2dd6d863f636915"
+    },
+    {
+      "file": "EF_Plot_wanjianqifa_Hit01/EF_Plot_wanjianqifa_Hit01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_wanjianqifa_Hit01.skel",
+      "cache_key": "7fa9f24e",
+      "bytes": 1665,
+      "sha256": "71f66baef8434a6c0556b807eaa5e0d4037d11b23a5cea0965d7571de3e54386"
+    },
+    {
+      "file": "EF_Plot_wanjianqifa_Hit01/EF_Plot_wanjianqifa_Hit01.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_wanjianqifa_Hit01.png",
+      "cache_key": "5daaae36",
+      "bytes": 482306,
+      "sha256": "a65fc5667f2db34f9b05df2263b673f27963718f1a22cd9fb7ff5d520d2c1dcd"
+    },
+    {
+      "file": "EF_Plot_wuzhongshengyou/EF_Plot_wuzhongshengyou.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_wuzhongshengyou.atlas.txt",
+      "cache_key": "70c361d5",
+      "bytes": 7144,
+      "sha256": "0b9feb47216a8751bf92b6fbfcf10e738a78066c99cb5c3b31ea25572cb15c9d"
+    },
+    {
+      "file": "EF_Plot_wuzhongshengyou/EF_Plot_wuzhongshengyou.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_wuzhongshengyou.skel",
+      "cache_key": "c9b85eeb",
+      "bytes": 18064,
+      "sha256": "0368b1720504caffc9d015255e14bc96a6cdd2aa57614f34244fef395b54689c"
+    },
+    {
+      "file": "EF_Plot_wuzhongshengyou/EF_Plot_wuzhongshengyou.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_wuzhongshengyou.png",
+      "cache_key": "2a2b3609",
+      "bytes": 1270386,
+      "sha256": "2ed034078029ce6a35f3b300aab76978886ec0227b3d2c8dae4c955ac1ea589b"
+    },
+    {
+      "file": "OL_PaiJu_FireAttack/OL_PaiJu_FireAttack.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/OL_PaiJu_FireAttack.atlas.txt",
+      "cache_key": "c9e576fc",
+      "bytes": 1676,
+      "sha256": "dc885646ce183178310cf95701ba89d1c99adb91f54750b99d02cf98985c5a40"
+    },
+    {
+      "file": "OL_PaiJu_FireAttack/OL_PaiJu_FireAttack.skel",
+      "original_path": "/res/assets/animate/game/neweffect/OL_PaiJu_FireAttack.skel",
+      "cache_key": "82181116",
+      "bytes": 1743,
+      "sha256": "2d98aa51387b273d3a239e9bb24dbe4eddce64da64682c67dfc2e8e477013c78"
+    },
+    {
+      "file": "OL_PaiJu_FireAttack/OL_PaiJu_FireAttack.png",
+      "original_path": "/res/assets/animate/game/neweffect/OL_PaiJu_FireAttack.png",
+      "cache_key": "8eb08c2c",
+      "bytes": 223997,
+      "sha256": "e6664777de2b45c983a6ac245300fd1bf4c11ab9104d6413ef0a7b0d67b0bf38"
+    },
+    {
+      "file": "Plot_guohechaiqiao_01/Plot_guohechaiqiao_01.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/Plot_guohechaiqiao_01.atlas.txt",
+      "cache_key": "6a164191",
+      "bytes": 6062,
+      "sha256": "55e46ee69edac68102b422aec2f55e6aad8ba1fc7b37ef40389109ceb0fceb2a"
+    },
+    {
+      "file": "Plot_guohechaiqiao_01/Plot_guohechaiqiao_01.skel",
+      "original_path": "/res/assets/animate/game/neweffect/Plot_guohechaiqiao_01.skel",
+      "cache_key": "e9dac662",
+      "bytes": 70047,
+      "sha256": "220b990f015e54ea19e4eac7ffba95a2efa883c19dd20c61252fdb9b122cc239"
+    },
+    {
+      "file": "Plot_guohechaiqiao_01/Plot_guohechaiqiao_01.png",
+      "original_path": "/res/assets/animate/game/neweffect/Plot_guohechaiqiao_01.png",
+      "cache_key": "27360c7c",
+      "bytes": 941060,
+      "sha256": "bdfd6bcbe585546b3f9cbb470102831e5f4cd2040f193b75f3af00161c090559"
+    },
+    {
+      "file": "Plot_guohechaiqiao_01/Plot_guohechaiqiao_01_2.png",
+      "original_path": "/res/assets/animate/game/neweffect/Plot_guohechaiqiao_01_2.png",
+      "cache_key": "837dc54f",
+      "bytes": 596823,
+      "sha256": "3315181864d263e8105d1cad911d549de39d88710c2b9004b52f1053c6bd3443"
+    }
+  ]
+}

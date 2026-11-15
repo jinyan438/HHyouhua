@@ -219,6 +219,11 @@ function handleDefaultTag(card, player, event, decadeUI) {
 			cardTempSuitNum(card, cardsuit, cardnumber, decadeUI.element);
 		}
 
+		// The source-card player deduplicates this clone hook with tryCardAnimate,
+		// including view-as skills that suppress the normal card popup.
+		const sourceEffects = game.hhCardEffects;
+		if (sourceEffects?.handles(event.card) && sourceEffects.playCard(player, event.card, { event })) return text;
+
 		// 播放卡牌特效
 		if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length === 1)) {
 			const name = event.card.name;

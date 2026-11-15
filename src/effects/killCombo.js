@@ -40,7 +40,7 @@ export function decodeKillCombo(spine, metadata, atlasText, bytes, images) {
 		page.setTexture({ setFilters() {}, setWraps() {}, getImage: () => images[page.name] });
 	}
 	const data = new spine.SkeletonBinary(new spine.AtlasAttachmentLoader(atlas)).readSkeletonData(new Uint8Array(bytes));
-	const animation = data.findAnimation('play');
+	const animation = data.findAnimation(metadata.action || 'play');
 	if (!animation || !data.version?.startsWith('4.0.')) throw new Error('连斩骨骼版本或动画不匹配');
 	for (const skin of data.skins) for (const { attachment } of skin.getAttachments()) {
 		const region = attachment.region;
@@ -98,12 +98,13 @@ export class KillComboRenderer {
 		model.textures = {};
 	}
 
-	draw(model, time) {
+	draw(model, time, placement = {}) {
 		const gl = this.gl, canvas = this.canvas, spine = model.spine;
 		const rect = canvas.getBoundingClientRect(), dpr = Math.min(globalThis.devicePixelRatio || 1, 2);
 		const width = Math.max(1, Math.round(rect.width * dpr)), height = Math.max(1, Math.round(rect.height * dpr));
 		if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
-		gl.viewport(0, 0, width, height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+		gl.viewport(0, 0, width, height);
+		if (placement.clear !== false) { gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); }
 		if (!rect.width || !rect.height || time >= model.animation.duration) return;
 		const skeleton = model.skeleton;
 		skeleton.setToSetupPose();
@@ -112,7 +113,8 @@ export class KillComboRenderer {
 		gl.useProgram(this.program); gl.uniform2f(this.view, rect.width, rect.height); gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
 		gl.enableVertexAttribArray(this.position); gl.enableVertexAttribArray(this.uv);
 		gl.vertexAttribPointer(this.position, 2, gl.FLOAT, false, 16, 0); gl.vertexAttribPointer(this.uv, 2, gl.FLOAT, false, 16, 8);
-		const scale = Math.min(rect.width / 1920, rect.height / 1080);
+		const scale = placement.scale ?? Math.min(rect.width / 1920, rect.height / 1080);
+		const x = placement.x ?? rect.width / 2, y = rect.height - (placement.y ?? rect.height / 2);
 		for (const slot of skeleton.drawOrder) {
 			const attachment = slot.getAttachment();
 			if (!attachment || !slot.bone.active || slot.color.a * (attachment.color?.a || 0) < .002) continue;
@@ -128,7 +130,7 @@ export class KillComboRenderer {
 			const vertices = new Float32Array(triangles.length * 4);
 			for (let i = 0; i < triangles.length; i++) {
 				const j = triangles[i] * 2, k = i * 4;
-				vertices[k] = rect.width / 2 + world[j] * scale; vertices[k + 1] = rect.height / 2 + world[j + 1] * scale;
+				vertices[k] = x + world[j] * scale; vertices[k + 1] = y + world[j + 1] * scale;
 				vertices[k + 2] = attachment.uvs[j]; vertices[k + 3] = attachment.uvs[j + 1];
 			}
 			const c = slot.color, a = attachment.color, s = skeleton.color;
@@ -142,6 +144,8 @@ export class KillComboRenderer {
 		}
 	}
 }
+
+export { loadSpine as loadSpine4Runtime, request as readSpine4Asset, loadImage as loadSpine4Image };
 
 export function createKillComboPlayer({ lib, game, ui }, environment = {}) {
 	const env = {

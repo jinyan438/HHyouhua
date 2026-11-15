@@ -8,6 +8,7 @@ import { AnimationPlayer } from "./AnimationPlayer.js";
 import { AnimationPlayerPool } from "./AnimationPlayerPool.js";
 import { assetList } from "./configs/assetList.js";
 import { initSkillAnimations } from "./initAnimations.js";
+import { replacedCardEffectNames } from "../effects/sourceCardAnimations.js";
 
 /**
  * 资源加载优先级枚举
@@ -131,7 +132,7 @@ export function setupGameAnimation(lib, game, ui, get, ai, _status) {
 
 		// 按优先级分组预加载
 		const groups = [[], [], [], []];
-		assetList.forEach(f => groups[priorityMap[f.name] ?? Priority.NORMAL].push(f));
+		assetList.filter(f => !replacedCardEffectNames.has(f.name)).forEach(f => groups[priorityMap[f.name] ?? Priority.NORMAL].push(f));
 
 		const preload = (files, concurrency, onDone) => {
 			if (!files.length) return onDone?.();
