@@ -3,10 +3,10 @@ import { decodeKillCombo, KillComboRenderer, loadSpine4Runtime, readSpine4Asset,
 
 const cardMap = new Map(sourceCards.map(card => [card.name, card]));
 const assetMap = new Map(sourceCardAssets.map(asset => [asset.id, asset]));
+const trickCards = new Set(['nanman', 'wugu', 'taoyuan', 'huogong', 'wuzhong', 'juedou', 'jiedao', 'wuxie', 'tiesuo', 'shunshou', 'guohe', 'wanjian']);
 const screenCards = new Set(['nanman', 'wugu', 'taoyuan', 'huogong']);
 const delayedCards = new Set(['lebu', 'bingliang', 'shandian']);
-const targetCards = new Set(['shunshou', 'guohe', 'jiedao', 'juedou']);
-const multiTargetCards = new Set(['wanjian', 'tiesuo']);
+const silentCastCards = new Set([...delayedCards, 'shunshou', 'guohe', 'wanjian']);
 const equipmentCards = new Set(sourceCards.filter(card => card.effect.startsWith('EF_Equip_')).map(card => card.name));
 
 // Keep lazy fallback loading available, but do not preload superseded 3.8 card effects.
@@ -37,7 +37,7 @@ export function sourceCardEffect(card, get) {
 	return card.name === 'sha' ? sourceCardNatures[sourceShaNature(card, get)] || entry.effect : entry.effect;
 }
 
-export function sourceCardPlacement(metadata, canvasRect, anchorRect, screen = false) {
+export function sourceCardPlacement(metadata, canvasRect, anchorRect, screen = false, { size = 1, centerOnAnchor = false } = {}) {
 	const [left, bottom, right, top] = metadata.bounds;
 	const width = Math.max(1, right - left), height = Math.max(1, top - bottom);
 	const centerX = (left + right) / 2, centerY = (bottom + top) / 2;
@@ -45,10 +45,11 @@ export function sourceCardPlacement(metadata, canvasRect, anchorRect, screen = f
 	if (!box || !box.width || !box.height) return null;
 	const widthFactor = screen === 'center' ? .64 : screen ? .92 : 1.8;
 	const heightFactor = screen === 'center' ? .66 : screen ? .82 : 1.35;
-	const scale = Math.min(box.width * widthFactor / width, box.height * heightFactor / height);
+	const scale = Math.min(box.width * widthFactor / width, box.height * heightFactor / height) * size;
+	const center = centerOnAnchor && anchorRect ? anchorRect : box;
 	return {
-		x: box.left - canvasRect.left + box.width / 2 - centerX * scale,
-		y: box.top - canvasRect.top + box.height / 2 + centerY * scale,
+		x: center.left - canvasRect.left + center.width / 2 - centerX * scale,
+		y: center.top - canvasRect.top + center.height / 2 + centerY * scale,
 		scale,
 	};
 }
@@ -62,11 +63,38 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 		setTimer: (callback, ms) => setTimeout(callback, ms), clearTimer: id => clearTimeout(id), ...environment,
 	};
 	const cache = new Map(), pending = new Map(), failed = new Set(), eventPlays = new WeakMap();
+	const eventAnchors = new WeakMap(), actorAnchors = new WeakMap();
 	const active = new Set();
 	let root, canvas, renderer, frame, generation = 0, graphicsFailed = false;
 	const rootPath = `${lib.assetURL || ''}extension/HH优化/assets/card-effects/`;
 	const pixelBudget = 16 * 1024 * 1024;
 	const enabled = () => lib.config?.animation !== false && !graphicsFailed && !env.document?.hidden;
+	function cardKey(card) {
+		return card.cardid || card.cards?.map(item => item.cardid).filter(Boolean).sort().join(',') || card.name;
+	}
+	function usedCardAnchor(actor, card, event, cardNode) {
+		let record = event && eventAnchors.get(event);
+		if (!record) {
+			record = { node: cardNode, lastRect: null };
+			record.anchor = { getBoundingClientRect() {
+				const rect = record.node?.isConnected !== false && record.node?.getBoundingClientRect?.();
+				if (rect?.width > 0 && rect?.height > 0) record.lastRect = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+				if (record.lastRect) return record.lastRect;
+				const area = (ui.arena || ui.window || env.document.body).getBoundingClientRect();
+				const width = Math.min(130, area.width * .12), height = width * 1.4;
+				return { left: area.left + (area.width - width) / 2, top: area.top + (area.height - height) / 2, width, height };
+			} };
+			if (event) eventAnchors.set(event, record);
+		}
+		if (cardNode) record.node = cardNode;
+		if (actor && card.name === 'shunshou') {
+			let entries = actorAnchors.get(actor);
+			if (!entries) actorAnchors.set(actor, entries = new Map());
+			entries.set(cardKey(card), record);
+			while (entries.size > 16) entries.delete(entries.keys().next().value);
+		}
+		return record.anchor;
+	}
 	function initialize() {
 		if (renderer) return renderer;
 		root = env.document.createElement('div'); root.className = 'hh-source-card-effects'; root.setAttribute('aria-hidden', 'true');
@@ -117,21 +145,21 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 		for (const instance of [...active]) {
 			const elapsed = Math.max(0, (now - instance.start) / 1000);
 			if (elapsed >= instance.model.animation.duration || (!instance.screen && instance.anchor?.isConnected === false)) { finish(instance); continue; }
-			const placement = sourceCardPlacement(instance.model.metadata, canvas.getBoundingClientRect(), instance.anchor?.getBoundingClientRect?.(), instance.screen);
+			const placement = sourceCardPlacement(instance.model.metadata, canvas.getBoundingClientRect(), instance.anchor?.getBoundingClientRect?.(), instance.screen, instance);
 			if (!placement) { finish(instance); continue; }
 			try { renderer.draw(instance.model, elapsed, { ...placement, clear: first }); first = false; }
 			catch (error) { console.warn('[HH优化] 卡牌动画绘制失败', error); finish(instance); }
 		}
 		if (active.size && frame === undefined) frame = env.requestFrame(tick);
 	}
-	async function playAsset(id, anchor, { screen = false, token = generation } = {}) {
+	async function playAsset(id, anchor, { screen = false, token = generation, size = 1, centerOnAnchor = false } = {}) {
 		if (!enabled()) return false;
 		const base = await preload(id);
 		if (!base || token !== generation || !enabled() || (!screen && anchor?.isConnected === false)) return false;
 		// A pending concurrent load can outlive another request's cache eviction.
 		if (!Object.keys(base.textures).length) { renderer.upload(base); cache.set(id, base); }
 		const model = { ...base, skeleton: new base.spine.Skeleton(base.data) };
-		const instance = { model, base, anchor, screen, start: env.now() };
+		const instance = { model, base, anchor, screen, size, centerOnAnchor, start: env.now() };
 		active.add(instance);
 		while (active.size > 24) finish(active.values().next().value);
 		instance.timer = env.setTimer(() => finish(instance), model.animation.duration * 1000 + 150);
@@ -140,10 +168,11 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 		trim(); return true;
 	}
 	function stop() { generation++; for (const instance of [...active]) finish(instance); root?.remove(); }
-	function playCard(actor, card, { event, onFallback } = {}) {
-		// Delay tricks are claimed here without an animation. Their effect() hooks
-		// invoke playSkill only once the judgment actually takes effect.
-		if (delayedCards.has(card?.name)) return true;
+	function playCard(actor, card, { event, cardNode, onFallback } = {}) {
+		// Bind the displayed card before deduplication: tryCardAnimate can precede
+		// the clone hook, and the effect must follow the card once it is laid out.
+		const anchor = trickCards.has(card?.name) ? usedCardAnchor(actor, card, event, cardNode) : actor;
+		if (silentCastCards.has(card?.name)) return true;
 		const id = sourceCardEffect(card, get);
 		if (!id || !enabled() || failed.has(id)) return false;
 		const token = generation;
@@ -155,13 +184,9 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 			if (seen.has(key)) return true;
 			seen.add(key);
 		}
-		const targets = ownEvent && Array.isArray(event.targets) ? event.targets.filter(Boolean) : [];
 		const screen = screenCards.has(card.name) ? (card.name === 'huogong' ? 'center' : true) : false;
-		let anchors = [actor];
-		if (multiTargetCards.has(card.name)) anchors = targets.length ? [...new Set(targets)] : card.name === 'wanjian' ? (game.players || []).filter(player => player !== actor) : [actor];
-		else if (targetCards.has(card.name) && targets.length) anchors = [targets[0]];
-		const jobs = anchors.map(anchor => playAsset(id, anchor, { screen, token }));
-		Promise.all(jobs).then(results => { if (token === generation && !results.some(Boolean)) onFallback?.(); }).catch(error => { console.warn('[HH优化] 卡牌动画播放失败', error); if (token === generation) onFallback?.(); });
+		const size = card.name === 'huogong' ? .8 : card.name === 'juedou' ? 1.6 : 1;
+		playAsset(id, anchor, { screen, token, size, centerOnAnchor: trickCards.has(card.name) }).then(success => { if (token === generation && !success) onFallback?.(); }).catch(error => { console.warn('[HH优化] 卡牌动画播放失败', error); if (token === generation) onFallback?.(); });
 		return true;
 	}
 	function playSkill(actor, name, { onFallback } = {}) {
@@ -174,11 +199,18 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 	env.document?.addEventListener?.('visibilitychange', () => { if (env.document.hidden) stop(); });
 	return {
 		handles(card) {
-			const id = sourceCardEffect(typeof card === 'string' ? { name: card } : card, get);
+			if (typeof card === 'string') card = { name: card };
+			if (silentCastCards.has(card?.name)) return true;
+			const id = sourceCardEffect(card, get);
 			return !!id && enabled() && !failed.has(id);
 		},
 		wasPlayed: (event, card) => !!eventPlays.get(event)?.has(card.name + ':' + sourceShaNature(card, get)),
 		playAsset, playCard, playSkill, preload, stop,
+		playSteal(actor, card) {
+			const record = actorAnchors.get(actor)?.get(cardKey(card));
+			const anchor = record?.anchor || usedCardAnchor(actor, card);
+			return playAsset(sourceCardEffect({ name: 'shunshou' }, get), anchor).catch(() => false);
+		},
 		playHit(actor, nature) {
 			if (!sourceCardEffect({ name: 'sha', nature }, get)) return Promise.resolve(false);
 			return playAsset(sourceCardHits[sourceShaNature({ nature }, get)] || sourceCardHits.sha, actor).catch(() => false);
@@ -244,5 +276,22 @@ export function setupSourceCardAnimations(context) {
 	};
 	if (typeof game.finishSkill === 'function') game.finishSkill('_hh_source_card_equip');
 	else game.addGlobalSkill?.('_hh_source_card_equip');
+	const shownSteals = new WeakSet();
+	lib.skill._hh_source_card_steal = {
+		trigger: { global: 'gainAfter' }, silent: true, charlotte: true, forced: true,
+		filter(event) {
+			if (!event.cards?.length || shownSteals.has(event)) return false;
+			const take = event.getParent?.(), effect = take?.getParent?.();
+			return take?.name === 'gainPlayerCard' && take.player === event.player && effect?.name === 'shunshou' && effect.player === event.player;
+		},
+		content(event, trigger) {
+			if (shownSteals.has(trigger)) return;
+			shownSteals.add(trigger);
+			const effect = trigger.getParent().getParent();
+			game.broadcastAll((target, card) => { game.hhCardEffects?.playSteal(target, card); }, trigger.player, effect.card || { name: 'shunshou' });
+		},
+	};
+	if (typeof game.finishSkill === 'function') game.finishSkill('_hh_source_card_steal');
+	else game.addGlobalSkill?.('_hh_source_card_steal');
 	return player;
 }

@@ -131,18 +131,33 @@ test('normal/view-as clone hooks deduplicate the same event but preserve indepen
 	h.advance(4000); assert.equal(h.player.diagnostics.active, 0); assert.equal(h.parent.children.length, 0);
 });
 
-test('multi-target cards follow distinct targets; single-target tricks follow the target; global tricks use the screen', async () => {
-	const h = harness();
-	for (const [name, targets] of [['tiesuo', [h.actor, h.victim]], ['guohe', [h.victim]], ['nanman', [h.victim]]]) {
-		const card = { name }; h.player.playCard(h.actor, card, { event: { name: 'useCard', player: h.actor, card, targets } });
+test('non-delay tricks play once at the displayed used card, follow its layout and retain their individual sizes', async () => {
+	const h = harness(); setupSourceCardAnimations(h.context);
+	const names = ['wugu', 'taoyuan', 'nanman', 'wuzhong', 'juedou', 'jiedao', 'wuxie', 'huogong', 'tiesuo'];
+	const nodes = names.map((name, i) => ({ isConnected: true, rect: { left: 360 + i * 30, top: 280, width: 120, height: 168 }, getBoundingClientRect() { return this.rect; } }));
+	for (const [i, name] of names.entries()) {
+		const card = { name }, event = { name: 'useCard', player: h.actor, card, targets: [h.actor, h.victim] };
+		h.context._status.event = event;
+		h.context.lib.animate.card[name].call(h.actor, card);
+		assert.equal(h.player.playCard(h.actor, card, { event, cardNode: nodes[i] }), true);
+		assert.equal(h.player.playCard(h.actor, card, { event, cardNode: nodes[i] }), true);
 	}
-	await flush(); h.advance(100);
-	assert.equal(h.drawn.length, 4);
-	const trick = h.drawn.find(draw => draw.model.metadata.id === sourceCardEffect({ name: 'guohe' }));
-	const expected = sourceCardPlacement(trick.model.metadata, h.parent.rect, h.victim.rect);
-	assert.equal(trick.placement.x, expected.x);
-	const global = h.drawn.find(draw => draw.model.metadata.id === sourceCardEffect({ name: 'nanman' }));
-	assert.equal(global.placement.scale, sourceCardPlacement(global.model.metadata, h.parent.rect, null, true).scale);
+	await flush(); h.advance(100); assert.equal(h.player.diagnostics.active, names.length);
+	const check = () => {
+		for (const [i, name] of names.entries()) {
+			const draw = h.drawn.findLast(draw => draw.model.metadata.id === sourceCardEffect({ name }));
+			const [left, bottom, right, top] = draw.model.metadata.bounds;
+			assert.ok(Math.abs(draw.placement.x + (left + right) / 2 * draw.placement.scale - (nodes[i].rect.left + nodes[i].rect.width / 2)) < 1e-6, name);
+			assert.ok(Math.abs(draw.placement.y - (bottom + top) / 2 * draw.placement.scale - (nodes[i].rect.top + nodes[i].rect.height / 2)) < 1e-6, name);
+			if (name === 'huogong') assert.equal(draw.placement.scale, sourceCardPlacement(draw.model.metadata, h.parent.rect, null, 'center').scale * .8);
+			if (name === 'juedou') assert.equal(draw.placement.scale, sourceCardPlacement(draw.model.metadata, h.parent.rect, nodes[i].rect).scale * 1.6);
+		}
+	};
+	check();
+	for (const node of nodes) node.rect.left += 75;
+	h.actor.rect.left += 200; h.victim.rect.left -= 200; h.advance(50); check();
+	for (const node of nodes) node.isConnected = false;
+	h.advance(50); check();
 	h.player.stop(); assert.equal(h.frames.size, 0); assert.equal(h.timers.size, 0);
 });
 
@@ -220,6 +235,7 @@ test('the actual thrown-card hook routes view-as cards to the new player while p
 	const label = context.routeCard(card, actor, event, { animation: { cap: { playSpineTo: (...args) => legacy.push(args) } } });
 	assert.equal(label, '原有标签'); assert.equal(context._status.event, current);
 	assert.equal(plays.length, 1); assert.equal(plays[0][0], actor); assert.equal(plays[0][1], event.card); assert.equal(plays[0][2].event, event);
+	assert.equal(plays[0][2].cardNode, card);
 	assert.equal(legacy.length, 0);
 });
 
@@ -268,6 +284,74 @@ test('normal/fire/thunder Sha and Shan use the actual original clone effects wit
 	assert.equal(h.context.lib.skill._hh_source_card_hit.filter({ card: { name: 'sha', nature: 'ice' }, nature: 'fire' }), false);
 	assert.equal(await h.player.playHit(h.victim, 'ice'), true);
 	h.player.stop();
+});
+
+test('Guohe and Wanjian suppress both imported and legacy effects even when graphics or animations are disabled', async t => {
+	t.mock.method(console, 'warn', () => {});
+	const h = harness({ graphicsFail: true }), legacy = [];
+	for (const name of ['guohe', 'wanjian']) h.context.lib.animate.card[name] = () => legacy.push(name);
+	setupSourceCardAnimations(h.context);
+	Object.assign(h.context.lib.config, { cardtempname: 'off' });
+	Object.assign(h.context.get, { cardsetion: () => '', number: () => 7, suit: () => 'spade' });
+	const source = fs.readFileSync(new URL('../src/ui/card-utils.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
+	const context = vm.createContext(h.context);
+	vm.runInContext(source + '\nglobalThis.routeCard = handleDefaultTag;', context);
+	assert.equal(await h.player.playAsset(sourceCardNatures.ice, h.actor), false);
+	for (const animation of [true, false]) {
+		h.context.lib.config.animation = animation;
+		for (const name of ['guohe', 'wanjian']) {
+			const card = { name }, event = { name: 'useCard', player: h.actor, card };
+			assert.equal(h.player.handles(card), true);
+			h.context.lib.animate.card[name].call(h.actor, card);
+			context.routeCard({ name, dataset: { views: '1' } }, h.actor, event, { animation: { cap: { playSpineTo: (...args) => legacy.push(args) } } });
+		}
+	}
+	await flush(); assert.deepEqual(legacy, []); assert.equal(h.uploaded.length, 0); assert.equal(h.player.diagnostics.active, 0);
+});
+
+test('actual Shunshou content stays silent on cast and plays at its used card only after a direct successful gain', async () => {
+	const h = harness(); setupSourceCardAnimations(h.context);
+	const hook = h.context.lib.skill._hh_source_card_steal;
+	const card = { name: 'shunshou', cards: [{ cardid: 'used-shunshou' }] };
+	const event = { name: 'useCard', card, player: h.actor };
+	const node = { isConnected: true, getBoundingClientRect: () => ({ left: 540, top: 270, width: 120, height: 168 }) };
+	h.player.playCard(h.actor, card, { event, cardNode: node });
+	await flush(); assert.equal(h.player.diagnostics.active, 0); assert.equal(h.uploaded.length, 0);
+	const pack = ts.createSourceFile('standard.js', fs.readFileSync(new URL('../../../card/standard.js', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+	const definition = pack.statements.find(ts.isExportAssignment).expression;
+	const cards = definition.properties.find(prop => prop.name?.getText(pack) === 'card').initializer;
+	const shunshou = cards.properties.find(prop => prop.name.getText(pack) === 'shunshou').initializer;
+	const content = shunshou.properties.find(prop => prop.name.getText(pack) === 'content').getText(pack).replace(/^async\s+content\s*\(/, 'async function(');
+	h.context.get.is = { single: () => false };
+	h.context.lib.card = { shunshou: { ai: { button: () => 0 } } };
+	const effect = { name: 'shunshou', card, player: h.actor, target: h.victim };
+	const take = { name: 'gainPlayerCard', player: h.actor, target: h.victim, getParent: () => effect };
+	const gained = { name: 'gain', player: h.actor, cards: [{ cardid: 'gained' }], getParent: () => take };
+	let attempts = 0;
+	h.victim.countGainableCards = () => 1;
+	h.actor.gainPlayerCard = (position, target, forced) => {
+		assert.equal(position, 'hej'); assert.equal(target, h.victim); assert.equal(forced, true); attempts++;
+		return { set() { return this; }, then(resolve, reject) {
+			Promise.resolve().then(() => { if (hook.filter(gained)) hook.content({}, gained); resolve(); }).catch(reject);
+		} };
+	};
+	const context = vm.createContext(h.context);
+	vm.runInContext('globalThis.useShunshou = (' + content + ');', context);
+	const resolution = context.useShunshou(effect, null, h.actor);
+	assert.equal(h.player.diagnostics.active, 0, 'Selecting the card does not animate yet');
+	await resolution; await flush(); h.advance(40);
+	assert.equal(attempts, 1); assert.equal(h.player.diagnostics.active, 1);
+	const draw = h.drawn.at(-1), expected = sourceCardPlacement(draw.model.metadata, h.parent.rect, node.getBoundingClientRect());
+	assert.equal(draw.model.metadata.id, sourceCardEffect(card)); assert.equal(draw.placement.x, expected.x); assert.equal(draw.placement.y, expected.y);
+	assert.equal(hook.filter(gained), false); hook.content({}, gained); await flush(); assert.equal(h.player.diagnostics.active, 1);
+	assert.equal(hook.filter({ ...gained, cards: [] }), false);
+	assert.equal(hook.filter({ ...gained, getParent: () => ({ ...take, getParent: () => ({ ...effect, name: 'guohe' }) }) }), false);
+	assert.equal(hook.filter({ ...gained, getParent: () => ({ name: 'draw', getParent: () => effect }) }), false);
+	assert.equal(hook.filter({ ...gained, player: h.victim }), false);
+	h.player.stop();
+	h.victim.countGainableCards = () => 0;
+	await context.useShunshou(effect, null, h.actor); await flush();
+	assert.equal(attempts, 1); assert.equal(h.player.diagnostics.active, 0, 'No obtainable card means no effect');
 });
 
 function judgmentHarness(h, changban = false) {
@@ -319,7 +403,7 @@ test('Changban supply-shortage judgment plays its effect while retaining its ori
 	h.player.stop();
 });
 
-test('fire attack occupies the center of the screen, independent of caster/target positions and viewport size', async () => {
+test('fire attack falls back to the arena center when no used-card node is available and adapts to resizing', async () => {
 	const h = harness(), card = { name: 'huogong' };
 	h.player.playCard(h.actor, card, { event: { name: 'useCard', player: h.actor, card, targets: [h.victim] } });
 	await flush(); h.advance(50);
@@ -327,12 +411,13 @@ test('fire attack occupies the center of the screen, independent of caster/targe
 		const draw = h.drawn.at(-1), [left, bottom, right, top] = draw.model.metadata.bounds;
 		assert.ok(Math.abs(draw.placement.x + (left + right) / 2 * draw.placement.scale - rect.width / 2) < 1e-6);
 		assert.ok(Math.abs(draw.placement.y - (bottom + top) / 2 * draw.placement.scale - rect.height / 2) < 1e-6);
-		assert.ok((right - left) * draw.placement.scale <= rect.width * .64 + 1e-6);
-		assert.ok((top - bottom) * draw.placement.scale <= rect.height * .66 + 1e-6);
+		assert.ok((right - left) * draw.placement.scale <= rect.width * .64 * .8 + 1e-6);
+		assert.ok((top - bottom) * draw.placement.scale <= rect.height * .66 * .8 + 1e-6);
 	};
 	check(h.parent.rect);
 	h.actor.rect.left = 700; h.victim.rect.left = 20; h.advance(50); check(h.parent.rect);
 	const resized = { left: 0, top: 0, width: 800, height: 450 };
+	h.parent.rect = resized;
 	h.parent.children[0].children[0].rect = resized;
 	h.advance(50); check(resized); h.player.stop();
 });
