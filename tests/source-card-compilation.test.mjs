@@ -137,9 +137,16 @@ test('blind-target public skill observations retain state through the actual Asy
 	const h = engineHarness();
 	h.lib.config.mode = 'identity'; h.game.zhu = h.actor; h.game.players = [h.actor, h.target];
 	h.actor.isZhu = h.actor.identityShown = true; h.actor.isIn = h.target.isIn = () => true;
-	Object.assign(h.get, { threaten: () => 1, distance: () => 1, result: () => ({ target: 1 }), info: () => ({ ai: {} }) });
+	Object.assign(h.get, { threaten: () => 1, distance: () => 1, result: item => ({ target: item?.name === 'hit' ? -1 : 1 }), info: () => ({ ai: {} }) });
 	const controller = setupLordBlindShot(h);
 	const compiled = await h.run('_hh_lord_blind_shot', { name: 'useSkill', player: h.target, skill: 'rescue_skill', targets: [h.actor] });
 	assert.equal(compiled.type, 'async'); assert.equal(controller.attitude(h.actor, h.target), 4);
-	assert.equal(controller.state.target, null); assert.equal(controller.state.ended, false);
+	assert.equal(controller.state.target, null); assert.equal(controller.state.paused, false);
+	const enemy = { isIn: () => true }, unknown = { isIn: () => true };
+	h.game.players.push(enemy, unknown);
+	await h.run('_hh_lord_blind_shot', { name: 'useCard', player: enemy, card: { name: 'hit' }, targets: [h.actor] });
+	assert.equal(controller.state.paused, true); assert.equal(controller.state.target, null);
+	enemy.isIn = () => false;
+	await h.run('_hh_lord_blind_shot', { name: 'die', player: enemy });
+	assert.equal(controller.state.paused, false); assert.equal(controller.state.target, unknown);
 });

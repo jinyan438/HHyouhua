@@ -2473,7 +2473,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_lord_blind_shot: {
 				name: "开局AI主公盲狙",
 				init: true,
-				intro: "离线身份局中，AI主公按仇恨值和距离锁定盲狙目标，卡牌与技能共同生效；目标表现偏忠后重选，出现明确偏反的角色后结束盲狙，恢复原有AI判断"
+				intro: "离线身份局中，AI主公按仇恨90%、距离10%锁定盲狙目标，卡牌与技能共同生效；目标偏忠后重选，有存活明反时优先打明反，明反死光后重新盲狙"
 			},
 			ai_think_delay_separator: {
 				name: '<span style="color:#ffcc00;">━━━ AI模拟真人思考 ━━━</span>',

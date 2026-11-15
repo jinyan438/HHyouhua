@@ -12,7 +12,7 @@ export function setupLordBlindShot({ lib, game, get, _status }) {
 	};
 	function reset() { state = undefined; seen = new WeakSet(); scored = new WeakSet(); }
 	function ensureState(lord) {
-		if (state?.lord !== lord) state = { lord, target: null, ended: false, reason: null, evidence: new Map() };
+		if (state?.lord !== lord) state = { lord, target: null, paused: false, reason: null, evidence: new Map() };
 		return state;
 	}
 	function tendency(player) {
@@ -28,12 +28,13 @@ export function setupLordBlindShot({ lib, game, get, _status }) {
 		const lord = aiLord();
 		if (!lord) return null;
 		const current = ensureState(lord);
-		if (current.ended || evaluating) return current;
+		if (evaluating) return current;
 		evaluating = true;
 		try {
-			for (const player of new Set([...game.players, ...(game.dead || [])])) {
-				if (player !== lord && tendency(player) < 0) {
-					current.ended = true; current.reason = 'rebel-exposed'; current.target = null; return current;
+			current.paused = false; current.reason = null;
+			for (const player of game.players) {
+				if (player !== lord && inGame(player) && tendency(player) < 0) {
+					current.paused = true; current.reason = 'living-rebel-exposed'; current.target = null; return current;
 				}
 			}
 			const candidate = player => player !== lord && inGame(player) && !player.identityShown && tendency(player) === 0;
@@ -50,7 +51,7 @@ export function setupLordBlindShot({ lib, game, get, _status }) {
 				if (!Number.isFinite(threat)) threat = 1;
 				if (!Number.isFinite(distance)) continue;
 				threat = Math.max(0, threat); distance = Math.max(1, distance);
-				const weight = .65 * threat / (1 + threat) + .35 / distance;
+				const weight = .9 * threat + .1 / distance;
 				if (weight > best) { best = weight; current.target = player; }
 			}
 			return current;
@@ -59,7 +60,8 @@ export function setupLordBlindShot({ lib, game, get, _status }) {
 	function attitude(from, to) {
 		if (!from || !to || evaluating || lib.config[option] === false || from !== game.zhu || from === to) return;
 		const current = sync();
-		if (!current || current.ended) return;
+		if (!current) return;
+		if (current.paused && inGame(to) && tendency(to) < 0) return -5;
 		if (current.target === to) return -5;
 		if (tendency(to) > 0) return 4;
 	}
@@ -71,7 +73,7 @@ export function setupLordBlindShot({ lib, game, get, _status }) {
 	function observe(event) {
 		if (!event || !supported()) return;
 		const current = sync();
-		if (!current || current.ended || seen.has(event)) return;
+		if (!current || seen.has(event)) return;
 		seen.add(event);
 		if (event.getParent?.('jiedao')?.name === 'jiedao') return;
 		if (event.name === 'damage' || event.name === 'recover') {

@@ -35,7 +35,7 @@ function fixture() {
 
 test('threat and distance jointly choose the highest weight, without reading hidden identities', () => {
 	const h = fixture(), [, near, high, far] = h.players;
-	high.threat = 5; high.distance = 2; far.threat = 12; far.distance = 4;
+	high.threat = 2; high.distance = 2; far.threat = 1.5; far.distance = 4;
 	for (const player of h.players.slice(1)) Object.defineProperty(player, 'identity', { get() { throw new Error('hidden role must not be inspected'); } });
 	assert.equal(h.controller.sync().target, high);
 	h.controller.reset(); high.threat = 1;
@@ -44,12 +44,19 @@ test('threat and distance jointly choose the highest weight, without reading hid
 	assert.equal(h.controller.sync().target, near);
 });
 
+test('a moderately higher threat farther away beats both adjacent seats', () => {
+	const h = fixture(), far = h.players[2];
+	h.players[1].distance = h.players[4].distance = 1;
+	far.threat = 1.15; far.distance = 4;
+	assert.equal(h.controller.sync().target, far);
+});
+
 test('the selected opponent stays locked while scores change; self-help and attacks on unknown players reveal no side', () => {
 	const h = fixture(), selected = h.controller.sync().target;
 	h.players[2].threat = 100;
 	h.controller.observe(h.action(selected, [selected], 'help'));
 	h.controller.observe(h.action(selected, [h.players[3]]));
-	assert.equal(h.controller.sync().target, selected); assert.equal(h.controller.state.ended, false);
+	assert.equal(h.controller.sync().target, selected); assert.equal(h.controller.state.paused, false);
 });
 
 test('helping the lord identifies a loyal tendency, changes target and prevents selecting that ally again', () => {
@@ -60,32 +67,62 @@ test('helping the lord identifies a loyal tendency, changes target and prevents 
 	assert.notEqual(h.controller.sync().target, loyal);
 });
 
-test('an attack on the lord by any player ends blind targeting permanently, including after that enemy dies', () => {
+test('a living exposed rebel pauses blind targeting, and death resumes it against an unknown survivor', () => {
 	const h = fixture(); h.controller.sync();
 	const actor = h.players[3]; h.controller.observe(h.action(actor, [h.lord]));
-	assert.equal(h.controller.state.ended, true); assert.equal(h.controller.state.target, null);
-	actor.dead = true; assert.equal(h.controller.attitude(h.lord, h.players[1]), undefined);
-	assert.equal(h.controller.sync().reason, 'rebel-exposed');
+	assert.equal(h.controller.state.paused, true); assert.equal(h.controller.state.target, null);
+	assert.equal(h.controller.attitude(h.lord, actor), -5);
+	assert.equal(h.controller.sync().reason, 'living-rebel-exposed');
+	actor.dead = true;
+	assert.equal(h.controller.attitude(h.lord, h.players[1]), -5);
+	assert.equal(h.controller.sync().paused, false); assert.equal(h.controller.state.reason, null);
 });
 
 test('targeted harmful skills and attacks on an established ally reveal a rebel tendency', () => {
 	let h = fixture(); h.controller.observe(h.action(h.players[1], [h.lord], 'hit_skill', true));
-	assert.equal(h.controller.state.ended, true);
+	assert.equal(h.controller.state.paused, true);
 	h = fixture(); h.controller.observe(h.action(h.players[1], [h.lord], 'help'));
-	h.controller.observe(h.action(h.players[2], [h.players[1]])); assert.equal(h.controller.state.ended, true);
+	h.controller.observe(h.action(h.players[2], [h.players[1]])); assert.equal(h.controller.state.paused, true);
 });
 
-test('publicly shown loyal identities are excluded; a publicly shown rebel ends the mechanism', () => {
+test('publicly shown loyal identities are excluded; a living publicly shown rebel pauses blind targeting', () => {
 	const h = fixture(); h.players[1].identityShown = true; h.players[1].identity = 'zhong';
 	assert.notEqual(h.controller.sync().target, h.players[1]);
-	h.players[3].identityShown = true; assert.equal(h.controller.sync().ended, true);
+	h.players[3].identityShown = true; assert.equal(h.controller.sync().paused, true);
 });
 
-test('a killed opponent revealed as a rebel also permanently ends blind targeting', () => {
+test('killing and revealing a blind target as a rebel continues blind targeting of unknown survivors', () => {
 	const h = fixture(), target = h.controller.sync().target;
 	target.dead = true; target.identityShown = true;
 	h.game.players = h.players.filter(player => player !== target); h.game.dead = [target];
-	assert.equal(h.controller.sync().ended, true); assert.equal(h.controller.state.target, null);
+	assert.equal(h.controller.sync().paused, false); assert.notEqual(h.controller.state.target, target);
+	assert.ok(h.controller.state.target?.isIn());
+});
+
+test('all living exposed rebels must be removed before blind targeting resumes', () => {
+	const h = fixture(), first = h.players[1], second = h.players[2];
+	first.identityShown = second.identityShown = true;
+	assert.equal(h.controller.sync().paused, true);
+	first.dead = true; assert.equal(h.controller.sync().paused, true); assert.equal(h.controller.state.target, null);
+	second.dead = true; assert.equal(h.controller.sync().paused, false); assert.ok(h.controller.state.target);
+});
+
+test('evidence is still collected while paused, preserving new enemies and allies when choosing again', () => {
+	const h = fixture(), first = h.players[1], loyal = h.players[2], second = h.players[3];
+	h.controller.observe(h.action(first, [h.lord]));
+	h.controller.observe(h.action(loyal, [h.lord], 'help'));
+	h.controller.observe(h.action(second, [h.lord]));
+	first.dead = true; assert.equal(h.controller.sync().paused, true);
+	second.dead = true; assert.equal(h.controller.sync().paused, false);
+	assert.equal(h.controller.state.target, h.players[4]);
+	assert.equal(h.controller.attitude(h.lord, loyal), 4);
+});
+
+test('an exposed rebel leaving and returning to play dynamically resumes and pauses blind targeting', () => {
+	const h = fixture(), actor = h.players[2]; h.controller.observe(h.action(actor, [h.lord]));
+	assert.equal(h.controller.state.paused, true);
+	actor.out = true; assert.equal(h.controller.sync().paused, false); assert.ok(h.controller.state.target);
+	actor.out = false; assert.equal(h.controller.sync().paused, true); assert.equal(h.controller.state.target, null);
 });
 
 test('dead, out, removed and unreachable candidates are excluded and an invalid target is replaced', () => {
@@ -127,25 +164,25 @@ test('forced attacks, hidden targets and chain splash do not supply voluntary id
 	h.controller.observe(h.action(h.players[1], [h.lord], 'hit', false, { getParent: () => ({ name: 'jiedao' }) }));
 	h.controller.observe(h.action(h.players[1], [h.lord], 'hit', false, { hideTargets: true }));
 	h.controller.observe({ name: 'damage', player: h.lord, source: h.players[2], num: 1, notLink: () => false });
-	assert.equal(h.controller.state.ended, false);
+	assert.equal(h.controller.state.paused, false);
 });
 
 test('multi-target evidence is weighted, repeated events and resulting damage are not counted twice', () => {
 	const h = fixture(), actor = h.players[1];
 	const action = h.action(actor, h.players.filter(player => player !== actor));
 	h.controller.observe(action); h.controller.observe(action);
-	assert.equal(h.controller.state.evidence.get(actor), -.5); assert.equal(h.controller.state.ended, false);
+	assert.equal(h.controller.state.evidence.get(actor), -.5); assert.equal(h.controller.state.paused, false);
 	h.controller.observe({ name: 'damage', player: h.lord, source: actor, num: 1, getParent: () => action });
 	assert.equal(h.controller.state.evidence.get(actor), -.5);
-	h.controller.observe(h.action(actor, [h.lord])); assert.equal(h.controller.state.ended, true);
+	h.controller.observe(h.action(actor, [h.lord])); assert.equal(h.controller.state.paused, true);
 });
 
 test('unclassified direct damage/recovery provide evidence, while zero changes do not', () => {
 	let h = fixture(); h.controller.observe({ name: 'recover', player: h.lord, source: h.players[1], num: 1 });
 	assert.equal(h.controller.attitude(h.lord, h.players[1]), 4);
 	h = fixture(); h.controller.observe({ name: 'damage', player: h.lord, source: h.players[2], num: 0 });
-	assert.equal(h.controller.state.ended, false);
-	h.controller.observe({ name: 'damage', player: h.lord, source: h.players[2], num: 1 }); assert.equal(h.controller.state.ended, true);
+	assert.equal(h.controller.state.paused, false);
+	h.controller.observe({ name: 'damage', player: h.lord, source: h.players[2], num: 1 }); assert.equal(h.controller.state.paused, true);
 });
 
 test('a healing skill and its actual recovery count as one public action', () => {
@@ -155,7 +192,7 @@ test('a healing skill and its actual recovery count as one public action', () =>
 	h.controller.observe(skill);
 	h.controller.observe({ name: 'recover', player: h.lord, source: actor, num: 1, getParent: name => name === 'useSkill' ? skill : null });
 	assert.equal(h.controller.state.evidence.get(actor), 1);
-	h.controller.observe(h.action(actor, [h.lord])); assert.equal(h.controller.state.ended, true);
+	h.controller.observe(h.action(actor, [h.lord])); assert.equal(h.controller.state.paused, true);
 });
 
 test('setup is idempotent, preserves existing attitude hooks and cleans game state on game over', () => {
@@ -209,7 +246,7 @@ function nativeAI(h) {
 	function choose(item, legal = h.players.slice(1)) {
 		ui.selected.targets.length = 0;
 		Object.assign(h._status.event, { filterTarget: () => true, selectTarget: 1 });
-		h.get.selectableTargets = () => legal.filter(player => !ui.selected.targets.includes(player));
+		h.get.selectableTargets = () => legal.filter(player => player.isIn() && !ui.selected.targets.includes(player));
 		return basic.chooseTarget(target => h.get.effect_use(target, item, h.lord));
 	}
 	return { ui, basic, choose };
@@ -234,4 +271,19 @@ test('native active-skill selection and target evaluation use the same blind tar
 	assert.equal(h._status.event.skill, 'qiangxi'); assert.equal(native.choose('qiangxi'), true);
 	assert.equal(native.ui.selected.targets[0], h.controller.state.target);
 	h.lord.hp = 1; assert.equal(native.choose('qiangxi'), false, 'Blind targeting must not force a suicidal skill');
+});
+
+test('native card and skill AI prioritize the living exposed rebel, then attack the next blind target after death', () => {
+	const h = fixture(), native = nativeAI(h), actor = h.players[3];
+	assert.equal(native.choose({ name: 'sha' }), true);
+	h.controller.observe(h.action(actor, [h.lord]));
+	for (const item of [{ name: 'sha' }, 'qiangxi']) {
+		assert.equal(native.choose(item), true); assert.equal(native.ui.selected.targets[0], actor);
+	}
+	actor.dead = true;
+	h.players[2].threat = 1.15; h.players[2].distance = 4;
+	for (const item of [{ name: 'sha' }, 'qiangxi']) {
+		assert.equal(native.choose(item), true); assert.equal(native.ui.selected.targets[0], h.players[2]);
+	}
+	assert.equal(h.controller.state.paused, false);
 });
