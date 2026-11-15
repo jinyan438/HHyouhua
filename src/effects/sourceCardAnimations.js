@@ -284,7 +284,8 @@ export function setupSourceCardAnimations(context) {
 			const take = event.getParent?.(), effect = take?.getParent?.();
 			return take?.name === 'gainPlayerCard' && take.player === event.player && effect?.name === 'shunshou' && effect.player === event.player;
 		},
-		content(event, trigger) {
+		// Keep async: StepCompiler reconstructs sync content and loses this closure.
+		async content(event, trigger) {
 			if (shownSteals.has(trigger)) return;
 			shownSteals.add(trigger);
 			const effect = trigger.getParent().getParent();

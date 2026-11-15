@@ -332,7 +332,7 @@ test('actual Shunshou content stays silent on cast and plays at its used card on
 	h.actor.gainPlayerCard = (position, target, forced) => {
 		assert.equal(position, 'hej'); assert.equal(target, h.victim); assert.equal(forced, true); attempts++;
 		return { set() { return this; }, then(resolve, reject) {
-			Promise.resolve().then(() => { if (hook.filter(gained)) hook.content({}, gained); resolve(); }).catch(reject);
+			Promise.resolve().then(async () => { if (hook.filter(gained)) await hook.content({}, gained); resolve(); }).catch(reject);
 		} };
 	};
 	const context = vm.createContext(h.context);
@@ -343,7 +343,7 @@ test('actual Shunshou content stays silent on cast and plays at its used card on
 	assert.equal(attempts, 1); assert.equal(h.player.diagnostics.active, 1);
 	const draw = h.drawn.at(-1), expected = sourceCardPlacement(draw.model.metadata, h.parent.rect, node.getBoundingClientRect());
 	assert.equal(draw.model.metadata.id, sourceCardEffect(card)); assert.equal(draw.placement.x, expected.x); assert.equal(draw.placement.y, expected.y);
-	assert.equal(hook.filter(gained), false); hook.content({}, gained); await flush(); assert.equal(h.player.diagnostics.active, 1);
+	assert.equal(hook.filter(gained), false); await hook.content({}, gained); await flush(); assert.equal(h.player.diagnostics.active, 1);
 	assert.equal(hook.filter({ ...gained, cards: [] }), false);
 	assert.equal(hook.filter({ ...gained, getParent: () => ({ ...take, getParent: () => ({ ...effect, name: 'guohe' }) }) }), false);
 	assert.equal(hook.filter({ ...gained, getParent: () => ({ name: 'draw', getParent: () => effect }) }), false);
