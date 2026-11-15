@@ -3654,7 +3654,7 @@
 		"ui/styles/skill/xinsha.css": "7eb77661ee1e95c0ba13ef395dde6925abcaa115",
 		"ui/utils.js": "3102e60e150195ab0209799a5db4134a27cce03a",
 		"updater-core.js": "d04c680a6a9d6b8face65bae45a487a3d98ddd51",
-		"updater-fs.js": "2958783ba9e52b6de9960e03ec66dfbb237fc78c",
+		"updater-fs.js": "21fbc04c2add3eacff3131b46b98ac83f7cf439a",
 		"updater.css": "daf1ffe6ff0fdfeeb5eb11e4c59c69a72b9c186b",
 		"updater.js": "d9444dcfdecb4196da513a33a8fdc6ef23bb7f20"
 	}

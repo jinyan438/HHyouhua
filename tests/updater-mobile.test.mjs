@@ -179,6 +179,21 @@ test('非 Cordova 客户端：直接包装回调，兼容 writeend 成功事件�
 	for (const path of ['../outside', '/outside', 'C:/outside', 'a\\b', '']) await assert.rejects(fs.write(path, 'x'), /无效.*路径/);
 });
 
+test('APK内置资源更新写入可写覆盖层，不尝试删除只读的内置文件', async () => {
+	const asset = bytes('original built-in source'), overlay = new Map();
+	const game = {
+		checkFile: (name, success) => success(name === root + 'extension.js' || overlay.has(name) ? 1 : -1),
+		checkDir: (name, success) => success(-1),
+		readFile: (name, success) => success(overlay.get(name) || asset),
+		writeFile(data, dir, name, callback) { overlay.set(dir + '/' + name, new Uint8Array(data)); callback(); },
+		removeFile(name, callback) { callback(Error('内置资源只读')); }, removeDir() {},
+	};
+	const fs = createGameFileSystem(game, {});
+	await fs.write('extension.js', 'new');
+	assert.equal(text(await fs.read('extension.js')), 'new');
+	assert.equal(text(asset), 'original built-in source');
+});
+
 test('旧事务恢复失败不会再向扩展启动抛异常，错误内容不再是 undefined', async () => {
 	const h = androidFS({ 'extension.js': 'unchanged', '.hh-update/transaction.json': JSON.stringify({
 		phase: 'prepared', hadState: false, changes: [{ path: 'extension.js', existed: true }],

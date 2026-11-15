@@ -31,8 +31,7 @@ export function createGameFileSystem(game, environment = globalThis) {
 		read: value => operation('读取文件', value, async () => bytesOf(await call('readFile', path(value)))),
 		write: (value, data) => operation('写入文件', value, async () => {
 			const target = path(value), split = target.lastIndexOf('/');
-			// 部分旧接口只覆盖前缀；先移除旧文件，防止较短的新文件残留旧尾部。
-			if (await call('checkFile', target) === 1) await removeFile(target);
+			// 统一文件接口会替换内容；APK内置资源通过可写覆盖层更新，不能先删除。
 			const buffer = bytesOf(data).slice().buffer;
 			await new Promise((resolve, reject) => game.writeFile(buffer, target.slice(0, split), target.slice(split + 1), result => {
 				if (!result || (['write', 'writeend'].includes(result.type) && !result.target?.error)) resolve();
