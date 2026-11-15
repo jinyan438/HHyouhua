@@ -90,14 +90,27 @@ test('Shunshou gainAfter survives the actual engine compiler pipeline and dedupl
 	assert.equal(hook.filter({ ...gain, getParent: () => ({ name: 'draw' }) }), false);
 });
 
-test('other imported-card trigger contents also run through the actual isolated StepCompiler', async () => {
+test('hit and equip triggers use the actual engine compilers without losing their required state', async () => {
 	const h = engineHarness();
 	const hit = await h.run('_hh_source_card_hit', { card: { name: 'sha', nature: 'ice' }, player: h.target });
 	const card = { name: 'chitu' };
 	const equip = await h.run('_hh_source_card_equip', { card, player: h.actor, getParent: () => null });
-	assert.equal(hit.type, 'step'); assert.equal(equip.type, 'step');
+	assert.equal(hit.type, 'step'); assert.equal(equip.type, 'async');
 	assert.deepEqual(h.calls, [['hit', h.target, 'ice'], ['equip', h.actor, card]]);
 	h.game.hhCardEffects.wasPlayed = () => true;
 	await h.run('_hh_source_card_equip', { card, player: h.actor, getParent: () => ({ name: 'useCard' }) });
 	assert.equal(h.calls.length, 2);
+});
+
+test('compiled equipAfter emits one equipment sound even when the use animation was already played', async () => {
+	const h = engineHarness(), sounds = [];
+	h.game.hhCardAudio = { playEquip: card => sounds.push(card) };
+	h.game.hhCardEffects.wasPlayed = () => true;
+	const event = { card: { name: 'bagua' }, player: h.actor, getParent: () => ({ name: 'useCard' }) };
+	const hook = h.lib.skill._hh_source_card_equip;
+	assert.equal(hook.filter(event), true);
+	await h.run('_hh_source_card_equip', event);
+	assert.equal(hook.filter(event), false);
+	await h.run('_hh_source_card_equip', event);
+	assert.deepEqual(sounds, [event.card]); assert.equal(h.calls.length, 0);
 });

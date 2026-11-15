@@ -150,7 +150,7 @@ test('non-delay tricks play once at the displayed used card, follow its layout a
 			assert.ok(Math.abs(draw.placement.x + (left + right) / 2 * draw.placement.scale - (nodes[i].rect.left + nodes[i].rect.width / 2)) < 1e-6, name);
 			assert.ok(Math.abs(draw.placement.y - (bottom + top) / 2 * draw.placement.scale - (nodes[i].rect.top + nodes[i].rect.height / 2)) < 1e-6, name);
 			if (name === 'huogong') assert.equal(draw.placement.scale, sourceCardPlacement(draw.model.metadata, h.parent.rect, null, 'center').scale * .8);
-			if (name === 'juedou') assert.equal(draw.placement.scale, sourceCardPlacement(draw.model.metadata, h.parent.rect, nodes[i].rect).scale * 1.6);
+			if (name === 'juedou' || name === 'wuxie') assert.equal(draw.placement.scale, sourceCardPlacement(draw.model.metadata, h.parent.rect, nodes[i].rect).scale * 1.6);
 		}
 	};
 	check();
@@ -212,9 +212,9 @@ test('direct equips get the new animation; the equipAfter hook does not replay a
 	h.player.playCard(h.actor, card, { event }); await flush();
 	const hook = h.context.lib.skill._hh_source_card_equip;
 	assert.equal(hook.filter({ card }), true); assert.equal(hook.filter({ card: { name: 'sha' } }), false);
-	hook.content({}, { card, player: h.actor, getParent: () => event }); await flush();
+	await hook.content({}, { card, player: h.actor, getParent: () => event }); await flush();
 	assert.equal(h.player.diagnostics.active, 1);
-	hook.content({}, { card: { name: 'dilu' }, player: h.victim, getParent: () => null }); await flush();
+	await hook.content({}, { card: { name: 'dilu' }, player: h.victim, getParent: () => null }); await flush();
 	assert.equal(h.player.diagnostics.active, 2);
 	h.context.lib.skill._hh_source_card_hit.content({}, { card: { name: 'sha' }, player: h.victim, nature: 'ice' }); await flush();
 	assert.equal(h.player.diagnostics.active, 3);

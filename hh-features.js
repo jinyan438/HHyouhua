@@ -1,4 +1,5 @@
 import { createKillComboPlayer } from './src/effects/killCombo.js';
+import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
 	const HH_finishSkill = function(skill) {
@@ -1542,6 +1543,8 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				}
 			}
 
+			setupSourceCardAudio({ lib, game, get, _status }, config);
+
 			// ========== 装备牌移动优化 ==========
 			// 装备牌直接移动到武将牌上，而不是先移动到页面中央
 			// 核心思路：在装备牌被抛出时，设置 fixed=true 阻止 layoutDiscard 将其移动到中央
@@ -2272,7 +2275,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_audio_replace: {
 				name: "启用音频替换",
 				init: false,
-				intro: "开启后，优先使用扩展目录下的音频文件替换游戏原音效"
+				intro: "替换顺手牵羊顺走牌时及装备入槽时的音效，并保留原有受伤等音效替换"
 			},
 			enable_equip_move_optimize: {
 				name: "装备牌移动优化",

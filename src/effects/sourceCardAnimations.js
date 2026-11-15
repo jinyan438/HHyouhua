@@ -185,7 +185,7 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 			seen.add(key);
 		}
 		const screen = screenCards.has(card.name) ? (card.name === 'huogong' ? 'center' : true) : false;
-		const size = card.name === 'huogong' ? .8 : card.name === 'juedou' ? 1.6 : 1;
+		const size = card.name === 'huogong' ? .8 : (card.name === 'juedou' || card.name === 'wuxie') ? 1.6 : 1;
 		playAsset(id, anchor, { screen, token, size, centerOnAnchor: trickCards.has(card.name) }).then(success => { if (token === generation && !success) onFallback?.(); }).catch(error => { console.warn('[HH优化] 卡牌动画播放失败', error); if (token === generation) onFallback?.(); });
 		return true;
 	}
@@ -207,6 +207,7 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 		wasPlayed: (event, card) => !!eventPlays.get(event)?.has(card.name + ':' + sourceShaNature(card, get)),
 		playAsset, playCard, playSkill, preload, stop,
 		playSteal(actor, card) {
+			game.hhCardAudio?.playSteal(actor, card);
 			const record = actorAnchors.get(actor)?.get(cardKey(card));
 			const anchor = record?.anchor || usedCardAnchor(actor, card);
 			return playAsset(sourceCardEffect({ name: 'shunshou' }, get), anchor).catch(() => false);
@@ -265,13 +266,19 @@ export function setupSourceCardAnimations(context) {
 	};
 	if (typeof game.finishSkill === 'function') game.finishSkill('_hh_source_card_hit');
 	else game.addGlobalSkill?.('_hh_source_card_hit');
+	const shownEquips = new WeakSet();
 	lib.skill._hh_source_card_equip = {
 		trigger: { global: 'equipAfter' }, silent: true, charlotte: true, forced: true,
-		filter(event) { return equipmentCards.has(event.card?.name) && player.handles(event.card.name); },
-		content(event, trigger) {
+		filter(event) { return !!event.card && !shownEquips.has(event) && (equipmentCards.has(event.card.name) || get.type?.(event.card) === 'equip'); },
+		async content(event, trigger) {
+			if (shownEquips.has(trigger)) return;
+			shownEquips.add(trigger);
 			const parent = trigger.getParent?.('useCard');
-			if (parent && game.hhCardEffects.wasPlayed(parent, trigger.card)) return;
-			game.broadcastAll((target, card) => { game.hhCardEffects?.playCard(target, card); }, trigger.player, trigger.card);
+			const animate = equipmentCards.has(trigger.card.name) && !(parent && game.hhCardEffects.wasPlayed(parent, trigger.card));
+			game.broadcastAll((target, card, animate) => {
+				game.hhCardAudio?.playEquip(card);
+				if (animate) game.hhCardEffects?.playCard(target, card);
+			}, trigger.player, trigger.card, animate);
 		},
 	};
 	if (typeof game.finishSkill === 'function') game.finishSkill('_hh_source_card_equip');
