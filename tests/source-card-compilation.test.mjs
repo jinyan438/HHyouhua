@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import { setupSourceCardAnimations } from '../src/effects/sourceCardAnimations.js';
 import { setupRescueFlow } from '../src/features/rescueFlow.js';
+import { setupLordBlindShot } from '../src/features/lordBlindShot.js';
 
 function engineHarness() {
 	const calls = [];
@@ -130,4 +131,15 @@ test('sequential rescue runs through the actual AsyncCompiler and preserves its 
 	h.lib.skill._hh_test_rescue = { content: h.lib.element.content._save };
 	const compiled = await h.run('_hh_test_rescue', { player: dying });
 	assert.equal(compiled.type, 'async'); assert.deepEqual(turns, [['dying', dying], h.actor, ['ended', dying]]);
+});
+
+test('blind-target public skill observations retain state through the actual AsyncCompiler', async () => {
+	const h = engineHarness();
+	h.lib.config.mode = 'identity'; h.game.zhu = h.actor; h.game.players = [h.actor, h.target];
+	h.actor.isZhu = h.actor.identityShown = true; h.actor.isIn = h.target.isIn = () => true;
+	Object.assign(h.get, { threaten: () => 1, distance: () => 1, result: () => ({ target: 1 }), info: () => ({ ai: {} }) });
+	const controller = setupLordBlindShot(h);
+	const compiled = await h.run('_hh_lord_blind_shot', { name: 'useSkill', player: h.target, skill: 'rescue_skill', targets: [h.actor] });
+	assert.equal(compiled.type, 'async'); assert.equal(controller.attitude(h.actor, h.target), 4);
+	assert.equal(controller.state.target, null); assert.equal(controller.state.ended, false);
 });

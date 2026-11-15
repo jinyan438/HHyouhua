@@ -1,6 +1,7 @@
 import { createKillComboPlayer } from './src/effects/killCombo.js';
 import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 import { setupRescueFlow } from './src/features/rescueFlow.js';
+import { setupLordBlindShot } from './src/features/lordBlindShot.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
 	const HH_finishSkill = function(skill) {
@@ -388,6 +389,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				wrapContentMap(lib.element.contents);
 			};
 			HH_hookAIThinkDelay();
+			setupLordBlindShot({ lib, game, get, _status });
 
 			// ========== 濒死逐人求桃 ==========
 			setupRescueFlow({ lib, game, ui, get, _status }, {
@@ -2467,6 +2469,11 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					// 立即应用速度
 					lib.config.extension_HH优化_speed_multiplier = multiplier;
 				}
+			},
+			enable_lord_blind_shot: {
+				name: "开局AI主公盲狙",
+				init: true,
+				intro: "离线身份局中，AI主公按仇恨值和距离锁定盲狙目标，卡牌与技能共同生效；目标表现偏忠后重选，出现明确偏反的角色后结束盲狙，恢复原有AI判断"
 			},
 			ai_think_delay_separator: {
 				name: '<span style="color:#ffcc00;">━━━ AI模拟真人思考 ━━━</span>',

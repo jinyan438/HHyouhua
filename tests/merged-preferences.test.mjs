@@ -16,6 +16,7 @@ test('旧设置迁移到单一扩展，保留已保存的 false、0、null 及�
 		extension_十周年UI_cardScale: .31, extension_十周年UI_dynamicSkin: true,
 		extension_十周年UI_futureOption: 'saved', extension_HH优化_dynamicSkin: false,
 		extension_HH优化_crop_left: 0, extension_HH优化_cardbj: null,
+		extension_HH优化_enable_lord_blind_shot: false,
 		extension_HH优化_player_width: '149', unrelated: 'keep',
 	});
 	await migratePreferences(lib, game);
@@ -25,6 +26,7 @@ test('旧设置迁移到单一扩展，保留已保存的 false、0、null 及�
 	assert.equal(lib.config.extension_HH优化_dynamicSkin, false);
 	assert.equal(lib.config.extension_HH优化_crop_left, 0);
 	assert.equal(lib.config.extension_HH优化_cardbj, null);
+	assert.equal(lib.config.extension_HH优化_enable_lord_blind_shot, false);
 	assert.equal(lib.config.extension_HH优化_player_width, '149');
 	assert.equal(lib.config.extension_HH优化_futureOption, 'saved');
 	assert.equal(lib.config.unrelated, 'keep');
@@ -36,7 +38,7 @@ test('旧设置迁移到单一扩展，保留已保存的 false、0、null 及�
 test('无旧设置的新安装使用导出的全部默认值，不修改其它扩展与全局设置', async () => {
 	const { lib, game } = setup({ extensions: ['HH优化'], theme: 'woodden', extension_other_enable: true });
 	await migratePreferences(lib, game);
-	assert.equal(Object.keys(defaultSettings).length, 160);
+	assert.equal(Object.keys(defaultSettings).length, 161);
 	for (const [key, value] of Object.entries(defaultSettings)) {
 		assert.deepEqual(lib.config['extension_HH优化_' + key], normalizePreference(key, value), key);
 	}

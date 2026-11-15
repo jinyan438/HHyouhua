@@ -144,6 +144,7 @@ export const defaultSettings = Object.freeze({
 	"enable_dead_image_override": true,
 	"enable_equip_move_optimize": true,
 	"enable_kill_combo": true,
+	"enable_lord_blind_shot": true,
 	"enable_mvp": true,
 	"enable_online_card_replace": true,
 	"enable_ui_crop": false,
