@@ -1,3 +1,5 @@
+import { createKillComboPlayer } from './src/effects/killCombo.js';
+
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
 	const HH_finishSkill = function(skill) {
 		if (!lib.skill[skill]) return;
@@ -1383,6 +1385,10 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 
 			// ========== 连斩特效功能 ==========
 			if (HH_getConfig(config, 'enable_kill_combo', false)) {
+				game.hhKillCombo?.stop();
+				game.hhKillCombo = createKillComboPlayer({ lib, game, ui });
+				game.hhKillCombo.preload(1).catch(error => console.warn('[HH优化] 连斩预加载失败，将在触发时重试', error));
+				if (Array.isArray(lib.onover)) lib.onover.push(() => game.hhKillCombo.stop());
 				// 连斩击杀特效
 				lib.skill._HH_lianzhan_ = {
 					trigger: {
@@ -1395,41 +1401,27 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					filter: function (event, player) {
 						return event && event.source === player && !event._HH_lianzhan_done;
 					},
-					content: function () {
+					content: async function (event, trigger, player) {
 						if (trigger._HH_lianzhan_done) return;
 						trigger._HH_lianzhan_done = true;
 						if (!player.storage._HH_lianzhan_) player.storage._HH_lianzhan_ = 0;
 						player.storage._HH_lianzhan_++;
 						
 						const count = player.storage._HH_lianzhan_;
-						const comboConfig = {
-							1: { audio: 'a_yipo', delay: 4, name: '一破' },
-							2: { audio: 'a_shuanglian', delay: 4, name: '双连' },
-							3: { audio: 'a_sanlian', delay: 4.2, name: '三连' },
-							4: { audio: 'a_silian', delay: 4.2, name: '四连' },
-							5: { audio: 'a_wulian', delay: 4.2, name: '五连' },
-							6: { audio: 'a_liulian', delay: 4.2, name: '六连' },
-							7: { audio: 'a_qilian', delay: 4.2, name: '七连' }
-						};
-						
-						const combo = comboConfig[Math.min(count, 7)];
-						
+						const names = ['一破', '双连', '三连', '四连', '五连', '六连', '七连'];
+						const index = Math.min(count, 7);
+
 						// 一破时检查是否已有人触发过
 						if (count == 1) {
 							if (player.storage._HH_lianzhan_triggered) { event.finish(); return; }
 							for (var i of game.players.concat(game.dead || [])) i.storage._HH_lianzhan_triggered = true;
 						}
 						
-						// 播放音频
-						game.playAudio('../extension/HH优化/audio/' + combo.audio + '.mp3');
-						
-						// 动画占位符 - 显示连斩文字
 						if (lib.config.extension_HH优化_show_combo_text !== false) {
-							player.popup(combo.name, 'fire');
+							player.popup(names[index - 1], 'fire');
 						}
-						
-						// 游戏延迟
-						game.delay(combo.delay);
+						// Both the original track and its voice start after the atlases are ready.
+						await game.hhKillCombo.play(index);
 					},
 				};
 				
@@ -2248,12 +2240,12 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_kill_combo: {
 				name: "启用连斩特效",
 				init: false,
-				intro: "开启后，击杀敌人时播放连斩音效（一破、双连、三连...七连），造成3点伤害触发癫狂屠戮，4点及以上触发万军取首"
+				intro: "开启后，击杀敌人时播放一破至七连的全屏播报动画及对应音效；造成3点伤害触发癫狂屠戮，4点及以上触发万军取首"
 			},
 			show_combo_text: {
 				name: "显示连斩文字",
 				init: true,
-				intro: "开启后，触发连斩时在角色头上显示文字提示"
+				intro: "开启后，触发连斩时在角色头上显示文字提示；不影响全屏播报动画"
 			},
 			enable_mvp: {
 				name: "启用MVP结算画面",

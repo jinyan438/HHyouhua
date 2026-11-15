@@ -1,0 +1,266 @@
+{
+  "apk": "yoka.game_g_android_4.0.2.apk",
+  "client_code": "sanguosha2/work/main.js",
+  "client_array": "NMt.GAME_REWARD_KILL_CHAIN_SPINE[1..7]",
+  "files": [
+    {
+      "file": "01_OL_PaiJu_BaoDian_YXPJ/OL_PaiJu_BaoDian_YXPJ.atlas.txt",
+      "cache_key": "31c6baf0",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_YXPJ.atlas.txt",
+      "bytes": 5905,
+      "sha256": "36a05c142c1ee8ededa56c284cb06cd039e89c780a98a8739f859f630b3ce771"
+    },
+    {
+      "file": "01_OL_PaiJu_BaoDian_YXPJ/OL_PaiJu_BaoDian_YXPJ.skel",
+      "cache_key": "00f4be92",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_YXPJ.skel",
+      "bytes": 9285,
+      "sha256": "d3d3d86846fac7f89624830579206459004c01de22386d71e42f7d6000765dbd"
+    },
+    {
+      "file": "01_OL_PaiJu_BaoDian_YXPJ/OL_PaiJu_BaoDian_YXPJ.png",
+      "cache_key": "6aebc97a",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_YXPJ.png",
+      "bytes": 1771031,
+      "sha256": "e05d6d2ce133c3768001a8ca572150777f137c62d31efb49b3b4eb0d4d0847fb"
+    },
+    {
+      "file": "01_OL_PaiJu_BaoDian_YXPJ/OL_PaiJu_BaoDian_YXPJ_2.png",
+      "cache_key": "3e29192b",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_YXPJ_2.png",
+      "bytes": 1465514,
+      "sha256": "9fe9b2f26b6ce0c61a62a5d11b5dc2553977b511a8c830869a467ae6f637189d"
+    },
+    {
+      "file": "01_OL_PaiJu_BaoDian_YXPJ/kill_1.ogg",
+      "cache_key": "ffd25339",
+      "original_path": "/res/local/voice/paijvbaodian/kill_1.ogg",
+      "bytes": 18576,
+      "sha256": "0585af1677c943d1e226cb4b220979dd2787e290aa02587f565498a3b4255166"
+    },
+    {
+      "file": "02_OL_PaiJu_BaoDian_ELSXPM/OL_PaiJu_BaoDian_ELSXPM.atlas.txt",
+      "cache_key": "f07fa66e",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_ELSXPM.atlas.txt",
+      "bytes": 8693,
+      "sha256": "d36f0e8ae8d0de7ae8eff5fd4f527ea9124e61d5e0ae6c73cfe21bb026fce26a"
+    },
+    {
+      "file": "02_OL_PaiJu_BaoDian_ELSXPM/OL_PaiJu_BaoDian_ELSXPM.skel",
+      "cache_key": "9d4aafd0",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_ELSXPM.skel",
+      "bytes": 185341,
+      "sha256": "193f0f2a7f5fba2444101375c7b62bac6285a349cca76aeec75caa717a0abd4c"
+    },
+    {
+      "file": "02_OL_PaiJu_BaoDian_ELSXPM/OL_PaiJu_BaoDian_ELSXPM.png",
+      "cache_key": "068d24ff",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_ELSXPM.png",
+      "bytes": 565771,
+      "sha256": "d0fdb6266a15dc99ba6d024c9cdb26387b683f476f57d6dbd94c13265004f58d"
+    },
+    {
+      "file": "02_OL_PaiJu_BaoDian_ELSXPM/OL_PaiJu_BaoDian_ELSXPM_2.png",
+      "cache_key": "a6668786",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_ELSXPM_2.png",
+      "bytes": 312851,
+      "sha256": "c44be8a7675037ffed9be900ea437eed45bcd00e9e7c8de9aa5976222530fdd1"
+    },
+    {
+      "file": "02_OL_PaiJu_BaoDian_ELSXPM/kill_2.ogg",
+      "cache_key": "b87229e9",
+      "original_path": "/res/local/voice/paijvbaodian/kill_2.ogg",
+      "bytes": 18281,
+      "sha256": "8a67f686ce835cf1eff67e851fa140defed2325a240f83deee4600fc651dd6ed"
+    },
+    {
+      "file": "03_OL_PaiJu_BaoDian_SLSBKD/OL_PaiJu_BaoDian_SLSBKD.atlas.txt",
+      "cache_key": "cd56469f",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_SLSBKD.atlas.txt",
+      "bytes": 6133,
+      "sha256": "e07a1b18ef642f273d9ae3ade7eaab38bd25e17ef647a0a710d01cac30ef49c8"
+    },
+    {
+      "file": "03_OL_PaiJu_BaoDian_SLSBKD/OL_PaiJu_BaoDian_SLSBKD.skel",
+      "cache_key": "74a41547",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_SLSBKD.skel",
+      "bytes": 64687,
+      "sha256": "251cf42a49285583f383403a47a01a3525ecc62909ed43e49564d209b971943e"
+    },
+    {
+      "file": "03_OL_PaiJu_BaoDian_SLSBKD/OL_PaiJu_BaoDian_SLSBKD.png",
+      "cache_key": "8b9286f9",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_SLSBKD.png",
+      "bytes": 648660,
+      "sha256": "53d7c0dcf904b8eddcf28c8dfd412c0395b0277c2c819f17424009583da6df8f"
+    },
+    {
+      "file": "03_OL_PaiJu_BaoDian_SLSBKD/OL_PaiJu_BaoDian_SLSBKD_2.png",
+      "cache_key": "c8e46fdb",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_SLSBKD_2.png",
+      "bytes": 393141,
+      "sha256": "30ef99d9dc83d78fe39dc688183f32b2d42316c0e4bb3e3ee223ec36cceda0e8"
+    },
+    {
+      "file": "03_OL_PaiJu_BaoDian_SLSBKD/kill_3.ogg",
+      "cache_key": "85120059",
+      "original_path": "/res/local/voice/paijvbaodian/kill_3.ogg",
+      "bytes": 17377,
+      "sha256": "b0646d7c06a7c305a602db9b9ab32896ea881082e1833fc05f74590538097def"
+    },
+    {
+      "file": "04_silian/silian.atlas.txt",
+      "cache_key": "4a82006b",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/silian.atlas.txt",
+      "bytes": 8797,
+      "sha256": "859392863b7f0a7bdfa8abb872487c2dcee76c4d5c0d294d290dd1ce2668f0b5"
+    },
+    {
+      "file": "04_silian/silian.skel",
+      "cache_key": "032d4dec",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/silian.skel",
+      "bytes": 106595,
+      "sha256": "d21a2222c49781e02dda930073eabd60b60d2d8a912ab7e9b64ca5023dbf782d"
+    },
+    {
+      "file": "04_silian/silian.png",
+      "cache_key": "05fabbf8",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/silian.png",
+      "bytes": 671033,
+      "sha256": "2d9a9d6e445c9bcec10db427b85dabc5998d28cf4bd6a5275b8dfcd27ab840a1"
+    },
+    {
+      "file": "04_silian/silian_2.png",
+      "cache_key": "89979ce3",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/silian_2.png",
+      "bytes": 466813,
+      "sha256": "0f818af8aea9af7a0cbcfcc3604e97a53f8f6431b58bb7d7ef4fb1f72d6c2387"
+    },
+    {
+      "file": "04_silian/kill_4.ogg",
+      "cache_key": "3732dc49",
+      "original_path": "/res/local/voice/paijvbaodian/kill_4.ogg",
+      "bytes": 18682,
+      "sha256": "d6211c00ec6613eaa2551cfba329d2154e6cf57e31faa228438c6e6a7eadc106"
+    },
+    {
+      "file": "05_wulian/wulian.atlas.txt",
+      "cache_key": "9f247a47",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/wulian.atlas.txt",
+      "bytes": 6511,
+      "sha256": "4bb7c170dd40aea0c303217c6b5cb4dd0d5b925b509f49f1933dfcfc2872c54a"
+    },
+    {
+      "file": "05_wulian/wulian.skel",
+      "cache_key": "8e665f08",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/wulian.skel",
+      "bytes": 73490,
+      "sha256": "7a069a883ee44295497a680235bec058f459ea777d6c6e799317bed73a2004c4"
+    },
+    {
+      "file": "05_wulian/wulian.png",
+      "cache_key": "46e5aae7",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/wulian.png",
+      "bytes": 670428,
+      "sha256": "cc9d6e4d2acc987e4055177108e17a948544e9202ecee06ae56e45f27a5dbe6b"
+    },
+    {
+      "file": "05_wulian/wulian_2.png",
+      "cache_key": "2e7df190",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/wulian_2.png",
+      "bytes": 545333,
+      "sha256": "fd5a17599925baa146e73d74be82ca1b3cc46386f5038f42971357c547548576"
+    },
+    {
+      "file": "05_wulian/kill_5.ogg",
+      "cache_key": "0a52f5f9",
+      "original_path": "/res/local/voice/paijvbaodian/kill_5.ogg",
+      "bytes": 19502,
+      "sha256": "ee889692e07026e84882e62e75ca3f0fb3ee36976517a3c0808261ebcad02ffb"
+    },
+    {
+      "file": "06_liulian/liulian.atlas.txt",
+      "cache_key": "0e129867",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/liulian.atlas.txt",
+      "bytes": 9649,
+      "sha256": "acfcb754c94de30a1963ea980efba83c17867e4a88bc6c62afcc41b7b1326769"
+    },
+    {
+      "file": "06_liulian/liulian.skel",
+      "cache_key": "749e5f79",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/liulian.skel",
+      "bytes": 87187,
+      "sha256": "d78078c7d537940ddd21c82d00dac4a5890c92958841575aa88cd764279cc02d"
+    },
+    {
+      "file": "06_liulian/liulian.png",
+      "cache_key": "b1d8b8f9",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/liulian.png",
+      "bytes": 545536,
+      "sha256": "06c2368f26ed0c665f716f470a5b92a5ae617257caae2a2a012aec701cab7f6d"
+    },
+    {
+      "file": "06_liulian/liulian_2.png",
+      "cache_key": "0985483a",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/liulian_2.png",
+      "bytes": 470697,
+      "sha256": "a9cc4f912fe518822efb407abc0254b035546ec21fdcda64017372f3d62062a7"
+    },
+    {
+      "file": "06_liulian/kill_6.ogg",
+      "cache_key": "4df28f29",
+      "original_path": "/res/local/voice/paijvbaodian/kill_6.ogg",
+      "bytes": 18865,
+      "sha256": "a7648671b79cc1e1d708689775be7ad598dee51e112aef0a1860526054bbee85"
+    },
+    {
+      "file": "07_OL_PaiJu_BaoDian_QLHTMD/OL_PaiJu_BaoDian_QLHTMD.atlas.txt",
+      "cache_key": "98a3b89a",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_QLHTMD.atlas.txt",
+      "bytes": 21880,
+      "sha256": "43bce4edca0c8eb8dcd7b382801451d46cb9fea866eed58df1f7f2b9e3035667"
+    },
+    {
+      "file": "07_OL_PaiJu_BaoDian_QLHTMD/OL_PaiJu_BaoDian_QLHTMD.skel",
+      "cache_key": "db597dbc",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_QLHTMD.skel",
+      "bytes": 153542,
+      "sha256": "27fd5a3ccc90b3d7802b4cdb4b085b1bf91bc2215e6d2c29c8681662d78c2893"
+    },
+    {
+      "file": "07_OL_PaiJu_BaoDian_QLHTMD/OL_PaiJu_BaoDian_QLHTMD.png",
+      "cache_key": "7ce13150",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_QLHTMD.png",
+      "bytes": 523795,
+      "sha256": "cae058aae018c4ccbe232d4f2119293911fa3f54bec7ed149f527016f84f2db7"
+    },
+    {
+      "file": "07_OL_PaiJu_BaoDian_QLHTMD/OL_PaiJu_BaoDian_QLHTMD_2.png",
+      "cache_key": "e224b927",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_QLHTMD_2.png",
+      "bytes": 508083,
+      "sha256": "aa7ccd6bc9de60b5359f45f1fce64514647a4144eb0aae53cd7d80e94411e7ba"
+    },
+    {
+      "file": "07_OL_PaiJu_BaoDian_QLHTMD/OL_PaiJu_BaoDian_QLHTMD_3.png",
+      "cache_key": "df449097",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_QLHTMD_3.png",
+      "bytes": 770993,
+      "sha256": "37ea7547fa064bb0e01eaec39304fba86ae6647eeeb3183282a5bcb075260fce"
+    },
+    {
+      "file": "07_OL_PaiJu_BaoDian_QLHTMD/OL_PaiJu_BaoDian_QLHTMD_4.png",
+      "cache_key": "6d644c87",
+      "original_path": "/res/assets/animate/game/neweffect/killEffect/OL_PaiJu_BaoDian_QLHTMD_4.png",
+      "bytes": 844671,
+      "sha256": "9f7cb9b4a5b578576cbfe710330ae8651d99c56a6b2561c64c7e4bcee8ad349e"
+    },
+    {
+      "file": "07_OL_PaiJu_BaoDian_QLHTMD/kill_7.ogg",
+      "cache_key": "7092a699",
+      "original_path": "/res/local/voice/paijvbaodian/kill_7.ogg",
+      "bytes": 21534,
+      "sha256": "655a16875e271acc41766745d00ab4ca55a991d800266343619e720623d79e06"
+    }
+  ]
+}
