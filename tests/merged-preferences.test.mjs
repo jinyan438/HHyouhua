@@ -38,7 +38,7 @@ test('旧设置迁移到单一扩展，保留已保存的 false、0、null 及�
 test('无旧设置的新安装使用导出的全部默认值，不修改其它扩展与全局设置', async () => {
 	const { lib, game } = setup({ extensions: ['HH优化'], theme: 'woodden', extension_other_enable: true });
 	await migratePreferences(lib, game);
-	assert.equal(Object.keys(defaultSettings).length, 161);
+	assert.equal(Object.keys(defaultSettings).length, 154);
 	for (const [key, value] of Object.entries(defaultSettings)) {
 		assert.deepEqual(lib.config['extension_HH优化_' + key], normalizePreference(key, value), key);
 	}

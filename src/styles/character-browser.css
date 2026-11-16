@@ -46,9 +46,9 @@
 /* The child is the exact visual component used by opening selection. */
 .hh-character-browser .hh-general-card { display:block; position:relative; width:100%; aspect-ratio:var(--hh-card-aspect); min-width:0; height:auto; padding:0; overflow:visible; border:0; border-radius:0; background:none; color:#fff; box-shadow:none; text-align:left; transition:filter .15s,opacity .15s; --hh-player-scale:1; }
 .hh-character-browser .hh-general-card::after { display:none; }
-.hh-character-browser .hh-general-card.is-disabled { filter:grayscale(1); opacity:.62; }
-.hh-character-browser .hh-general-card.is-pack-disabled { opacity:.4; }
-.hh-character-browser .hh-general-card.is-disabled.is-pack-disabled { opacity:.28; }
+.hh-character-browser .hh-general-card:not(.hh-general-card-large).is-disabled { filter:grayscale(1); opacity:.62; }
+.hh-character-browser .hh-general-card:not(.hh-general-card-large).is-pack-disabled { opacity:.4; }
+.hh-character-browser .hh-general-card:not(.hh-general-card-large).is-disabled.is-pack-disabled { opacity:.28; }
 .hh-character-browser .hh-character-section { grid-column:1 / -1; display:flex; align-items:center; justify-content:center; gap:12px; min-height:42px; padding:4px 90px; margin:18px 0 12px; background:url("../../assets/character-browser/generallistbg_cell.png") center/100% 100% no-repeat; color:#f4e2ac; }
 .hh-character-browser .hh-character-section.is-pack-disabled { opacity:.5; }
 .hh-character-browser .hh-character-section-name { position:static; display:block; max-width:65%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-size:clamp(15px,1.8vw,25px); }

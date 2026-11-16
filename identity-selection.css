@@ -53,6 +53,20 @@
 .hh-selection-prompt { position:absolute; left:774px; top:1144px; width:1206px; height:48px; font-size:42px; letter-spacing:5px; text-align:center; color:#4c3b19; }
 .hh-selection-progress { position:absolute; left:774px; top:1196px; width:1206px; height:18px; border:1px solid #947646; border-radius:2px; background:#4c4539; box-shadow:0 2px 5px #47372277; }
 .hh-selection-progress>i { position:absolute; left:0; top:0; width:100%; height:100%; background:linear-gradient(#e5c343,#cfa01b); border:1px solid #f2df8c; box-shadow:inset -4px 0 3px #fff0aa; }
+
+/* Landlord and farmer use the same stage and card component, with a centered row. */
+.hh-doudizhu-selection .hh-selection-main { left:150px; top:440px; width:2460px; height:650px; }
+.hh-doudizhu-selection .hh-selection-dialog .content { padding:36px 40px 35px!important; }
+.hh-identity-selection.hh-doudizhu-selection .hh-general-grid { display:flex!important; flex-wrap:wrap; justify-content:center; align-items:center; gap:70px; width:100%!important; }
+.hh-doudizhu-selection .hh-general-grid>.button.hh-general { flex:0 0 auto; }
+.hh-doudizhu-selection .hh-selection-side::after,.hh-doudizhu-selection .hh-my-identity,.hh-doudizhu-selection .hh-identity-goal,.hh-doudizhu-selection .hh-lord { display:none!important; }
+.hh-doudizhu-selection .hh-seat-map { left:190px; top:151px; width:338px; height:236px; }
+.hh-doudizhu-selection .hh-seat { background:linear-gradient(90deg,#315b2ebb,#44733bdd,#335b2abb); }
+.hh-doudizhu-selection .hh-seat.hh-seat-lord { background:linear-gradient(90deg,#722b23bb,#954a36dd,#6c2923bb); }
+.hh-doudizhu-selection .hh-selection-prompt strong { color:#c77722; font-weight:normal; }
+.hh-doudizhu-selection .hh-general-swap[hidden] { display:none!important; }
+.hh-doudizhu-selection .hh-selection-dialog .caption { display:block!important; position:relative!important; padding:18px 0; font-size:34px; color:#5a4423; text-shadow:none; }
+.hh-doudizhu-selection .hh-selection-dialog .content>.caption:first-child { display:none!important; }
 .hh-selection-footer { position:absolute; left:2110px; top:1152px; width:440px; height:76px; }
 .hh-selection-footer #control { position:relative!important; inset:auto!important; display:flex!important; justify-content:center; width:100%!important; height:auto!important; margin:0!important; transform:none!important; }
 .hh-selection-footer #control>.control { position:relative!important; left:auto!important; top:auto!important; margin:0 8px!important; transform:none!important; font-size:32px!important; color:#ead9a7; background:#76613a!important; border:1px solid #cbb177; box-shadow:0 2px 4px #46351e66; }
@@ -77,6 +91,8 @@
 
 /* Decade UI cards inherit the in-game player styles, not a second card design. */
 .hh-identity-selection { transition:none!important; }
+/* Arena cards can keep their screen size while the fullscreen stage changes scale. */
+.hh-use-player-style { --hh-card-unit:calc(var(--hh-card-width) / 294); }
 .hh-use-player-style .button.hh-general,
 .hh-use-player-style .hh-lord>.button.hh-general { width:var(--hh-card-width)!important; height:var(--hh-card-height)!important; }
 .hh-use-player-style .hh-general-grid { grid-template-columns:repeat(5,294px); grid-auto-rows:380px; justify-items:center; align-items:center; }
@@ -85,8 +101,17 @@
 .hh-use-player-style .hh-variant-panel>.button.hh-general { flex:0 0 var(--hh-card-width); }
 .hh-identity-selection .button.hh-arena-card { background:none!important; border-radius:0!important; box-shadow:none!important; }
 .hh-identity-selection .hh-general.hh-arena-card::before { display:none!important; }
-.hh-use-player-style .hh-general-swap { width:48px; height:48px; right:-18px; top:-14px; background-size:1656px 753.6px; background-position:-591px -128.4px; }
-.hh-use-player-style .hh-variant-hint { top:42%; width:114px; height:45px; right:-20px; background-size:2208px 1004.8px; background-position:-1036px -312px; }
+.hh-use-player-style .hh-general-swap {
+	width:calc(48 * var(--hh-card-unit)); height:calc(48 * var(--hh-card-unit));
+	right:calc(-18 * var(--hh-card-unit)); top:calc(-14 * var(--hh-card-unit));
+	background-size:calc(1656 * var(--hh-card-unit)) calc(753.6 * var(--hh-card-unit));
+	background-position:calc(-591 * var(--hh-card-unit)) calc(-128.4 * var(--hh-card-unit));
+}
+.hh-use-player-style .hh-variant-hint {
+	top:42%; width:calc(114 * var(--hh-card-unit)); height:calc(45 * var(--hh-card-unit)); right:calc(-20 * var(--hh-card-unit));
+	background-size:calc(2208 * var(--hh-card-unit)) calc(1004.8 * var(--hh-card-unit));
+	background-position:calc(-1036 * var(--hh-card-unit)) calc(-312 * var(--hh-card-unit));
+}
 .hh-use-player-style .hh-general.selected>.hh-selection-player,
 .hh-use-player-style .hh-general.hh-current>.hh-selection-player { outline:2px solid #ffe39b; box-shadow:0 0 12px #ffbf50; }
 

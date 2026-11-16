@@ -1,0 +1,35 @@
+@font-face {
+	font-family:"hh-source-general";
+	src:url("../../assets/general-font/FZLBGBK.woff2") format("woff2");
+	font-style:normal;
+	font-weight:400;
+	font-display:swap;
+}
+
+/* Native general-name text uses FZLBGBK without synthetic bold. */
+.player > .camp-wrap > .avatar-name,
+.player > .camp-wrap > .avatar-name-default,
+.player > .camp-wrap > .avatar2-name-default,
+.player > .name.name2,
+#arena > .player:not(.minskin) > .name.name2 {
+	font-family:"hh-source-general","FZLBJW",yuanli,serif!important;
+	font-weight:400!important;
+	font-size:18px!important;
+	line-height:21px!important;
+	letter-spacing:3px!important;
+	text-shadow:1px 0 #3b2322,-1px 0 #3b2322,0 1px #3b2322,0 -1px #3b2322!important;
+}
+
+.player > .camp-wrap > .avatar-name *,
+.player > .camp-wrap > .avatar-name-default *,
+.player > .camp-wrap > .avatar2-name-default *,
+.player > .name.name2 * {
+	font-family:inherit!important;
+	font-weight:inherit!important;
+}
+
+/* Enlarge the faction glyph around its center without moving its layout box. */
+.player > .camp-wrap > .camp-name {
+	transform:scale(1.1);
+	transform-origin:center center;
+}

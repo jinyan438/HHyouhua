@@ -2,6 +2,7 @@ import { createKillComboPlayer } from './src/effects/killCombo.js';
 import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 import { setupRescueFlow } from './src/features/rescueFlow.js';
 import { setupLordBlindShot } from './src/features/lordBlindShot.js';
+import { getPlayerStyleSizing, playerGlowGeometry } from './src/ui/playerStyleSizing.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
 	const HH_finishSkill = function(skill) {
@@ -427,19 +428,14 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					const parsed = parseFloat(val);
 					return isNaN(parsed) ? defaultVal : parsed;
 				};
-				const widthValue = getConfigValue('player_width', 128);
-				const borderWidthValue = getConfigValue('player_border_width', 375);
-				const hpRightValue = getConfigValue('hp_right_offset', 127);
-				const borderLeftValue = getConfigValue('border_left_offset', -10);
-				const glowWidth = getConfigValue('glow_border_width', 228);
-				const glowLeft = getConfigValue('glow_border_left', -55);
-				const factionLeftValue = getConfigValue('faction_left_offset', 13);
-				const nameLeftValue = getConfigValue('name_left_offset', 25);
+				const sizing = getPlayerStyleSizing(lib.config.extension_HH优化_player_width, lib.config.extension_HH优化_newDecadeStyle);
+				const { width: widthValue, borderWidth: borderWidthValue, hpRight: hpRightValue,
+					borderLeft: borderLeftValue, glowWidth, glowLeft, factionLeft: factionLeftValue, nameInset: nameInsetValue } = sizing;
 				
 
 				
-				// 护甲位置按比例计算
-				const hujiaLeftValue = Math.round(113 * widthValue / 128);
+				// 护甲保留右侧间距
+				const hujiaLeftValue = sizing.armorLeft;
 				
 				let css = '';
 				
@@ -450,6 +446,31 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const cropRight = getConfigValue('crop_right', 0);
 
 				css += `
+					.player {
+						--hh-configured-player-width: ${widthValue}px;
+						--hh-configured-hp-right: ${hpRightValue}px;
+					}
+					.player::before, .player::after {
+						--hh-glow-edge-left: 56.5;
+						--hh-glow-edge-span: 125.5;
+					}
+					#arena[data-new-decade-style="onlineUI"] > .player::before,
+					#arena[data-new-decade-style="onlineUI"] > .player::after,
+					#arena[data-new-decade-style="off"] > .player::before,
+					#arena[data-new-decade-style="off"] > .player::after {
+						--hh-glow-edge-left: 50;
+						--hh-glow-edge-span: 140;
+					}
+					#arena[data-new-decade-style="onlineUI"] > .player:not([data-position="0"])::after,
+					#arena[data-new-decade-style="off"] > .player:not([data-position="0"])::after {
+						--hh-glow-edge-left: 76.5;
+						--hh-glow-edge-span: 104;
+					}
+					#arena[data-new-decade-style="onlineUI"] > .player.selected:not(.target)::before,
+					#arena[data-new-decade-style="off"] > .player.selected:not(.target)::before {
+						--hh-glow-edge-left: 48.5;
+						--hh-glow-edge-span: 143;
+					}
 					/* 覆盖HH优化所有样式的武将宽度 */
 					#arena[data-new-decade-style="onlineUI"] > .player {
 						--w: ${widthValue}px !important;
@@ -462,6 +483,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						--w: ${widthValue}px !important;
 					}
 					/* 只修改宽度，高度保持原样 */
+					#arena.fewplayer > .player:not(.minskin),
 					#arena:not(.fewplayer) > .player:not(.minskin),
 					#arena:not(.fewplayer):not(*[data-player_height=""]) > .player:not(.minskin) {
 						width: ${widthValue}px !important;
@@ -472,6 +494,11 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						background-size: cover !important;
 						background-position: center top !important;
 						background-repeat: no-repeat !important;
+					}
+					/* Fixed portrait insets; percentage widths otherwise leave a gap when widened. */
+					.player:not(.fullskin2):not(.double-character):not(.double):not([data-double="1"]):not([data-mode="guozhan"]) > .primary-avatar {
+						width: auto !important;
+						right: ${sizing.portraitRight}px !important;
 					}
 					/* 调整HP勾玉位置 */
 					.player > .hp-wrap {
@@ -486,26 +513,33 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					}
 					/* 覆盖HH优化 online样式的边框图片宽度和位置 */
 					.player > .camp-wrap > .camp-border {
-						width: ${borderWidthValue}% !important;
-						left: ${borderLeftValue}px !important;
+						width: calc(${borderWidthValue}% + ${sizing.borderGrow}px) !important;
+						left: ${borderLeftValue + sizing.borderShift}px !important;
 					}
 					#arena.decadeUI[data-border-level="one"] .player > .camp-wrap > .camp-border,
 					#arena.decadeUI[data-border-level="two"] .player > .camp-wrap > .camp-border,
 					#arena.decadeUI[data-border-level="three"] .player > .camp-wrap > .camp-border,
 					#arena.decadeUI[data-border-level="four"] .player > .camp-wrap > .camp-border {
-						width: ${borderWidthValue}% !important;
-						left: ${borderLeftValue}px !important;
+						width: calc(${borderWidthValue}% + ${sizing.borderGrow}px) !important;
+						left: ${borderLeftValue + sizing.borderShift}px !important;
 					}
 					/* 调整势力标志位置 */
 					.player > .camp-wrap > .camp-name {
 						left: ${factionLeftValue}px !important;
 					}
-					/* 调整武将名位置 */
-					.player > .camp-wrap > .avatar-name {
-						left: ${nameLeftValue}% !important;
-					}
+					/* Share the same text column; image-based factions keep their theme geometry. */
+					body[data-style="onlineUI"] .player > .camp-wrap > .camp-name,
+					.player > .camp-wrap > .avatar-name,
 					.player > .camp-wrap > .avatar-name-default {
-						left: ${nameLeftValue}% !important;
+						left: ${nameInsetValue}% !important;
+						right: ${nameInsetValue}% !important;
+						width: auto !important;
+						align-items: center !important;
+						writing-mode: vertical-rl !important;
+					}
+					.player > .camp-wrap > .avatar-name,
+					.player > .camp-wrap > .avatar-name-default {
+						transform: none !important;
 					}
 				`;
 
@@ -1059,16 +1093,12 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						sheet.deleteRule(0);
 					}
 					
-					// 使用transform: scaleX()只缩放宽度，高度不变
-					// 原始宽度228px，计算缩放比例
-					const scale = glowWidth / 228;
-					
-					// 计算位移：用户设置的left与原始left(-55)的差值
-					// 由于scaleX会放大translateX的效果，需要除以scale来补偿
-					const translateX = (glowLeft - (-55)) / scale;
-					
-					// scaleX缩放宽度 + translateX移动位置
-					const scaleStyle = `transform: scaleX(${scale}) translateX(${translateX}px) !important; transform-origin: center center !important;`;
+					// Stretch between the visible sprite rails, not around its transparent canvas center.
+					// Preserve the previous 136px transform exactly when delta is zero.
+					const baseScale = glowWidth / playerGlowGeometry.canvasWidth;
+					const scale = `calc(${baseScale} + ${sizing.delta * playerGlowGeometry.frameWidth / playerGlowGeometry.displayedFrameWidth} / var(--hh-glow-edge-span))`;
+					const translateX = `calc(${(1 - baseScale) * 50}% + ${glowLeft + 55}px - ${sizing.delta}px * var(--hh-glow-edge-left) / var(--hh-glow-edge-span))`;
+					const scaleStyle = `transform: translateX(${translateX}) scaleX(${scale}) !important; transform-origin: left center !important;`;
 					
 					// 插入新规则
 					const rules = [
@@ -2256,9 +2286,9 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 		},
 		config: {
 			identity_fullscreen: {
-				name: "身份模式全屏选将",
+				name: "全屏选将",
 				init: true,
-				intro: "身份牌展示后收至左上角；点击武将牌显示确认选择，再点同一张牌确认。点击换随机更换，长按武将或换可选择同名版本。适用于本地标准身份及明忠模式，重启生效。"
+				intro: "身份及斗地主共用全屏选将界面；点击武将查看技能，再点同一张牌确认。换将遵守各玩法的候选范围，固定候选玩法保留原限制。适用于本地标准身份、明忠及斗地主，重启生效。"
 			},
 			enable_kill_combo: {
 				name: "启用连斩特效",
@@ -2523,147 +2553,22 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			ui_style_separator: {
 				name: '<span style="color:#ffcc00;">━━━ 武将牌样式 ━━━</span>',
 				clear: true,
-				intro: "调整武将牌、边框和文字的位置与大小"
+				intro: "调整武将宽度，边框、发光、勾玉和文字位置自动适配"
 			},
 			player_width: {
 				name: "武将宽度(px)",
-				init: "128",
-				intro: "设置武将卡牌的宽度（像素），默认128。只改变宽度，高度不变，图片用cover填充不会变形。",
+				init: "136",
+				intro: "设置武将卡牌的宽度（80-200像素），默认136。高度不变，边框、发光、勾玉和文字位置按当前136像素样式自动适配。",
 				input: true,
 				onblur: function() {
 					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
 					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = 128;
+					if (isNaN(value)) value = 136;
 					value = Math.max(80, Math.min(200, value));
 					this.innerHTML = value;
+					if (String(value) !== String(lib.config.extension_HH优化_player_width)) delete game.hhSelectionCardLayout;
 					game.saveConfig('extension_HH优化_player_width', String(value));
 					lib.config.extension_HH优化_player_width = String(value);
-					if (window._speedControlUpdateStyle) {
-						window._speedControlUpdateStyle();
-					}
-				}
-			},
-			player_border_width: {
-				name: "武将边框宽度(%)",
-				init: "375",
-				intro: "设置HH优化边框图片的宽度百分比，默认375%。数值越大边框越宽，可拉伸变形。",
-				input: true,
-				onblur: function() {
-					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
-					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = 375;
-					value = Math.max(100, Math.min(600, value));
-					this.innerHTML = value;
-					game.saveConfig('extension_HH优化_player_border_width', String(value));
-					lib.config.extension_HH优化_player_border_width = String(value);
-					if (window._speedControlUpdateStyle) {
-						window._speedControlUpdateStyle();
-					}
-				}
-			},
-			glow_border_width: {
-				name: "发光边框宽度(px)",
-				init: "228",
-				intro: "设置发光边框的宽度（像素），默认228。原始值：蓝色230px，绿色/橙色228px。",
-				input: true,
-				onblur: function() {
-					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
-					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = 228;
-					value = Math.max(100, Math.min(500, value));
-					this.innerHTML = value;
-					game.saveConfig('extension_HH优化_glow_border_width', String(value));
-					lib.config.extension_HH优化_glow_border_width = String(value);
-					if (window._speedControlUpdateStyle) {
-						window._speedControlUpdateStyle();
-					}
-				}
-			},
-			glow_border_left: {
-				name: "发光边框左偏移(px)",
-				init: "-55",
-				intro: "设置发光边框的左偏移（像素），默认-55。负值向左偏移，正值向右偏移。",
-				input: true,
-				onblur: function() {
-					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
-					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = -55;
-					value = Math.max(-200, Math.min(100, value));
-					this.innerHTML = value;
-					game.saveConfig('extension_HH优化_glow_border_left', String(value));
-					lib.config.extension_HH优化_glow_border_left = String(value);
-					if (window._speedControlUpdateStyle) {
-						window._speedControlUpdateStyle();
-					}
-				}
-			},
-			hp_right_offset: {
-				name: "勾玉右偏移(px)",
-				init: "127",
-				intro: "设置勾玉(HP)的右偏移（像素），默认127。数值越大越靠左，数值越小越靠右。",
-				input: true,
-				onblur: function() {
-					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
-					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = 127;
-					value = Math.max(50, Math.min(300, value));
-					this.innerHTML = value;
-					game.saveConfig('extension_HH优化_hp_right_offset', String(value));
-					lib.config.extension_HH优化_hp_right_offset = String(value);
-					if (window._speedControlUpdateStyle) {
-						window._speedControlUpdateStyle();
-					}
-				}
-			},
-			border_left_offset: {
-				name: "边框左偏移(px)",
-				init: "-10",
-				intro: "设置武将边框图片的左偏移（像素），默认-10。负值向左偏移，正值向右偏移。",
-				input: true,
-				onblur: function() {
-					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
-					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = -10;
-					value = Math.max(-100, Math.min(100, value));
-					this.innerHTML = value;
-					game.saveConfig('extension_HH优化_border_left_offset', String(value));
-					lib.config.extension_HH优化_border_left_offset = String(value);
-					if (window._speedControlUpdateStyle) {
-						window._speedControlUpdateStyle();
-					}
-				}
-			},
-			faction_left_offset: {
-				name: "势力左偏移(px)",
-				init: "13",
-				intro: "设置势力标志的左偏移（像素），默认13。数值越大越靠右。",
-				input: true,
-				onblur: function() {
-					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
-					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = 13;
-					value = Math.max(-50, Math.min(100, value));
-					this.innerHTML = value;
-					game.saveConfig('extension_HH优化_faction_left_offset', String(value));
-					lib.config.extension_HH优化_faction_left_offset = String(value);
-					if (window._speedControlUpdateStyle) {
-						window._speedControlUpdateStyle();
-					}
-				}
-			},
-			name_left_offset: {
-				name: "武将名左偏移(%)",
-				init: "25",
-				intro: "设置武将名的左偏移（百分比），默认25%。数值越大越靠右。",
-				input: true,
-				onblur: function() {
-					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
-					let value = parseInt(this.innerHTML);
-					if (isNaN(value)) value = 25;
-					value = Math.max(0, Math.min(100, value));
-					this.innerHTML = value;
-					game.saveConfig('extension_HH优化_name_left_offset', String(value));
-					lib.config.extension_HH优化_name_left_offset = String(value);
 					if (window._speedControlUpdateStyle) {
 						window._speedControlUpdateStyle();
 					}
@@ -2756,7 +2661,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				'<li><hr>' +
 				'<li><strong>HH优化样式覆盖：</strong>' +
 				'<li>• 武将宽度：设置武将卡牌宽度（80-200像素），只改宽度不改高度，图片用cover填充不变形' +
-				'<li>• 武将边框宽度：设置HH优化边框图片宽度百分比（100-600%），默认375%' +
+				'<li>• 边框、发光、勾玉和文字位置均以136像素样式为基准，随武将宽度自动调整' +
 				'<li>• 这些设置会覆盖HH优化扩展的默认样式' +
 				'<li>• 修改后实时生效，无需重启游戏' +
 				'<li><hr>' +

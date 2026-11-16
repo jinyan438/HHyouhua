@@ -210,6 +210,25 @@ test('selection visuals handle large and string health values with the same comp
 	assert.equal(visual.dataset.maxHp,'4'); assert.equal(visual.querySelector('.hp').classList.contains('textstyle'),true);
 });
 
+test('selection health allows shared width styles to update without frozen inline coordinates', () => {
+	const h = fixture(), template = h.document.createElement('div'), hpWrap = h.document.createElement('div');
+	template.offsetWidth = 136; template.offsetHeight = 180; hpWrap.offsetLeft = -72; hpWrap.className = 'hp-wrap';
+	h.lib.config.extension_HH优化_player_width = '136';
+	template.node = { campWrap: h.document.createElement('div'), hpWrap }; template.appendChild(hpWrap); h.game.players = [template];
+	const visual = createSelectionPlayerVisual(h.context, 'liubei', h.environment), health = visual.querySelector('.hp-wrap');
+	assert.equal(health.style.left, undefined); assert.equal(health.style.right, undefined);
+	// The live right-anchored wrapper moves when its player widens; the selection copy must not.
+	for (const [width, scale] of [[136, 1], [160, .8], [120, 1.6], [136, .5]]) {
+		template.offsetWidth = width; hpWrap.offsetLeft = width - 208;
+		visual.style.setProperty('--hh-player-width', `${width}px`); visual.style.setProperty('--hh-player-scale', scale);
+		assert.equal(health.style.left, undefined); assert.equal(health.style.right, undefined);
+		const rerolled = createSelectionPlayerVisual(h.context, 'guanyu', h.environment);
+		assert.equal(rerolled.querySelector('.hp-wrap').style.left, undefined, 'New cards must follow the same live styles');
+	}
+	assert.equal(hpWrap.style.left, undefined); assert.equal(hpWrap.style.right, undefined);
+	assert.equal(health.querySelector('.hp').children.length, 4);
+});
+
 test('catalog visuals follow player dimensions after resizing and release the resize observer on close', () => {
 	const h = fixture(), template = h.document.createElement('div'); template.offsetWidth = 140; template.offsetHeight = 190;
 	template.node = { campWrap: h.document.createElement('div') }; h.game.players = [template]; let callback, disconnected = 0;

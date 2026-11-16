@@ -11,22 +11,27 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			const result = open.apply(this, args);
 			const event = _status.event;
 			const parent = event?.getParent?.('chooseCharacter');
-			if (!this._hhSelection && !this.noopen && get.mode() === 'identity' &&
+			const mode = get.mode();
+			if (!this._hhSelection && !this.noopen && ['identity', 'doudizhu'].includes(mode) &&
 				!_status.connectMode && !game.online && !_status.brawl &&
-				!['purple', 'stratagem'].includes(_status.mode) &&
-				event?.name === 'chooseButton' && event.player === game.me && parent?.list &&
+				(mode !== 'identity' || !['purple', 'stratagem'].includes(_status.mode)) &&
+				event?.name === 'chooseButton' && event.player === game.me && parent?.name === 'chooseCharacter' && (mode === 'doudizhu' || parent.list) &&
 				this !== parent.dialogxx && this.buttons?.some(button => button.classList.contains('character'))) {
-				mount(this, event, parent);
+				mount(this, event, parent, mode);
 			}
 			return result;
 		};
 	});
 
-	function mount(dialog, event, parent) {
+	function mount(dialog, event, parent, mode) {
+		const doudizhu = mode === 'doudizhu';
+		const fixedChoices = doudizhu && !Array.isArray(parent.list);
 		const viewport = document.createElement('div');
 		viewport.className = 'hh-identity-viewport';
 		const root = document.createElement('div');
 		root.className = 'hh-identity-selection';
+		root.classList.toggle('hh-doudizhu-selection', doudizhu);
+		root.dataset.mode = mode;
 		root.innerHTML = '<header class="hh-selection-title">选将</header><aside class="hh-selection-side"><div class="hh-seat-map"></div><div class="hh-my-identity"></div><div class="hh-identity-goal"></div><div class="hh-lord"></div></aside><main class="hh-selection-main"></main><div class="hh-selection-prompt">请选择武将</div><div class="hh-selection-progress"><i></i></div><footer class="hh-selection-footer"></footer>';
 		viewport.appendChild(root);
 		ui.window.appendChild(viewport);
@@ -82,7 +87,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const enabled = name => !!lib.character[name] && !lib.filter.characterDisabled(name);
 		const occupied = () => new Set(game.players.filter(p => p !== game.me).flatMap(p => [p.name1, p.name2]).filter(Boolean).map(source));
 		const variants = button => {
-			if (_status.noReplaceCharacter) return [];
+			if (_status.noReplaceCharacter || fixedChoices) return [];
 			const list = lib.characterReplace[button._link] || lib.characterReplace[source(button.link)] || [];
 			return [...new Set(list)].filter(name => enabled(name) && !occupied().has(source(name)));
 		};
@@ -166,7 +171,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		}
 
 		function reroll(button) {
-			if (disposed || !isCurrent()) return;
+			if (disposed || !isCurrent() || !Array.isArray(parent.list) || !button.classList.contains('selectable')) return;
 			clearPending();
 			const used = occupied();
 			for (const other of dialog.buttons) used.add(source(other.link));
@@ -178,7 +183,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			closePopup();
 			const name = pool[Math.floor(Math.random() * pool.length)];
 			const next = ui.create.button(name, 'characterx');
-			// The pool is maintained by identity mode; still revalidate replacement versions.
+			// The pool is maintained by the mode; still revalidate replacement versions.
 			if (!enabled(next.link)) {
 				next.link = (lib.characterReplace[name] || [name]).find(enabled);
 				next.refresh(next, next.link);
@@ -241,7 +246,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			const right = (anchor.right - bounds.left) / scale;
 			const width = skillPanel.offsetWidth, height = skillPanel.offsetHeight;
 			// Keep the confirmation card clear; the reference panel sits to its left.
-			const x = left - width - 20 >= 654 ? left - width - 20 : right + 20;
+			const x = left - width - 20 >= (doudizhu ? 16 : 654) ? left - width - 20 : right + 20;
 			skillPanel.style.left = `${Math.max(16, Math.min(x, root.clientWidth - width - 16))}px`;
 			skillPanel.style.top = `${Math.max(143, Math.min((anchor.top - bounds.top) / scale - 97, 1110 - height))}px`;
 		}
@@ -312,6 +317,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		function updateConfirmation() {
 			if (pendingButton && !dialog.buttons.includes(pendingButton)) { pendingButton = null; closeSkills(); }
 			for (const button of dialog.buttons) {
+				if (!button.classList.contains('hh-general')) continue;
 				const pending = button === pendingButton;
 				const selected = ui.selected.buttons.includes(button);
 				button.classList.toggle('hh-pending', pending);
@@ -361,6 +367,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		}
 
 		function decorate(button) {
+			if (!button.classList.contains('character') || typeof button.link !== 'string') return;
 			button.classList.add('hh-general');
 			paintCard(button);
 			button.classList.toggle('hh-has-variants', variants(button).length > 1);
@@ -375,6 +382,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			button.appendChild(confirmation);
 			const swap = document.createElement('button');
 			swap.className = 'hh-general-swap';
+			swap.hidden = fixedChoices;
 			swap.textContent = '换';
 			swap.title = '随机更换；长按选择同名武将';
 			swap.setAttribute('aria-label', '随机更换武将，长按选择同名武将');
@@ -436,38 +444,46 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			});
 		}
 
-		const roleNames = { zhu: '主公', zhong: '忠臣', mingzhong: '明忠', fan: '反贼', nei: '内奸', commoner: '平民' };
-		const goals = { zhu: '目标：消灭反贼和内奸', zhong: '目标：保护主公，消灭反贼和内奸', mingzhong: '目标：保护主公，消灭反贼和内奸', fan: '目标：击败主公', nei: '目标：成为最后的生还者', commoner: '目标：存活到游戏结束' };
+		const roleNames = doudizhu ? { zhu: '地主', fan: '农民' } : { zhu: '主公', zhong: '忠臣', mingzhong: '明忠', fan: '反贼', nei: '内奸', commoner: '平民' };
+		const goals = doudizhu ? { zhu: '目标：击败两名农民', fan: '目标：与队友合力击败地主' } : { zhu: '目标：消灭反贼和内奸', zhong: '目标：保护主公，消灭反贼和内奸', mingzhong: '目标：保护主公，消灭反贼和内奸', fan: '目标：击败主公', nei: '目标：成为最后的生还者', commoner: '目标：存活到游戏结束' };
 		function updateSide() {
 			const role = game.me.identity;
 			const roleName = roleNames[role] || get.translation(role);
 			root.dataset.identity = role;
 			identityText.textContent = `我（${roleName}）`;
+			if (doudizhu) {
+				const prompt = root.querySelector('.hh-selection-prompt'); prompt.replaceChildren('您是');
+				const roleText = document.createElement('strong'); roleText.textContent = roleName; prompt.appendChild(roleText);
+				const count = get.select?.(event.selectButton)?.[1] || 1;
+				prompt.append(count > 1 && count < Infinity ? `，请选择${get.cnNumber(count)}名武将` : '，请选择武将');
+			}
 			root.querySelector('.hh-identity-goal').textContent = goals[role] || '';
 			const map = root.querySelector('.hh-seat-map');
 			map.replaceChildren();
 			// Relative seat order comes from the engine, never from hidden identity data.
 			const first = game.zhu || game.players[0];
 			const players = game.players.slice().sort((a, b) => get.distance(first, a, 'absolute') - get.distance(first, b, 'absolute'));
+			const myIndex = players.indexOf(game.me);
 			players.forEach((player, index) => {
 				const seat = document.createElement('div');
 				seat.className = 'hh-seat';
-				const isLord = player === game.zhu && player.identityShown;
+				const isLord = player === game.zhu && (doudizhu || player.identityShown);
 				seat.classList.toggle('hh-seat-lord', !!isLord);
 				seat.classList.toggle('hh-seat-me', player === game.me);
 				const prefix = player === game.me ? '我' : isLord ? (roleNames[player.identity] || '').slice(0, 1) : '';
-				seat.textContent = `${prefix ? prefix + '\n' : ''}${get.cnNumber(index + 1, true)}`;
+				seat.textContent = `${!doudizhu && prefix ? prefix + '\n' : ''}${get.cnNumber(index + 1, true)}`;
 				// Eight-seat outline follows the reference: lord at left, next seats bottom-right,
 				// then ascending up the right edge and across the top from right to left.
 				const points = [[8, 98], [324, 178], [324, 98]];
 				for (let i = 3; i < players.length; i++) points.push([288 - (i - 3) * 240 / Math.max(1, players.length - 4), 18]);
-				const point = points[index];
+				const landlordPoints = game.me === game.zhu ? [[252, 150], [199, 17], [88, 17]] : [[252, 150], [170, 17], [52, 85]];
+				const point = doudizhu ? landlordPoints[(index - myIndex + players.length) % players.length] : points[index];
 				seat.style.left = `${point[0]}px`;
 				seat.style.top = `${point[1]}px`;
 				map.appendChild(seat);
 			});
 			const lord = game.zhu;
-			const name = lord?.identityShown && lord !== game.me ? lord.name1 : '';
+			const name = !doudizhu && lord?.identityShown && lord !== game.me ? lord.name1 : '';
 			if (lordName !== name) {
 				lordName = name;
 				const area = root.querySelector('.hh-lord');
@@ -482,7 +498,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 					area.appendChild(label);
 				}
 			}
-			if (seenIdentity !== role) {
+			if (!doudizhu && seenIdentity !== role) {
 				seenIdentity = role;
 				parent._hhRevealedIdentity = role;
 				reveal(role, roleName);

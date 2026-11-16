@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "source": {
+    "apk": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+    "entry": "assets/cache/https.__web.sanguosha.com_220_sgsolApp/d54ce33c",
+    "cacheKey": "d54ce33c",
+    "url": "https://web.sanguosha.com/220/sgsolApp/res/assets/fontApp/FZLBGBK.ttf",
+    "bytes": 12993852,
+    "sha256": "19e6426eee18e655f4d247976a73fd51cefc03e599667e224497c73d598762b8"
+  },
+  "font": {
+    "file": "FZLBGBK.woff2",
+    "family": "hh-source-general",
+    "originalFamily": "FZLBGBK",
+    "weight": 400,
+    "codepoints": 22033,
+    "bytes": 4946752,
+    "sha256": "5c5685e27d384590c9cd135c5032b84ad0da88924f929221ebbcc34e10499e60"
+  },
+  "usage": {
+    "generalNameFont": "rB.SemiBold (fzlbgbk)",
+    "nativeGeneralName": "jx.Create(22, #ffffff, null, 30, 108, false, 2, #3b2322, center, top)",
+    "factionScale": 1.1
+  },
+  "validation": {
+    "cmapMatchesSource": true,
+    "representativeGlyphOutlinesAndAdvancesMatch": true,
+    "sampleCodepoints": [
+      23385,
+      20241,
+      21556,
+      39759,
+      34560,
+      32676,
+      26187,
+      31070,
+      35832,
+      33883,
+      20142,
+      26361,
+      39654,
+      29579,
+      20803,
+      23020,
+      38047,
+      29744,
+      30028,
+      35851
+    ]
+  }
+}
