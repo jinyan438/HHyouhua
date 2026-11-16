@@ -6,6 +6,7 @@ import vm from 'node:vm';
 import { createCharacterCatalog, bindCharacterPress } from '../src/ui/characterCatalog.js';
 import { createCharacterBrowser } from '../src/ui/characterBrowser.js';
 import { addCharacterCatalogMenu } from '../src/ui/characterBrowserMenu.js';
+import { createSelectionPlayerVisual, captureSelectionPlayerLayout, selectionPlayerSize } from '../src/ui/selectionPlayer.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
@@ -127,4 +128,56 @@ test('all native catalog UI resources retain their source hashes', () => {
 	const base = new URL('../assets/character-browser/', import.meta.url), sources = JSON.parse(fs.readFileSync(new URL('sources.json', base), 'utf8'));
 	assert.equal(sources.files.length, 10);
 	for (const file of sources.files) { const bytes = fs.readFileSync(new URL(file.file, base)); assert.equal(bytes.length, file.bytes); assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256); }
+});
+
+test('selection visuals preserve the live template and use its faction renderer without player initialization', () => {
+	const h = fixture(), template = h.document.createElement('div'); template.className = 'player'; template.dataset.borderLevel = 'four';
+	const avatar = h.document.createElement('div'); avatar.className = 'primary-avatar hidden'; avatar.setBackground('old');
+	const camp = h.document.createElement('div'); camp.className = 'camp-wrap'; camp.dataset.camp = 'old';
+	for (const cls of ['camp-back','camp-border','camp-name','avatar-name','custom-camp-decoration']) { const part = h.document.createElement('div'); part.className = cls; part.textContent = '原武将'; camp.appendChild(part); }
+	const hpWrap = h.document.createElement('div'); hpWrap.className = 'hp-wrap'; hpWrap.appendChild(h.document.createElement('div'));
+	template.node = { avatar, campWrap: camp, hpWrap }; template.append(avatar,camp,hpWrap); template.init = () => assert.fail('visual must not initialize players');
+	h.game.players = [template]; h.lib.config.extension_HH优化_borderLevel = 'random'; h.lib.character.liubei.hp = 3;
+	h.get.slimName = () => '<b>界</b>刘备'; let groupCalls = 0;
+	const prototype = {}; Object.defineProperty(prototype, 'group', { set(group) { groupCalls++; assert.notEqual(this,template); this.node.campWrap.node.campName.textContent = '渲染：'+group; } });
+	h.lib.element = { Player: { prototype } };
+	const visual = createSelectionPlayerVisual(h.context,'liubei',h.environment);
+	assert.equal(visual.dataset.borderLevel,'four'); assert.equal(visual.querySelector('.primary-avatar').portraitId,'liubei');
+	assert.equal(visual.querySelector('.avatar-name').innerHTML,'<b>界</b>刘备'); assert.equal(visual.querySelector('.camp-name').textContent,'渲染：shu');
+	assert.ok(visual.querySelector('.custom-camp-decoration')); assert.equal(visual.querySelector('.hp').children.length,4); assert.equal(visual.querySelectorAll('.lost').length,1);
+	assert.equal(visual.querySelectorAll('.hh-general-swap').length,0); assert.equal(groupCalls,1);
+	assert.equal(avatar.portraitId,'old'); assert.equal(avatar.classList.contains('hidden'),true); assert.equal(camp.dataset.camp,'old'); assert.equal(hpWrap.children.length,1);
+});
+
+test('selection visuals handle large and string health values with the same compact counter', () => {
+	const h = fixture(); h.lib.character.extra.hp = '5/8'; h.get.numStr = String;
+	const visual = createSelectionPlayerVisual(h.context,'extra',h.environment);
+	assert.equal(visual.querySelector('.hp').innerHTML,'5<br>/<br>8<div></div>'); assert.equal(visual.querySelector('.hp').dataset.condition,'high');
+	assert.equal(visual.dataset.maxHp,'4'); assert.equal(visual.querySelector('.hp').classList.contains('textstyle'),true);
+});
+
+test('catalog visuals follow player dimensions after resizing and release the resize observer on close', () => {
+	const h = fixture(), template = h.document.createElement('div'); template.offsetWidth = 140; template.offsetHeight = 190;
+	template.node = { campWrap: h.document.createElement('div') }; h.game.players = [template]; let callback, disconnected = 0;
+	h.environment.window.ResizeObserver = class { constructor(fn) { callback=fn; } observe() {} disconnect() { disconnected++; } };
+	const browser = createCharacterBrowser(h.context,h.environment); const root = browser.open();
+	assert.equal(root.style['--hh-card-aspect'],'140/190'); const card = root.querySelector('.hh-general-card'); card.clientWidth = 210; callback();
+	assert.equal(card.style['--hh-player-scale'],'1.5'); assert.ok(card.querySelector('.hh-selection-player'));
+	template.offsetWidth=150;template.offsetHeight=200;callback();assert.equal(root.style['--hh-card-aspect'],'150/200');assert.equal(card.style['--hh-player-scale'],'1.4');
+	browser.close();assert.equal(disconnected,1);assert.equal(h.game.players[0],template);
+});
+
+test('catalog retains exact card dimensions and scale recorded by opening selection', () => {
+	const h=fixture(),template=h.document.createElement('div');template.offsetWidth=136;template.offsetHeight=180;
+	template.getBoundingClientRect=()=>({width:204,height:270});
+	const opening=captureSelectionPlayerLayout(template,.5);h.game.hhSelectionCardLayout=opening;
+	assert.deepEqual(opening,{width:408,height:540,playerWidth:136,playerHeight:180,playerScale:3});
+	template.offsetWidth=150;template.offsetHeight=210;
+	assert.equal(selectionPlayerSize(template,h.game,h.lib),opening);
+	let relayout;h.environment.window.ResizeObserver=class { constructor(fn){relayout=fn;} observe(){} unobserve(){} disconnect(){} };
+	const browser=createCharacterBrowser(h.context,h.environment),root=browser.open();const card=root.querySelector('.hh-general-card');
+	card.clientWidth=204;relayout();
+	assert.equal(root.style['--hh-card-aspect'],'408/540');assert.equal(root.style['--hh-player-width'],'136px');
+	assert.equal(card.style['--hh-player-scale'],'1.5');
+	browser.close();
 });

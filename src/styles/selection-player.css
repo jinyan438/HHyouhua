@@ -1,0 +1,5 @@
+/* One visual component for opening selection and the character catalog. */
+.hh-selection-player { position:absolute!important; left:0!important; top:0!important; right:auto!important; bottom:auto!important; width:var(--hh-player-width)!important; height:var(--hh-player-height)!important; margin:0!important; transform:scale(var(--hh-player-scale))!important; transform-origin:0 0!important; transition:none!important; pointer-events:none!important; }
+.hh-selection-player,.hh-selection-player * { box-sizing:content-box; }
+.hh-selection-player::before,.hh-selection-player::after { display:none!important; }
+.hh-selection-player>.hp-wrap>.hp { bottom:-20px!important; }

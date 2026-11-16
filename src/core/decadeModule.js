@@ -92,7 +92,7 @@ export function initDecadeModule() {
 	 * @returns {Promise<Object>} this
 	 */
 	module.init = async function () {
-		const cssFiles = ["src/styles/extension.css", "src/styles/decadeLayout.css", "src/styles/card.css", "src/styles/meihua.css", "src/styles/character-browser.css"];
+		const cssFiles = ["src/styles/extension.css", "src/styles/decadeLayout.css", "src/styles/card.css", "src/styles/meihua.css", "src/styles/selection-player.css", "src/styles/character-browser.css"];
 		cssFiles.forEach(path => this.css(`${decadeUIPath}${path}`));
 
 		const style = getConfigValue("newDecadeStyle", "on");

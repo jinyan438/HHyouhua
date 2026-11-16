@@ -1,3 +1,5 @@
+import { createSelectionPlayerVisual, findSelectionPlayerTemplate, captureSelectionPlayerLayout } from './src/ui/selectionPlayer.js';
+
 // Keep the engine's real buttons, links and chooseButton event throughout selection.
 export function installIdentitySelection(lib, game, ui, get, _status) {
 	if (lib._hhIdentitySelectionInstalled) return;
@@ -29,19 +31,21 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		viewport.appendChild(root);
 		ui.window.appendChild(viewport);
 		// Use the actual arena player, including HH overrides and the game's zoom.
-		const playerTemplate = () => game.players.find(player => player !== game.me && player.node?.campWrap) || game.me;
+		const playerTemplate = () => findSelectionPlayerTemplate(game);
 		const matchPlayerSize = () => {
 			const player = playerTemplate();
 			if (!player?.node?.campWrap) return;
-			const rect = player.getBoundingClientRect();
 			const scale = root.getBoundingClientRect().width / 2760;
-			if (!rect.width || !rect.height || !scale) return;
+			const layout = captureSelectionPlayerLayout(player, scale);
+			if (!layout) return;
+			// Preserve the exact opening card dimensions for the catalog later in this game.
+			game.hhSelectionCardLayout = layout;
 			root.classList.add('hh-use-player-style');
-			root.style.setProperty('--hh-card-width', `${rect.width / scale}px`);
-			root.style.setProperty('--hh-card-height', `${rect.height / scale}px`);
-			root.style.setProperty('--hh-player-width', `${player.offsetWidth}px`);
-			root.style.setProperty('--hh-player-height', `${player.offsetHeight}px`);
-			root.style.setProperty('--hh-player-scale', rect.width / player.offsetWidth / scale);
+			root.style.setProperty('--hh-card-width', `${layout.width}px`);
+			root.style.setProperty('--hh-card-height', `${layout.height}px`);
+			root.style.setProperty('--hh-player-width', `${layout.playerWidth}px`);
+			root.style.setProperty('--hh-player-height', `${layout.playerHeight}px`);
+			root.style.setProperty('--hh-player-scale', layout.playerScale);
 		};
 		const fit = () => {
 			const scale = Math.min(viewport.clientWidth / 2760, viewport.clientHeight / 1256);
@@ -101,56 +105,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		function paintArenaPlayer(button) {
 			const template = playerTemplate();
 			if (!template?.node?.campWrap) return false;
-			const info = get.character(button.link);
-			// A visual-only DOM tree: no player.init, skills, dynamic-skin instances or game state.
-			const player = document.createElement('div');
-			player.className = 'player fullskin hh-selection-player';
-			player.style.fontFamily = getComputedStyle(template).fontFamily;
-			player.dataset.mode = get.mode();
-			player.dataset.borderLevel = ui.arena.dataset.borderLevel || lib.config.extension_HH优化_borderLevel || 'five';
-			if (player.dataset.borderLevel === 'random') player.dataset.borderLevel = template.dataset.borderLevel || 'five';
-			const avatar = template.node.avatar.cloneNode(false);
-			avatar.classList.remove('hidden');
-			avatar.style.display = '';
-			avatar.style.opacity = '1';
-			avatar.style.visibility = 'visible';
-			avatar.setBackground(button.link, 'character');
-			const camp = template.node.campWrap.cloneNode(true);
-			camp.dataset.camp = info.groupBorder || info.group;
-			const name = camp.querySelector('.avatar-name');
-			name.innerHTML = get.slimName(button.link);
-			const campName = camp.querySelector('.camp-name');
-			campName.style.backgroundImage = '';
-			campName.innerHTML = get.translation(info.group);
-			// Reuse Decade UI's group renderer, including its onlineUI text/image distinction.
-			camp.node = { campName };
-			let prototype = lib.element.Player.prototype;
-			while (prototype) {
-				const descriptor = Object.getOwnPropertyDescriptor(prototype, 'group');
-				if (descriptor?.set) {
-					descriptor.set.call({ name: button.link, node: { campWrap: camp } }, info.group);
-					break;
-				}
-				prototype = Object.getPrototypeOf(prototype);
-			}
-			const hpWrap = template.node.hpWrap.cloneNode(false);
-			const hp = document.createElement('div');
-			hp.className = 'hp';
-			hp.dataset.condition = info.hp > info.maxHp / 2 ? 'high' : info.hp > info.maxHp / 3 ? 'mid' : 'low';
-			if (info.maxHp > 5 || (info.hujia && info.maxHp > 3)) {
-				hp.classList.add('textstyle');
-				hp.innerHTML = `${get.numStr(info.hp)}<br>/<br>${get.numStr(info.maxHp)}<div></div>`;
-				player.dataset.maxHp = '4';
-			} else {
-				player.dataset.maxHp = info.maxHp;
-				for (let i = 0; i < info.maxHp; i++) {
-					const jade = document.createElement('div');
-					jade.classList.toggle('lost', i >= info.hp);
-					hp.appendChild(jade);
-				}
-			}
-			hpWrap.appendChild(hp);
-			player.append(avatar, camp, hpWrap);
+			const player = createSelectionPlayerVisual({ lib, game, ui, get }, button.link, { template });
 			button.classList.add('hh-arena-card');
 			button.appendChild(player);
 			return true;

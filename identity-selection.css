@@ -1,3 +1,5 @@
+@import "src/styles/selection-player.css";
+
 /* Coordinates measured on the 2760 × 1256 reference. Scale the entire stage. */
 .hh-identity-viewport { position:absolute!important; inset:0!important; z-index:90; overflow:hidden; background:#b29d70 url('assets/selection/background.png') center/cover; }
 .hh-identity-selection { --hh-role:#56ba32; position:absolute!important; left:50%!important; top:50%!important; width:2760px!important; height:1256px!important; transform-origin:center; background:url('assets/selection/background.png') 0 0/2760px 1256px; color:#463820; font-family:KaiTi,STKaiti,'shousha',serif; text-shadow:none; user-select:none; }
@@ -83,10 +85,6 @@
 .hh-use-player-style .hh-variant-panel>.button.hh-general { flex:0 0 var(--hh-card-width); }
 .hh-identity-selection .button.hh-arena-card { background:none!important; border-radius:0!important; box-shadow:none!important; }
 .hh-identity-selection .hh-general.hh-arena-card::before { display:none!important; }
-.hh-selection-player { position:absolute!important; left:0!important; top:0!important; right:auto!important; bottom:auto!important; width:var(--hh-player-width)!important; height:var(--hh-player-height)!important; margin:0!important; transform:scale(var(--hh-player-scale))!important; transform-origin:0 0!important; transition:none!important; pointer-events:none!important; }
-.hh-selection-player,.hh-selection-player * { box-sizing:content-box; }
-.hh-selection-player::before,.hh-selection-player::after { display:none!important; }
-.hh-identity-selection .hh-selection-player>.hp-wrap>.hp { bottom:-20px!important; }
 .hh-use-player-style .hh-general-swap { width:48px; height:48px; right:-18px; top:-14px; background-size:1656px 753.6px; background-position:-591px -128.4px; }
 .hh-use-player-style .hh-variant-hint { top:42%; width:114px; height:45px; right:-20px; background-size:2208px 1004.8px; background-position:-1036px -312px; }
 .hh-use-player-style .hh-general.selected>.hh-selection-player,

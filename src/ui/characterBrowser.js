@@ -1,4 +1,5 @@
 import { createCharacterCatalog, bindCharacterPress, allCharactersPack } from './characterCatalog.js';
+import { createSelectionPlayerVisual, findSelectionPlayerTemplate, selectionPlayerSize } from './selectionPlayer.js';
 
 const clean = value => typeof value === 'string' ? value.replace(/<[^>]*>/g, '').trim() : '';
 
@@ -9,7 +10,7 @@ export function createCharacterBrowser(context, environment = {}) {
 	const env = { setTimer: (fn, ms) => setTimeout(fn, ms), clearTimer: id => clearTimeout(id), now: Date.now, ...environment };
 	let root, model, workspace, detail, grid, search, status, title, back, feedback, sidebar;
 	let pack = allCharactersPack, rows = [], shown = 0, detailId, previousFocus, pausedHere = false, noticeTimer;
-	let presses = [], detailPress, packButtons = new Map();
+	let presses = [], detailPress, packButtons = new Map(), sizeObserver;
 	const pageSize = 60;
 	function node(tag, cls, text, parent) {
 		const result = doc.createElement(tag); result.className = cls;
@@ -18,7 +19,7 @@ export function createCharacterBrowser(context, environment = {}) {
 		parent?.appendChild(result); return result;
 	}
 	function clear(element) { while (element.firstChild) element.removeChild(element.firstChild); }
-	function stopPresses() { for (const press of presses) press.destroy(); presses = []; }
+	function stopPresses() { for (const press of presses) press.destroy(); presses = []; if (grid) for (const card of grid.children) sizeObserver?.unobserve?.(card); }
 	function notify(text) {
 		if (!root) return;
 		feedback.textContent = text; env.clearTimer(noticeTimer);
@@ -30,10 +31,15 @@ export function createCharacterBrowser(context, environment = {}) {
 			button.setAttribute('aria-pressed', String(id === pack));
 		}
 	}
-	function paintPortrait(element, entry) {
-		if (env.setPortrait) env.setPortrait(element, entry);
-		else if (typeof element.setBackground === 'function') element.setBackground(entry.id, 'character');
-		else element.style.backgroundImage = `url("${lib.assetURL || ''}image/character/${encodeURIComponent(entry.id)}.jpg")`;
+	function fitCards() {
+		if (!root) return;
+		const { width, height, playerWidth, playerHeight, playerScale } = selectionPlayerSize(findSelectionPlayerTemplate(game), game, lib);
+		root.style.setProperty('--hh-player-width', `${playerWidth}px`); root.style.setProperty('--hh-player-height', `${playerHeight}px`);
+		root.style.setProperty('--hh-card-aspect', `${width}/${height}`);
+		root.style.setProperty('--hh-card-ratio', String(width / height)); root.style.setProperty('--hh-card-height-ratio', String(height / width));
+		for (const card of root.querySelectorAll('.hh-general-card')) {
+			if (card.clientWidth) card.style.setProperty('--hh-player-scale', String(playerScale * card.clientWidth / width));
+		}
 	}
 	function portrait(parent, entry, large = false) {
 		const card = node(large ? 'div' : 'button', 'hh-general-card' + (large ? ' hh-general-card-large' : ''), undefined, parent);
@@ -41,10 +47,11 @@ export function createCharacterBrowser(context, environment = {}) {
 		card.classList.toggle('is-disabled', model.isBanned(entry.id));
 		card.setAttribute('aria-label', entry.name + (model.isBanned(entry.id) ? '，已禁用' : ''));
 		card.title = `${entry.name} · 长按${model.isBanned(entry.id) ? '启用' : '禁用'}`;
-		paintPortrait(node('div', 'hh-general-art', undefined, card), entry);
-		const ribbon = node('div', 'hh-general-ribbon', undefined, card);
-		node('span', 'hh-general-group', clean(get.translation?.(entry.group) || entry.group), ribbon);
-		node('span', 'hh-general-name', entry.name, ribbon);
+		card.appendChild(createSelectionPlayerVisual(context, entry.id, {
+			document: doc, getComputedStyle: win.getComputedStyle?.bind(win),
+			setPortrait: env.setPortrait && ((element, id) => env.setPortrait(element, model.entries.get(id))),
+		}));
+		sizeObserver?.observe(card);
 		return card;
 	}
 	function press(card, entry, open) {
@@ -69,6 +76,7 @@ export function createCharacterBrowser(context, environment = {}) {
 			presses.push(press(card, entry, () => showDetail(entry.id)));
 		}
 		grid.appendChild(fragment);
+		fitCards();
 		root.querySelector('.hh-character-more').hidden = shown >= rows.length;
 	}
 	function renderGrid(reset = true) {
@@ -81,12 +89,14 @@ export function createCharacterBrowser(context, environment = {}) {
 		grid.parentNode.scrollTop = reset ? 0 : scroll;
 	}
 	function showList() {
+		const previous = detail?.querySelector('.hh-general-card'); if (previous) sizeObserver?.unobserve?.(previous);
 		detailPress?.destroy(); detailPress = null; detailId = null;
 		workspace.hidden = false; detail.hidden = true; search.hidden = false; status.hidden = false;
 		title.textContent = '武将'; back.setAttribute('aria-label', '关闭武将界面');
 	}
 	function showDetail(id, focus = true) {
 		const entry = model?.entries.get(id); if (!root || !entry) return;
+		const previous = detail.querySelector('.hh-general-card'); if (previous) sizeObserver?.unobserve?.(previous);
 		detailPress?.destroy(); clear(detail); detailId = id;
 		workspace.hidden = true; detail.hidden = false; search.hidden = true; status.hidden = true;
 		title.textContent = '武将详情'; back.setAttribute('aria-label', '返回武将列表');
@@ -122,7 +132,7 @@ export function createCharacterBrowser(context, environment = {}) {
 		}
 		skillsTab.addEventListener('click', skills);
 		storyTab?.addEventListener('click', () => { selected(storyTab); const body = node('div', 'hh-general-story', undefined, pane); body.innerHTML = story; });
-		skills(); if (focus) skillsTab.focus?.({ preventScroll: true });
+		skills(); fitCards(); if (focus) skillsTab.focus?.({ preventScroll: true });
 	}
 	function backOrClose() { if (detailId) { const id = detailId; showList(); Array.from(grid.children).find(item => item.dataset.character === id)?.focus?.({ preventScroll: true }); } else close(); }
 	function key(event) {
@@ -166,11 +176,16 @@ export function createCharacterBrowser(context, environment = {}) {
 		search.addEventListener('input', () => renderGrid()); status.addEventListener('change', () => renderGrid());
 		for (const type of ['click', 'pointerdown', 'pointerup', 'touchstart', 'touchend', 'wheel', 'keydown']) root.addEventListener(type, event => event.stopPropagation(), { passive: type.startsWith('touch') || type === 'wheel' });
 		doc.addEventListener('keydown', key, true); doc.addEventListener('visibilitychange', cancelPresses);
+		if (typeof win.ResizeObserver === 'function') {
+			sizeObserver = new win.ResizeObserver(fitCards); sizeObserver.observe(root);
+			const template = findSelectionPlayerTemplate(game); if (template?.node?.campWrap) sizeObserver.observe(template);
+		} else win.addEventListener?.('resize', fitCards);
 		updatePackCounts(); renderGrid(); root.focus?.({ preventScroll: true }); return root;
 	}
 	function close() {
 		if (!root) return;
 		stopPresses(); detailPress?.destroy(); detailPress = null; env.clearTimer(noticeTimer);
+		sizeObserver?.disconnect(); sizeObserver = null; win.removeEventListener?.('resize', fitCards);
 		doc.removeEventListener('keydown', key, true); doc.removeEventListener('visibilitychange', cancelPresses);
 		root.remove(); root = null; model = null; detailId = null; packButtons.clear();
 		if (pausedHere) game.resume2?.(); pausedHere = false;

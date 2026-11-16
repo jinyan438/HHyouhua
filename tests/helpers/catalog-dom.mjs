@@ -24,6 +24,8 @@ export function domFixture() {
 		get textContent() { return (this._text || '') + this.children.map(child => child.textContent).join(''); }
 		set innerHTML(value) { this.textContent = value; } get innerHTML() { return this.textContent; }
 		appendChild(child) { if (child.fragment) { for (const item of [...child.children]) this.appendChild(item); return child; } child.remove(); this.children.push(child); child.parentNode = this; return child; }
+		append(...children) { for (const child of children) this.appendChild(child); }
+		cloneNode(deep = false) { const copy = new Element(this.tagName); copy.className = this.className; Object.assign(copy.dataset, this.dataset); Object.assign(copy.style, this.style); Object.assign(copy.attributes, this.attributes); copy._text = this._text; if (deep) for (const child of this.children) copy.appendChild(child.cloneNode(true)); return copy; }
 		removeChild(child) { if (child.parentNode !== this) throw new Error('Not a child'); child.remove(); return child; }
 		remove() { if (this.parentNode) { const index = this.parentNode.children.indexOf(this); if (index >= 0) this.parentNode.children.splice(index, 1); } this.parentNode = null; }
 		delete() { this.remove(); }
