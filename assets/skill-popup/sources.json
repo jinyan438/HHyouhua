@@ -1,0 +1,92 @@
+{
+  "apk": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+  "animation": "play2",
+  "version": "4.0.56",
+  "duration": 1.166700005531311,
+  "events": [
+    {
+      "name": "chuxian",
+      "time": 0.30000001192092896
+    },
+    {
+      "name": "xiaoshi",
+      "time": 1
+    }
+  ],
+  "files": [
+    {
+      "file": "putongchufa.png",
+      "cacheKey": "31f2153a",
+      "originalPath": "/res/assets/animate/game/skill/general/putongchufa.png",
+      "sha256": "f805bb87ee86354475e0281e001e7e5a313fc4127495941e6269296583661983",
+      "bytes": 330389
+    },
+    {
+      "file": "putongchufa.atlas.txt",
+      "cacheKey": "3f63fb80",
+      "originalPath": "/res/assets/animate/game/skill/general/putongchufa.atlas.txt",
+      "sha256": "af1fbd9c4719e73082be7169b9942dadd66288d145014c761fe8e1f1eee307ba",
+      "bytes": 7542
+    },
+    {
+      "file": "putongchufa.skel",
+      "cacheKey": "7673e6de",
+      "originalPath": "/res/assets/animate/game/skill/general/putongchufa.skel",
+      "sha256": "872075db45249ed6bc9cd569135ec1830e3125fb5dc0ba7061ff9cf742bdea16",
+      "bytes": 8076
+    },
+    {
+      "file": "HYF3GJM.woff2",
+      "originalPath": "/res/assets/font/HYF3GJM.ttf",
+      "cacheKey": "4bd66369",
+      "originalSha256": "a78addd4146e4879de93a997f215d06391ba5b1c55672ea6d6bc004000b508e5",
+      "sha256": "7e67f6b2b54c9f4703f87b34e8c445676b68e6966de02430ad8634cfa38aef86",
+      "bytes": 1160004,
+      "decode": "Lossless WOFF2 compression of the original complete font."
+    },
+    {
+      "file": "skill-trigger.png",
+      "sha256": "c2e27c755c6ffa1579c8374a2b645bca24a6f5380f6d3c4b96d308c133f347f6",
+      "bytes": 144993,
+      "decode": "Native Spine 4.0.56 play2 pose sampling at 30 fps, alpha compositing, crop [0,80,300,200]; 36 horizontal frames.",
+      "frameSha256": [
+        "09d70dfa508c78be6e37aecd90919b4e01452ff385a3329c4a7beaca85f291f5",
+        "eef58bdcf3c2091896deb6bafa7b54ae1a55eeef3796f7e20eac947fa565f8c3",
+        "eef58bdcf3c2091896deb6bafa7b54ae1a55eeef3796f7e20eac947fa565f8c3",
+        "8bab156acca97cae37661af2a68b3e9a2b4e29ff9d9fbf10eb61d8fe5b7a9d7e",
+        "8bab156acca97cae37661af2a68b3e9a2b4e29ff9d9fbf10eb61d8fe5b7a9d7e",
+        "e34c98ba70b90c0dcc582772a8f24bb9463959118fb9cdc75600a1b58a0b02b3",
+        "e34c98ba70b90c0dcc582772a8f24bb9463959118fb9cdc75600a1b58a0b02b3",
+        "7ec597e814a086df2453ee852f9e50ce018cd76634fffda35662365894daf3bd",
+        "3c3365ca510a9f4ace9f4f67aaeb7f0ebaa160de5d300078142bb76e5fbdfc3f",
+        "3c3365ca510a9f4ace9f4f67aaeb7f0ebaa160de5d300078142bb76e5fbdfc3f",
+        "b6cb83c8650a8170189e435721ea25223dbfa9c6e72afca3c2944c21a997c827",
+        "b6cb83c8650a8170189e435721ea25223dbfa9c6e72afca3c2944c21a997c827",
+        "a2366dade72189f69efb700fc1ad2253e68c6cb598cabca167fc454dc492519f",
+        "a2366dade72189f69efb700fc1ad2253e68c6cb598cabca167fc454dc492519f",
+        "2d6bb60fe82bfeba6ae4a66018b59ddc922f64307ea8b48cb84c2fbdbd21ee38",
+        "2d6bb60fe82bfeba6ae4a66018b59ddc922f64307ea8b48cb84c2fbdbd21ee38",
+        "a4512b56455fac741a3ca2eb804eb6660c54cfccd97abdc04ab11ae5b2061eae",
+        "a4512b56455fac741a3ca2eb804eb6660c54cfccd97abdc04ab11ae5b2061eae",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "e067898de8c9b3496da7d8c92ef1b9a29ba1418bde9a69031d4215f1eab7fca0",
+        "70619e13529fdbb8abef628fedac7efce23933342bf07e80ed01057eea2c4320",
+        "4dae00c32a47dfe0a172f42573b40277ae438a641cd9f92b7fbeb578523b968b",
+        "1039fc80e286e502e3d033469c8078b51d504de22e4480aec7767731887140e8",
+        "09d70dfa508c78be6e37aecd90919b4e01452ff385a3329c4a7beaca85f291f5"
+      ]
+    }
+  ]
+}

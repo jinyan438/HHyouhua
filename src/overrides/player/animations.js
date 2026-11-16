@@ -6,6 +6,7 @@
 
 import { lib, game, ui, get, ai, _status } from "noname";
 import { getDui } from "./base.js";
+import { createSourceSkillPopup } from "../../effects/sourceSkillPopup.js";
 
 /**
  * 伤害动画动作映射
@@ -19,7 +20,7 @@ const DAMAGE_ACTIONS = {
 
 /**
  * 伤害弹出覆写
- * @description 播放Spine伤害动画，字符串时显示武将技能名称（文字从两边飞入）
+ * @description 播放Spine伤害动画，字符串时显示原版墨迹技能名称
  * @param {number|string} num - 伤害数值或技能名称
  * @param {string} [nature] - 伤害属性（fire/thunder/water等）
  * @param {boolean} [font] - 是否使用普通字体
@@ -44,37 +45,8 @@ export function playerDamagepop(num, nature = "soil", font, nobroadcast) {
 			game.broadcast((p, n, na, f) => p.$damagepop(n, na, f), player, num, nature, font);
 		}
 
-		const container = ui.create.div(".damage.skill-popup", ui.arena);
-		container.dataset.nature = nature || "soil";
-
-		let left = 0;
-		let top = 0;
-		let element = player;
-
-		while (element && element !== ui.arena) {
-			left += element.offsetLeft || 0;
-			top += element.offsetTop || 0;
-			element = element.offsetParent;
-		}
-
-		container.style.position = "absolute";
-		container.style.left = `${left}px`;
-		container.style.top = `${top + 80}px`;
-		container.style.width = `${player.offsetWidth}px`;
-		container.style.zIndex = "9999";
-
-		const chars = num.split("");
-		const midIndex = Math.ceil(chars.length / 2);
-
-		chars.forEach((char, i) => {
-			const span = document.createElement("span");
-			span.textContent = char;
-			span.className = i < midIndex ? "char-left" : "char-right";
-			span.style.animationDelay = `${i * 0.05}s`;
-			container.appendChild(span);
-		});
-
-		setTimeout(() => container.delete(), 1500);
+		game.hhSourceSkillPopup ||= createSourceSkillPopup({ lib });
+		game.hhSourceSkillPopup.play(player, num);
 		return;
 	}
 
