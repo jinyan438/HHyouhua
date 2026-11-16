@@ -98,6 +98,7 @@ export function initDecadeModule() {
 		const style = getConfigValue("newDecadeStyle", "on");
 		const styleIndex = STYLE_OPTIONS.indexOf(style);
 		this.css(`${decadeUIPath}src/styles/player${styleIndex !== -1 ? styleIndex + 1 : 2}.css`);
+		this.css(`${decadeUIPath}src/styles/source-skill-marks.css`);
 		this.css(`${decadeUIPath}src/styles/equip.css`);
 		this.css(`${decadeUIPath}src/styles/layout.css`);
 		document.body.setAttribute("data-style", style);

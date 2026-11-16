@@ -1,0 +1,94 @@
+/* Native seat-state labels. Only the existing rectangular mark style uses these assets. */
+#arena[data-player-mark-style="decade"] > .player > .dui-marks.hh-source-marks {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-auto-flow: row dense;
+	align-items: start;
+	align-content: start;
+	gap: 3px 0;
+	left: 18%;
+	right: -16%;
+	top: 24%;
+	bottom: auto;
+	width: auto;
+	height: auto;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+	line-height: normal;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] {
+	display: flex;
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	width: max-content;
+	min-width: 23px;
+	height: 20px;
+	min-height: 0;
+	box-sizing: border-box;
+	padding: 0 5px 2px;
+	margin: 0;
+	border: 0 solid transparent;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+	border-image: url("../../assets/skill-marks/seat_state_bg_new.png") 6 11 10 7 fill / 4px 7.333px 6.667px 4.667px / 0 stretch;
+	animation: none;
+	transition: none;
+	white-space: nowrap;
+	color: #dbdbdb;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark="gold"] {
+	min-width: 41px;
+	border-image: url("../../assets/skill-marks/seat_state_btn_0_new2024.png") 4 10 10 6 fill / 2.667px 6.667px 6.667px 4px / 0 stretch;
+	color: #ffefad;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks.hh-source-marks > .mark.hh-source-mark[data-hh-source-mark="gray"] {
+	grid-column: 1;
+	justify-self: start;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks.hh-source-marks > .mark.hh-source-mark[data-hh-source-mark="gold"] {
+	grid-column: 2;
+	justify-self: end;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-text,
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-count {
+	display: inline-block;
+	position: static;
+	width: auto;
+	height: auto;
+	min-height: 0;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+	font-family: yuanli, STKaiti, KaiTi, serif;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 18px;
+	color: inherit;
+	text-shadow: none;
+	animation: none;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-text {
+	font-size: 0;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-text::after {
+	content: attr(data-hh-source-mark-label);
+	font-size: 14px;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-count::before { content: "["; }
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-count::after { content: "]"; }

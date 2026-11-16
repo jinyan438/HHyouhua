@@ -6,6 +6,7 @@
 
 import { lib, game, ui, get, ai, _status } from "noname";
 import { getBasePlayerMethods } from "./base.js";
+import { decorateSourceSkillMark, refreshSourceSkillMarks } from "../../ui/sourceSkillMarks.js";
 
 /**
  * 跳过标记的技能前缀列表
@@ -74,7 +75,9 @@ export function playerMarkSkill(name, info, card, nobroadcast) {
 export function playerUnmarkSkill(name, info, card, nobroadcast) {
 	if (shouldSkipMark(name)) return;
 	const base = getBasePlayerMethods();
-	return base.unmarkSkill.apply(this, [name, info, card, nobroadcast]);
+	const result = base.unmarkSkill.apply(this, [name, info, card, nobroadcast]);
+	refreshSourceSkillMarks(this.node.marks);
+	return result;
 }
 
 /**
@@ -124,6 +127,7 @@ export function playerMark(item, info, skill) {
 	this.node.marks.appendChild(mark);
 	this.updateMarks();
 	ui.updatem(this);
+	refreshSourceSkillMarks(this.node.marks);
 
 	return mark;
 }
@@ -227,6 +231,7 @@ function createMarkElement(item, skill) {
 		const hasCardDisplay = typeof skillIntro?.mark === "function" || ["expansion", "card", "cards"].includes(skillIntro?.content);
 		mark.classList.add(hasCardDisplay ? "other-skill" : "own-skill");
 	}
+	if (typeof item === "string") decorateSourceSkillMark(mark, lib);
 
 	return mark;
 }
@@ -297,11 +302,13 @@ export function playerMarkCharacter(name, info, learn, learn2) {
 	// 设置标记类型
 	const hasCardDisplay = typeof lib.skill[name]?.intro?.mark === "function";
 	nodeMark.classList.add(hasCardDisplay ? "other-skill" : "own-skill");
+	decorateSourceSkillMark(nodeMark, lib, { skill: name, label: info.name });
 
 	bindMarkEvents(nodeMark);
 
 	this.node.marks.appendChild(nodeMark);
 	ui.updatem(this);
+	refreshSourceSkillMarks(this.node.marks);
 
 	return nodeMark;
 }
@@ -327,6 +334,7 @@ export function playerUpdateMark(name, storage) {
 
 	const mark = this.marks[name];
 	const skillInfo = lib.skill[name];
+	if (mark.classList.contains("hh-source-mark")) decorateSourceSkillMark(mark, lib, { skill: name });
 
 	if (storage && this.storage[name]) {
 		this.syncStorage(name);
@@ -354,6 +362,7 @@ export function playerUpdateMark(name, storage) {
 		}
 	}
 
+	refreshSourceSkillMarks(this.node.marks);
 	return this;
 }
 
@@ -402,23 +411,24 @@ function calculateMarkCount(player, name, skillInfo) {
  * @param {Object|string} target - 目标武将
  * @param {string} name - 名称
  * @param {string} content - 内容
+ * @param {boolean} [nobroadcast] - 仅在本机更新，供原引擎及广播回调调用
  * @returns {Object} 玩家对象（链式调用）
  * @this {Object} 玩家对象
  */
-export function playerMarkSkillCharacter(id, target, name, content) {
+export function playerMarkSkillCharacter(id, target, name, content, nobroadcast) {
 	if (typeof target === "object") target = target.name;
+	if (nobroadcast === true) {
+		if (this.marks[id]) updateExistingSkillMark(this, id, name, content, target);
+		else createNewSkillMark(this, id, name, content, target);
+		this.marks[id].classList.add("skillmark");
+		this.marks[id]._name = name;
+		ui.updatem(this);
+		return this;
+	}
 
 	game.broadcastAll(
 		(player, target, name, content, id) => {
-			if (player.marks[id]) {
-				updateExistingSkillMark(player, id, name, content, target);
-			} else {
-				createNewSkillMark(player, id, name, content, target);
-			}
-
-			player.marks[id].classList.add("skillmark");
-			player.marks[id]._name = name;
-			ui.updatem(player);
+			player.markSkillCharacter(id, target, name, content, true);
 		},
 		this,
 		target,
@@ -444,9 +454,11 @@ function updateExistingSkillMark(player, id, name, content, target) {
 	mark.name = name + "_skillmark";
 	mark.info = { name, content, id };
 
-	const hasCardDisplay = typeof lib.skill[name]?.intro?.mark === "function";
+	const hasCardDisplay = typeof (lib.skill[id] || lib.skill[name])?.intro?.mark === "function";
 	mark.classList.remove("own-skill", "other-skill");
 	mark.classList.add(hasCardDisplay ? "other-skill" : "own-skill");
+	decorateSourceSkillMark(mark, lib, { skill: id, label: name });
+	refreshSourceSkillMarks(player.node.marks);
 
 	game.addVideo("changeMarkCharacter", player, { id, name, content, target });
 }
@@ -479,8 +491,9 @@ function createNewSkillMark(player, id, name, content, target) {
 	nodeMark.info = { name, content, id };
 	nodeMark.text = nodeMarkText;
 
-	const hasCardDisplay = typeof lib.skill[name]?.intro?.mark === "function";
+	const hasCardDisplay = typeof (lib.skill[id] || lib.skill[name])?.intro?.mark === "function";
 	nodeMark.classList.add(hasCardDisplay ? "other-skill" : "own-skill");
+	decorateSourceSkillMark(nodeMark, lib, { skill: id, label: skillName });
 
 	nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
 
@@ -495,6 +508,7 @@ function createNewSkillMark(player, id, name, content, target) {
 
 	player.node.marks.appendChild(nodeMark);
 	player.marks[id] = nodeMark;
+	refreshSourceSkillMarks(player.node.marks);
 
 	game.addVideo("markCharacter", player, { name, content, id, target });
 }

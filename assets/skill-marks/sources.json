@@ -1,0 +1,78 @@
+{
+  "apk": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+  "atlas": {
+    "cacheKey": "61c5aa54",
+    "originalPath": "/res/assets/game/seat.atlas",
+    "sha256": "13216107810332015fe8b7875765d05e646cac00e0ebc85c04cbc1c3e1b056b1"
+  },
+  "texture": {
+    "cacheKey": "db156ff2",
+    "originalPath": "/res/assets/game/seat.png",
+    "sha256": "b083b66f6a922defd964c71416d5c0c108d8610ec109d69a75afb05640cb87b8"
+  },
+  "decode": "Exact RGBA crops restored from the native Laya atlas, without resizing or recoloring.",
+  "files": [
+    {
+      "file": "seat_state_bg_new.png",
+      "kind": "gray",
+      "sha256": "199400dc606164bd6320f4712b1ef6dbcf069c850cd8232ac1e7d3bfb9edb8c6",
+      "bytes": 433,
+      "atlasRegion": {
+        "frame": {
+          "h": 30,
+          "idx": 0,
+          "w": 30,
+          "x": 1129,
+          "y": 491
+        },
+        "sourceSize": {
+          "h": 30,
+          "w": 30
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sizeGrid": [
+        6,
+        11,
+        10,
+        7
+      ],
+      "textColor": "#DBDBDB",
+      "rgbaSha256": "c52f339089ee58d45cffaa64aa3fe96eebfc5232ce8122d231315c0a5b8fc270"
+    },
+    {
+      "file": "seat_state_btn_0_new2024.png",
+      "kind": "gold",
+      "sha256": "298d3acd6817a698df9f421596bc824d338dbcad73b55245f88b2130012edb12",
+      "bytes": 476,
+      "atlasRegion": {
+        "frame": {
+          "h": 30,
+          "idx": 0,
+          "w": 30,
+          "x": 1132,
+          "y": 442
+        },
+        "sourceSize": {
+          "h": 30,
+          "w": 30
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sizeGrid": [
+        4,
+        10,
+        10,
+        6
+      ],
+      "textColor": "#FFEFAD",
+      "rgbaSha256": "08aae56a2e5cac503efdeb427f6185004f3d9ed9119e5947dc621ce5e50a2893"
+    }
+  ]
+}
