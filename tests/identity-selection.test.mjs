@@ -104,6 +104,95 @@ test('identity still uses the same hook with its identity sidebar and single sub
 	const first = h.dialog.buttons[0]; first.emit('click'); first.emit('click'); assert.equal(h.calls.ok, 1); h.dialog.close();
 });
 
+function pointPick(root, id) {
+	root.querySelector('.hh-point-entry').emit('click');
+	const picker = root.querySelector('.hh-point-picker'), search = picker.querySelector('.hh-point-search');
+	search.value = id; search.emit('input');
+	const card = picker.querySelector('.hh-point-grid').querySelectorAll('.hh-general').find(button => button.link === id);
+	assert.ok(card, `Missing free-pick character ${id}`); card.emit('click');
+	assert.equal(root.querySelector('.hh-point-picker'), null);
+}
+
+for (const options of [{ mode: 'identity', count: 8 }, { role: 'zhu' }, { role: 'fan' }, { fixed: true, teammate: true, role: 'fan' }]) {
+	test(`point-pick adds a real selectable candidate and submits once (${JSON.stringify(options)})`, () => {
+		const h = selectionFixture(options), filter = h.event.filterButton, root = h.open(), original = [...h.dialog.buttons];
+		assert.ok(root.querySelector('.hh-general-grid').contains(root.querySelector('.hh-point-slot')));
+		h.event._buttonChoice = { 0: [...original] };
+		pointPick(root, 'general20');
+		const picked = h.dialog.buttons.at(-1);
+		assert.equal(picked.link, 'general20'); assert.equal(h.dialog.buttons.length, original.length + 1);
+		assert.equal(h.event._buttonChoice, undefined); assert.equal(h.event.filterButton(picked, h.game.me), true);
+		assert.equal(h.ui.selected.buttons.length, 0); assert.equal(h.calls.ok, 0); assert.ok(picked.classList.contains('hh-pending'));
+		assert.ok(root.querySelector('.hh-skill-panel')); assert.equal(picked.querySelector('.hh-general-swap').hidden, true);
+		picked.emit('click'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons[0], picked);
+		h.dialog.close(); assert.equal(h.event.filterButton, filter); assert.equal(h.document.body.querySelector('.hh-point-picker'), null);
+		assert.equal(h.timers.size, 0); assert.ok(h.observers.every(observer => observer.disconnected));
+	});
+}
+
+test('point-pick searches names, ids and skills, filters packages and excludes occupied, hidden and teammate characters', () => {
+	const h = selectionFixture({ fixed: true, teammate: true, role: 'fan' });
+	h.lib.character.general30.isUnseen = true; h.game.players[1].name1 = 'general31';
+	h.lib.translate.general20 = '测试武将'; h.lib.translate.rende = '仁德';
+	const translate = h.get.translation; h.get.translation = id => h.lib.translate[id] || translate(id);
+	h.lib.characterPack = { sample: { general20: h.lib.character.general20 } }; h.lib.translate.sample_character_config = '测试包';
+	const root = h.open(); root.querySelector('.hh-point-entry').emit('click');
+	const picker = root.querySelector('.hh-point-picker'), search = picker.querySelector('.hh-point-search'), grid = picker.querySelector('.hh-point-grid');
+	const ids = () => grid.querySelectorAll('.hh-general').map(button => button.link);
+	for (const id of ['general3', 'general4', 'general5', 'general30', 'general31']) assert.equal(ids().includes(id), false);
+	for (const query of ['测试武将', '仁德', ' GENERAL20 ']) {
+		search.value = query; search.emit('input'); assert.ok(ids().includes('general20'));
+	}
+	search.value = ''; search.emit('input'); picker.querySelectorAll('.hh-point-pack').find(button => button.textContent === '测试包').emit('click');
+	assert.deepEqual(ids(), ['general20']);
+	search.value = '没有这个武将'; search.emit('input'); assert.equal(grid.querySelector('.hh-point-empty').textContent, '暂无武将');
+	picker.emit('keydown', { key: 'Escape' }); assert.equal(root.querySelector('.hh-point-picker'), null); assert.equal(h.calls.ok, 0);
+	h.dialog.close();
+});
+
+test('point-pick batches a large pool, replaces a preview and keeps both native and freely picked first generals in double-character games', () => {
+	for (const firstFree of [false, true]) {
+		const h = selectionFixture({ select: 2 }), root = h.open();
+		for (let i = 40; i < 110; i++) h.lib.character['general' + i] = h.lib.character.general20;
+		root.querySelector('.hh-point-entry').emit('click');
+		const grid = root.querySelector('.hh-point-grid'); assert.equal(grid.children.length, 40);
+		grid.scrollTop = grid.scrollHeight; grid.emit('scroll'); assert.equal(grid.children.length, 80);
+		root.querySelector('.hh-point-picker').emit('keydown', { key: 'Escape' });
+		pointPick(root, 'general20'); pointPick(root, 'general21');
+		assert.equal(h.dialog.buttons.some(button => button.link === 'general20'), false);
+		const first = firstFree ? h.dialog.buttons.at(-1) : h.dialog.buttons[0];
+		if (!firstFree) first.emit('click'); first.emit('click');
+		assert.equal(h.ui.selected.buttons[0], first); assert.equal(h.calls.ok, 0);
+		pointPick(root, 'general22'); const second = h.dialog.buttons.at(-1);
+		assert.equal(h.ui.selected.buttons[0], first); assert.equal(first.isConnected, true);
+		second.emit('click'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons.length, 2);
+		h.dialog.close();
+	}
+});
+
+test('point-picking an existing candidate previews it without duplicating it or submitting on a single click', () => {
+	const h = selectionFixture(), root = h.open(), count = h.dialog.buttons.length;
+	pointPick(root, 'general0'); assert.equal(h.dialog.buttons.length, count); assert.equal(h.calls.ok, 0);
+	assert.ok(h.dialog.buttons[0].classList.contains('hh-pending'));
+	root.querySelector('.hh-point-entry').emit('click'); h.dialog.close();
+	assert.equal(h.document.body.querySelector('.hh-point-picker'), null); assert.equal(h.event.filterButton(h.dialog.buttons[0]), true);
+});
+
+const engineCheck = new URL('../../../noname/game/check.js', import.meta.url);
+test('native engine Check rebuilds its cached candidate list for a free pick and preserves the first confirmed general', { skip: !fs.existsSync(engineCheck) }, () => {
+	const h = selectionFixture({ select: 2, fixed: true, teammate: true, role: 'fan' });
+	h.lib.filter.cardAiIncluded = () => true; h.lib.filter.buttonIncluded = () => true; h.game.callHook = () => {};
+	const source = fs.readFileSync(engineCheck, 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export class Check', 'class Check');
+	vm.runInContext(source + '\ngame.Check = new Check();', h.context);
+	h.game.check = () => h.game.Check.button(h.event, true).ok;
+	const root = h.open(), first = h.dialog.buttons[0]; first.emit('click'); first.emit('click');
+	assert.equal(h.ui.selected.buttons[0], first); assert.equal(h.event._buttonChoice[0].includes(first), true);
+	pointPick(root, 'general20'); const picked = h.dialog.buttons.at(-1);
+	assert.equal(h.event._buttonChoice[0].includes(picked), true); assert.equal(h.ui.selected.buttons[0], first);
+	assert.equal(h.dialog.buttons[3].classList.contains('selectable'), false);
+	picked.emit('click'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons.length, 2); h.dialog.close();
+});
+
 for (const reason of ['bidding', 'ai', 'connect', 'online', 'brawl', 'free-pick', 'other-mode', 'in-game-skill']) test(`opening hook leaves ${reason} dialogs alone`, () => {
 	const h = selectionFixture();
 	if (reason === 'bidding') h.event.name = 'chooseControl';

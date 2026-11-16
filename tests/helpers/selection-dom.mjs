@@ -64,7 +64,7 @@ export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role
 	const selected = []; selected.add = item => { if (!selected.includes(item)) selected.push(item); }; selected.remove = item => { const i = selected.indexOf(item); if (i >= 0) selected.splice(i, 1); };
 	const ui = { window: document.body, control: new Element(), selected: { buttons: selected }, click: { ok() { calls.ok++; event.result = { confirm: 'ok' }; } }, create: {} };
 	document.body.append(ui.control);
-	const makeButton = id => { const button = new Element(); button.className = 'button character'; button.link = id; button.refresh = (_, next) => { button.link = next; }; button.addEventListener('click', () => calls.nativeClicks++); return button; };
+	const makeButton = (id, type, parent, noclick) => { const button = new Element(); button.className = 'button character'; button.link = id; button.refresh = (_, next) => { button.link = next; }; if (!noclick) button.addEventListener('click', () => calls.nativeClicks++); parent?.appendChild(button); return button; };
 	ui.create.button = makeButton;
 	const dialog = new Dialog();
 	function group(ids, character = true) { const box = new Element(); box.className = 'buttons'; for (const id of ids) { const button = makeButton(id); if (!character) button.className = 'button card'; dialog.buttons.push(button); box.append(button); } dialog.content.append(box); }
@@ -78,8 +78,9 @@ export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role
 	const _status = { event };
 	const context = vm.createContext({ document, window, lib, game, get, ui, _status, ResizeObserver: Observer, MutationObserver: Observer, AbortController: Controller, setTimeout: dom.environment.setTimer, clearTimeout: dom.environment.clearTimer,
 		findSelectionPlayerTemplate: () => null, createSelectionPlayerVisual() { throw new Error('Unexpected player initialization'); }, captureSelectionPlayerLayout() {} });
-	const source = fs.readFileSync(new URL('../../identity-selection.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/, '').replace('export function ', 'function ');
-	vm.runInContext(source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
+	const source = fs.readFileSync(new URL('../../identity-selection.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export function ', 'function ');
+	const picker = fs.readFileSync(new URL('../../src/ui/selectionFreePick.js', import.meta.url), 'utf8').replace('export function ', 'function ');
+	vm.runInContext(picker + '\n' + source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
 	lib.arenaReady.forEach(fn => fn());
 	return { ...dom, context, lib, game, get, ui, _status, parent, event, dialog, calls, observers, own, open() { dialog.open(); game.check(); return dialog._hhSelection; } };
 }

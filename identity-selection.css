@@ -144,3 +144,23 @@
 .hh-skill-scroll-down { bottom:-39px; }
 .hh-skill-scroll[hidden] { display:none!important; }
 .hh-skill-scroll:focus-visible,.hh-skill-content:focus-visible { outline:2px solid #edcc73; }
+
+/* The final column is the empty lower-right card position in the opening layout. */
+.hh-point-slot { position:relative!important; grid-column:5; width:var(--hh-card-width,294px); height:var(--hh-card-height,380px); flex:0 0 auto; }
+.hh-point-entry { position:absolute; inset:0; width:100%; height:100%; padding:0; border:3px solid #a58042; border-radius:10px; background:linear-gradient(135deg,#f4df9e24,#76603a30); box-shadow:inset 0 0 0 5px #ead39b35,0 2px 8px #59412538; color:#725225; font:inherit; font-size:64px; letter-spacing:10px; cursor:pointer; text-shadow:0 1px 1px #f6e1a6; }
+.hh-point-entry:hover,.hh-point-entry:focus-visible { outline:3px solid #efcf78; background-color:#e8c77530; }
+.hh-point-filled>.hh-point-entry { inset:auto 0 -48px; height:44px; border:1px solid #a58042; border-radius:4px; font-size:30px; letter-spacing:5px; background:#dec48b9c; }
+.hh-identity-selection .hh-general-swap[hidden] { display:none!important; }
+.hh-point-picker { position:absolute!important; inset:158px 144px 130px; z-index:30; display:grid!important; grid-template-columns:310px 1fr; grid-template-rows:110px 1fr; overflow:hidden; border:3px solid #a88a50; border-radius:12px; background:#c2aa78 url('assets/selection/background.png') center/cover; box-shadow:0 15px 70px #392b1c88; }
+.hh-point-header { position:relative; grid-column:1/-1; display:flex; align-items:center; gap:50px; padding:18px 34px; border-bottom:2px solid #98783f66; }
+.hh-point-title { position:static; color:#61441f; font-size:50px; letter-spacing:8px; }
+.hh-point-search { position:static!important; flex:1; min-width:0; height:64px; padding:6px 24px; border:2px solid #9b7b45; border-radius:6px; background:#f3dfaf80; color:#49351b; font:inherit; font-size:34px; user-select:text; }
+.hh-point-search::placeholder { color:#826b45; }
+.hh-point-close { position:static; width:64px; height:64px; border:0; background:none; color:#694b29; font:inherit; font-size:64px; line-height:1; cursor:pointer; }
+.hh-point-packs { position:relative; min-height:0; overflow:auto; padding:22px 16px; border-right:2px solid #98783f66; overscroll-behavior:contain; touch-action:pan-y; }
+.hh-point-pack { position:relative; display:block; width:100%; margin:0 0 12px; padding:18px 8px; border:1px solid #9d804a55; border-radius:5px; background:#dfc48a44; color:#70532e; font:inherit; font-size:32px; cursor:pointer; }
+.hh-point-pack[aria-pressed='true'] { background:linear-gradient(90deg,#846131,#ae874b,#846131); color:#fff0b9; }
+.hh-point-grid { position:relative; min-width:0; min-height:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); grid-auto-rows:max-content; justify-items:center; align-content:start; gap:64px 24px; overflow:auto; padding:54px 30px; overscroll-behavior:contain; touch-action:pan-y; }
+.hh-point-empty { grid-column:1/-1; margin:100px 0; color:#70532e; font-size:40px; }
+.hh-point-picker button:focus-visible,.hh-point-grid:focus-visible { outline:3px solid #ffe29b; }
+.hh-identity-selection.hh-doudizhu-selection .hh-general-grid { column-gap:40px; }

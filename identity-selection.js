@@ -1,4 +1,5 @@
 import { createSelectionPlayerVisual, findSelectionPlayerTemplate, captureSelectionPlayerLayout } from './src/ui/selectionPlayer.js';
+import { createSelectionFreePick } from './src/ui/selectionFreePick.js';
 
 // Keep the engine's real buttons, links and chooseButton event throughout selection.
 export function installIdentitySelection(lib, game, ui, get, _status) {
@@ -100,6 +101,52 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				button.removeAttribute('aria-expanded');
 			}
 		};
+		const originalFilter = event.filterButton;
+		const pickedButtons = new Set();
+		let pointCard = null;
+		const pointSlot = document.createElement('div');
+		pointSlot.className = 'hh-point-slot';
+		const pointEntry = document.createElement('button');
+		pointEntry.type = 'button'; pointEntry.className = 'hh-point-entry'; pointEntry.textContent = '点将';
+		pointEntry.setAttribute('aria-label', '点将，任选武将');
+		pointSlot.appendChild(pointEntry);
+		const available = name => {
+			if (!lib.character[name]) return false;
+			const info = get.character(name);
+			if (info.isUnseen || info.trashBin?.includes('unseen') || occupied().has(source(name))) return false;
+			// A fixed teammate's pool remains reserved for that teammate.
+			return !dialog.buttons.some(button => typeof button.link === 'string' && !pickedButtons.has(button) &&
+				source(button.link) === source(name) && !originalFilter.call(event, button, game.me));
+		};
+		const pointFilter = function (button, ...args) {
+			return pickedButtons.has(button) ? available(button.link) : originalFilter.call(this, button, ...args);
+		};
+		event.filterButton = pointFilter;
+		const picker = createSelectionFreePick({ lib, ui, get }, { root, available, paintCard, onPick: pickGeneral });
+		listen(pointEntry, 'click', e => {
+			e.stopPropagation();
+			if (disposed || !isCurrent() || root.classList.contains('hh-revealing')) return;
+			clearPending(); closePopup(); picker.open();
+		});
+		function pickGeneral(name) {
+			if (disposed || !isCurrent() || !available(name)) return;
+			const existing = dialog.buttons.find(button => button.link === name && event.filterButton(button, game.me));
+			if (existing) { existing.focus({ preventScroll: true }); chooseCard(existing); return; }
+			clearPending();
+			if (pointCard && ui.selected.buttons.includes(pointCard)) {
+				// Keep a confirmed first general when picking a second one in double-character games.
+				pointSlot.parentNode.insertBefore(pointCard, pointSlot); pointCard = null;
+			}
+			if (pointCard) {
+				dialog.buttons.splice(dialog.buttons.indexOf(pointCard), 1); pickedButtons.delete(pointCard); pointCard.remove();
+			}
+			pointCard = ui.create.button(name, 'character');
+			pickedButtons.add(pointCard); dialog.buttons.push(pointCard); pointSlot.insertBefore(pointCard, pointEntry);
+			pointSlot.classList.add('hh-point-filled'); decorate(pointCard);
+			// Refresh the native legality cache without clearing a confirmed first general.
+			delete event._buttonChoice; game.check();
+			pointCard.focus({ preventScroll: true }); chooseCard(pointCard);
+		}
 		main.appendChild(dialog);
 		dialog.classList.add('hh-selection-dialog', 'fixed');
 		root.classList.toggle('hh-touch', !!lib.config.touchscreen);
@@ -382,7 +429,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			button.appendChild(confirmation);
 			const swap = document.createElement('button');
 			swap.className = 'hh-general-swap';
-			swap.hidden = fixedChoices;
+			swap.hidden = fixedChoices || pickedButtons.has(button);
 			swap.textContent = '换';
 			swap.title = '随机更换；长按选择同名武将';
 			swap.setAttribute('aria-label', '随机更换武将，长按选择同名武将');
@@ -565,6 +612,8 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			for (const container of dialog.content.querySelectorAll('.buttons')) {
 				container.classList.toggle('hh-general-grid', !!container.querySelector('.hh-general'));
 			}
+			const grid = dialog.content.querySelector('.hh-general-grid');
+			if (grid && pointSlot.parentNode !== grid) grid.appendChild(pointSlot);
 			updateConfirmation();
 			updateSide();
 		}
@@ -576,7 +625,11 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			if (popup && !popup.contains(e.target) && !e.target.closest('.hh-general')) closePopup();
 			if (skillPanel && !skillPanel.contains(e.target) && !e.target.closest('.hh-general')) clearPending();
 		};
-		const escape = e => { if (e.key === 'Escape' && (popup || skillPanel)) { e.stopPropagation(); closePopup(); clearPending(); } };
+		const escape = e => {
+			if (e.key !== 'Escape') return;
+			if (picker.isOpen) { e.preventDefault(); e.stopImmediatePropagation(); picker.close(); }
+			else if (popup || skillPanel) { e.stopPropagation(); closePopup(); clearPending(); }
+		};
 		root.addEventListener('pointerdown', clickAway);
 		document.addEventListener('keydown', escape, true);
 		const resize = () => { closePopup(); fit(); positionSkills(); };
@@ -591,6 +644,13 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			if (disposed) return;
 			disposed = true;
 			listeners.abort();
+			picker.close(false);
+			if (event.filterButton === pointFilter) event.filterButton = originalFilter;
+			for (const button of pickedButtons) {
+				const index = dialog.buttons.indexOf(button); if (index >= 0) dialog.buttons.splice(index, 1);
+				button.remove();
+			}
+			pointSlot.remove(); delete event._buttonChoice;
 			for (const button of decorated) {
 				delete button._hhDecorated;
 				button.querySelector('.hh-general-swap')?.remove();
