@@ -89,8 +89,24 @@ export function createCharacterBrowser(context, environment = {}) {
 		root.style.setProperty('--hh-player-width', `${playerWidth}px`); root.style.setProperty('--hh-player-height', `${playerHeight}px`);
 		root.style.setProperty('--hh-card-aspect', `${width}/${height}`);
 		root.style.setProperty('--hh-card-ratio', String(width / height)); root.style.setProperty('--hh-card-height-ratio', String(height / width));
+		const large = detailId && !detail.hidden ? detail.querySelector('.hh-general-card-large') : null;
+		if (large) {
+			const left = large.parentNode, style = win.getComputedStyle?.(left);
+			const availableWidth = left.clientWidth - (parseFloat(style?.paddingLeft) || 0) - (parseFloat(style?.paddingRight) || 0);
+			const availableHeight = left.clientHeight - (parseFloat(style?.paddingTop) || 0) - (parseFloat(style?.paddingBottom) || 0);
+			if (win.getComputedStyle?.(detail)?.display === 'flex') { large.style.width = ''; large.style.height = ''; }
+			else if (availableWidth > 0 && availableHeight > 0) {
+				const cardHeight = Math.min(availableHeight, availableWidth * height / width);
+				large.style.width = `${cardHeight * width / height}px`; large.style.height = `${cardHeight}px`;
+			}
+		}
 		for (const card of root.querySelectorAll('.hh-general-card')) {
-			if (card.clientWidth) card.style.setProperty('--hh-player-scale', String(playerScale * card.clientWidth / width));
+			if (!card.clientWidth) continue;
+			const scale = playerScale * card.clientWidth / width; card.style.setProperty('--hh-player-scale', String(scale));
+			if (card === large) {
+				const targetWidth = card.getBoundingClientRect().width, visualWidth = card.querySelector('.hh-selection-player')?.getBoundingClientRect().width;
+				if (targetWidth > 0 && visualWidth > 0) card.style.setProperty('--hh-player-scale', String(scale * targetWidth / visualWidth));
+			}
 		}
 	}
 	function portrait(parent, entry, large = false) {
@@ -176,7 +192,7 @@ export function createCharacterBrowser(context, environment = {}) {
 	}
 	function showList() {
 		detailSession++; voice.stop();
-		const previous = detail?.querySelector('.hh-general-card'); if (previous) sizeObserver?.unobserve?.(previous);
+		const previous = detail?.querySelector('.hh-general-card'); if (previous) { sizeObserver?.unobserve?.(previous); sizeObserver?.unobserve?.(previous.parentNode); }
 		detailPress?.destroy(); detailPress = null; detailId = null;
 		workspace.hidden = false; detail.hidden = true; search.hidden = false; status.hidden = false;
 		title.textContent = '武将'; back.setAttribute('aria-label', '关闭武将界面');
@@ -184,11 +200,12 @@ export function createCharacterBrowser(context, environment = {}) {
 	function showDetail(id, focus = true) {
 		const entry = model?.entries.get(id); if (!root || !entry) return;
 		closeFilter(); voice.stop(); const session = ++detailSession;
-		const previous = detail.querySelector('.hh-general-card'); if (previous) sizeObserver?.unobserve?.(previous);
+		const previous = detail.querySelector('.hh-general-card'); if (previous) { sizeObserver?.unobserve?.(previous); sizeObserver?.unobserve?.(previous.parentNode); }
 		detailPress?.destroy(); clear(detail); detailId = id;
 		workspace.hidden = true; detail.hidden = false; search.hidden = true; status.hidden = true;
 		title.textContent = '武将详情'; back.setAttribute('aria-label', '返回武将列表');
 		const left = node('section', 'hh-general-detail-left', undefined, detail), card = portrait(left, entry, true);
+		sizeObserver?.observe(left);
 		detailPress = press(card, entry, () => {});
 		const right = node('section', 'hh-general-detail-right', undefined, detail);
 		const panel = node('section', 'hh-general-info', undefined, right);

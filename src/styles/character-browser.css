@@ -57,9 +57,10 @@
 .hh-character-browser .hh-character-section-toggle[aria-checked="true"] { border-image-source:url("../../assets/character-browser/generaldetail_bgskill_sel.png"); color:#ffeda4; }
 .hh-character-browser .hh-character-empty { padding:25vh 20px; text-align:center; color:#5e492d; }
 .hh-character-browser .hh-character-more { display:block; width:160px; margin:24px auto 0; padding:5px 18px; border:1px solid #b59451; border-radius:3px; background:#7e6943; color:#f8e5aa; }
-.hh-character-browser .hh-general-detail { --hh-detail-headroom:clamp(22px,4.5vh,52px); --hh-detail-height:calc(100vh - clamp(50px,9vh,76px) - 6vh - var(--hh-detail-headroom)); display:grid; flex:1; min-height:0; grid-template-columns:minmax(0,.95fr) minmax(0,1fr); gap:6vw; padding:3vh 13.5vw 3vh 19vw; }
-.hh-character-browser .hh-general-detail-left { display:flex; flex-direction:column; align-items:center; min-width:0; min-height:0; padding-top:var(--hh-detail-headroom); }
-.hh-character-browser .hh-general-card-large { width:min(100%,calc(var(--hh-detail-height) * var(--hh-card-ratio))); flex:none; max-width:100%; max-height:none; min-height:0; }
+.hh-character-browser .hh-general-detail { --hh-detail-headroom:clamp(22px,4.5vh,52px); display:grid; flex:1; min-height:0; grid-template-columns:minmax(0,.95fr) minmax(0,1fr); gap:6vw; padding:3vh 13.5vw max(8px,env(safe-area-inset-bottom)) 19vw; }
+.hh-character-browser .hh-general-detail-left { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-width:0; min-height:0; padding-top:var(--hh-detail-headroom); }
+.hh-character-browser .hh-general-card-large { width:100%; flex:none; max-width:none; max-height:none; min-height:0; }
+.hh-character-browser .hh-general-card-large > .hh-selection-player { min-width:0!important; min-height:0!important; max-width:none!important; max-height:none!important; }
 .hh-character-browser .hh-general-detail-right { display:flex; flex-direction:column; min-width:0; min-height:0; }
 .hh-character-browser .hh-general-info { display:flex; flex-direction:column; flex:1; min-height:0; }
 .hh-character-browser .hh-general-detail-tabs { display:flex; gap:5px; flex-shrink:0; }
@@ -92,7 +93,7 @@
 }
 @supports not (aspect-ratio:1/1) {
 	.hh-character-browser .hh-general-card::before { content:""; display:block; padding-top:calc(100% * var(--hh-card-height-ratio)); }
-	.hh-character-browser .hh-general-card-large { width:100%; max-width:calc(var(--hh-detail-height) * var(--hh-card-ratio)); flex:none; }
+	.hh-character-browser .hh-general-card-large { width:100%; max-width:none; flex:none; }
 }
 @media(max-width:700px) {
 	.hh-character-browser .hh-character-header { gap:8px; padding:0 12px; }

@@ -236,6 +236,27 @@ test('catalog retains exact card dimensions and scale recorded by opening select
 	browser.close();
 });
 
+test('detail fills the measured left region at the opening ratio and corrects additional visual scaling', () => {
+	const h = fixture(), template = h.document.createElement('div'); template.offsetWidth = 136; template.offsetHeight = 180;
+	template.node = { campWrap: h.document.createElement('div') }; h.game.players = [template];
+	h.game.hhSelectionCardLayout = { width: 272, height: 360, playerWidth: 136, playerHeight: 180, playerScale: 2 };
+	let resize, stacked = false; const unobserved = [];
+	h.environment.window.ResizeObserver = class { constructor(fn) { resize = fn; } observe() {} unobserve(node) { unobserved.push(node); } disconnect() {} };
+	h.environment.window.getComputedStyle = element => element.classList.contains('hh-general-detail') ? { display: stacked ? 'flex' : 'grid' } : { paddingTop: '40px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '0px' };
+	const browser = createCharacterBrowser(h.context, h.environment), root = browser.open(); browser.openCharacter('liubei');
+	const card = root.querySelector('.hh-general-card-large'), left = card.parentNode, visual = card.querySelector('.hh-selection-player'), zoom = .7;
+	left.clientWidth = 760; left.clientHeight = 1000;
+	Object.defineProperty(card, 'clientWidth', { get: () => parseFloat(card.style.width) || 0 });
+	card.getBoundingClientRect = () => ({ width: parseFloat(card.style.width) * zoom, height: parseFloat(card.style.height) * zoom });
+	visual.getBoundingClientRect = () => ({ width: 136 * Number(card.style['--hh-player-scale']) * zoom * .55 });
+	resize(); assert.equal(parseFloat(card.style.height), 960); assert.ok(Math.abs(parseFloat(card.style.width) / parseFloat(card.style.height) - 136 / 180) < 1e-9);
+	assert.ok(Math.abs(visual.getBoundingClientRect().width - card.getBoundingClientRect().width) < .01);
+	left.clientWidth = 1000; left.clientHeight = 1200; resize(); assert.equal(parseFloat(card.style.height), 1160);
+	assert.ok(Math.abs(visual.getBoundingClientRect().width - card.getBoundingClientRect().width) < .01);
+	stacked = true; resize(); assert.equal(card.style.width, ''); assert.equal(card.style.height, '');
+	root.querySelector('.hh-character-back').emit('click'); assert.ok(unobserved.includes(left)); browser.close();
+});
+
 test('pack state uses the native allowlist and keeps individual bans when whole packs change', async () => {
 	const h=fixture();h.lib.characterPack.hh_sp={custom:h.lib.character.custom};h.lib.translate.hh_sp_character_config='HH分包';
 	const catalog=createCharacterCatalog(h.context),before=[...h.lib.config.identity_banned],characters=h.lib.character;
