@@ -1,4 +1,8 @@
 /* Native seat-state labels. Only the existing rectangular mark style uses these assets. */
+.player > .dui-marks > .mark > .hh-source-mark-content {
+	display: none;
+}
+
 #arena[data-player-mark-style="decade"] > .player > .dui-marks.hh-source-marks {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -41,6 +45,10 @@
 	transition: none;
 	white-space: nowrap;
 	color: #dbdbdb;
+	font-family: yuanli, STKaiti, KaiTi, serif;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 18px;
 }
 
 #arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark="gold"] {
@@ -61,7 +69,11 @@
 
 #arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-text,
 #arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-count {
-	display: inline-block;
+	display: none;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .hh-source-mark-content {
+	display: block;
 	position: static;
 	width: auto;
 	height: auto;
@@ -72,23 +84,8 @@
 	border-radius: 0;
 	background: none;
 	box-shadow: none;
-	font-family: yuanli, STKaiti, KaiTi, serif;
-	font-size: 14px;
-	font-weight: normal;
-	line-height: 18px;
+	font: inherit;
 	color: inherit;
 	text-shadow: none;
 	animation: none;
 }
-
-#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-text {
-	font-size: 0;
-}
-
-#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-text::after {
-	content: attr(data-hh-source-mark-label);
-	font-size: 14px;
-}
-
-#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-count::before { content: "["; }
-#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] > .mark-count::after { content: "]"; }

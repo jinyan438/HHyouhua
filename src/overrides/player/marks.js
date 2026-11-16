@@ -334,7 +334,7 @@ export function playerUpdateMark(name, storage) {
 
 	const mark = this.marks[name];
 	const skillInfo = lib.skill[name];
-	if (mark.classList.contains("hh-source-mark")) decorateSourceSkillMark(mark, lib, { skill: name });
+	if (mark.text) decorateSourceSkillMark(mark, lib, { skill: name });
 
 	if (storage && this.storage[name]) {
 		this.syncStorage(name);
