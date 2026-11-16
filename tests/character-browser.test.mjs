@@ -8,6 +8,7 @@ import { createCharacterBrowser } from '../src/ui/characterBrowser.js';
 import { addCharacterCatalogMenu } from '../src/ui/characterBrowserMenu.js';
 import { createSelectionPlayerVisual, captureSelectionPlayerLayout, selectionPlayerSize } from '../src/ui/selectionPlayer.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
+import { refreshCharacterSettingsMenus } from '../src/ui/characterSettingsMenu.js';
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
 function fixture({ connect = false, paused = false, size = 0 } = {}) {
@@ -16,8 +17,9 @@ function fixture({ connect = false, paused = false, size = 0 } = {}) {
 	const custom = { sex: 'female', group: 'qun', hp: 3, skills: ['custom_skill'] }, extra = { sex: 'male', group: 'wei', hp: '3/4', skills: [] };
 	const _status = { connectMode: connect, paused2: paused };
 	const lib = { assetURL: '/noname/', config: { mode: 'identity', identity_banned: ['already_banned'], versus_banned: ['other_mode'] }, onover: [], character: { liubei, guanyu, custom, extra }, characterPack: { standard: { liubei, guanyu, unseen: { isUnseen: true, skills: [] } }, mode_extension_test: { custom, liubei } }, characterIntro: { liubei: '刘备，字玄德。' }, skill: { rende: {}, jijiang: { zhuSkill: true }, wusheng: {}, custom_skill: {} }, translate: { standard_character_config: '标准', mode_extension_test_character_config: '测试扩展', liubei: '刘备', guanyu: '关羽', custom: '自定义武将', extra: '其他武将', rende: '仁德', jijiang: '激将', wusheng: '武圣', rende_info: '可以将手牌交给其他角色。', jijiang_info: '请求蜀势力角色出杀。', custom_skill: '扩展技能', shu: '蜀', wei: '魏', qun: '群', male: '男', female: '女' } };
+	Object.assign(lib.config, { characters: ['standard'], connect_characters: [], extension_test_characters_enable: true });
 	for (let i = 0; i < size; i++) { const id = 'test_' + i; lib.character[id] = { ...liubei }; lib.characterPack.standard[id] = lib.character[id]; lib.translate[id] = '测试武将' + i; }
-	const game = { async saveConfig(key, value) { calls.saves.push([key, [...value]]); }, pause2() { calls.pause++; _status.paused2 = true; }, resume2() { calls.resume++; _status.paused2 = false; }, system: {}, playAudio() {} };
+	const game = { async saveConfig(key, value) { calls.saves.push([key, Array.isArray(value) ? [...value] : value]); }, pause2() { calls.pause++; _status.paused2 = true; }, resume2() { calls.resume++; _status.paused2 = false; }, system: {}, playAudio() {} };
 	const get = { character: id => lib.character[id] || Object.values(lib.characterPack).find(pack => pack[id])?.[id], translation: id => lib.translate[id] || id, mode: () => 'identity', characterIntro: id => lib.characterIntro[id] || '', skillInfoTranslation: skill => lib.translate[skill + '_info'] || '' };
 	const ui = { window: dom.document.body, click: {}, system1: new dom.Element(), system2: new dom.Element() };
 	return { ...dom, context: { lib, game, get, ui, _status }, lib, game, get, calls };
@@ -126,7 +128,7 @@ test('all six actual menu themes receive one working catalog button', async () =
 
 test('all native catalog UI resources retain their source hashes', () => {
 	const base = new URL('../assets/character-browser/', import.meta.url), sources = JSON.parse(fs.readFileSync(new URL('sources.json', base), 'utf8'));
-	assert.equal(sources.files.length, 10);
+	assert.equal(sources.files.length, 11);
 	for (const file of sources.files) { const bytes = fs.readFileSync(new URL(file.file, base)); assert.equal(bytes.length, file.bytes); assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256); }
 });
 
@@ -180,4 +182,93 @@ test('catalog retains exact card dimensions and scale recorded by opening select
 	assert.equal(root.style['--hh-card-aspect'],'408/540');assert.equal(root.style['--hh-player-width'],'136px');
 	assert.equal(card.style['--hh-player-scale'],'1.5');
 	browser.close();
+});
+
+test('pack state uses the native allowlist and keeps individual bans when whole packs change', async () => {
+	const h=fixture();h.lib.characterPack.hh_sp={custom:h.lib.character.custom};h.lib.translate.hh_sp_character_config='HH分包';
+	const catalog=createCharacterCatalog(h.context),before=[...h.lib.config.identity_banned],characters=h.lib.character;
+	assert.equal(catalog.isPackEnabled('hh_sp'),false);assert.equal(catalog.isCharacterPackEnabled('custom','hh_sp'),false);
+	assert.equal(await catalog.togglePack('hh_sp'),true);assert.deepEqual(h.lib.config.characters,['standard','hh_sp']);
+	assert.equal(await catalog.togglePack('standard'),false);assert.equal(catalog.counts('standard').enabled,0);
+	assert.equal(catalog.list({pack:'standard',status:'enabled'}).length,0);assert.equal(catalog.list({pack:'standard',status:'disabled'}).length,2);
+	assert.equal(catalog.isCharacterPackEnabled('liubei'),true);assert.equal(catalog.isCharacterPackEnabled('liubei','standard'),false);
+	assert.deepEqual(h.lib.config.identity_banned,before);assert.equal(h.lib.character,characters);
+	await assert.rejects(catalog.togglePack('__all'));await assert.rejects(catalog.togglePack('__other'));
+	assert.equal(createCharacterCatalog(h.context).isPackEnabled('hh_sp'),true);
+});
+
+test('online pack exclusions and legacy extension character switches retain the native meaning', async () => {
+	const h=fixture({connect:true});h.lib.config.connect_characters=['standard'];h.lib.config.extension_test_enable=true;
+	const catalog=createCharacterCatalog(h.context);assert.equal(catalog.isPackEnabled('standard'),false);
+	assert.equal(await catalog.togglePack('standard'),true);assert.deepEqual(h.lib.config.connect_characters,[]);
+	assert.equal(await catalog.togglePack('standard'),false);assert.deepEqual(h.lib.config.connect_characters,['standard']);assert.deepEqual(h.lib.config.characters,['standard']);
+	assert.equal(await catalog.togglePack('mode_extension_test'),false);assert.equal(h.lib.config.extension_test_characters_enable,false);assert.equal(h.lib.config.extension_test_enable,true);
+	assert.equal(await catalog.togglePack('mode_extension_test'),true);assert.deepEqual(h.lib.config.identity_banned,['already_banned']);
+	h.game.hasExtensionLoaded=()=>false;assert.equal(catalog.canTogglePack('mode_extension_test'),false);assert.equal(catalog.isPackEnabled('mode_extension_test'),false);
+});
+
+test('pack and group writes serialize with bans, suppress repeated holds and restore failed writes', async () => {
+	const h=fixture();h.lib.characterSort={standard:{first:['liubei']}};let release;const writes=[];
+	h.game.saveConfig=(key,value)=>{writes.push(key);return writes.length===1?new Promise(resolve=>{release=resolve}):Promise.resolve()};
+	const catalog=createCharacterCatalog(h.context),first=catalog.togglePack('standard');assert.equal(catalog.togglePack('standard'),first);
+	const ban=catalog.toggle('guanyu'),group=catalog.toggleGroup('standard','first');await flush();assert.equal(writes.length,1);release();await Promise.all([first,ban,group]);
+	assert.deepEqual(h.lib.config.identity_banned,['already_banned','guanyu','liubei']);assert.deepEqual(writes,['characters','identity_banned','identity_banned']);
+	const before=h.lib.config.characters,bans=h.lib.config.identity_banned,flag=h.lib.config.extension_test_characters_enable;
+	h.game.saveConfig=async()=>{throw new Error('disk failure')};
+	await assert.rejects(catalog.togglePack('standard'),/disk failure/);assert.equal(h.lib.config.characters,before);
+	await assert.rejects(catalog.togglePack('mode_extension_test'),/disk failure/);assert.equal(h.lib.config.extension_test_characters_enable,flag);
+	await assert.rejects(catalog.toggleGroup('standard','first'),/disk failure/);assert.equal(h.lib.config.identity_banned,bans);assert.equal(h.lib.config.banned,bans);
+});
+
+test('subpacks follow characterSort names, order and the current-mode bulk ban settings', async () => {
+	const h=fixture();h.lib.characterSort={standard:{first:['liubei'],second:['guanyu']}};Object.assign(h.lib.translate,{first:'第一分包',second:'第二分包'});
+	const catalog=createCharacterCatalog(h.context);assert.deepEqual(catalog.sections({pack:'standard'}).map(section=>section.name),['第一分包','第二分包']);
+	assert.equal(catalog.sections({pack:'standard',query:'刘备'})[0].group,'first');
+	assert.equal(await catalog.toggleGroup('standard','first'),false);assert.ok(h.lib.config.identity_banned.includes('liubei'));assert.equal(catalog.groupEnabled('standard','first'),false);
+	await catalog.toggle('guanyu');await catalog.togglePack('standard');
+	assert.equal(await catalog.toggleGroup('standard','first'),true);assert.equal(catalog.isBanned('liubei'),false);assert.equal(catalog.isBanned('guanyu'),true);assert.equal(catalog.counts('standard').enabled,0);
+	await catalog.togglePack('standard');assert.equal(catalog.counts('standard').enabled,1);assert.deepEqual(h.lib.config.versus_banned,['other_mode']);
+	const online=fixture({connect:true});online.lib.characterSort=h.lib.characterSort;await createCharacterCatalog(online.context).toggleGroup('standard','first');assert.deepEqual(online.lib.config.connect_identity_banned,['liubei']);
+});
+
+test('sidebar holds toggle packages without selecting them, scrolling cancels holds and sections toggle groups', async () => {
+	const h=fixture();h.lib.characterSort={standard:{first:['liubei','guanyu']}};h.lib.translate.first='蜀汉分包';
+	const view=createCharacterBrowser(h.context,h.environment),root=view.open();const standard=root.querySelector('[data-pack="standard"]'),legacy=root.querySelector('[data-pack="mode_extension_test"]');
+	legacy.emit('click');assert.equal(legacy.getAttribute('aria-pressed'),'true');standard.emit('pointerdown');h.advance(600);await flush();standard.emit('pointerup');standard.emit('click');
+	assert.equal(standard.classList.contains('is-pack-disabled'),true);assert.equal(legacy.getAttribute('aria-pressed'),'true');assert.equal(h.lib.config.characters.includes('standard'),false);
+	h.advance(1000);standard.emit('click');assert.equal(root.querySelector('.hh-character-section-name').textContent,'蜀汉分包');
+	assert.ok(root.querySelectorAll('.hh-general-card').every(card=>card.classList.contains('is-pack-disabled')));
+	root.querySelector('.hh-character-section-toggle').emit('click');await flush();assert.ok(root.querySelectorAll('.hh-general-card').every(card=>card.classList.contains('is-disabled')));
+	root.querySelector('.hh-character-section-toggle').emit('click');await flush();assert.equal(h.lib.config.identity_banned.includes('liubei'),false);assert.equal(h.lib.config.characters.includes('standard'),false);
+	standard.emit('pointerdown');root.querySelector('.hh-character-packs').emit('scroll');h.advance(700);await flush();assert.equal(h.lib.config.characters.includes('standard'),false);
+	view.close();assert.equal(h.timers.size,0);
+	h.lib.config.characters.push('standard');h.lib.config.identity_banned.push('guanyu');const reopened=view.open();assert.equal(reopened.querySelector('[data-pack="standard"]').classList.contains('is-pack-disabled'),false);assert.equal(reopened.querySelector('[data-character="guanyu"]').classList.contains('is-disabled'),true);view.close();
+});
+
+test('existing native character settings pages refresh pack, subgroup and individual ban controls only', async () => {
+	const h=fixture();h.lib.characterSort={standard:{first:['liubei']}};const catalog=createCharacterCatalog(h.context),make=(cls='')=>{const node=h.document.createElement('div');node.className=cls;return node};
+	const menu=make(),tabs=make('menu-tab'),start=make(),page=make(),left=make(),pack=make('menubutton'),packPage=make();page.appendChild(left);left.appendChild(pack);pack.mode='standard';pack.link=packPage;
+	const begin=make();begin.textContent='开始';begin._link=start;const chars=make();chars.textContent='武将';chars._link=page;tabs.append(begin,chars);menu.appendChild(tabs);h.context.ui.menuContainer=menu;
+	const switchRow=make('config on');switchRow._link={config:{name:'开启',_name:'standard',init:true}};const groupRow=make('config on');groupRow._link={config:{name:'第一分包',_name:'first',init:true}};const aiRow=make('config on');aiRow._link={config:{name:'仅点将可用',init:true}};
+	const card=make('character');card.updateBanned=()=>card.classList.toggle('banned',h.lib.config.identity_banned.includes('liubei'));packPage.append(switchRow,groupRow,aiRow,card);
+	await catalog.togglePack('standard');await catalog.toggleGroup('standard','first');refreshCharacterSettingsMenus(h.context,catalog);
+	assert.equal(pack.classList.contains('off'),true);assert.equal(switchRow.classList.contains('on'),false);assert.equal(switchRow._link.config.init,false);assert.equal(groupRow.classList.contains('on'),false);assert.equal(card.classList.contains('banned'),true);assert.equal(aiRow.classList.contains('on'),true);
+});
+
+const nativeMenuFile='F:/noname/apps/core/noname/ui/create/menu/pages/characterPackMenu.js';
+test('native settings handlers and the catalog read and write the same package and subgroup data', {skip:!fs.existsSync(nativeMenuFile)}, async () => {
+	const h=fixture();h.lib.characterSort={standard:{first:['liubei']}};
+	const text=fs.readFileSync(nativeMenuFile,'utf8'),start=text.indexOf('var togglePack = function (bool) {'),end=text.indexOf('\n\tvar createModeConfig',start);
+	assert.ok(start>=0&&end>start);const packCode=text.slice(start+'var togglePack = '.length,end).trim().replace(/;$/,'');
+	const groupStart=text.indexOf('onclick(bool) {',text.indexOf('var cfgnodeY = {')),bodyStart=groupStart+'onclick(bool) {'.length,bodyEnd=text.indexOf('updateActive();',bodyStart)+'updateActive();'.length;
+	assert.ok(groupStart>=0&&bodyEnd>bodyStart);
+	const wire=values=>{Object.defineProperties(values,{add:{configurable:true,value(id){if(!this.includes(id))this.push(id)}},remove:{configurable:true,value(id){let at;while((at=this.indexOf(id))>=0)this.splice(at,1)}}});return values};
+	const game={saveConfig(key,value){h.lib.config[key]=value},hasExtension:()=>true,hasExtensionLoaded:()=>true,saveExtensionConfig(name,key,value){h.lib.config[`extension_${name}_${key}`]=value}};
+	const realm=vm.createContext({lib:h.lib,game,get:h.get,_status:h.context._status,connectMenu:false,mode:'standard',updateNodes(){},updateActive(){}});
+	const nativePack=vm.runInContext('('+packCode+')',realm),nativeGroup=vm.runInContext('(function(bool){'+text.slice(bodyStart,bodyEnd)+'})',realm),catalog=createCharacterCatalog({...h.context,game});
+	wire(h.lib.config.characters);nativePack.call({_link:{config:{_name:'standard'}}},false);assert.equal(catalog.isPackEnabled('standard'),false);
+	await catalog.togglePack('standard');assert.equal(h.lib.config.characters.includes('standard'),true);
+	wire(h.lib.config.identity_banned);nativeGroup.call({_link:{config:{_name:'first'}}},false);assert.equal(catalog.isBanned('liubei'),true);
+	await catalog.toggleGroup('standard','first');assert.equal(h.lib.config.identity_banned.includes('liubei'),false);
+	nativePack.call({_link:{config:{_name:'mode_extension_test'}}},false);assert.equal(catalog.isPackEnabled('mode_extension_test'),false);await catalog.togglePack('mode_extension_test');assert.equal(h.lib.config.extension_test_characters_enable,true);
 });

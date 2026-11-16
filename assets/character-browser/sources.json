@@ -242,6 +242,32 @@
       },
       "sha256": "98ee3b53fded35b344439bfa387be47c17ee68471499a7b8099e35c5f227f555",
       "bytes": 151
+    },
+    {
+      "file": "generallistbg_cell.png",
+      "atlasKey": "da20014b",
+      "atlasPath": "/res/assets/generallist/generallist.atlas",
+      "textureKey": "3968f6f0",
+      "texturePath": "/res/assets/generallist/generallist.png",
+      "frame": {
+        "frame": {
+          "h": 42,
+          "idx": 0,
+          "w": 870,
+          "x": 0,
+          "y": 0
+        },
+        "sourceSize": {
+          "h": 42,
+          "w": 870
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "2b2484ca20bae0468544fb9656c2b6f985e068aa02d217211408ed4e665567eb",
+      "bytes": 9709
     }
   ]
 }

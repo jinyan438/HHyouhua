@@ -30,6 +30,7 @@
 .hh-character-browser .hh-character-packs { display:flex; flex-direction:column; gap:clamp(8px,1.8vh,18px); padding:3px 5px 30px; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#b79750 transparent; }
 .hh-character-browser .hh-character-pack { flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; min-height:clamp(51px,10vh,85px); padding:8px 12px; border:0 solid transparent; border-image:url("../../assets/character-browser/pritab_nrm.png") 18 24 18 24 fill / 14px 18px / 0 stretch; background:none; color:#eee0ae; font-size:clamp(17px,2vw,28px); line-height:1.15; }
 .hh-character-browser .hh-character-pack[aria-pressed="true"] { border-image-source:url("../../assets/character-browser/pritab_sel.png"); color:#342b14; }
+.hh-character-browser .hh-character-pack.is-pack-disabled { opacity:.42; }
 .hh-character-browser .hh-character-pack-name { display:block; position:static; overflow-wrap:anywhere; }
 .hh-character-browser .hh-character-pack-count { display:block; position:static; font-size:.7em; opacity:.85; }
 .hh-character-browser .hh-character-scroll { min-width:0; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:25px 18px 35px 22px; scrollbar-width:thin; scrollbar-color:#b79750 transparent; }
@@ -38,6 +39,14 @@
 .hh-character-browser .hh-general-card { display:block; position:relative; width:100%; aspect-ratio:var(--hh-card-aspect); min-width:0; height:auto; padding:0; overflow:visible; border:0; border-radius:0; background:none; color:#fff; box-shadow:none; text-align:left; transition:filter .15s,opacity .15s; --hh-player-scale:1; }
 .hh-character-browser .hh-general-card::after { display:none; }
 .hh-character-browser .hh-general-card.is-disabled { filter:grayscale(1); opacity:.62; }
+.hh-character-browser .hh-general-card.is-pack-disabled { opacity:.4; }
+.hh-character-browser .hh-general-card.is-disabled.is-pack-disabled { opacity:.28; }
+.hh-character-browser .hh-character-section { grid-column:1 / -1; display:flex; align-items:center; justify-content:center; gap:12px; min-height:42px; padding:4px 90px; margin:18px 0 12px; background:url("../../assets/character-browser/generallistbg_cell.png") center/100% 100% no-repeat; color:#f4e2ac; }
+.hh-character-browser .hh-character-section.is-pack-disabled { opacity:.5; }
+.hh-character-browser .hh-character-section-name { position:static; display:block; max-width:65%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-size:clamp(15px,1.8vw,25px); }
+.hh-character-browser .hh-character-section-count { position:static; display:block; flex-shrink:0; font-size:clamp(12px,1.4vw,19px); }
+.hh-character-browser .hh-character-section-toggle { position:absolute; right:0; min-width:74px; padding:3px 12px; border:0 solid transparent; border-image:url("../../assets/character-browser/generaldetail_bgskill.png") 12 fill / 8px / 0 stretch; background:none; font-size:16px; line-height:1.5; }
+.hh-character-browser .hh-character-section-toggle[aria-checked="true"] { border-image-source:url("../../assets/character-browser/generaldetail_bgskill_sel.png"); color:#ffeda4; }
 .hh-character-browser .hh-character-empty { padding:25vh 20px; text-align:center; color:#5e492d; }
 .hh-character-browser .hh-character-more { display:block; width:160px; margin:24px auto 0; padding:5px 18px; border:1px solid #b59451; border-radius:3px; background:#7e6943; color:#f8e5aa; }
 .hh-character-browser .hh-general-detail { display:grid; flex:1; min-height:0; grid-template-columns:minmax(210px,.85fr) minmax(300px,1.2fr); gap:clamp(30px,6vw,120px); padding:3vh 10vw 3vh 12vw; }
@@ -69,6 +78,8 @@
 	.hh-character-browser .hh-character-workspace { grid-template-columns:125px minmax(0,1fr); gap:12px; padding:12px 10px 0; }
 	.hh-character-browser .hh-character-pack { min-height:54px; font-size:17px; }
 	.hh-character-browser .hh-character-grid { grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:20px; }
+	.hh-character-browser .hh-character-section { padding:4px 63px 4px 10px; gap:6px; }
+	.hh-character-browser .hh-character-section-toggle { min-width:54px; padding:3px 8px; font-size:14px; }
 	.hh-character-browser .hh-general-detail { grid-template-columns:minmax(130px,.8fr) minmax(200px,1.2fr); gap:18px; padding:15px 20px; }
 	.hh-character-browser .hh-general-detail-pane { padding:12px; }
 }

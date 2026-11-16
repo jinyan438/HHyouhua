@@ -1,5 +1,6 @@
 import { createCharacterCatalog, bindCharacterPress, allCharactersPack } from './characterCatalog.js';
 import { createSelectionPlayerVisual, findSelectionPlayerTemplate, selectionPlayerSize } from './selectionPlayer.js';
+import { refreshCharacterSettingsMenus } from './characterSettingsMenu.js';
 
 const clean = value => typeof value === 'string' ? value.replace(/<[^>]*>/g, '').trim() : '';
 
@@ -10,7 +11,7 @@ export function createCharacterBrowser(context, environment = {}) {
 	const env = { setTimer: (fn, ms) => setTimeout(fn, ms), clearTimer: id => clearTimeout(id), now: Date.now, ...environment };
 	let root, model, workspace, detail, grid, search, status, title, back, feedback, sidebar;
 	let pack = allCharactersPack, rows = [], shown = 0, detailId, previousFocus, pausedHere = false, noticeTimer;
-	let presses = [], detailPress, packButtons = new Map(), sizeObserver;
+	let presses = [], packPresses = [], detailPress, packButtons = new Map(), sizeObserver;
 	const pageSize = 60;
 	function node(tag, cls, text, parent) {
 		const result = doc.createElement(tag); result.className = cls;
@@ -29,6 +30,10 @@ export function createCharacterBrowser(context, environment = {}) {
 		for (const [id, { button, count }] of packButtons) {
 			const value = model.counts(id); count.textContent = `${value.enabled}/${value.total}`;
 			button.setAttribute('aria-pressed', String(id === pack));
+			const enabled = model.isPackEnabled(id), item = model.packs.find(item => item.id === id);
+			button.classList.toggle('is-pack-disabled', !enabled);
+			button.setAttribute('aria-label', `${item.name} ${value.enabled}/${value.total}${enabled ? '' : '，已关闭'}`);
+			button.title = model.canTogglePack(id) ? `${item.name} · 长按${enabled ? '关闭' : '开启'}` : item.name;
 		}
 	}
 	function fitCards() {
@@ -45,6 +50,7 @@ export function createCharacterBrowser(context, environment = {}) {
 		const card = node(large ? 'div' : 'button', 'hh-general-card' + (large ? ' hh-general-card-large' : ''), undefined, parent);
 		card.dataset.character = entry.id; card.dataset.group = entry.group;
 		card.classList.toggle('is-disabled', model.isBanned(entry.id));
+		const packEnabled = model.isCharacterPackEnabled(entry.id, pack); card.classList.toggle('is-pack-disabled', !packEnabled);
 		card.setAttribute('aria-label', entry.name + (model.isBanned(entry.id) ? '，已禁用' : ''));
 		card.title = `${entry.name} · 长按${model.isBanned(entry.id) ? '启用' : '禁用'}`;
 		card.appendChild(createSelectionPlayerVisual(context, entry.id, {
@@ -61,6 +67,7 @@ export function createCharacterBrowser(context, environment = {}) {
 		const current = model;
 		try {
 			const banned = await current.toggle(id);
+			refreshCharacterSettingsMenus(context, current);
 			if (!root || model !== current) return;
 			updatePackCounts();
 			if (detailId) showDetail(detailId, false);
@@ -68,11 +75,43 @@ export function createCharacterBrowser(context, environment = {}) {
 			notify(`${current.entries.get(id).name}已${banned ? '禁用' : '启用'}`);
 		} catch (error) { if (root && model === current) notify('保存失败，请重试'); console.warn('[HH优化] 保存禁将设置失败', error); }
 	}
+	async function togglePack(id) {
+		const current = model;
+		try {
+			const enabled = await current.togglePack(id); refreshCharacterSettingsMenus(context, current);
+			if (!root || model !== current) return;
+			updatePackCounts(); renderGrid(false); if (detailId) showDetail(detailId, false);
+			notify(`${current.packs.find(item => item.id === id).name}已${enabled ? '开启' : '关闭'}`);
+		} catch (error) { if (root && model === current) notify('保存失败，请重试'); console.warn('[HH优化] 保存武将包设置失败', error); }
+	}
+	async function toggleGroup(section) {
+		const current = model;
+		try {
+			const enabled = await current.toggleGroup(section.pack, section.group); refreshCharacterSettingsMenus(context, current);
+			if (!root || model !== current) return;
+			updatePackCounts(); renderGrid(false); notify(`${section.name}已${enabled ? '开启' : '关闭'}`);
+		} catch (error) { if (root && model === current) notify('保存失败，请重试'); console.warn('[HH优化] 保存分包设置失败', error); }
+	}
+	function sectionHeader(parent, section) {
+		const header = node('div', 'hh-character-section', undefined, parent); header.dataset.section = section.key;
+		header.classList.toggle('is-pack-disabled', !model.isPackEnabled(section.pack));
+		const label = node('span', 'hh-character-section-name', section.name, header); label.title = section.name;
+		const enabled = section.ids.filter(id => model.isEnabled(id, section.pack)).length;
+		node('span', 'hh-character-section-count', `${enabled}/${section.ids.length}`, header);
+		if (section.group ? model.canToggleGroup(section.pack, section.group) : model.canTogglePack(section.pack)) {
+			const on = section.group ? model.groupEnabled(section.pack, section.group) : model.isPackEnabled(section.pack);
+			const button = node('button', 'hh-character-section-toggle', on ? '开启' : '关闭', header);
+			button.setAttribute('role', 'switch'); button.setAttribute('aria-checked', String(on)); button.setAttribute('aria-label', section.name);
+			button.addEventListener('click', () => section.group ? toggleGroup(section) : togglePack(section.pack));
+		}
+	}
 	function more() {
 		if (!root || shown >= rows.length) return;
 		const limit = Math.min(rows.length, shown + pageSize), fragment = doc.createDocumentFragment();
 		for (; shown < limit; shown++) {
-			const entry = rows[shown], card = portrait(fragment, entry);
+			const { entry, section } = rows[shown];
+			if (section.header && (shown === 0 || rows[shown - 1].section.key !== section.key)) sectionHeader(fragment, section);
+			const card = portrait(fragment, entry);
 			presses.push(press(card, entry, () => showDetail(entry.id)));
 		}
 		grid.appendChild(fragment);
@@ -82,7 +121,7 @@ export function createCharacterBrowser(context, environment = {}) {
 	function renderGrid(reset = true) {
 		const scroll = grid.parentNode.scrollTop, limit = reset ? pageSize : Math.max(pageSize, shown);
 		stopPresses(); clear(grid); shown = 0;
-		rows = model.list({ pack, query: search.value, status: status.value });
+		rows = model.sections({ pack, query: search.value, status: status.value }).flatMap(section => section.entries.map(entry => ({ entry, section })));
 		while (shown < Math.min(rows.length, limit)) more();
 		root.querySelector('.hh-character-empty').hidden = rows.length > 0;
 		root.querySelector('.hh-character-more').hidden = shown >= rows.length;
@@ -145,7 +184,7 @@ export function createCharacterBrowser(context, environment = {}) {
 			else if (!event.shiftKey && doc.activeElement === last) { event.preventDefault(); first?.focus(); }
 		}
 	}
-	function cancelPresses() { for (const item of presses) item.cancel(); detailPress?.cancel(); }
+	function cancelPresses() { for (const item of [...presses, ...packPresses]) item.cancel(); detailPress?.cancel(); }
 	function open() {
 		if (root) { root.focus?.(); return root; }
 		if (!doc?.createElement) return null;
@@ -165,9 +204,13 @@ export function createCharacterBrowser(context, environment = {}) {
 		packButtons = new Map();
 		for (const entry of model.packs) {
 			const button = node('button', 'hh-character-pack', undefined, sidebar); node('span', 'hh-character-pack-name', entry.name, button);
+			button.dataset.pack = entry.id;
 			const count = node('span', 'hh-character-pack-count', '', button); packButtons.set(entry.id, { button, count });
-			button.addEventListener('click', () => { pack = entry.id; updatePackCounts(); renderGrid(); });
+			const select = () => { pack = entry.id; updatePackCounts(); renderGrid(); };
+			if (model.canTogglePack(entry.id)) packPresses.push(bindCharacterPress(button, { open: select, toggle: () => togglePack(entry.id), pointerEvents: !!win.PointerEvent, setTimer: env.setTimer, clearTimer: env.clearTimer, now: env.now }));
+			else button.addEventListener('click', select);
 		}
+		sidebar.addEventListener('scroll', cancelPresses, { passive: true });
 		const scroll = node('main', 'hh-character-scroll', undefined, workspace); grid = node('div', 'hh-character-grid', undefined, scroll);
 		node('div', 'hh-character-empty', '没有匹配的武将', scroll);
 		const load = node('button', 'hh-character-more', '更多武将', scroll); load.addEventListener('click', more);
@@ -184,7 +227,7 @@ export function createCharacterBrowser(context, environment = {}) {
 	}
 	function close() {
 		if (!root) return;
-		stopPresses(); detailPress?.destroy(); detailPress = null; env.clearTimer(noticeTimer);
+		stopPresses(); for (const item of packPresses) item.destroy(); packPresses = []; detailPress?.destroy(); detailPress = null; env.clearTimer(noticeTimer);
 		sizeObserver?.disconnect(); sizeObserver = null; win.removeEventListener?.('resize', fitCards);
 		doc.removeEventListener('keydown', key, true); doc.removeEventListener('visibilitychange', cancelPresses);
 		root.remove(); root = null; model = null; detailId = null; packButtons.clear();
