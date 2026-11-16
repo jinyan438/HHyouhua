@@ -91,7 +91,7 @@ test('full-screen view supports packs, searching, skill detail, ban gray state a
 	root.querySelector('.hh-general-card').emit('click'); assert.equal(root.querySelector('.hh-character-title').textContent, '武将详情');
 	assert.equal(root.querySelector('.hh-general-skill-text').innerHTML, '可以将手牌交给其他角色。');
 	root.querySelectorAll('.hh-general-skill')[1].emit('click'); assert.equal(root.querySelector('.hh-general-skill-text').innerHTML, '请求蜀势力角色出杀。');
-	root.querySelectorAll('.hh-general-tab')[1].emit('click'); assert.equal(root.querySelector('.hh-general-story').textContent, '刘备，字玄德。');
+	root.querySelector('[data-tab="story"]').emit('click'); assert.equal(root.querySelector('.hh-general-story').textContent, '刘备，字玄德。');
 	root.querySelector('.hh-character-back').emit('click');
 	const card = root.querySelector('.hh-general-card'); card.emit('pointerdown'); h.advance(600); await flush();
 	assert.equal(root.querySelector('.hh-general-card').classList.contains('is-disabled'), true);
@@ -99,6 +99,58 @@ test('full-screen view supports packs, searching, skill detail, ban gray state a
 	assert.deepEqual(h.lib.config.identity_banned, ['already_banned', 'liubei']);
 	browser.close(); assert.equal(h.calls.resume, 1); assert.equal(h.timers.size, 0); assert.equal(browser.root, null);
 	assert.equal(h.document.listeners.get('keydown').length, 0);
+});
+
+test('the themed dropdown filters package availability and bans together with character search', () => {
+	const h = fixture(); h.lib.config.identity_banned = ['guanyu']; h.lib.config.extension_test_characters_enable = false;
+	const browser = createCharacterBrowser(h.context, h.environment), root = browser.open();
+	const trigger = root.querySelector('.hh-character-filter-button'), menu = root.querySelector('.hh-character-filter-menu');
+	const options = root.querySelectorAll('.hh-character-filter-option'), ids = () => root.querySelectorAll('.hh-general-card').map(card => card.dataset.character).sort();
+	assert.equal(root.querySelector('select'), null); assert.deepEqual(options.map(option => option.textContent), ['全部武将', '已启用', '已禁用']);
+	trigger.emit('click'); assert.equal(menu.hidden, false); options[1].emit('click');
+	assert.deepEqual(ids(), ['extra', 'liubei']); assert.equal(trigger.textContent, '已启用'); assert.equal(trigger.getAttribute('aria-expanded'), 'false'); assert.equal(menu.hidden, true);
+	trigger.emit('click'); options[2].emit('click'); assert.deepEqual(ids(), ['custom', 'guanyu']); assert.equal(options[2].getAttribute('aria-selected'), 'true'); assert.equal(options[1].getAttribute('aria-selected'), 'false');
+	const search = root.querySelector('input'); search.value = '自定义'; search.emit('input'); assert.deepEqual(ids(), ['custom']);
+	trigger.emit('click'); options[1].emit('click'); assert.deepEqual(ids(), []); assert.equal(root.querySelector('.hh-character-empty').hidden, false);
+	trigger.emit('click'); options[0].emit('click'); assert.deepEqual(ids(), ['custom']); assert.equal(h.calls.saves.length, 0);
+	browser.close();
+});
+
+test('dropdown keyboard navigation, outside dismissal and Escape preserve the browser and clean up listeners', () => {
+	const h = fixture(), browser = createCharacterBrowser(h.context, h.environment), root = browser.open();
+	const trigger = root.querySelector('.hh-character-filter-button'), menu = root.querySelector('.hh-character-filter-menu'), options = root.querySelectorAll('.hh-character-filter-option');
+	trigger.emit('keydown', { key: 'ArrowDown' }); assert.equal(menu.hidden, false); assert.equal(h.document.activeElement, options[0]);
+	menu.emit('keydown', { key: 'ArrowDown' }); assert.equal(h.document.activeElement, options[1]);
+	menu.emit('keydown', { key: 'End' }); assert.equal(h.document.activeElement, options[2]);
+	menu.emit('keydown', { key: 'Home' }); assert.equal(h.document.activeElement, options[0]);
+	menu.emit('keydown', { key: 'ArrowUp' }); assert.equal(h.document.activeElement, options[2]);
+	h.document.emit('keydown', { key: 'Escape' }); assert.equal(menu.hidden, true); assert.equal(browser.root, root); assert.equal(h.document.activeElement, trigger);
+	trigger.emit('click'); h.document.emit('pointerdown', { target: options[0] }); assert.equal(menu.hidden, false);
+	h.document.emit('pointerdown', { target: root.querySelector('input') }); assert.equal(menu.hidden, true);
+	trigger.emit('click'); root.querySelector('.hh-character-scroll').emit('scroll'); assert.equal(menu.hidden, true);
+	trigger.emit('click'); h.document.emit('keydown', { key: 'Tab' }); assert.equal(menu.hidden, true); assert.equal(browser.root, root);
+	h.document.emit('keydown', { key: 'Escape' }); assert.equal(browser.root, null);
+	for (const type of ['keydown', 'pointerdown', 'click']) assert.equal(h.document.listeners.get(type).length, 0);
+});
+
+test('detail skills, voice button and skin thumbnails stay in sync and stop preview audio when leaving', async () => {
+	const h = fixture(), voiceRequests = [], played = [];
+	h.lib.skill.rende.enable = 'phaseUse'; h.lib.skill.jijiang.trigger = { global: 'chooseToUse' };
+	h.lib.characterSubstitute = { liubei: [['liubei_alt', ['ext:test/alt.png']]] }; h.lib.translate.liubei_alt = '刘备新装';
+	h.get.skinPath = id => 'image/skin/' + id + '/'; h.game.getFileList = (_path, success) => success([], ['favorite.jpg']);
+	h.get.Audio = { skill(options) { voiceRequests.push(options); return { audioList: [{ file: 'skill/' + options.skill + '.mp3', text: '仁德台词' }] }; } };
+	h.game.playAudio = options => { const audio = { stopped: false, pause() { this.stopped = true; }, remove() {} }; played.push(audio); return audio; };
+	const browser = createCharacterBrowser(h.context, h.environment), root = browser.open(); browser.openCharacter('liubei'); await flush();
+	assert.equal(root.querySelector('.hh-general-skill-type').getAttribute('aria-label'), '主动');
+	assert.equal(root.querySelectorAll('.hh-general-skin').length, 3);
+	root.querySelector('[data-skin="character:liubei_alt"]').emit('click'); await flush();
+	assert.deepEqual(h.lib.config.skin.liubei, ['liubei_alt', 'extension/test/alt.png']);
+	assert.equal(root.querySelector('.hh-general-card-large').querySelector('.primary-avatar').style.backgroundImage, 'extension/test/alt.png');
+	root.querySelector('.hh-general-voice').emit('click'); assert.equal(voiceRequests[0].player.skin.name, 'liubei_alt'); assert.equal(root.querySelector('.hh-general-voice-caption').textContent, '仁德台词');
+	root.querySelector('[data-skill="jijiang"]').emit('click'); assert.equal(played[0].stopped, true); assert.equal(root.querySelector('.hh-general-skill-type').getAttribute('aria-label'), '被动'); assert.ok(root.querySelector('.hh-general-skill-kind').textContent.includes('主公技'));
+	root.querySelector('.hh-general-voice').emit('click'); assert.equal(voiceRequests[1].skill, 'jijiang');
+	root.querySelector('.hh-character-back').emit('click'); assert.equal(played[1].stopped, true);
+	browser.close();
 });
 
 test('large catalogs render incrementally; existing pauses and online games are not resumed by closing', () => {
@@ -128,7 +180,7 @@ test('all six actual menu themes receive one working catalog button', async () =
 
 test('all native catalog UI resources retain their source hashes', () => {
 	const base = new URL('../assets/character-browser/', import.meta.url), sources = JSON.parse(fs.readFileSync(new URL('sources.json', base), 'utf8'));
-	assert.equal(sources.files.length, 11);
+	assert.equal(sources.files.length, 19);
 	for (const file of sources.files) { const bytes = fs.readFileSync(new URL(file.file, base)); assert.equal(bytes.length, file.bytes); assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256); }
 });
 

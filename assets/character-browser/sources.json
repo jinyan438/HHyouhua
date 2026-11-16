@@ -268,6 +268,214 @@
       },
       "sha256": "2b2484ca20bae0468544fb9656c2b6f985e068aa02d217211408ed4e665567eb",
       "bytes": 9709
+    },
+    {
+      "file": "gdetail_skill_desc_bei.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 35,
+          "idx": 0,
+          "w": 136,
+          "x": 1580,
+          "y": 668
+        },
+        "sourceSize": {
+          "h": 35,
+          "w": 136
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "6e6fe50b4e710b90d1d40eba7f3a2dab3ff02259c3f3d62dbe0dfac1df8867ac",
+      "bytes": 3559
+    },
+    {
+      "file": "gdetail_skill_desc_zhu.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 35,
+          "idx": 0,
+          "w": 136,
+          "x": 1718,
+          "y": 668
+        },
+        "sourceSize": {
+          "h": 35,
+          "w": 136
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "6a91301cce091f4d8a374db3a378b0694ebdc5064959393ac51a2449518d33d5",
+      "bytes": 2898
+    },
+    {
+      "file": "sectab_nrm.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 50,
+          "idx": 0,
+          "w": 158,
+          "x": 799,
+          "y": 770
+        },
+        "sourceSize": {
+          "h": 50,
+          "w": 158
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "8126d63eebdfa5231e321199c913fd0959c9ed86deccdf4b7858321a7e61b2a0",
+      "bytes": 2187
+    },
+    {
+      "file": "sectab_sel.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 54,
+          "idx": 0,
+          "w": 158,
+          "x": 242,
+          "y": 685
+        },
+        "sourceSize": {
+          "h": 54,
+          "w": 158
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "11634c7f9ac3708fed1f9f390e616ba78f350f89e14fe7e6afadd22eb4208e2b",
+      "bytes": 1969
+    },
+    {
+      "file": "general_voice.png",
+      "atlasKey": "13aec3ba",
+      "atlasPath": "/res/assets/generaldetail/generaldetail.atlas",
+      "textureKey": "d3eb44a6",
+      "texturePath": "/res/assets/generaldetail/generaldetail.png",
+      "frame": {
+        "frame": {
+          "h": 55,
+          "idx": 0,
+          "w": 48,
+          "x": 1996,
+          "y": 197
+        },
+        "sourceSize": {
+          "h": 55,
+          "w": 48
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "20beddc964c92bbd850d5d4148119d52c21294d5f59902a5b4a9ef691d17d501",
+      "bytes": 2902
+    },
+    {
+      "file": "generaldetail_bgskin.png",
+      "atlasKey": "13aec3ba",
+      "atlasPath": "/res/assets/generaldetail/generaldetail.atlas",
+      "textureKey": "d3eb44a6",
+      "texturePath": "/res/assets/generaldetail/generaldetail.png",
+      "frame": {
+        "frame": {
+          "h": 22,
+          "idx": 0,
+          "w": 22,
+          "x": 990,
+          "y": 314
+        },
+        "sourceSize": {
+          "h": 22,
+          "w": 22
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "899becedaaa99c5276acca96d7b60506884d9f252e0bfc1afb4151c1f30cfd45",
+      "bytes": 290
+    },
+    {
+      "file": "new_gen_border.png",
+      "atlasKey": "13aec3ba",
+      "atlasPath": "/res/assets/generaldetail/generaldetail.atlas",
+      "textureKey": "d3eb44a6",
+      "texturePath": "/res/assets/generaldetail/generaldetail.png",
+      "frame": {
+        "frame": {
+          "h": 81,
+          "idx": 0,
+          "w": 79,
+          "x": 1477,
+          "y": 333
+        },
+        "sourceSize": {
+          "h": 81,
+          "w": 79
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "19e7cb56acc55cdab4d45f21d1f4c704083102c79d2c873508404de3de02d70b",
+      "bytes": 3875
+    },
+    {
+      "file": "new_gen_border_noLight.png",
+      "atlasKey": "13aec3ba",
+      "atlasPath": "/res/assets/generaldetail/generaldetail.atlas",
+      "textureKey": "d3eb44a6",
+      "texturePath": "/res/assets/generaldetail/generaldetail.png",
+      "frame": {
+        "frame": {
+          "h": 81,
+          "idx": 0,
+          "w": 79,
+          "x": 1477,
+          "y": 250
+        },
+        "sourceSize": {
+          "h": 81,
+          "w": 79
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "4ee7b58cea4a25bc47f0935a1cfc2d813fc98e6512194e0071676c5115dad3f9",
+      "bytes": 363
     }
   ]
 }
