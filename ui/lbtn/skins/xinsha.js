@@ -205,6 +205,7 @@ export function createXinshaLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 			});
 
 			const home = ui.create.div(".buttonyjcm", container);
+			queueMicrotask(() => { if (container.isConnected) self.addCharacterCatalogButton(home, { popup: container }); });
 
 			// 设置按钮
 			const szBtn = ui.create.div(".controls", home);

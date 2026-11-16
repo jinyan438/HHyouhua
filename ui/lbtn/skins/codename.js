@@ -96,6 +96,7 @@ export function createCodenameLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 				});
 
 				ui.create.div(".HOME", menuPopup);
+				queueMicrotask(() => { if (menuPopup?.isConnected) self.addCharacterCatalogButton(menuPopup, { layout: "fixed", close: closeMenu }); });
 
 				// 设置
 				const szBtn = ui.create.div(".SZ", menuPopup);

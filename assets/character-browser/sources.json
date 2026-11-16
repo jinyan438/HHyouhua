@@ -1,0 +1,247 @@
+{
+  "apk": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+  "decode": "Original PNG files and exact atlas RGBA crops. No recoloring or resizing.",
+  "files": [
+    {
+      "file": "back.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 40,
+          "idx": 0,
+          "w": 66,
+          "x": 1156,
+          "y": 966
+        },
+        "sourceSize": {
+          "h": 40,
+          "w": 66
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "b6be989a26bd621698bf7ec93de3fa8190c718d960c4d38e598db645a184f7b8",
+      "bytes": 4043
+    },
+    {
+      "file": "win_btn_search4.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 38,
+          "idx": 0,
+          "w": 38,
+          "x": 1619,
+          "y": 1021
+        },
+        "sourceSize": {
+          "h": 38,
+          "w": 38
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "2fd84731cd2607ca8e00a11b353101a2eda608a6e1791dd657090e1d6a40049c",
+      "bytes": 2496
+    },
+    {
+      "file": "pritab_nrm.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 234,
+          "x": 1790,
+          "y": 140
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 234
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "da51cad59b4fdb31d9aca8ba4a5251e86b3ae64a266014d2725813d932795849",
+      "bytes": 3570
+    },
+    {
+      "file": "pritab_sel.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 234,
+          "x": 1790,
+          "y": 216
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 234
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "ceb736b0699dc17bf6baadb121569c81062547bc4d9cb0ed38648787c1644195",
+      "bytes": 11565
+    },
+    {
+      "file": "generaldetail_bgskill.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 55,
+          "idx": 0,
+          "w": 116,
+          "x": 0,
+          "y": 881
+        },
+        "sourceSize": {
+          "h": 55,
+          "w": 116
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "5f358d72002b72de9a68e474afc3469c2f71412df40caa341cadea38af528d1f",
+      "bytes": 1337
+    },
+    {
+      "file": "generaldetail_bgskill_sel.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 55,
+          "idx": 0,
+          "w": 116,
+          "x": 637,
+          "y": 893
+        },
+        "sourceSize": {
+          "h": 55,
+          "w": 116
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "838113093db2ed29e61620c4ba091930fc53e81abfc001a01d949c4b72bea621",
+      "bytes": 1510
+    },
+    {
+      "file": "window_general_bg_dark.png",
+      "cacheKey": "47d4c361",
+      "originalPath": "/res/assets/BigBg/window_general_bg_dark.png",
+      "sha256": "e58acd7639135d08dbb7f2ff73d74cc3d1522cfc67490340f66c152e9658d7f6",
+      "bytes": 643898
+    },
+    {
+      "file": "general_head.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 100,
+          "idx": 0,
+          "w": 100,
+          "x": 1478,
+          "y": 610
+        },
+        "sourceSize": {
+          "h": 100,
+          "w": 100
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "8c66fa5f94f88d2086723e4e86dfbf400b21df3f6cef2217586091a472655354",
+      "bytes": 6090
+    },
+    {
+      "file": "general_default_skin_98.png",
+      "atlasKey": "71445296",
+      "atlasPath": "/res/assets/Common/baseUI1.atlas",
+      "textureKey": "8723e84d",
+      "texturePath": "/res/assets/Common/baseUI1.png",
+      "frame": {
+        "frame": {
+          "h": 98,
+          "idx": 0,
+          "w": 98,
+          "x": 0,
+          "y": 679
+        },
+        "sourceSize": {
+          "h": 98,
+          "w": 98
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "82f6b962dadaf4b9c266dc6c75b15da2d1ddeb1bb5e1f59a141888fd48bfe535",
+      "bytes": 11168
+    },
+    {
+      "file": "generaldetail_bg.png",
+      "atlasKey": "13aec3ba",
+      "atlasPath": "/res/assets/generaldetail/generaldetail.atlas",
+      "textureKey": "d3eb44a6",
+      "texturePath": "/res/assets/generaldetail/generaldetail.png",
+      "frame": {
+        "frame": {
+          "h": 10,
+          "idx": 0,
+          "w": 14,
+          "x": 2019,
+          "y": 434
+        },
+        "sourceSize": {
+          "h": 10,
+          "w": 14
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "sha256": "98ee3b53fded35b344439bfa387be47c17ee68471499a7b8099e35c5f227f555",
+      "bytes": 151
+    }
+  ]
+}

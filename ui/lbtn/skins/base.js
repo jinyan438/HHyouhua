@@ -3,6 +3,7 @@
  * 提供所有样式共用的基础功能
  */
 import { lib, game, ui, get, ai, _status } from "noname";
+import { addCharacterCatalogMenu } from "../../../src/ui/characterBrowserMenu.js";
 
 /**
  * 创建基础lbtn插件
@@ -10,6 +11,9 @@ import { lib, game, ui, get, ai, _status } from "noname";
 export function createBaseLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 	return {
 		name: "lbtn",
+		addCharacterCatalogButton(parent, options) {
+			return addCharacterCatalogMenu({ lib, game, ui, get, _status }, parent, options);
+		},
 
 		// 模式过滤
 		filter: () => !["chess", "tafang"].includes(get.mode()),

@@ -585,6 +585,7 @@ export function createShoushaLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 					action();
 				});
 			});
+			self.addCharacterCatalogButton(container, { layout: "row" });
 		},
 
 		// 创建身份提示

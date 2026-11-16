@@ -453,12 +453,14 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 
 				// 动态添加系统菜单项
 				self.addSystemMenuItems(home);
+				self.addCharacterCatalogButton(home, { popup: container });
 			};
 		},
 
 		// 添加系统菜单项
 		addSystemMenuItems(container) {
 			const excludedItems = [
+				"武将",
 				"聊天",
 				"联机大厅",
 				"最近连接",
