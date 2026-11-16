@@ -297,6 +297,7 @@ export function playerMarkCharacter(name, info, learn, learn2) {
 
 	nodeMark.name = name + "_charactermark";
 	nodeMark.info = info;
+	nodeMark.skill = info.id || name;
 	nodeMark.text = nodeMarkText;
 
 	// 设置标记类型
@@ -452,6 +453,7 @@ export function playerMarkSkillCharacter(id, target, name, content, nobroadcast)
 function updateExistingSkillMark(player, id, name, content, target) {
 	const mark = player.marks[id];
 	mark.name = name + "_skillmark";
+	mark.skill = id;
 	mark.info = { name, content, id };
 
 	const hasCardDisplay = typeof (lib.skill[id] || lib.skill[name])?.intro?.mark === "function";
@@ -488,6 +490,7 @@ function createNewSkillMark(player, id, name, content, target) {
 
 	nodeMarkText.innerHTML = text;
 	nodeMark.name = name + "_skillmark";
+	nodeMark.skill = id;
 	nodeMark.info = { name, content, id };
 	nodeMark.text = nodeMarkText;
 

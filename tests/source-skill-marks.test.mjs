@@ -29,6 +29,9 @@ class Element {
 		this.classList = { contains: value => values.has(value), add: (...names) => names.forEach(name => values.add(name)), remove: (...names) => names.forEach(name => values.delete(name)), toggle(name, state = !values.has(name)) { if (state) values.add(name); else values.delete(name); } };
 	}
 	appendChild(child) { child.remove(); child.parentNode = this; this.children.push(child); return child; }
+	insertBefore(child, before) { child.remove(); child.parentNode = this; const index = before ? this.children.indexOf(before) : -1; if (index < 0) this.children.push(child); else this.children.splice(index, 0, child); return child; }
+	get firstChild() { return this.children[0] || null; }
+	setAttribute() {}
 	remove() { if (this.parentNode) this.parentNode.children.splice(this.parentNode.children.indexOf(this), 1); this.parentNode = null; }
 	delete() { this.remove(); }
 	addEventListener(type, fn) { this.listeners[type] = fn; }
@@ -133,12 +136,12 @@ test('native markSkill broadcasts preserve state and source styling on a separat
 });
 
 const nativePacks = new Map();
-function nativeSkill(pack, name) {
+function nativeSkill(pack, name, realm) {
 	if (!nativePacks.has(pack)) nativePacks.set(pack, ts.createSourceFile(pack + '.js', fs.readFileSync(new URL('../../../character/' + pack + '/skill.js', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS));
 	const source = nativePacks.get(pack); let definition;
 	function find(node) { if (ts.isPropertyAssignment(node) && node.name?.getText(source) === name && ts.isObjectLiteralExpression(node.initializer)) definition = node.initializer; ts.forEachChild(node, find); }
 	find(source); assert.ok(definition, name + ' exists in the installed game');
-	return vm.runInNewContext('(' + definition.getText(source) + ')');
+	return realm ? vm.runInContext('(' + definition.getText(source) + ')', realm) : vm.runInNewContext('(' + definition.getText(source) + ')');
 }
 
 test('actual Xu Sheng variants, Deng Ai and Zhong Hui definitions create gold expansion marks', () => {
@@ -164,4 +167,116 @@ test('updates correct a cached gray classification and expansion-count-only cust
 	h.player.markSkill('countOnly'); assert.equal(h.player.marks.countOnly.dataset.hhSourceMark, 'gold');
 	h.player.marks.customIntro = h.player.mark('customIntro', { content: 'cards' }); h.player.updateMark('customIntro');
 	assert.equal(h.player.marks.customIntro.dataset.hhSourceMark, 'gold');
+});
+
+function nativeMethods(file, names) {
+	const source = ts.createSourceFile(file, fs.readFileSync(new URL(file, import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS), found = [];
+	function visit(node) { if (ts.isMethodDeclaration(node) && names.includes(node.name?.getText(source))) found.push(node.getText(source)); ts.forEachChild(node, visit); }
+	visit(source); assert.equal(found.length, names.length); return '({' + found.join(',') + '})';
+}
+
+let nativeContentAst;
+function nativeContent(name, realm) {
+	if (!nativeContentAst) nativeContentAst = ts.createSourceFile('content.ts', fs.readFileSync(new URL('../../../noname/library/element/content.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+	let definition;
+	function find(node) { if (ts.isPropertyAssignment(node) && node.name?.getText(nativeContentAst) === name) definition = node.initializer; ts.forEachChild(node, find); }
+	find(nativeContentAst); assert.ok(definition, name);
+	return vm.runInContext(ts.transpileModule('(' + definition.getText(nativeContentAst) + ')', { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText, realm);
+}
+
+function expansionFixture() {
+	const h = fixture(), { player, lib, get, realm } = h;
+	const ui = h.ui; ui.ordering = new Element('ordering'); ui.discardPile = new Element('discardpile');
+	const pMethods = nativeMethods('../../../noname/library/element/player.js', ['iterableGetCards', 'getCards', 'countCards', 'getExpansions', '$addToExpansion', 'addToExpansion']);
+	const gMethods = nativeMethods('../../../noname/get/index.js', ['iterableChildNodes', 'storageintro', 'nodeintro']);
+	Object.assign(player, vm.runInContext(pMethods, realm)); Object.assign(get, vm.runInContext(gMethods, realm));
+	player.node.expansions = new Element('expansions'); player.node.handcards1 = new Element('handcards'); player.node.handcards2 = new Element('handcards');
+	lib.config.sort_card = () => 0; lib.commonArea = new Map(); get.is = { object: value => value?.constructor === Object };
+	get.owner = () => null; get.position = card => card.parentNode === ui.ordering ? 'o' : card.parentNode === player.node.expansions ? 'x' : 'h'; get.delayx = value => value;
+	const oldItemType = get.itemtype; get.itemtype = value => value === player ? 'player' : oldItemType(value);
+	vm.runInContext('Array.prototype.add = function(value) { if (!this.includes(value)) this.push(value); return this; };', realm);
+	realm.delay = async () => {}; realm.game.pause = async () => {}; realm.game.resume = () => {}; realm.game.updateRoundNumber = () => {}; realm.game.delayx = () => {};
+	const steps = nativeContent('addToExpansion', realm);
+	const cardMethods = vm.runInContext(nativeMethods('../../../noname/library/element/card.js', ['addGaintag', 'hasGaintag']), realm);
+	player.$gain2 = () => false; player.gain = card => { player.node.handcards1.appendChild(card); return Promise.resolve(); };
+	realm.game.createEvent = name => {
+		assert.equal(name, 'addToExpansion');
+		const event = { finished: false, setContent() { return this; }, finish() { this.finished = true; }, async then(resolve, reject) { try { for (const step of steps) { if (this.finished) break; await step(this, null, player); } resolve(); } catch (error) { reject(error); } } };
+		return event;
+	};
+	function makeCard(suit) {
+		const card = Object.assign(new Element('card'), cardMethods, { card: true, name: 'sha', suit, number: 7, gaintag: vm.runInContext('[]', realm), vanishtag: [], node: { gaintag: new Element('gaintag') }, fix() { this.classList.remove('removing'); }, willBeDestroyed: () => false, addKnower() {} });
+		ui.ordering.appendChild(card); return card;
+	}
+	function showMark(skill) {
+		const rows = [], cards = [];
+		const dialog = { setAttribute() {}, add(value) { rows.push(value); return {}; }, addAuto(value) { cards.push(...value); }, style: {}, classList: new Element().classList };
+		get.nodeintro(player.marks[skill], false, null, dialog); return { rows, cards };
+	}
+	return { ...h, makeCard, showMark };
+}
+
+test('actual Tuntian callbacks move non-heart judgments into expansion cards and native mark intros show them', async () => {
+	for (const [pack, skill, suit] of [['shenhua', 'tuntian', 'spade'], ['refresh', 'retuntian', 'club']]) {
+		const h = expansionFixture(); h.lib.skill.tuntian = nativeSkill('shenhua', 'tuntian'); h.lib.translate.tuntian = '屯田'; h.get.mode = () => 'identity';
+		const card = h.makeCard(suit), callback = nativeSkill(pack, skill, h.realm).callback;
+		await callback({ card, judgeResult: { card, suit, bool: true } }, null, h.player);
+		assert.deepEqual(Array.from(h.player.getExpansions('tuntian')), [card]);
+		assert.equal(h.player.marks.tuntian.hhSourceMarkContent.textContent, '屯田[1]');
+		assert.deepEqual(h.showMark('tuntian').cards, [card]);
+	}
+});
+
+function judgeFactory(realm) {
+	const text = fs.readFileSync(new URL('../src/overrides/content.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
+	vm.runInContext(text, realm); return realm.createContentJudge;
+}
+
+test('native judgment waits for the actual non-heart Tuntian callback and retains its card after cleanup', async () => {
+	const h = expansionFixture(), { player, lib, get, realm, ui } = h, game = realm.game;
+	lib.skill.tuntian = nativeSkill('shenhua', 'tuntian'); lib.translate.tuntian = '屯田'; lib.status = { videoId: 1 }; lib.cardOL = {};
+	get.mode = () => 'identity'; get.copy = value => ({ ...value }); get.suit = card => card.suit; get.number = card => card.number; get.color = () => 'black'; get.id = () => 'judge-card'; get.idDialog = () => null;
+	ui.arena = new Element(); ui.clear = () => {}; ui.create.dialog = () => ({ classList: new Element().classList, close() {} });
+	game.broadcastAll = (fn, ...args) => fn(...args); game.delay = async () => {}; game.log = () => {}; game.checkMod = () => {};
+	game.cardsGotoOrdering = card => { ui.ordering.appendChild(card); return { forResult: async () => ({}) }; };
+	game.cardsDiscard = async cards => { for (const card of cards) ui.discardPile.appendChild(card); };
+	player.judging = []; player.$throwordered = () => new Element('card thrown');
+	const card = h.makeCard('spade'); card.copy = () => new Element('card');
+	const signals = [], judge = { directresult: card, judgestr: '屯田', player, next: [], position: ui.discardPile, judge: () => 1, callback: nativeSkill('refresh', 'retuntian', realm).callback, async trigger() {}, triggerMessage() { signals.push(player.getExpansions('tuntian').length); } };
+	realm._status.event = judge;
+	const createExpansion = game.createEvent;
+	game.createEvent = name => {
+		if (name !== 'judgeCallback') return createExpansion(name);
+		const event = { setContent(callback) { this.callback = callback; }, then(resolve, reject) { Promise.resolve().then(() => this.callback(this, null, player)).then(resolve, reject); } };
+		judge.next.push(event); return event;
+	};
+	const original = nativeContent('judge', realm), wrapped = judgeFactory(realm)(original);
+	assert.equal(wrapped[0], original[0]);
+	for (const step of wrapped) await step(judge, null, player);
+	const cleanup = vm.runInContext(nativeMethods('../../../noname/library/element/content.ts', ['orderingDiscard']), realm).orderingDiscard;
+	await cleanup({ relatedEvent: { orderingCards: [card] } }, null, player);
+	assert.deepEqual(Array.from(player.getExpansions('tuntian')), [card]);
+	assert.deepEqual(h.showMark('tuntian').cards, [card]);
+	assert.equal(player.marks.tuntian.hhSourceMarkContent.textContent, '屯田[1]'); assert.deepEqual(signals, [1]);
+});
+
+test('heart judgments for refreshed Deng Ai enter the hand without adding a field card or field count', async () => {
+	const h = expansionFixture(); h.lib.skill.tuntian = nativeSkill('shenhua', 'tuntian'); h.lib.translate.tuntian = '屯田';
+	const card = h.makeCard('heart');
+	await nativeSkill('refresh', 'retuntian', h.realm).callback({ card, judgeResult: { card, suit: 'heart', bool: true } }, null, h.player);
+	assert.equal(card.parentNode, h.player.node.handcards1); assert.equal(h.player.getExpansions('tuntian').length, 0); assert.equal(h.player.marks.tuntian, undefined);
+});
+
+test('skill-character marks retain the storage key needed by the native expansion detail dialog', async () => {
+	const h = expansionFixture(); h.lib.skill.tuntian = nativeSkill('shenhua', 'tuntian'); h.lib.translate.tuntian = '屯田';
+	const card = h.makeCard('club'); h.player.$addToExpansion([card], false, ['tuntian']);
+	h.player.markSkillCharacter('tuntian', 'dengai', '屯田', 'expansion');
+	assert.equal(h.player.marks.tuntian.skill, 'tuntian'); assert.deepEqual(h.showMark('tuntian').cards, [card]);
+	h.player.markSkillCharacter('tuntian', 'dengai', '屯田', 'expansion');
+	assert.equal(h.player.marks.tuntian.skill, 'tuntian'); assert.deepEqual(h.showMark('tuntian').cards, [card]);
+});
+
+test('older native step-style judgment implementations pass through without rewriting their card rules', () => {
+	const h = fixture(), createJudge = judgeFactory(h.realm), native = function () { 'step 0'; };
+	assert.equal(createJudge(native), native);
 });

@@ -52,7 +52,7 @@ import { controlAdd, controlOpen, controlClose, controlReplace, controlUpdateLay
 import { dialogOpen, dialogClose } from "../overrides/dialog.js";
 import { eventAddMessageHook, eventTriggerMessage } from "../overrides/event.js";
 import { cardCopy, cardInit, cardUpdateTransform, cardMoveTo, cardMoveDelete } from "../overrides/card.js";
-import { createContentGain, contentJudge, createContentLose } from "../overrides/content.js";
+import { createContentGain, createContentJudge, createContentLose } from "../overrides/content.js";
 import { libInitCssstyles } from "../overrides/lib.js";
 import { getSkillState, getObjtype } from "../overrides/get.js";
 import { gameSwapSeat, gameSwapPlayer, gameSwapControl, gameAddGlobalSkill, gameRemoveGlobalSkill, gameLogv } from "../overrides/game.js";
@@ -225,7 +225,7 @@ export const createDecadeUIObject = () => ({
 						$changeZhuanhuanji: lib.element.player.$changeZhuanhuanji,
 						trySkillAnimate: lib.element.player.trySkillAnimate,
 					},
-					content: { lose: lib.element.content.lose, gain: lib.element.content.gain },
+					content: { lose: lib.element.content.lose, gain: lib.element.content.gain, judge: lib.element.content.judge },
 					dialog: { close: lib.element.dialog.close },
 				},
 				init: { cssstyles: lib.init.cssstyles },
@@ -307,7 +307,7 @@ export const createDecadeUIObject = () => ({
 					},
 					content: {
 						gain: createContentGain(base.lib.element.content.gain),
-						judge: contentJudge,
+						judge: createContentJudge(base.lib.element.content.judge),
 						lose: createContentLose(base.lib.element.content.lose),
 					},
 				},
