@@ -1,7 +1,7 @@
 import { createPlayerTip } from './playerTip.js';
 
 const css = `
-.hh-rescue-active .player>.timeai,.hh-rescue-active .player>.timePhase,.hh-rescue-active .player>.timerbar,.hh-rescue-active .player>.tipskill,.hh-rescue-active .player>.tipshow:not(.hh-rescue-thinking),.hh-rescue-active #jindutiaopl{visibility:hidden!important}
+.hh-rescue-active .player>.timeai,.hh-rescue-active .player>.timePhase,.hh-rescue-active .player>.timerbar,.hh-rescue-active .player>.tipskill,.hh-rescue-active .player>.tipshow:not(.hh-rescue-thinking),.hh-rescue-active #jindutiaopl:not([data-hh-action-timer]){visibility:hidden!important}
 .player>.hh-rescue-thinking{pointer-events:none;transition:none}
 .player>.hh-rescue-help{position:absolute;display:block;left:50%;top:35%;width:112%;height:auto;transform:translate(-50%,-50%);overflow:visible;z-index:97;pointer-events:none;transition:none;animation:none;opacity:1}
 .hh-rescue-help>img{position:static;display:block;width:100%;max-width:none;height:auto;animation:none;transform:none;opacity:1}

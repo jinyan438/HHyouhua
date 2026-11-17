@@ -139,6 +139,13 @@ test('快速操作和关闭文字提示仍同步进度，等待异常也会清�
     }
 });
 
+test('因操作超时托管的本地角色快速执行，其他AI仍保留原思考节奏', async () => {
+    const h = setup(); h.game.me = h.player; h.status.auto = true; h.game.hhPlayerActionTimer = { timedOutAuto: true };
+    await h.think.delay(h.use('sha')); assert.equal(h.waits.length, 0);
+    const other = { ...h.player };
+    await h.think.delay(h.use('sha', { player: other })); assert.equal(h.waits.length, 1);
+});
+
 test('求桃预思考沿用救人长考和自救点击节奏，不预先查询是否有桃', () => {
     const h = setup(), dying = { hp: 0 }, parent = { name: '_save' };
     h.player.canSave = () => { throw new Error('不能提前探测救人能力'); };

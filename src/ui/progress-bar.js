@@ -7,6 +7,7 @@ import { lib, game, ui, get, ai, _status } from "noname";
 import { initGTBB } from "./gtbb.js";
 import { initPhaseTipsSkills } from "./phase-tips.js";
 import { createPlayerTip } from "./playerTip.js";
+import { setupPlayerActionTimer } from "../features/playerActionTimer.js";
 
 // ==================== 常量定义 ====================
 
@@ -23,9 +24,6 @@ const ANIMATION_DURATION = 1000;
 const AI_PROGRESS_DURATION = 15000;
 
 const AI_ANIMATION_INTERVAL = 32;
-
-/** @type {number} 红色阈值 */
-const RED_THRESHOLD = 395 / 3;
 
 /** @type {number} 检查间隔(毫秒) */
 const CHECK_INTERVAL = 100;
@@ -245,7 +243,7 @@ const createTipImg = (className, imgName) => {
  */
 export function initPrecontentUI() {
 	// 玩家进度条
-	game.Jindutiaoplayer = () => {
+	game.Jindutiaoplayer = (options = {}) => {
 		clearTimer("timer");
 		clearTimer("timer2");
 		removeElementById(PROGRESS_BAR_ID);
@@ -258,47 +256,59 @@ export function initPrecontentUI() {
 		if (cfg.setSpecial && !window.jindutiaoTeshu) window.jindutiaoTeshu = true;
 
 		Object.assign(container.style, cfg.container);
+		container.style.pointerEvents = "none";
+		container.style.zIndex = "100";
+		container.setAttribute("role", "progressbar");
+		container.setAttribute("aria-label", "操作剩余时间");
+		container.setAttribute("aria-valuemin", "0");
+		container.setAttribute("aria-valuemax", "100");
 		const boxTime = createDiv(cfg.progressBar.data, cfg.progressBar.style);
 		container.appendChild(boxTime);
 
-		let boxTime2 = null,
-			imgBg3 = null;
+		let boxTime2 = null;
 		if (cfg.secondaryBar) {
 			boxTime2 = createDiv(cfg.secondaryBar.data, cfg.secondaryBar.style);
 			container.appendChild(boxTime2);
 		}
 		if (cfg.backgroundImage) container.appendChild(createImg(cfg.backgroundImage.src, cfg.backgroundImage.style));
 		if (cfg.backgroundImages) {
-			cfg.backgroundImages.forEach((c, i) => {
+			cfg.backgroundImages.forEach(c => {
 				const img = createImg(c.src, c.style);
-				if (i === 0) imgBg3 = img;
 				container.appendChild(img);
 			});
 		}
 
 		document.body.appendChild(container);
-		const interval = parseFloat(lib.config.extension_HH优化_jindutiaoST);
-
-		window.timer = setInterval(() => {
-			boxTime.style.width = `${boxTime.data}px`;
-			boxTime.style.backgroundColor = boxTime.data <= RED_THRESHOLD ? "rgba(230,56,65,0.88)" : "rgb(230,151,91)";
-			if (--boxTime.data === 0) {
-				clearTimer("timer");
-				container.remove();
-			}
-		}, interval);
-
-		if (window.jindutiaoTeshu && boxTime2 && imgBg3) {
-			window.timer2 = setInterval(() => {
-				boxTime2.style.width = `${--boxTime2.data}px`;
-				if (boxTime2.data === 0) {
-					clearTimer("timer2");
-					delete window.jindutiaoTeshu;
-					boxTime2.remove();
-					imgBg3.remove();
-				}
-			}, interval / 2);
+		boxTime.style.width ||= `${cfg.progressBar.data}px`;
+		for (const bar of [boxTime, boxTime2].filter(Boolean)) {
+			bar.style.transformOrigin = "left center";
+			bar.style.transition = "none";
 		}
+		let timer = null;
+		const view = {
+			update(fraction) {
+				const remaining = Math.max(0, Math.min(1, fraction));
+				container.setAttribute("aria-valuenow", String(Math.round(remaining * 100)));
+				boxTime.style.transform = `scaleX(${remaining})`;
+				boxTime.style.backgroundColor = remaining <= 1 / 3 ? "rgba(230,56,65,0.88)" : "rgb(230,151,91)";
+				if (boxTime2) boxTime2.style.transform = `scaleX(${remaining})`;
+			},
+			remove() {
+				if (timer !== null) { clearInterval(timer); if (window.timer === timer) delete window.timer; }
+				container.remove();
+			},
+		};
+		view.update(1);
+		if (options.manual) container.dataset.hhActionTimer = "true";
+		else {
+			const startedAt = performance.now(), duration = Math.max(1, Number(lib.config.extension_HH优化_playerActionTime) || 15) * 1000;
+			timer = window.timer = setInterval(() => {
+				const remaining = Math.max(0, 1 - (performance.now() - startedAt) / duration);
+				view.update(remaining);
+				if (remaining === 0) view.remove();
+			}, AI_ANIMATION_INTERVAL);
+		}
+		return view;
 	};
 
 	/**
@@ -381,28 +391,15 @@ export function initPrecontentUI() {
  * @param {object} config - 配置对象
  */
 const setupWatcher = config => {
-	let playerShown = false,
-		thinking = null,
+	let thinking = null,
 		watcher = null;
 	const aiPlayers = new Map();
-
-	const showPlayer = () => {
-		if (playerShown) return;
-		playerShown = true;
-		game.Jindutiaoplayer();
-	};
-
-	const hidePlayer = () => {
-		if (!playerShown) return;
-		playerShown = false;
-		clearTimer("timer");
-		clearTimer("timer2");
-		removeElementById(PROGRESS_BAR_ID);
-	};
+	const playerTimer = setupPlayerActionTimer({ lib, game, ui, get, _status });
 
 	// 暴露重置方法供配置热更新使用
 	window.resetProgressBarState = () => {
-		playerShown = false;
+		playerTimer.check(false);
+		playerTimer.refresh();
 	};
 
 	/**
@@ -475,10 +472,10 @@ const setupWatcher = config => {
 
 	const check = () => {
 		const event = _status.event;
-		if (_status.over || game.hhRescueFlow?.active) { hidePlayer(); hideAllAI(); return; }
+		playerTimer.check(false);
+		if (_status.over || game.hhRescueFlow?.active) { hideAllAI(); return; }
 		// 原生暂停状态不覆盖独立的 AI 等待；同一次思考复用节点和起始时间。
 		if (thinking) {
-			hidePlayer();
 			showOneAI(thinking.player, thinking);
 			return;
 		}
@@ -487,17 +484,13 @@ const setupWatcher = config => {
 
 		if (waiting) {
 			if (isWuxie) {
-				if (lib.config.extension_HH优化_jindutiaoYangshi !== "0") showPlayer();
 				showAllAI();
 			} else if (event.player === game.me) {
 				hideAllAI();
-				if (lib.config.extension_HH优化_jindutiaoYangshi !== "0") showPlayer();
 			} else {
-				hidePlayer();
 				showOneAI(event.player);
 			}
 		} else {
-			hidePlayer();
 			hideAllAI();
 		}
 	};
@@ -511,7 +504,6 @@ const setupWatcher = config => {
 			watcher = null;
 		}
 		thinking = null;
-		hidePlayer();
 		hideAllAI();
 	};
 

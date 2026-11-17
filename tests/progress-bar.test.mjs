@@ -4,6 +4,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 import { domFixture } from './helpers/catalog-dom.mjs';
 import { createPlayerTip } from '../src/ui/playerTip.js';
+import { setupPlayerActionTimer } from '../src/features/playerActionTimer.js';
 
 const source = readFileSync(new URL('../src/ui/progress-bar.js', import.meta.url), 'utf8')
 	.replace(/^import[^\n]*\n/gm, '').replaceAll('export function ', 'function ');
@@ -20,13 +21,14 @@ function fixture(style = 'off') {
 	}
 	function clearInterval(token) { if (!token) return; token.active = false; environment.clearTimer(token.timer); intervals.delete(token); }
 	const players = Array.from({ length: 3 }, () => document.createElement('div'));
-	players.forEach(player => { player.className = 'player'; player.isPhaseUsing = () => true; document.body.appendChild(player); });
+	players.forEach(player => { player.className = 'player'; player.isPhaseUsing = () => true; player.isMine = () => player === game.me && !status.auto; document.body.appendChild(player); });
 	const lib = { assetURL: '', config: { extension_HH优化_newDecadeStyle: style, extension_HH优化_jindutiaoYangshi: '2' }, onover: [] };
-	const game = { me: players[0], players, Jindutiaoplayer() { const node = document.createElement('div'); node.id = 'jindutiaopl'; document.body.appendChild(node); } };
+	const game = { me: players[0], players, Jindutiaoplayer() { const node = document.createElement('div'); node.id = 'jindutiaopl'; document.body.appendChild(node); return { update(fraction) { node.fraction = fraction; }, remove() { node.remove(); } }; } };
 	const status = { gameStarted: true, currentPhase: players[1] };
 	let clockOffset = 0;
 	const context = vm.createContext({ document, window: {}, lib, game, ui: {}, get: {}, _status: status,
 		createPlayerTip: (lib, className, imageName) => createPlayerTip(lib, className, imageName, document),
+		setupPlayerActionTimer: context => setupPlayerActionTimer(context, { now: environment.now, setInterval, clearInterval }),
 		performance: { now: () => environment.now() + clockOffset }, setInterval, clearInterval });
 	vm.runInContext(source + '\nsetupWatcher({}); setupTipWatcher();', context);
 	dom.advance(100);
@@ -136,10 +138,10 @@ test('short or hidden thinking hints still get a correctly timed bar, including 
 
 test('manual player waits and Wuxie multiple-seat timers retain their normal lifecycle', () => {
 	const h = fixture();
-	h.status.event = { player: h.game.me }; h.status.paused = true; h.advance(100);
+	h.status.event = { name: 'chooseToUse', player: h.game.me, isMine: () => true }; h.status.paused = true; h.advance(100);
 	assert.ok(h.document.getElementById('jindutiaopl'));
 	const token = h.progress.begin(h.players[1], 1920, true);
-	assert.equal(h.document.getElementById('jindutiaopl'), undefined);
+	assert.ok(h.document.getElementById('jindutiaopl'), 'An unrelated AI hint cannot cancel a real manual choice');
 	h.progress.end(token); h.advance(100);
 	assert.ok(h.document.getElementById('jindutiaopl'));
 	h.status.event.type = 'wuxie'; h.advance(100);
@@ -161,4 +163,14 @@ test('rescue prompts take precedence and game over clears bars, hints and animat
 	h.status.over = true; h.stop(); h.progress.end(token);
 	assert.equal(bar(player), null); assert.equal(player.querySelector('.hh-ai-thinking'), null);
 	assert.equal(h.progress.begin(player, 1920, true), null); assert.equal(h.intervals.size, 0);
+});
+
+test('a manual Peach question still has its own player countdown while rescue hides AI bars', () => {
+	const h = fixture();
+	h.game.hhRescueFlow = { active: true };
+	h.status.event = { name: 'chooseToUse', type: 'dying', player: h.game.me, isMine: () => true };
+	h.status.paused = true; h.advance(100);
+	assert.ok(h.document.getElementById('jindutiaopl'));
+	assert.ok(h.players.every(player => !bar(player)));
+	h.stop(); assert.equal(h.document.getElementById('jindutiaopl'), undefined);
 });

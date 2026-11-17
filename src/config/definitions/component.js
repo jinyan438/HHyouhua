@@ -41,22 +41,19 @@ export const jindutiaoYangshi = {
 };
 
 /**
- * 进度条速度配置
+ * 玩家操作时限配置
  * @type {Object}
  */
-export const jindutiaoST = {
-	name: "进度条速度",
-	init: "200",
-	intro: "设置玩家进度条的时间间隔",
+export const playerActionTime = {
+	name: "操作时限",
+	init: "15",
+	intro: "本地手动操作每个节点独立计时，默认15秒。超时优先取消或不响应，强制选择由系统默认处理；连续3次超时进入托管，完成一次手动选择或取消托管后清零。关闭进度条时不启用本地超时处理，联机沿用房间规则",
 	item: {
-		10: "10毫秒/次",
-		50: "50毫秒/次",
-		100: "100毫秒/次",
-		200: "200毫秒/次",
-		500: "500毫秒/次",
-		800: "800毫秒/次",
-		1000: "1秒/次",
-		2000: "2秒/次",
+		10: "10秒",
+		15: "15秒",
+		20: "20秒",
+		30: "30秒",
+		60: "60秒",
 	},
 };
 
@@ -199,7 +196,7 @@ export const component_title_end = createCollapseEnd("component_title");
 export const componentConfigs = {
 	component_title,
 	jindutiaoYangshi,
-	jindutiaoST,
+	playerActionTime,
 	jindutiaoSet,
 	JDTSYangshi,
 	GTBBYangshi,
