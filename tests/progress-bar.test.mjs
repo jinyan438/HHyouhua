@@ -38,7 +38,7 @@ function bar(player) { return player.querySelector('.timeai,.timePhase'); }
 function fraction(node) { return Number(node.firstChild.style.transform.match(/scaleX\((.+)\)/)[1]); }
 
 for (const style of ['off', 'on']) {
-	test(`AI countdown survives unpaused engine ticks and drains over its actual duration (${style})`, () => {
+	test(`AI bar uses a fixed 15-second scale and survives unpaused engine ticks (${style})`, () => {
 		const h = fixture(style), player = h.players[1];
 		const token = h.progress.begin(player, 1920, true), node = bar(player), tip = player.querySelector('.hh-ai-thinking');
 		assert.ok(node && tip, 'Shown immediately, without waiting for the 100ms watcher');
@@ -47,12 +47,12 @@ for (const style of ['off', 'on']) {
 		h.advance(960);
 		assert.equal(bar(player), node, 'Watcher must keep the same node while the engine is not paused');
 		assert.equal(player.querySelector('.hh-ai-thinking'), tip);
-		assert.equal(fraction(node), 0.5);
+		assert.ok(Math.abs(fraction(node) - 0.936) < 1e-9);
 		h.advance(928);
-		assert.ok(fraction(node) > 0 && fraction(node) < 0.03);
+		assert.ok(fraction(node) > 0.87 && fraction(node) < 0.88);
 		h.advance(32);
-		assert.equal(fraction(node), 0);
-		assert.equal(bar(player), node, 'Keep the empty bar until the actual wait finishes');
+		assert.equal(fraction(node), 0.872, 'A 1.92-second thought consumes only 1.92 / 15 of the bar');
+		assert.equal(bar(player), node, 'The actual wait controls when the remaining bar is removed');
 		h.progress.end(token);
 		assert.equal(bar(player), null);
 		assert.equal(player.querySelector('.hh-ai-thinking'), null);
@@ -60,10 +60,27 @@ for (const style of ['off', 'on']) {
 	});
 }
 
-test('a delayed animation frame consumes elapsed time instead of one fixed step', () => {
+test('three seconds of thinking consumes 20 percent of the 15-second bar', () => {
+	const h = fixture(), token = h.progress.begin(h.players[1], 3000, true), node = bar(h.players[1]);
+	h.advance(3000);
+	assert.ok(Math.abs(fraction(node) - 0.8) < 32 / 15000, 'Animation may lag by at most one frame');
+	h.progress.end(token);
+	assert.equal(bar(h.players[1]), null, 'Finishing a thought removes the remaining 80 percent');
+	h.stop();
+});
+
+test('the bar reaches zero at 15 seconds and never becomes negative', () => {
+	const h = fixture(), token = h.progress.begin(h.players[1], 15000, true), node = bar(h.players[1]);
+	h.advance(14976); assert.ok(fraction(node) > 0);
+	h.advance(32); assert.equal(fraction(node), 0);
+	h.advance(2000); assert.equal(fraction(node), 0);
+	h.progress.end(token); h.stop(); assert.equal(h.intervals.size, 0);
+});
+
+test('a delayed animation frame consumes elapsed time against the fixed 15-second scale', () => {
 	const h = fixture(), token = h.progress.begin(h.players[1], 1920, true), node = bar(h.players[1]);
 	h.jump(928); h.advance(32);
-	assert.equal(fraction(node), 0.5);
+	assert.ok(Math.abs(fraction(node) - 0.936) < 1e-9);
 	h.progress.end(token); h.stop();
 });
 
@@ -74,7 +91,7 @@ test('consecutive choices restart at full and an older completion cannot hide a 
 	const second = h.progress.begin(player, 960, true), next = bar(player);
 	assert.notEqual(next, old); assert.equal(old.isConnected, false); assert.equal(fraction(next), 1);
 	h.progress.end(first); assert.equal(bar(player), next);
-	h.advance(480); assert.equal(fraction(next), 0.5);
+	h.advance(480); assert.equal(fraction(next), 0.968, 'Shorter decisions keep the same consumption rate');
 	const third = h.progress.begin(h.players[2], 960, false);
 	assert.equal(bar(player), null); assert.ok(bar(h.players[2]));
 	h.progress.end(second); assert.ok(bar(h.players[2]));
@@ -84,7 +101,7 @@ test('consecutive choices restart at full and an older completion cannot hide a 
 test('short or hidden thinking hints still get a correctly timed bar, including autoplay on the local seat', () => {
 	const h = fixture(), token = h.progress.begin(h.game.me, 320, false), node = bar(h.game.me);
 	assert.ok(node); assert.equal(h.game.me.querySelector('.hh-ai-thinking'), null);
-	h.advance(160); assert.equal(fraction(node), 0.5);
+	h.advance(160); assert.equal(fraction(node), 1 - 160 / 15000);
 	h.progress.end(token); assert.equal(bar(h.game.me), null); h.stop();
 });
 

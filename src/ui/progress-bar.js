@@ -19,8 +19,8 @@ const DEFAULT_POS = [0, 0, 100, 100];
 /** @type {number} 动画持续时间(毫秒) */
 const ANIMATION_DURATION = 1000;
 
-/** @type {number} AI计时器间隔(毫秒) */
-const AI_TIMER_INTERVAL = 150;
+/** @type {number} AI进度条满条代表的总时间(毫秒)，独立于单次实际思考时长 */
+const AI_PROGRESS_DURATION = 15000;
 
 const AI_ANIMATION_INTERVAL = 32;
 
@@ -428,11 +428,10 @@ const setupWatcher = config => {
 		}
 
 		const startedAt = thought?.startedAt ?? performance.now();
-		const duration = thought?.duration ?? boxTime.data * AI_TIMER_INTERVAL;
 		boxTime.style.transformOrigin = "left center";
 		boxTime.style.transition = "none";
 		const update = () => {
-			const remaining = Math.max(0, 1 - (performance.now() - startedAt) / duration);
+			const remaining = Math.max(0, 1 - (performance.now() - startedAt) / AI_PROGRESS_DURATION);
 			boxTime.style.transform = `scaleX(${remaining})`;
 			if (remaining === 0) {
 				clearInterval(entry.timer);
