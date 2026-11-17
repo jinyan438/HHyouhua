@@ -6,6 +6,7 @@
 
 import { lib, game, ui, get, ai, _status } from "noname";
 import { getBasePlayerMethods, playShowCardAudio } from "./base.js";
+import { refreshPlayerEquipment } from "../../ui/equipment.js";
 
 export function playerEquip() {
 	const event = getBasePlayerMethods().equip.apply(this, arguments);
@@ -15,6 +16,7 @@ export function playerEquip() {
 
 export function playerAddVirtualEquip(card, cards) {
 	const result = getBasePlayerMethods().$addVirtualEquip.apply(this, arguments);
+	refreshPlayerEquipment(this, get);
 	if (!game.online) game.hhEquipMove?.placed(card, cards, this);
 	return result;
 }
@@ -123,6 +125,7 @@ export function playerRespondAnimateBefore(event) {
 export function playerHandleEquipChange() {
 	const base = getBasePlayerMethods();
 	base.$handleEquipChange.apply(this, arguments);
+	refreshPlayerEquipment(this, get);
 
 	const player = this;
 

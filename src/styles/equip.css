@@ -87,36 +87,46 @@
 	justify-content: flex-end;
 	width: 100%;
 	height: 100%;
-	row-gap: 3px;
+	row-gap: 0;
 }
 
 .equips-wrap > .equips-back > div {
-	position: initial;
+	position: relative;
+	flex: 0 0 27px;
 	width: 100%;
 	height: 27px;
-	left: 3px;
-	right: 3px;
+	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat;
 }
 
-/* 装备槽背景图 */
+.equips-wrap > .equips-back > div::before {
+	content: "";
+	position: absolute;
+	left: 3px;
+	top: 4.5px;
+	width: 18px;
+	height: 18px;
+	background: var(--hh-equip-slot-icon) center / contain no-repeat;
+	opacity: 0.45;
+}
+
 .equips-wrap > .equips-back > div[data-type="0"] {
-	background-image: url("../../image/styles/decade/equip1.png");
+	--hh-equip-slot-icon: url("../../assets/equipment/new_equip_type_3_new.png");
 }
 
 .equips-wrap > .equips-back > div[data-type="1"] {
-	background-image: url("../../image/styles/decade/equip2.png");
+	--hh-equip-slot-icon: url("../../assets/equipment/new_equip_type_4_new.png");
 }
 
 .equips-wrap > .equips-back > div[data-type="2"] {
-	background-image: url("../../image/styles/decade/equip3.png");
+	--hh-equip-slot-icon: url("../../assets/equipment/new_equip_type_5_new.png");
 }
 
 .equips-wrap > .equips-back > div[data-type="3"] {
-	background-image: url("../../image/styles/decade/equip4.png");
+	--hh-equip-slot-icon: url("../../assets/equipment/new_equip_type_6_new.png");
 }
 
 .equips-wrap > .equips-back > div[data-type="4"] {
-	background-image: url("../../image/styles/decade/equip5.png");
+	--hh-equip-slot-icon: url("../../assets/equipment/new_equip_type_7_new.png");
 }
 
 /** 装备栏内容 */
@@ -133,7 +143,7 @@
 	bottom: 0;
 	left: 0;
 	right: 0;
-	row-gap: 3px;
+	row-gap: 0;
 }
 
 /* 装备卡牌槽 */
@@ -147,7 +157,7 @@
 	height: 27px;
 	left: 3px;
 	right: 3px;
-	background: rgb(53, 38, 32) !important;
+	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat !important;
 	border-radius: 0;
 	box-shadow: none;
 	-webkit-text-size-adjust: none;
@@ -160,33 +170,6 @@
 	top: auto;
 	left: auto;
 	border: initial;
-}
-
-/* 装备槽边框 */
-.equips-wrap > .equips > div::after {
-	display: block;
-	width: inherit;
-	height: inherit;
-	top: auto;
-	left: auto;
-	border-radius: 0;
-	box-shadow: none;
-	opacity: 1;
-	z-index: auto;
-	background:
-		linear-gradient(to left, yellow, yellow) left top no-repeat,
-		linear-gradient(to bottom, yellow, yellow) left top no-repeat,
-		linear-gradient(to left, yellow, yellow) right top no-repeat,
-		linear-gradient(to bottom, yellow, yellow) right top no-repeat,
-		linear-gradient(to left, yellow, yellow) left bottom no-repeat,
-		linear-gradient(to bottom, yellow, yellow) left bottom no-repeat,
-		linear-gradient(to left, yellow, yellow) right bottom no-repeat,
-		linear-gradient(to left, yellow, yellow) right bottom no-repeat !important;
-	background-size:
-		2px 8px,
-		10px 2px,
-		2px 8px,
-		10px 2px !important;
 }
 
 /** 装备选中状态 */
@@ -219,86 +202,6 @@
 		0 0 8px yellow;
 }
 
-/** 装备图标 */
-
-.equips-wrap > .equips-back > div > .icon,
-.equips-wrap > .equips > div > .icon {
-	display: block;
-	width: 20px;
-	height: 20px;
-	top: 4px;
-	left: 2px;
-	transition: opacity 0.5s;
-}
-
-/** 装备牌内容 */
-
-.equips-wrap > .equips > .card > div {
-	position: absolute;
-	text-shadow: none;
-}
-
-.equips-wrap > .equips > .card > .name2 {
-	position: static;
-	display: flex;
-	align-items: center;
-	align-content: center;
-	justify-content: center;
-	width: calc(100% - 4px);
-	height: calc(100% - 4px);
-	margin: 0;
-	font-family: "yuanli" !important;
-	font-weight: bold;
-	white-space: pre-wrap;
-	background-color: rgb(228, 207, 166);
-	border: 1px solid rgb(90, 50, 33);
-	border-radius: 0;
-	box-sizing: border-box;
-	pointer-events: none;
-	z-index: 1;
-}
-
-/* 红色花色 */
-.equips-wrap > .equips > .card[data-suit="heart"] > .name2,
-.equips-wrap > .equips > .card[data-suit="diamond"] > .name2 {
-	color: #8b0000;
-}
-
-/* 黑色花色 */
-.equips-wrap > .equips > .card[data-suit="spade"] > .name2,
-.equips-wrap > .equips > .card[data-suit="club"] > .name2 {
-	color: #181818;
-}
-
-/* 无色 */
-.equips-wrap > .equips > .card[data-suit="none"] > .name2 {
-	color: white;
-	background-color: black;
-}
-
-/* 废除状态 */
-.equips-wrap > .equips > .card.feichu > .name2 {
-	color: white;
-	font-weight: normal;
-	background-color: rgb(57, 48, 33);
-}
-
-/* 装备图片 */
-.equips-wrap > .equips > .card > .image {
-	position: absolute;
-	display: block;
-	width: 20px;
-	height: 20px;
-	left: 3px;
-	bottom: auto;
-	visibility: visible !important;
-	z-index: 2;
-}
-
-.equips-wrap > .equips > .card:not(.fullskin) > .image {
-	display: block !important;
-}
-
 /** 其他玩家装备栏 */
 
 .player > .equips,
@@ -307,7 +210,9 @@
 	display: flex;
 	flex-direction: column;
 	width: auto;
-	height: 80px;
+	height: auto;
+	min-height: 80px;
+	container-type: inline-size;
 	left: var(--player-equips-left);
 	right: var(--player-equips-right);
 	bottom: 3%;
@@ -331,29 +236,108 @@
 	box-shadow: none;
 }
 
-/* 其他玩家装备牌 */
-.player > .equips > .card,
-.player.unseen > .equips > .card,
-.player.unseen2 > .equips > .card {
-	display: flex;
-	align-items: center;
-	align-content: center;
-	justify-content: center;
+/* 原版 140×30 装备条，随武将牌内的实际栏宽等比缩放。 */
+.equips > .card {
+	--hh-equip-unit: 0.72px;
+}
+
+:is(.player, .equips-wrap) > .equips > .card,
+#arena :is(.player, .equips-wrap) > .equips > .card {
+	position: relative !important;
+	display: block;
+	flex: 0 0 auto;
 	width: 100%;
-	height: 16px;
-	background: rgba(228, 207, 166, 0.8) !important;
-	border: 1px solid rgb(95, 55, 45);
+	height: calc(var(--hh-equip-unit) * 30);
+	min-height: 0;
+	left: 0;
+	top: 0;
+	margin: 0;
+	padding: 0;
+	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat !important;
+	border: 0 !important;
 	border-image: none !important;
-	border-radius: 1px;
+	border-radius: 0;
 	box-sizing: border-box;
+	box-shadow: none;
 	text-shadow: none;
 }
 
-#arena.decadeUI:not(.long).mobile:not(.oldlayout) .player.unseen:not([data-position="0"]) .equips:not(*:empty) > .card,
-#arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty) > .card:not(.selected),
-#arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty) > .card,
-#arena.decadeUI.long:not(.mobile):not(.oldlayout) .player.unseen2 .equips:not(*:empty) > .card:not(.selected) {
-	background: rgba(228, 207, 166, 0.8) !important;
+@supports (width: 1cqw) {
+	.player > .equips > .card {
+		--hh-equip-unit: clamp(0.53px, 0.714286cqw, 0.9px);
+	}
+}
+
+.equips-wrap > .equips {
+	container-type: inline-size;
+}
+
+.equips-wrap > .equips > .card {
+	--hh-equip-unit: 0.9px;
+}
+
+:is(.player, .equips-wrap) > .equips > .card > div:not(.name2) {
+	display: none !important;
+}
+
+:is(.player, .equips-wrap) > .equips > .card > .name2 {
+	position: absolute !important;
+	display: block !important;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	margin: 0 !important;
+	padding: 0;
+	background: none;
+	border: 0;
+	font-family: "hh-source-general", "FZLBJW", serif !important;
+	font-weight: 400 !important;
+	font-size: calc(var(--hh-equip-unit) * 22);
+	line-height: calc(var(--hh-equip-unit) * 30) !important;
+	letter-spacing: 0;
+	color: #fff7f7 !important;
+	text-align: left;
+	text-shadow: none;
+	white-space: nowrap !important;
+	pointer-events: none;
+}
+
+:is(.player, .equips-wrap) > .equips > .card > .name2 > span {
+	position: absolute;
+	display: block;
+	top: 0;
+	height: 100%;
+	margin: 0;
+	font: inherit;
+	line-height: inherit;
+	color: inherit;
+	text-shadow: none;
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+:is(.player, .equips-wrap) > .equips > .card > .name2 > :is(.equip-icon, .equip-suit, .equip-number) {
+	width: calc(var(--hh-equip-unit) * 20);
+	height: calc(var(--hh-equip-unit) * 20);
+	top: calc(var(--hh-equip-unit) * 5);
+	color: transparent;
+}
+
+.equips > .card > .name2 > .equip-icon { left: calc(var(--hh-equip-unit) * 3); }
+.equips > .card > .name2 > .equip-suit { left: calc(var(--hh-equip-unit) * 22); }
+.equips > .card > .name2 > .equip-number { left: calc(var(--hh-equip-unit) * 38); }
+
+.equips > .card > .name2 > .equip-name {
+	left: calc(var(--hh-equip-unit) * 60);
+	right: calc(var(--hh-equip-unit) * var(--hh-equip-range-units, 3));
+	font-size: min(calc(var(--hh-equip-unit) * 22), calc((100cqw - var(--hh-equip-unit) * (60 + var(--hh-equip-range-units, 3))) / var(--hh-equip-name-length, 3))) !important;
+}
+
+.equips > .card > .name2 > .equip-range {
+	right: calc(var(--hh-equip-unit) * 2);
+	text-align: right;
 }
 
 .player:not(.selectable) > .equips > .card,
@@ -361,34 +345,20 @@
 	pointer-events: auto;
 }
 
-.player > .equips > .card > div {
-	position: static;
+/* 翻面和暗将继续使用同一张原版装备底图。 */
+#arena .player:is(.unseen, .unseen2) > .equips > .card {
+	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat !important;
 }
 
-.player > .equips > .card > .name2 {
-	position: absolute;
-	display: flex;
-	align-items: center;
-	align-content: center;
-	justify-content: center;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	margin: 0;
-	line-height: 15px;
-	font-size: 13px;
-	font-family: yuanli;
-	font-weight: bold;
-	color: #181818;
-	text-align: center;
-	text-shadow: none;
-	pointer-events: none;
+:is(.player, .equips-wrap) > .equips > .card.selected,
+#arena :is(.player, .equips-wrap) > .equips > .card.selected {
+	box-shadow: inset 0 0 0 1px #ffdc78, 0 0 5px #ffcf4a !important;
 }
 
-.player > .equips > .card[data-suit="heart"] > .name2,
-.player > .equips > .card[data-suit="diamond"] > .name2 {
-	color: #8b0000;
+:is(.player, .equips-wrap) > .equips > .card.feichu > .name2 {
+	color: #bebebe !important;
+	padding-left: 3px;
+	box-sizing: border-box;
 }
 
 /** 样式变量覆盖 */
@@ -415,7 +385,7 @@ body[data-style="off"] {
 }
 
 body[data-style="codename"] .equips-wrap > .equips-back > div {
-	opacity: 0.5;
+	opacity: 1;
 }
 
 /** 技能选择装备牌 */

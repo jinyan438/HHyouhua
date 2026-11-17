@@ -1,0 +1,190 @@
+{
+  "renderer": "E:/AI/sanguosha/sanguosha2/work/main.js: fns (EquipCardUi)",
+  "nativeSize": [
+    140,
+    30
+  ],
+  "font": "../general-font/FZLBGBK.woff2",
+  "files": [
+    {
+      "file": "new_equip_card_bg_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\new_equip_card_bg_new.png",
+      "sha256": "f0a5fd19ebf48ea9393846125c65379c5a712571410819707396257b2ae0c0f7"
+    },
+    {
+      "file": "new_equip_type_3_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\new_equip_type_3_new.png",
+      "sha256": "52344edeee997d43665c43d765a00d1f03c82f5f5108d95efea4015be604d210"
+    },
+    {
+      "file": "new_equip_type_4_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\new_equip_type_4_new.png",
+      "sha256": "353c3321ba53710244f0bfbf3d373ce97f530dde89e767af01101bddec5bdad2"
+    },
+    {
+      "file": "new_equip_type_5_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\new_equip_type_5_new.png",
+      "sha256": "917e2ca1e65e6fe2f8e1141e9d2ed9ec15b7604ff265707e3d96c8f98410d801"
+    },
+    {
+      "file": "new_equip_type_6_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\new_equip_type_6_new.png",
+      "sha256": "b8d0beb13ff10421a266adfcb0b42836f2c46581277d34b53eb88e76bd3e1778"
+    },
+    {
+      "file": "new_equip_type_7_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\new_equip_type_7_new.png",
+      "sha256": "20fb73b7123e13461d1c27adef5a61cd79a870ed32ffc34d579d19af8ccdf795"
+    },
+    {
+      "file": "other_equip_spade_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_spade_new.png",
+      "sha256": "eb4c44091119ff738e4e7249116747ea7f3f5d002e023a9084fe8b40933758c7"
+    },
+    {
+      "file": "other_equip_heart_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_heart_new.png",
+      "sha256": "7473b0da561d7d27fd61d975fbe8626435c0f4c4ef15b7868310a6fcbcfa002d"
+    },
+    {
+      "file": "other_equip_club_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_club_new.png",
+      "sha256": "f9092fd2bf3dc285b9c3ec2e07a2255ae7a8166cc244f6f6c4f44a6d41558c11"
+    },
+    {
+      "file": "other_equip_diamond_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_diamond_new.png",
+      "sha256": "0b6851a06ab5eaa7b0e166fbe97ad81b5826ed130e48918eebed3bc45ed789c7"
+    },
+    {
+      "file": "other_equip_red_a_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_a_new.png",
+      "sha256": "dbfb28e89f4d2b5a735232c99f7e2ca981c7ff83834f9408730153eb0f8b6f3f"
+    },
+    {
+      "file": "other_equip_red_2_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_2_new.png",
+      "sha256": "390d9aea0897052ca0420f312f94b761628d861c86495eb8b0aa38415e4a3be8"
+    },
+    {
+      "file": "other_equip_red_3_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_3_new.png",
+      "sha256": "d9adb296360f2d0d28fc3542ed9c8bc878b8bf5f2eef6920ae266d796d1a8a39"
+    },
+    {
+      "file": "other_equip_red_4_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_4_new.png",
+      "sha256": "daff260ec23a909d122632e95ef545427fb5c345887e89ffe76d5e1d6da177be"
+    },
+    {
+      "file": "other_equip_red_5_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_5_new.png",
+      "sha256": "478a836e186279147d83915a0bf6eee9bc66de54ad6a85647aa800917cd49a87"
+    },
+    {
+      "file": "other_equip_red_6_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_6_new.png",
+      "sha256": "b8ef8c9f31858eb40998a2df3770b8203f85b1d9971b3fb69ca00d0a79b2bb28"
+    },
+    {
+      "file": "other_equip_red_7_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_7_new.png",
+      "sha256": "2c0ced201fd70d4318fd280ac8b14e0e0a904a7385ae646bd09aa9c1dc6059fe"
+    },
+    {
+      "file": "other_equip_red_8_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_8_new.png",
+      "sha256": "fdbff78bbfbf7d90805ffd39c789533ea2388adf1d5d8e097ef03487f5f33a94"
+    },
+    {
+      "file": "other_equip_red_9_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_9_new.png",
+      "sha256": "3c728f0a8aa63c48af234976dc7c155a79bb59630a4ea2e07d2fd8cf0411c4f3"
+    },
+    {
+      "file": "other_equip_red_10_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_10_new.png",
+      "sha256": "7e120e17d764c8c5af24d16ac84ca7122b613ede325e220e3c37f4e4989a0d1a"
+    },
+    {
+      "file": "other_equip_red_j_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_j_new.png",
+      "sha256": "df414e9602c73254cce41d0c59b95fe3f7a99149eb2246b1a095ee43c84f2888"
+    },
+    {
+      "file": "other_equip_red_q_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_q_new.png",
+      "sha256": "a725a877dbd37fff6d01c4b5658b1aafed82727cd424474f7aca60c65ca1a072"
+    },
+    {
+      "file": "other_equip_red_k_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_red_k_new.png",
+      "sha256": "97dad0adf63beaecda8f54ef0dba5a79712cd9d7d7b3a5e9c252254cf98b0f66"
+    },
+    {
+      "file": "other_equip_black_a_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_a_new.png",
+      "sha256": "d09fdb4fbfcfa5f72c72f522396298840dcf455d3b1a534aaed6428f00e45417"
+    },
+    {
+      "file": "other_equip_black_2_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_2_new.png",
+      "sha256": "71ae3bc64a5dbb21abe387358c214a662ce3b461a89cb889c3385876fe52a640"
+    },
+    {
+      "file": "other_equip_black_3_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_3_new.png",
+      "sha256": "4d9b4e586ef02c2c6a057bd27d8d14ced75611c9100492331bf47ef33ecd9232"
+    },
+    {
+      "file": "other_equip_black_4_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_4_new.png",
+      "sha256": "54b85f32ff65a729e54564663e867d0b2721865143a2a4ac2b8db93f88f7eabc"
+    },
+    {
+      "file": "other_equip_black_5_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_5_new.png",
+      "sha256": "70916d61f0c900bc62f42d091470fe887d9b2352ee51f191dd416b9fa1979b3d"
+    },
+    {
+      "file": "other_equip_black_6_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_6_new.png",
+      "sha256": "63ef822c030a4775c51e5397243fa9993034fd3bd135c93c58a1d4b1a289c689"
+    },
+    {
+      "file": "other_equip_black_7_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_7_new.png",
+      "sha256": "cea7b5c8e650f59df89e50e88ec438df00915b018bc23171416363a80ff5fb2e"
+    },
+    {
+      "file": "other_equip_black_8_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_8_new.png",
+      "sha256": "805ac7e8091ee8b06b4142fe1d2b399c6a2979762db9678640c327725545b6ef"
+    },
+    {
+      "file": "other_equip_black_9_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_9_new.png",
+      "sha256": "aba0e5ea7111db47ceb6efce5b360caf2fd9933c9ce48ebf6d9354923a5c4357"
+    },
+    {
+      "file": "other_equip_black_10_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_10_new.png",
+      "sha256": "544ad50f79eb0774af8cdd5e37a5c83af996fb7ae7b002cec66e6602d72b408a"
+    },
+    {
+      "file": "other_equip_black_j_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_j_new.png",
+      "sha256": "bb96ae04b8e7df5aff6863be63fe7eb68114fb897ac054567dac411d3019ea2f"
+    },
+    {
+      "file": "other_equip_black_q_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_q_new.png",
+      "sha256": "e62b561d41289c1c667f29ff1570c9053c903cf4f38ce682049b3711883c4748"
+    },
+    {
+      "file": "other_equip_black_k_new.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\other_equip_black_k_new.png",
+      "sha256": "865be0472047f63fccdb74a313042abd73c18232d7f85762e88d4e32de396483"
+    }
+  ]
+}

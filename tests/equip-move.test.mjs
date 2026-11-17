@@ -68,7 +68,7 @@ function harness({ zoom = 1, enabled = true } = {}) {
 		const card = cards[0] || game.createCard(equip.name);
 		card.rect = visual({ left: 724, top: 266, width: 104, height: 16 }); target.node.equips.appendChild(card);
 	} };
-	const context = vm.createContext({ lib, ui, game, get, _status, getBasePlayerMethods: () => base, getDui: () => dui, applyCardBorder() {}, decadeUI: { config: {} },
+	const context = vm.createContext({ lib, ui, game, get, _status, refreshPlayerEquipment() {}, getBasePlayerMethods: () => base, getDui: () => dui, applyCardBorder() {}, decadeUI: { config: {} },
 		document: { createDocumentFragment() { return Object.assign(node(), { fragment: true }); } } });
 	vm.runInContext(`Array.prototype.add = function(x) { if (!this.includes(x)) this.push(x); return this; };
 		Array.prototype.addArray = function(list) { for (const x of list) this.add(x); return this; };

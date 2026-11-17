@@ -8,6 +8,7 @@ import { applyCardBorder } from "../../ui/cardStyles.js";
 import { applyCardSkin, handleSkinFallback } from "./skin-applier.js";
 import { getSkinCache, isSkinPreloaded, getFallbackKey, getFallbackSkinUrl, generateSkinFilename } from "./skin-loader.js";
 import { CARD_ANIMATION, LAYOUT } from "../../constants.js";
+import { refreshEquipmentDisplay } from "../../ui/equipment.js";
 
 /** @type {Function|null} 基础卡牌初始化方法 */
 let baseCardInit = null;
@@ -158,6 +159,7 @@ function updateCardDisplay(cardElement, card) {
 	const spaceIdx = innerHTML.indexOf(" ");
 	equip.$suitnum.innerHTML = innerHTML.slice(0, spaceIdx);
 	equip.$name.innerHTML = innerHTML.slice(spaceIdx);
+	refreshEquipmentDisplay(cardElement, get);
 
 	// 处理判定标记
 	const node = cardElement.node;
