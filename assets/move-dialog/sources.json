@@ -1,0 +1,68 @@
+{
+  "files": [
+    {
+      "file": "panel-half.png",
+      "source": "Assets/Res/Picture/SkillWin/skill2025_bg_big.png",
+      "bundle": "3e783501a60dace2",
+      "size": [
+        874,
+        495
+      ],
+      "sha256": "01b928d47b07ab485b2553c6a039cf505c6ae849d50c0413408c7c8421316931"
+    },
+    {
+      "file": "card-slot.png",
+      "source": "Assets/Res/Picture/SkillWin/skill2025_bg_card.png",
+      "bundle": "3e783501a60dace2",
+      "size": [
+        128,
+        173
+      ],
+      "sha256": "a30daeea5e33e278405169fb3eba4c612475eadd9ec8c29dd33259ba354eb7ff"
+    },
+    {
+      "file": "row-label.png",
+      "source": "Assets/Res/Picture/SkillWin/skill2025_title_vertical.png",
+      "bundle": "3e783501a60dace2",
+      "size": [
+        41,
+        137
+      ],
+      "sha256": "492660f0c0a7ed6fec4b48d32e5b7323c3beaa5ff3143f9d6a52c1251213b59c"
+    },
+    {
+      "file": "expand.png",
+      "source": "Assets/Res/Picture/SkillWin/skill_window_close.png",
+      "bundle": "3e783501a60dace2",
+      "size": [
+        44,
+        41
+      ],
+      "sha256": "acd19152ab3a85f5794fabc3c37583323834b29b289b107f433e26fc21885028"
+    }
+  ],
+  "derived": [
+    {
+      "file": "panel.png",
+      "size": [
+        1748,
+        450
+      ],
+      "sha256": "1c29055c8e1130e8c3aa65a87d467d1d9770178771b7315aed48677a9a61a612",
+      "cropBottom": 45
+    },
+    {
+      "file": "slot-tile.png",
+      "size": [
+        144,
+        173
+      ],
+      "sha256": "0ed0ea5a28fb3b3fc44086a57f7845287ae5d60e6634d35224a071b6708190c2"
+    }
+  ],
+  "loadingStyle": {
+    "value": "onlineUI",
+    "file": "image/ui/dialog/dialog5.png"
+  },
+  "slotTileGap": 16
+}

@@ -2,6 +2,7 @@
  * @fileoverview Dialog覆写模块 - lib.element.dialog的覆写方法
  */
 import { lib, game, ui, get, ai, _status } from "noname";
+import { decorateSourceMoveDialog, closeSourceMoveDialog } from "../ui/sourceMoveDialog.js";
 
 /** @type {Function|null} 基础方法引用 */
 let baseDialogClose = null;
@@ -28,6 +29,7 @@ export function dialogOpen() {
 			ui.dialogs.remove(this);
 			ui.dialogs.unshift(this);
 			ui.update();
+			decorateSourceMoveDialog(this, _status.event, { ui, get, lib });
 			return this;
 		}
 		if (!this.peaceDialog) {
@@ -43,6 +45,7 @@ export function dialogOpen() {
 	ui.arena.appendChild(this);
 	ui.dialogs.unshift(this);
 	ui.update();
+	decorateSourceMoveDialog(this, _status.event, { ui, get, lib });
 
 	if (!this.classList.contains("prompt")) {
 		this.style.animation = "open-dialog 0.5s";
@@ -56,6 +59,7 @@ export function dialogOpen() {
  * @returns {*} 关闭结果
  */
 export function dialogClose() {
+	closeSourceMoveDialog(this);
 	if (this.intersection) {
 		this.intersection.disconnect();
 		this.intersection = undefined;

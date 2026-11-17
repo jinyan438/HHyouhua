@@ -1,0 +1,229 @@
+/* Native 2025 skill-window panel, mirrored halves and empty card slots. */
+#arena.decadeUI > .dialog.hh-source-move-dialog,
+#arena.decadeUI[data-loading-style] > .dialog.hh-source-move-dialog:is(.scroll1, .scroll2, .addNewRow) {
+	position: absolute !important;
+	left: 0 !important;
+	top: var(--hh-move-top) !important;
+	right: auto !important;
+	bottom: auto !important;
+	width: 100% !important;
+	height: var(--hh-move-panel-height) !important;
+	min-height: 0 !important;
+	min-width: 0 !important;
+	max-width: none !important;
+	max-height: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: url("../../assets/move-dialog/panel.png") center / 100% 100% no-repeat !important;
+	box-shadow: none !important;
+	transform: none !important;
+	animation: none !important;
+	color: #c2a574;
+	font-family: "FZLBGBK", "shousha", serif;
+	white-space: normal !important;
+	overflow: visible !important;
+	text-shadow: 0 1px 1px #27180e;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog > .content-container {
+	position: absolute !important;
+	top: var(--hh-move-content-top) !important;
+	left: 50% !important;
+	width: var(--hh-move-board-width) !important;
+	height: var(--hh-move-body-height) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	transform: translateX(-50%) !important;
+	overflow: visible !important;
+	transition: none !important;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog > .content-container > .content {
+	position: relative;
+	width: 100% !important;
+	height: 100% !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: none !important;
+	transition: none !important;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-original:not(.hh-move-cards):not(.hh-move-label):not(.hh-move-grid-row):not(.hh-move-select-all) { display: none !important; }
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-cards {
+	position: absolute !important;
+	top: calc(var(--hh-move-row-index) * (var(--hh-move-card-height) + 10px)) !important;
+	left: calc(var(--hh-move-label-width) + 10px) !important;
+	right: 0 !important;
+	width: auto !important;
+	height: var(--hh-move-card-height) !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	display: flex !important;
+	align-items: flex-start !important;
+	justify-content: flex-start !important;
+	gap: var(--hh-move-gap) !important;
+	box-sizing: border-box;
+	background: none !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	overflow-x: auto;
+	overflow-y: hidden;
+	isolation: isolate;
+	transition: none !important;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-cards::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: calc(var(--hh-move-slot-count) * var(--hh-move-step) - var(--hh-move-gap));
+	height: var(--hh-move-card-height);
+	background: url("../../assets/move-dialog/slot-tile.png") left top / var(--hh-move-step) 100% repeat-x;
+	pointer-events: none;
+	z-index: -1;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-cards > .button {
+	position: relative !important;
+	left: auto !important;
+	top: auto !important;
+	flex: 0 0 108px !important;
+	width: 108px !important;
+	height: 150px !important;
+	padding: 0 !important;
+	border: 0 !important;
+	box-sizing: border-box !important;
+	margin: 0 calc(108px * (var(--hh-move-scale) - 1)) 0 0 !important;
+	zoom: 1 !important;
+	/* Native chooseToMove_new resolves swaps on transform transitionend. */
+	transition-property: transform, opacity, box-shadow !important;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-label {
+	position: absolute !important;
+	left: 0 !important;
+	top: calc(var(--hh-move-row-index) * (var(--hh-move-card-height) + 10px)) !important;
+	width: var(--hh-move-label-width) !important;
+	height: var(--hh-move-card-height) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	background: url("../../assets/move-dialog/row-label.png") center / 100% 100% no-repeat !important;
+	font-size: clamp(12px, calc(18px * var(--hh-move-scale)), 20px);
+	transition: none !important;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-label :is(.text, .caption) {
+	position: static !important;
+	width: auto !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	font: inherit !important;
+	color: inherit !important;
+	line-height: 1.35;
+	writing-mode: vertical-rl;
+	text-orientation: upright;
+	letter-spacing: .12em;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-grid-row {
+	position: absolute !important;
+	top: calc(var(--hh-move-row-index) * (var(--hh-move-card-height) + 10px)) !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: var(--hh-move-card-height) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	display: grid !important;
+	column-gap: 10px;
+	border: 0 !important;
+	background: none !important;
+	transition: none !important;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-grid-row > :is(.hh-move-label, .hh-move-cards) {
+	position: relative !important;
+	left: auto !important;
+	top: auto !important;
+	right: auto !important;
+	width: 100% !important;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-title {
+	position: absolute;
+	top: 9px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #c7a767;
+	font-size: 23px;
+	line-height: 28px;
+	white-space: nowrap;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-expand {
+	width: 23px;
+	height: 23px;
+	padding: 0;
+	border: 0;
+	background: url("../../assets/move-dialog/expand.png") center / contain no-repeat;
+	cursor: pointer;
+}
+
+#arena.decadeUI > .dialog.hh-source-move-dialog .hh-move-select-all {
+	display: none !important;
+}
+
+/* The final loading-frame option shares the native art and fits its content. */
+#arena.decadeUI[data-loading-style="onlineUI"] > .dialog.hh-source-loading-dialog:is(.scroll1, .scroll2, .addNewRow) {
+	left: 0 !important;
+	top: var(--hh-loading-top, 8px) !important;
+	right: auto !important;
+	bottom: auto !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	max-width: none !important;
+	height: var(--hh-loading-height, 280px) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	background: url("../../assets/move-dialog/panel.png") center / 100% 100% no-repeat !important;
+	color: #c2a574;
+	font-family: "FZLBGBK", "shousha", serif;
+}
+
+#arena.decadeUI > .dialog.hh-source-loading-dialog > .content-container {
+	left: 4% !important;
+	top: 52px !important;
+	width: 92% !important;
+	height: calc(100% - 78px) !important;
+	padding: 0 !important;
+	box-sizing: border-box;
+}
+
+#arena.decadeUI > .dialog.hh-source-loading-dialog .hh-loading-heading { display: none !important; }
+
+#arena.decadeUI > .dialog.hh-source-loading-dialog::before {
+	content: attr(data-hh-loading-title);
+	position: absolute;
+	top: 12px;
+	left: 12%;
+	width: 76%;
+	line-height: 30px;
+	font: 23px/30px "FZLBGBK", "shousha", serif;
+	color: #d7bc83;
+	text-align: center;
+	text-shadow: 0 1px 2px #24170c;
+	pointer-events: none;
+}

@@ -7,6 +7,7 @@
 import { lib, game, ui, get, _status } from "noname";
 import { throttle } from "../../animation/index.js";
 import { getBaseUiUpdate } from "./base.js";
+import { updateSourceLoadingDialog } from "../../ui/sourceMoveDialog.js";
 
 /**
  * 更新控制栏位置
@@ -125,6 +126,7 @@ export function uiUpdate() {
 		ui.dialog.classList.add("scroll1");
 		ui.dialog.classList.add("scroll2");
 	}
+	updateSourceLoadingDialog(ui.dialog, { ui, event: _status.event });
 }
 
 /**

@@ -103,6 +103,7 @@ export function initDecadeModule() {
 		this.css(`${decadeUIPath}src/styles/source-skill-marks.css`);
 		this.css(`${decadeUIPath}src/styles/equip.css`);
 		this.css(`${decadeUIPath}src/styles/layout.css`);
+		this.css(`${decadeUIPath}src/styles/source-move-dialog.css`);
 		document.body.setAttribute("data-style", style);
 
 		if (getConfigValue("meanPrettify", false)) {
