@@ -2521,7 +2521,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			ai_think_delay_popup: {
 				name: "显示思考提示",
 				init: true,
-				intro: "开启后，预计思考时长达到600毫秒时持续显示“思考中”提示；进度条满条固定代表15秒，按实际耗时缩短，思考结束后移除；顺手操作和快速响应只显示进度条"
+				intro: "开启后，预计思考时长达到600毫秒时持续显示“出牌 思考中”提示；进度条满条固定代表15秒，按实际耗时缩短，思考结束后移除；顺手操作和快速响应只显示进度条"
 			},
 			ai_think_delay_min: {
 				name: "最短思考时间(ms)",

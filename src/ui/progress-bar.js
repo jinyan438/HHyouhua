@@ -419,10 +419,9 @@ const setupWatcher = config => {
 		const entry = { container, thought, timer: null, tip: null };
 		aiPlayers.set(player, entry);
 		if (thought?.showTip) {
-			removeFirst(player, "playertip");
 			removeFirst(player, "tipskill");
-			entry.tip = createTipImg("hh-ai-thinking", "thinktip.png");
-			entry.tip.alt = "思考中";
+			entry.tip = createTipImg("hh-ai-thinking", "tip.png");
+			entry.tip.alt = "出牌 思考中…";
 			entry.tip.setAttribute("role", "status");
 			player.appendChild(entry.tip);
 		}
@@ -536,32 +535,17 @@ const setupWatcher = config => {
 	lib.onover.push(stop);
 };
 
-// ==================== 提示监视器 ====================
+// ==================== 弃牌提示监视器 ====================
 
 /**
- * 设置提示监视器
+ * 设置弃牌提示监视器；出牌思考仅由实际 AI 等待显示
  */
 const setupTipWatcher = () => {
-	let lastPhasePlayer = null,
-		lastDiscardPlayer = null;
+	let lastDiscardPlayer = null,
+		watcher = null;
 
 	const check = () => {
 		if (!_status.gameStarted || !game.players) return;
-
-		// 出牌阶段提示
-		const phase = _status.currentPhase;
-		if (phase && phase !== game.me && phase.isPhaseUsing?.() && !phase.getElementsByClassName("hh-ai-thinking")[0]) {
-			if (lastPhasePlayer !== phase) {
-				if (lastPhasePlayer) removeFirst(lastPhasePlayer, "playertip");
-				lastPhasePlayer = phase;
-				if (!phase.getElementsByClassName("playertip")[0]) {
-					phase.appendChild(createTipImg("playertip", isShoushaSyle() ? "tip.png" : "phasetip.png"));
-				}
-			}
-		} else if (lastPhasePlayer) {
-			removeFirst(lastPhasePlayer, "playertip");
-			lastPhasePlayer = null;
-		}
 
 		// 弃牌阶段提示
 		const event = _status.event;
@@ -582,9 +566,14 @@ const setupTipWatcher = () => {
 	const waitStart = setInterval(() => {
 		if (_status.gameStarted) {
 			clearInterval(waitStart);
-			setInterval(check, CHECK_INTERVAL);
+			watcher = setInterval(check, CHECK_INTERVAL);
 		}
 	}, CHECK_INTERVAL);
+	lib.onover.push(() => {
+		clearInterval(waitStart);
+		if (watcher) clearInterval(watcher);
+		if (lastDiscardPlayer) removeFirst(lastDiscardPlayer, "playertipQP");
+	});
 };
 
 // ==================== 卡牌提示监视器 ====================

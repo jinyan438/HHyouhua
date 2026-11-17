@@ -28,7 +28,7 @@ function fixture(style = 'off') {
 	const context = vm.createContext({ document, window: {}, lib, game, ui: {}, get: {}, _status: status,
 		createPlayerTip: (lib, className, imageName) => createPlayerTip(lib, className, imageName, document),
 		performance: { now: () => environment.now() + clockOffset }, setInterval, clearInterval });
-	vm.runInContext(source + '\nsetupWatcher({});', context);
+	vm.runInContext(source + '\nsetupWatcher({}); setupTipWatcher();', context);
 	dom.advance(100);
 	return { ...dom, context, lib, game, status, players, intervals, progress: game.hhAIThinkProgress,
 		jump(ms) { clockOffset += ms; }, stop() { lib.onover.forEach(fn => fn()); } };
@@ -43,7 +43,7 @@ for (const style of ['off', 'on']) {
 		const token = h.progress.begin(player, 1920, true), node = bar(player), tip = player.querySelector('.hh-ai-thinking');
 		assert.ok(node && tip, 'Shown immediately, without waiting for the 100ms watcher');
 		assert.equal(fraction(node), 1);
-		assert.match(tip.src, /thinktip\.png$/);
+		assert.match(tip.src, /\/tip\.png$/);
 		h.advance(960);
 		assert.equal(bar(player), node, 'Watcher must keep the same node while the engine is not paused');
 		assert.equal(player.querySelector('.hh-ai-thinking'), tip);
@@ -59,6 +59,35 @@ for (const style of ['off', 'on']) {
 		h.stop(); assert.equal(h.intervals.size, 0);
 	});
 }
+
+test('interaction resolution has no phase thinking label; real AI thought uses the original play style only while waiting', () => {
+	for (const style of ['off', 'on']) {
+		const h = fixture(style), player = h.players[1];
+		for (const name of ['phaseUse', 'useCard', 'choosePlayerCard', 'gain', 'damage']) {
+			h.status.event = { name, player }; h.status.paused = name === 'choosePlayerCard'; h.advance(200);
+			assert.equal(player.querySelector('.tipshow'), null, `No phase label or replacement during ${name}`);
+		}
+		const token = h.progress.begin(player, 1920, true), tip = player.querySelector('.hh-ai-thinking');
+		assert.match(tip.src, /\/tip\.png$/);
+		assert.equal(tip.alt, '出牌 思考中…');
+		h.advance(300); assert.equal(player.querySelectorAll('.tipshow').length, 1);
+		h.progress.end(token); h.advance(200);
+		assert.equal(player.querySelector('.tipshow'), null, 'Ending thought must not restore the old phase label');
+		h.stop(); assert.equal(h.intervals.size, 0);
+	}
+});
+
+test('discard hints retain their theme style, disappear after discard, and clear on game over', () => {
+	for (const style of ['off', 'on']) {
+		const h = fixture(style), player = h.players[1];
+		h.status.event = { name: 'phaseDiscard', player }; h.advance(100);
+		const tip = player.querySelector('.playertipQP');
+		assert.ok(tip); assert.ok(tip.src.endsWith(style === 'off' ? '/tipQP.png' : '/discardtip.png'));
+		h.status.event.name = 'phaseUse'; h.advance(100); assert.equal(player.querySelector('.tipshow'), null);
+		h.status.event.name = 'phaseDiscard'; h.advance(100); assert.ok(player.querySelector('.playertipQP'));
+		h.stop(); assert.equal(player.querySelector('.tipshow'), null); assert.equal(h.intervals.size, 0);
+	}
+});
 
 test('three seconds of thinking consumes 20 percent of the 15-second bar', () => {
 	const h = fixture(), token = h.progress.begin(h.players[1], 3000, true), node = bar(h.players[1]);
