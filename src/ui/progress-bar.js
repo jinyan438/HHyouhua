@@ -392,7 +392,7 @@ export function initPrecontentUI() {
  */
 const setupWatcher = config => {
 	let thinking = null,
-		watcher = null;
+		watcher = null, stopped = false;
 	const aiPlayers = new Map();
 	const playerTimer = setupPlayerActionTimer({ lib, game, ui, get, _status });
 
@@ -412,6 +412,7 @@ const setupWatcher = config => {
 		removeFirst(player, "timePhase");
 
 		const { container, boxTime } = createAIProgressBar(_status.currentPhase === player);
+		if (thought?.rescue) container.classList.add('hh-rescue-progress');
 		player.appendChild(container);
 		const entry = { container, thought, timer: null, tip: null };
 		aiPlayers.set(player, entry);
@@ -431,7 +432,8 @@ const setupWatcher = config => {
 		boxTime.style.transformOrigin = "left center";
 		boxTime.style.transition = "none";
 		const update = () => {
-			const remaining = Math.max(0, 1 - (performance.now() - startedAt) / AI_PROGRESS_DURATION);
+			const elapsed = thought?.elapsed?.() ?? performance.now() - startedAt;
+			const remaining = Math.max(0, 1 - elapsed / AI_PROGRESS_DURATION);
 			boxTime.style.transform = `scaleX(${remaining})`;
 			if (remaining === 0) {
 				clearInterval(entry.timer);
@@ -481,9 +483,16 @@ const setupWatcher = config => {
 	};
 
 	const check = () => {
+		if (stopped) return;
 		const event = _status.event;
 		playerTimer.check(false);
-		if (_status.over || game.hhRescueFlow?.active) { hideAllAI(); return; }
+		if (_status.over) { hideAllAI(); return; }
+		if (game.hhRescueFlow?.active) {
+			const turn = game.hhRescueFlow.current;
+			if (turn?.progress) showOneAI(turn.player, turn.progress);
+			else hideAllAI();
+			return;
+		}
 		// 原生暂停状态不覆盖独立的 AI 等待；同一次思考复用节点和起始时间。
 		if (thinking) {
 			// 无懈询问的所有 AI 共用显示时钟，不能暴露实际响应者。
@@ -508,9 +517,10 @@ const setupWatcher = config => {
 	};
 
 	const start = () => {
-		if (!watcher) watcher = setInterval(check, CHECK_INTERVAL);
+		if (!watcher && !stopped) watcher = setInterval(check, CHECK_INTERVAL);
 	};
 	const stop = () => {
+		stopped = true; clearInterval(waitStart);
 		if (watcher) {
 			clearInterval(watcher);
 			watcher = null;
@@ -520,8 +530,9 @@ const setupWatcher = config => {
 	};
 
 	game.hhAIThinkProgress = {
+		refresh: check,
 		begin(player, duration, showTip, event = _status.event) {
-			if (_status.over || !player || !(duration > 0)) return null;
+			if (stopped || _status.over || !player || !(duration > 0)) return null;
 			thinking = { player, duration, showTip, startedAt: performance.now(), wuxie: isWuxieChoice(event) };
 			check();
 			return thinking;

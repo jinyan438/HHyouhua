@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import { domFixture } from './helpers/catalog-dom.mjs';
 import { createPlayerTip } from '../src/ui/playerTip.js';
 import { setupPlayerActionTimer } from '../src/features/playerActionTimer.js';
+import { createRescuePrompt } from '../src/ui/rescuePrompt.js';
 
 const source = readFileSync(new URL('../src/ui/progress-bar.js', import.meta.url), 'utf8')
 	.replace(/^import[^\n]*\n/gm, '').replaceAll('export function ', 'function ');
@@ -218,4 +219,50 @@ test('a manual Peach question still has its own player countdown while rescue hi
 	assert.ok(h.document.getElementById('jindutiaopl'));
 	assert.ok(h.players.every(player => !bar(player)));
 	h.stop(); assert.equal(h.document.getElementById('jindutiaopl'), undefined);
+});
+
+test('rescue polling shows only the current seat with a fixed 15-second progress scale, then resets for the next seat', async () => {
+	for (const style of ['off', 'on']) {
+		const h = fixture(style), prompt = createRescuePrompt({ lib: h.lib, game: h.game }, h.environment);
+		h.game.hhRescueFlow = prompt;
+		h.players.forEach(player => { player.getCards = player.canSave = () => { throw new Error('Do not reveal rescue capability'); }; });
+		const round = prompt.beginRound(h.players[0]), first = prompt.begin(h.players[1], h.players[0], 3000), waiting = first.wait(3000);
+		const node = bar(h.players[1]);
+		assert.ok(node?.classList.contains('hh-rescue-progress')); assert.equal(fraction(node), 1);
+		assert.equal(h.players[1].querySelector('.hh-rescue-thinking')?.alt, '桃 思考中…');
+		assert.equal(h.players[1].querySelector('.hh-ai-thinking'), null);
+		assert.equal(bar(h.players[0]), null); assert.equal(bar(h.players[2]), null);
+		h.advance(1500); assert.ok(Math.abs(fraction(node) - .9) <= 32 / 15000);
+		h.advance(1500); assert.equal(await waiting, true);
+		assert.equal(bar(h.players[1]), null, 'The pre-thought bar stops before actual rescue selection');
+		assert.ok(h.players[1].querySelector('.hh-rescue-thinking'));
+		prompt.end(first);
+		const second = prompt.begin(h.players[2], h.players[0], 700), next = bar(h.players[2]);
+		assert.equal(fraction(next), 1); assert.equal(bar(h.players[1]), null);
+		prompt.end(second); prompt.endRound(round); h.stop();
+		assert.equal(h.intervals.size, 0); assert.ok(h.players.every(player => !bar(player)));
+	}
+});
+
+test('nested rescue restores the outer progress with its original elapsed time', async () => {
+	const h = fixture(), prompt = createRescuePrompt({ lib: h.lib, game: h.game }, h.environment);
+	h.game.hhRescueFlow = prompt;
+	const outer = prompt.begin(h.players[1], h.players[0], 3000), waiting = outer.wait(3000);
+	h.advance(1000); const old = bar(h.players[1]);
+	const inner = prompt.begin(h.players[2], h.players[0], 600), nested = inner.wait(600);
+	assert.equal(old.isConnected, false); assert.ok(bar(h.players[2]));
+	h.advance(600); assert.equal(await nested, true); prompt.end(inner);
+	const restored = bar(h.players[1]); assert.ok(restored); assert.equal(bar(h.players[2]), null);
+	assert.ok(Math.abs(fraction(restored) - (1 - 1600 / 15000)) < 1e-9);
+	h.advance(1400); assert.equal(await waiting, true); prompt.end(outer); h.stop();
+	assert.equal(h.intervals.size, 0);
+});
+
+test('game end clears rescue progress and its pending wait without reviving an underlying AI timer', async () => {
+	const h = fixture(), prompt = createRescuePrompt({ lib: h.lib, game: h.game }, h.environment);
+	h.game.hhRescueFlow = prompt;
+	h.status.event = { name: 'chooseToUse', player: h.players[2] }; h.status.paused = true;
+	const turn = prompt.begin(h.players[1], h.players[0], 3000), waiting = turn.wait(3000);
+	assert.ok(bar(h.players[1])); h.stop(); assert.equal(await waiting, false);
+	assert.ok(h.players.every(player => !bar(player))); assert.equal(h.intervals.size, 0); assert.equal(h.timers.size, 0);
 });

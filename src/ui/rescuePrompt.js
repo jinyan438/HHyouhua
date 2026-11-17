@@ -1,13 +1,13 @@
 import { createPlayerTip } from './playerTip.js';
 
 const css = `
-.hh-rescue-active .player>.timeai,.hh-rescue-active .player>.timePhase,.hh-rescue-active .player>.timerbar,.hh-rescue-active .player>.tipskill,.hh-rescue-active .player>.tipshow:not(.hh-rescue-thinking),.hh-rescue-active #jindutiaopl:not([data-hh-action-timer]){visibility:hidden!important}
+.hh-rescue-active .player>.timeai:not(.hh-rescue-progress),.hh-rescue-active .player>.timePhase:not(.hh-rescue-progress),.hh-rescue-active .player>.timerbar,.hh-rescue-active .player>.tipskill,.hh-rescue-active .player>.tipshow:not(.hh-rescue-thinking),.hh-rescue-active #jindutiaopl:not([data-hh-action-timer]){visibility:hidden!important}
 .player>.hh-rescue-thinking{pointer-events:none;transition:none}
 .player>.hh-rescue-help{position:absolute;display:block;left:50%;top:35%;width:112%;height:auto;transform:translate(-50%,-50%);overflow:visible;z-index:97;pointer-events:none;transition:none;animation:none;opacity:1}
 .hh-rescue-help>img{position:static;display:block;width:100%;max-width:none;height:auto;animation:none;transform:none;opacity:1}
 `;
 
-export function createRescuePrompt({ lib }, environment = {}) {
+export function createRescuePrompt({ lib, game }, environment = {}) {
 	const env = { document: globalThis.document, now: () => Date.now(), setTimer: (fn, ms) => setTimeout(fn, ms), clearTimer: id => clearTimeout(id), ...environment };
 	const stack = [], rounds = new Set(), markers = new Map();
 	function ensureStyle() {
@@ -45,16 +45,20 @@ export function createRescuePrompt({ lib }, environment = {}) {
 		const current = stack[stack.length - 1];
 		env.document?.body?.classList.toggle('hh-rescue-active', !!current?.node);
 		for (const token of stack) if (token.node) { token.node.hidden = token !== current; token.node.style.display = token === current ? 'block' : 'none'; }
+		game?.hhAIThinkProgress?.refresh();
 	}
 	function end(token) {
 		if (token.closed) return;
 		token.closed = true; env.clearTimer(token.timer); token.settle?.(false);
+		token.progress = null;
 		token.node?.remove();
 		const index = stack.indexOf(token); if (index !== -1) stack.splice(index, 1);
 		refresh();
 	}
 	function begin(player, dying, duration = 0) {
-		const token = { player, dying, closed: false };
+		const token = { player, dying, closed: false, startedAt: env.now(), progress: null };
+		const progress = { rescue: true, elapsed: () => Math.max(0, env.now() - token.startedAt) };
+		if (duration > 0) token.progress = progress;
 		stack.push(token);
 		try {
 			const doc = env.document;
@@ -67,11 +71,16 @@ export function createRescuePrompt({ lib }, environment = {}) {
 		} catch (error) { token.node?.remove(); token.node = null; console.warn('[HH优化] 求桃提示显示失败', error); }
 		refresh();
 		token.wait = (ms, valid = () => true) => new Promise(resolve => {
-			const start = env.now(); token.settle = resolve;
+			token.startedAt = env.now(); token.progress = ms > 0 ? progress : null;
+			const finish = value => {
+				env.clearTimer(token.timer); token.timer = null; token.settle = null; token.progress = null;
+				refresh(); resolve(value);
+			};
+			token.settle = finish; refresh();
 			const tick = () => {
-				if (token.closed || !valid()) { resolve(false); return; }
-				const remaining = ms - (env.now() - start);
-				if (remaining <= 0) { resolve(true); return; }
+				if (token.closed || !valid()) { finish(false); return; }
+				const remaining = ms - (env.now() - token.startedAt);
+				if (remaining <= 0) { finish(true); return; }
 				token.timer = env.setTimer(tick, Math.min(80, remaining));
 			};
 			tick();
