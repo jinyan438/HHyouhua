@@ -95,7 +95,24 @@
 	flex: 0 0 27px;
 	width: 100%;
 	height: 27px;
+	background: none;
+}
+
+.equips-wrap > .equips-back > div::after,
+:is(.player, .equips-wrap) > .equips > .card > .name2::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: -2px;
+	right: -2px;
 	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.equips-wrap > .equips-back > div {
+	isolation: isolate;
 }
 
 .equips-wrap > .equips-back > div::before {
@@ -157,7 +174,7 @@
 	height: 27px;
 	left: 3px;
 	right: 3px;
-	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat !important;
+	background: none !important;
 	border-radius: 0;
 	box-shadow: none;
 	-webkit-text-size-adjust: none;
@@ -230,7 +247,7 @@
 #arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty),
 #arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty),
 #arena.decadeUI.long:not(.mobile):not(.oldlayout) .player.unseen2 .equips:not(*:empty) {
-	overflow: hidden;
+	overflow: visible;
 	background: none;
 	border-radius: 0;
 	box-shadow: none;
@@ -253,7 +270,8 @@
 	top: 0;
 	margin: 0;
 	padding: 0;
-	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat !important;
+	background: none !important;
+	overflow: visible;
 	border: 0 !important;
 	border-image: none !important;
 	border-radius: 0;
@@ -290,6 +308,8 @@
 	margin: 0 !important;
 	padding: 0;
 	background: none;
+	isolation: isolate;
+	overflow: visible;
 	border: 0;
 	font-family: "hh-source-general", "FZLBJW", serif !important;
 	font-weight: 400 !important;
@@ -347,7 +367,7 @@
 
 /* 翻面和暗将继续使用同一张原版装备底图。 */
 #arena .player:is(.unseen, .unseen2) > .equips > .card {
-	background: url("../../assets/equipment/new_equip_card_bg_new.png") center / 100% 100% no-repeat !important;
+	background: none !important;
 }
 
 :is(.player, .equips-wrap) > .equips > .card.selected,
