@@ -22,6 +22,8 @@ const ANIMATION_DURATION = 1000;
 /** @type {number} AI计时器间隔(毫秒) */
 const AI_TIMER_INTERVAL = 150;
 
+const AI_ANIMATION_INTERVAL = 32;
+
 /** @type {number} 红色阈值 */
 const RED_THRESHOLD = 395 / 3;
 
@@ -206,16 +208,16 @@ const createAIProgressBar = isPhase => {
 	if (isShousha) {
 		container.style.cssText =
 			"display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);left:3.5px;bottom:-6.2px;";
-		boxTime.data = 125;
+		boxTime.data = 120;
 		boxTime.style.cssText =
-			"z-index:92;--w:33px;--h:calc(var(--w)*4/120);width:var(--w);height:var(--h);margin:1px;background-color:#dd9900;position:absolute;top:0;";
+			"z-index:92;width:120px;height:3px;margin:1px;background-color:#dd9900;position:absolute;top:0;";
 		imgBg.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/uibutton/time.png`;
 		imgBg.style.cssText = "position:absolute;z-index:91;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);top:0;";
 	} else {
 		container.style.cssText =
 			"display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);left:1.5px;bottom:-14px;";
 		boxTime.data = 120;
-		boxTime.style.cssText = "z-index:91;width:115px;height:3.3px;margin:1px;background-color:#f2c84b;position:absolute;top:0;border-radius:3px;";
+		boxTime.style.cssText = "z-index:91;width:120px;height:3.3px;margin:1px;background-color:#f2c84b;position:absolute;top:0;border-radius:3px;";
 		imgBg.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/uibutton/timeX.png`;
 		imgBg.style.cssText = "position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);top:0;";
 	}
@@ -380,9 +382,9 @@ export function initPrecontentUI() {
  */
 const setupWatcher = config => {
 	let playerShown = false,
-		aiShown = false,
-		aiPlayers = [],
+		thinking = null,
 		watcher = null;
+	const aiPlayers = new Map();
 
 	const showPlayer = () => {
 		if (playerShown) return;
@@ -407,58 +409,77 @@ const setupWatcher = config => {
 	 * 显示AI进度条
 	 * @param {HTMLElement} player - 玩家元素
 	 */
-	const showAI = player => {
-		if (!player || player === game.me || aiPlayers.includes(player)) return;
-		aiPlayers.push(player);
+	const showAI = (player, thought = null) => {
+		if (!player || (!thought && player === game.me) || aiPlayers.has(player)) return;
 		removeFirst(player, "timeai");
 		removeFirst(player, "timePhase");
 
 		const { container, boxTime } = createAIProgressBar(_status.currentPhase === player);
 		player.appendChild(container);
+		const entry = { container, thought, timer: null, tip: null };
+		aiPlayers.set(player, entry);
+		if (thought?.showTip) {
+			removeFirst(player, "playertip");
+			removeFirst(player, "tipskill");
+			entry.tip = createTipImg("hh-ai-thinking", "thinktip.png");
+			entry.tip.alt = "思考中";
+			entry.tip.setAttribute("role", "status");
+			player.appendChild(entry.tip);
+		}
 
-		const id = `timerai_${player.playerid}`;
-		window[id] = setInterval(() => {
-			boxTime.style.width = `${--boxTime.data}px`;
-			if (boxTime.data === 0) {
-				clearTimer(id);
-				container.remove();
+		const startedAt = thought?.startedAt ?? performance.now();
+		const duration = thought?.duration ?? boxTime.data * AI_TIMER_INTERVAL;
+		boxTime.style.transformOrigin = "left center";
+		boxTime.style.transition = "none";
+		const update = () => {
+			const remaining = Math.max(0, 1 - (performance.now() - startedAt) / duration);
+			boxTime.style.transform = `scaleX(${remaining})`;
+			if (remaining === 0) {
+				clearInterval(entry.timer);
+				// 模拟思考由实际等待的 finally 清理，避免动画先结束时闪回普通进度条。
+				if (!thought) container.remove();
 			}
-		}, AI_TIMER_INTERVAL);
+		};
+		entry.timer = setInterval(update, AI_ANIMATION_INTERVAL);
+		update();
 	};
 
 	const hideAllAI = () => {
-		if (!aiShown && !aiPlayers.length) return;
-		aiShown = false;
-		aiPlayers.forEach(p => {
-			clearTimer(`timerai_${p.playerid}`);
-			removeFirst(p, "timeai");
-			removeFirst(p, "timePhase");
+		aiPlayers.forEach(entry => {
+			clearInterval(entry.timer);
+			entry.container.remove();
+			entry.tip?.remove();
 		});
-		aiPlayers = [];
+		aiPlayers.clear();
 	};
 
 	/**
 	 * 显示单个AI进度条
 	 * @param {HTMLElement} player - 玩家元素
 	 */
-	const showOneAI = player => {
-		if (!player || player === game.me) return;
-		if (aiShown && aiPlayers.length === 1 && aiPlayers[0] === player) return;
+	const showOneAI = (player, thought = null) => {
+		if (!player || (!thought && player === game.me)) return;
+		if (aiPlayers.size === 1 && aiPlayers.get(player)?.thought === thought) return;
 		hideAllAI();
-		aiShown = true;
-		showAI(player);
+		showAI(player, thought);
 	};
 
 	const showAllAI = () => {
-		if (aiShown && aiPlayers.length > 1) return;
+		const players = game.players.filter(p => p !== game.me);
+		if (aiPlayers.size === players.length && players.every(p => aiPlayers.has(p) && !aiPlayers.get(p).thought)) return;
 		hideAllAI();
-		aiShown = true;
-		game.players.forEach(p => p !== game.me && showAI(p));
+		players.forEach(p => showAI(p));
 	};
 
 	const check = () => {
 		const event = _status.event;
-		if (game.hhRescueFlow?.active) { hidePlayer(); hideAllAI(); return; }
+		if (_status.over || game.hhRescueFlow?.active) { hidePlayer(); hideAllAI(); return; }
+		// 原生暂停状态不覆盖独立的 AI 等待；同一次思考复用节点和起始时间。
+		if (thinking) {
+			hidePlayer();
+			showOneAI(thinking.player, thinking);
+			return;
+		}
 		const waiting = event?.player && (_status.paused || _status.imchoosing);
 		const isWuxie = event?.type === "wuxie";
 
@@ -487,8 +508,23 @@ const setupWatcher = config => {
 			clearInterval(watcher);
 			watcher = null;
 		}
+		thinking = null;
 		hidePlayer();
 		hideAllAI();
+	};
+
+	game.hhAIThinkProgress = {
+		begin(player, duration, showTip) {
+			if (_status.over || !player || !(duration > 0)) return null;
+			thinking = { player, duration, showTip, startedAt: performance.now() };
+			check();
+			return thinking;
+		},
+		end(token) {
+			if (!token || thinking !== token) return;
+			thinking = null;
+			hideAllAI();
+		},
 	};
 
 	const waitStart = setInterval(() => {
@@ -515,7 +551,7 @@ const setupTipWatcher = () => {
 
 		// 出牌阶段提示
 		const phase = _status.currentPhase;
-		if (phase && phase !== game.me && phase.isPhaseUsing?.()) {
+		if (phase && phase !== game.me && phase.isPhaseUsing?.() && !phase.getElementsByClassName("hh-ai-thinking")[0]) {
 			if (lastPhasePlayer !== phase) {
 				if (lastPhasePlayer) removeFirst(lastPhasePlayer, "playertip");
 				lastPhasePlayer = phase;

@@ -13,7 +13,7 @@ const coreCode = ts.transpileModule(coreSource.slice(coreSource.indexOf('export 
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
 }).outputText;
 
-function setup({ config = {}, random = 0.5, content } = {}) {
+function setup({ config = {}, random = 0.5, content, schedule = callback => callback() } = {}) {
     const waits = [], popups = [], actions = [];
     const lib = { config: { extension_HH优化_enable_ai_think_delay: true, ...config }, skill: { global: [] }, element: {},
         filter: { all: () => true, cardDiscardable: () => true } };
@@ -42,7 +42,7 @@ function setup({ config = {}, random = 0.5, content } = {}) {
     const context = vm.createContext({ lib, game, ui, get, ai: { basic: { chooseCard: () => true, chooseButton: () => true } }, _status: status, Math: math, Date,
         setupRescueFlow(_context, options) { rescueOptions = options; },
         delay: () => Promise.resolve(),
-        setTimeout(callback, ms) { waits.push(ms); callback(); },
+        setTimeout(callback, ms) { waits.push(ms); schedule(callback, ms); },
     });
     vm.runInContext(`
         Array.prototype.add = function(value) { if (!this.includes(value)) this.push(value); return this; };
@@ -103,6 +103,41 @@ function setup({ config = {}, random = 0.5, content } = {}) {
     }
     return { lib, game, ui, get, status, player, hand, waits, popups, actions, event, use, run, choice, loadCardPack, think: context.think, rescueDelay: (...args) => rescueOptions.getThinkDelay(...args) };
 }
+
+test('思考开始即传入实际等待时长，直到等待完成才清理提示和进度条', async () => {
+    let finish;
+    const h = setup({ schedule: callback => { finish = callback; } }), calls = [], token = {};
+    h.game.hhAIThinkProgress = {
+        begin(player, duration, showTip) { calls.push({ player, duration, showTip }); return token; },
+        end(value) { assert.equal(value, token); calls.push('end'); },
+    };
+    const pending = h.think.delay(h.use('sha'));
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].player, h.player);
+    assert.equal(calls[0].duration, h.waits[0]);
+    assert.ok(calls[0].duration >= 600); assert.equal(calls[0].showTip, true);
+    assert.deepEqual(h.popups, [], 'Use a persistent hint instead of the transient damage popup');
+    finish(); await pending;
+    assert.equal(calls[1], 'end');
+});
+
+test('快速操作和关闭文字提示仍同步进度，等待异常也会清理', async () => {
+    for (const mode of ['quick', 'hidden', 'error']) {
+        const h = setup({ config: { extension_HH优化_ai_think_delay_popup: mode !== 'hidden' },
+            schedule: callback => { if (mode === 'error') throw new Error('wait failed'); callback(); } });
+        const token = {}; let started = false, ended = false;
+        h.game.hhAIThinkProgress = {
+            begin(player, duration, showTip) {
+                started = true; assert.ok(duration > 0); if (mode === 'quick') assert.ok(duration < 600);
+                assert.equal(showTip, mode === 'error'); return token;
+            },
+            end(value) { assert.equal(value, token); ended = true; },
+        };
+        const pending = h.think.delay(h.use(mode === 'quick' ? 'wuzhong' : 'sha'));
+        if (mode === 'error') await assert.rejects(pending, /wait failed/); else await pending;
+        assert.ok(started && ended);
+    }
+});
 
 test('求桃预思考沿用救人长考和自救点击节奏，不预先查询是否有桃', () => {
     const h = setup(), dying = { hp: 0 }, parent = { name: '_save' };

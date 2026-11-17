@@ -356,10 +356,13 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const delay = HH_calcAIThinkDelay(player, event);
 				if (delay <= 0) return;
 				parents.forEach(parent => { parent._HH_aiThinkChildDelayed = true; });
-				if (delay >= 600 && lib.config.extension_HH优化_ai_think_delay_popup !== false && player && typeof player.popup == 'function') {
-					player.popup('思考中...');
+				const progress = game.hhAIThinkProgress;
+				const thinking = progress?.begin(player, delay, delay >= 600 && lib.config.extension_HH优化_ai_think_delay_popup !== false);
+				try {
+					await HH_sleep(delay);
+				} finally {
+					progress?.end(thinking);
 				}
-				await HH_sleep(delay);
 			};
 			const HH_hookAIThinkDelay = function() {
 				if (!lib.element) return;
@@ -2518,7 +2521,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			ai_think_delay_popup: {
 				name: "显示思考提示",
 				init: true,
-				intro: "开启后，思考达到600毫秒时显示“思考中...”提示；顺手操作和快速响应不显示"
+				intro: "开启后，预计思考时长达到600毫秒时持续显示“思考中”提示，进度条按实际剩余时间缩短，思考结束后移除；顺手操作和快速响应只显示进度条"
 			},
 			ai_think_delay_min: {
 				name: "最短思考时间(ms)",
