@@ -207,7 +207,7 @@ const createAIProgressBar = isPhase => {
 
 	if (isShousha) {
 		container.style.cssText =
-			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:5px;height:5px;";
+			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:3px;height:5px;";
 		boxTime.data = 120;
 		boxTime.style.cssText =
 			"z-index:92;left:1px;width:calc(100% - 2px);height:3px;background-color:#dd9900;position:absolute;top:1px;";
@@ -215,7 +215,7 @@ const createAIProgressBar = isPhase => {
 		imgBg.style.cssText = "position:absolute;z-index:91;left:0;top:0;width:100%;height:100%;";
 	} else {
 		container.style.cssText =
-			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:5px;height:6px;";
+			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:3px;height:6px;";
 		boxTime.data = 120;
 		boxTime.style.cssText = "z-index:91;left:1px;width:calc(100% - 2px);height:3.3px;background-color:#f2c84b;position:absolute;top:1px;border-radius:3px;";
 		imgBg.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/uibutton/timeX.png`;
