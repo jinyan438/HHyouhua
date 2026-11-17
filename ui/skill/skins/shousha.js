@@ -429,6 +429,7 @@ export function createShoushaSkillPlugin(lib, game, ui, get, ai, _status, app) {
 
 					item.classList.toggle("usable", isUsable);
 					item.classList.toggle("select", _status.event.skill === skillId);
+					item.classList.toggle("hh-source-active-skill", Boolean(lib.skill[skillId]?.enable));
 				});
 
 				const count = this.node.enable.childNodes.length;

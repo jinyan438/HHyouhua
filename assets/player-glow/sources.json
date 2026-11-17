@@ -1,0 +1,4173 @@
+{
+  "sourceRoot": "E:\\AI\\sanguosha\\logged-in-game\\220\\u3d\\U3dWeb\\WebGL",
+  "frameSize": [
+    256,
+    256
+  ],
+  "frames": 10,
+  "duration": 0.9,
+  "variants": {
+    "green": {
+      "bundle": "693d535b415812db",
+      "prefab": "Assets/Res/Effect/FxEffect/NoUIParticle/FX_paiju_zuowei01.prefab",
+      "groupPosition": {
+        "x": -1.0,
+        "y": 32.0
+      },
+      "groupScale": {
+        "x": 1.1799999475479126,
+        "y": 1.1867378950119019,
+        "z": 1.0
+      },
+      "layers": [
+        {
+          "name": "FX_PaiJu_ZuoWei_Lv_andi01",
+          "position": {
+            "x": 3.799999952316284,
+            "y": -1.7000000476837158
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 2.3428127765655518,
+            "y": 1.774999976158142,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_andi01",
+          "keywords": [
+            "MASK_UV_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_paiju_zuowei_mask01_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0,
+            "g": 0.09433960914611816,
+            "b": 0.014704014174640179,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Lv_di01",
+          "position": {
+            "x": 0.800000011920929,
+            "y": -0.800000011920929
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 2.2301599979400635,
+            "y": 1.85281240940094,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_di01",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON",
+            "_COLOROVERLAY_ON"
+          ],
+          "textures": {
+            "_DistortionTex": {
+              "file": "original/fx_zaobo_ff04.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MainTex": {
+              "file": "original/n_noise_002.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 3.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": -0.009999999776482582,
+            "_DistortionVSpeed": -0.009999999776482582,
+            "_DistortionValue": 1.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.18000000715255737,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.05999999865889549,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0,
+            "g": 1.0,
+            "b": 0.024693727493286133,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Lv_di02",
+          "position": {
+            "x": -0.10000000149011612,
+            "y": -11.199999809265137
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 2.1726133823394775,
+            "y": 1.730625033378601,
+            "z": 1.0
+          },
+          "opacity": 0.9900736808776855,
+          "material": "FX_PaiJu_ZuoWei_di06",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_000.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.14000000059604645,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.18000000715255737,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.05999999865889549,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.004805977456271648,
+            "g": 0.11320751905441284,
+            "b": 0.01774943433701992,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Lv_di03",
+          "position": {
+            "x": -1.2000000476837158,
+            "y": -12.600000381469727
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 2.144665002822876,
+            "y": 1.6801639795303345,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_di03",
+          "keywords": [
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_022.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_1_000.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0,
+            "g": 4.0,
+            "b": 0.6117647290229797,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Lv_di04",
+          "position": {
+            "x": -0.10000000149011612,
+            "y": -7.599999904632568
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 2.166433811187744,
+            "y": 1.787500023841858,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_di04",
+          "keywords": [
+            "MASK_ON",
+            "PLOAR_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/n_noise_002.png",
+              "scale": {
+                "x": 0.800000011920929,
+                "y": 0.800000011920929
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.20000000298023224,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.10000000149011612,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 1.7437623739242554,
+            "g": 6.06028938293457,
+            "b": 2.8511440753936768,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Lv_di05",
+          "position": {
+            "x": -0.4000000059604645,
+            "y": -17.5
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.4987813234329224,
+            "y": 1.2668359279632568,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_di05",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_qifu_beijing_noise02.png",
+              "scale": {
+                "x": 2.5399999618530273,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask01_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.11999999731779099,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": -0.05999999865889549,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.1899999976158142,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 3.092505693435669,
+            "g": 26.224451065063477,
+            "b": 4.9398884773254395,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Lv_di06",
+          "position": {
+            "x": 0.6000000238418579,
+            "y": -4.800000190734863
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 2.2389798164367676,
+            "y": 1.8674999475479126,
+            "z": 1.0
+          },
+          "opacity": 0.9850425124168396,
+          "material": "FX_PaiJu_ZuoWei_Lv_di06",
+          "keywords": [
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_2.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.011764684692025185,
+            "g": 0.7490196228027344,
+            "b": 0.05252327769994736,
+            "a": 1.0
+          }
+        }
+      ],
+      "normalization": {
+        "left": 162.79,
+        "right": 348.97,
+        "bottom": 402.23
+      }
+    },
+    "orange": {
+      "bundle": "d1cb4d7057848bd7",
+      "prefab": "Assets/Res/Effect/FxEffect/NoUIParticle/FX_paiju_zuowei02.prefab",
+      "groupPosition": {
+        "x": 0.0,
+        "y": 26.0
+      },
+      "groupScale": {
+        "x": 2.3499999046325684,
+        "y": 1.9900000095367432,
+        "z": 1.0
+      },
+      "layers": [
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_andi01",
+          "position": {
+            "x": 2.799999952316284,
+            "y": 9.600000381469727
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1166093349456787,
+            "y": 1.1846953630447388,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_andi01",
+          "keywords": [
+            "MASK_UV_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_paiju_zuowei_mask01_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.8679245114326477,
+            "g": 0.19668947160243988,
+            "b": 0.05322181060910225,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di01",
+          "position": {
+            "x": 0.0,
+            "y": -3.4000000953674316
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1292216777801514,
+            "y": 1.0878430604934692,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di01",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_qifu_beijing_noise02.png",
+              "scale": {
+                "x": 1.0,
+                "y": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.11999999731779099,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": -0.05999999865889549,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.1899999976158142,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 5.3403143882751465,
+            "g": 0.8465272784233093,
+            "b": 0.0,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di02",
+          "position": {
+            "x": 0.0,
+            "y": -3.4000000953674316
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1553417444229126,
+            "y": 1.130566954612732,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di02",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON",
+            "_COLOROVERLAY_ON"
+          ],
+          "textures": {
+            "_DistortionTex": {
+              "file": "original/fx_zaobo_ff04.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MainTex": {
+              "file": "original/n_noise_001.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 3.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": -0.009999999776482582,
+            "_DistortionVSpeed": -0.009999999776482582,
+            "_DistortionValue": 1.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.18000000715255737,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.10000000149011612,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.3960784375667572,
+            "g": 0.15968245267868042,
+            "b": 0.0,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di03",
+          "position": {
+            "x": 0.0,
+            "y": -8.5
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1166093349456787,
+            "y": 1.0096975564956665,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di03",
+          "keywords": [
+            "MASK_ON",
+            "PLOAR_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_mask_zwt_1.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_1_000.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.44999998807907104,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.699999988079071,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 1.0,
+            "g": 0.0715978741645813,
+            "b": 0.0,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di04",
+          "position": {
+            "x": -0.8999999761581421,
+            "y": -7.599999904632568
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1018109321594238,
+            "y": 1.0030760765075684,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di04",
+          "keywords": [
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_mask_zwt_1.png",
+              "scale": {
+                "x": 3.0,
+                "y": 3.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.340000033378601,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.8999999761581421,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 1.849056601524353,
+            "g": 0.658348560333252,
+            "b": 0.3227127194404602,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di05",
+          "position": {
+            "x": 0.0,
+            "y": -11.5
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1029796600341797,
+            "y": 0.9518626928329468,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di05",
+          "keywords": [
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_2.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 3.999999523162842,
+            "g": 0.18801042437553406,
+            "b": 0.0,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di06",
+          "position": {
+            "x": 0.0,
+            "y": -7.599999904632568
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1023027896881104,
+            "y": 1.0064753293991089,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di06",
+          "keywords": [
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_2.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 6.75286340713501,
+            "g": 0.7083857655525208,
+            "b": 0.2866780459880829,
+            "a": 1.0
+          }
+        }
+      ],
+      "normalization": {
+        "left": 163,
+        "right": 349,
+        "bottom": 401.5
+      }
+    },
+    "red": {
+      "bundle": "d70b7ecf94f74eda",
+      "prefab": "Assets/Res/Effect/FxEffect/NoUIParticle/FX_paiju_zuowei03.prefab",
+      "groupPosition": {
+        "x": 0.0,
+        "y": 16.0
+      },
+      "groupScale": {
+        "x": 2.299999952316284,
+        "y": 2.0,
+        "z": 1.0
+      },
+      "layers": [
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_andi01",
+          "position": {
+            "x": 0.0,
+            "y": 6.300000190734863
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.2225127220153809,
+            "y": 1.1830294132232666,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_andi02",
+          "keywords": [
+            "MASK_UV_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_paiju_zuowei_mask01_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.4905660152435303,
+            "g": 0.0,
+            "b": 0.010722663253545761,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di01",
+          "position": {
+            "x": 0.0,
+            "y": 0.8999999761581421
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.100303053855896,
+            "y": 1.0334508419036865,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di01_0",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_qifu_beijing_noise02.png",
+              "scale": {
+                "x": 1.0,
+                "y": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.11999999731779099,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": -0.05999999865889549,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.1899999976158142,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 6.120813846588135,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di02",
+          "position": {
+            "x": 0.0,
+            "y": 1.899999976158142
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.200355052947998,
+            "y": 1.130566954612732,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di02_0",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON",
+            "_COLOROVERLAY_ON"
+          ],
+          "textures": {
+            "_DistortionTex": {
+              "file": "original/fx_zaobo_ff04.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MainTex": {
+              "file": "original/n_noise_001.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 3.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": -0.009999999776482582,
+            "_DistortionVSpeed": -0.009999999776482582,
+            "_DistortionValue": 1.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.18000000715255737,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.10000000149011612,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.5377358198165894,
+            "g": 0.009292460046708584,
+            "b": 0.0,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di03",
+          "position": {
+            "x": -0.0,
+            "y": -1.899999976158142
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.130566954612732,
+            "y": 1.0096975564956665,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di03_0",
+          "keywords": [
+            "MASK_ON",
+            "PLOAR_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_mask_zwt_1.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_1_000.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.44999998807907104,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.699999988079071,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 1.0,
+            "g": 0.0,
+            "b": 0.028217315673828125,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di05",
+          "position": {
+            "x": 0.0,
+            "y": -1.5
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.0881582498550415,
+            "y": 1.0104618072509766,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di05_0",
+          "keywords": [
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_2.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 2.5693962574005127,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di04",
+          "position": {
+            "x": 0.0,
+            "y": -3.4000000953674316
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1143673658370972,
+            "y": 0.9847326874732971,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di04_0",
+          "keywords": [
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_mask_zwt_1.png",
+              "scale": {
+                "x": 3.0,
+                "y": 3.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": -1.5,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.8999999761581421,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 3.9533493518829346,
+            "g": 0.6416431069374084,
+            "b": 0.37256696820259094,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_Hong_di06",
+          "position": {
+            "x": 0.0,
+            "y": -1.399999976158142
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.0989362001419067,
+            "y": 1.0176233053207397,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_Hong_di06_0",
+          "keywords": [
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_2.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 5.891274929046631,
+            "g": 0.7992737889289856,
+            "b": 0.6391478776931763,
+            "a": 1.0
+          }
+        }
+      ],
+      "normalization": {
+        "left": 168.49,
+        "right": 347.89,
+        "bottom": 387.99
+      }
+    },
+    "blue": {
+      "bundle": "5f3a31329ff733c3",
+      "prefab": "Assets/Res/Effect/FxEffect/NoUIParticle/FX_paiju_zuowei04.prefab",
+      "groupPosition": {
+        "x": -1.5,
+        "y": 16.0
+      },
+      "groupScale": {
+        "x": 2.25,
+        "y": 1.9500000476837158,
+        "z": 1.0
+      },
+      "layers": [
+        {
+          "name": "FX_PaiJu_ZuoWei_lan_andi01",
+          "position": {
+            "x": 0.0,
+            "y": 6.300000190734863
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.2225127220153809,
+            "y": 1.1830294132232666,
+            "z": 1.0
+          },
+          "opacity": 0.1764705926179886,
+          "material": "FX_PaiJu_ZuoWei_lan_andi",
+          "keywords": [
+            "MASK_UV_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_paiju_zuowei_mask01_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0,
+            "g": 0.16257435083389282,
+            "b": 0.4901960790157318,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_lan_di01",
+          "position": {
+            "x": 0.0,
+            "y": 0.8999999761581421
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.100303053855896,
+            "y": 1.0334508419036865,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_lan_di01",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_qifu_beijing_noise02.png",
+              "scale": {
+                "x": 1.0,
+                "y": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.11999999731779099,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": -0.05999999865889549,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.1899999976158142,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0,
+            "g": 2.4990122318267822,
+            "b": 6.120813369750977,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_lan_di02",
+          "position": {
+            "x": 0.0,
+            "y": 1.899999976158142
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1253328323364258,
+            "y": 1.130566954612732,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_lan_di02",
+          "keywords": [
+            "DISTORTION_UV_ON",
+            "MASK_ON",
+            "UV_ANIMATION_ON",
+            "_COLOROVERLAY_ON"
+          ],
+          "textures": {
+            "_DistortionTex": {
+              "file": "original/fx_zaobo_ff04.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MainTex": {
+              "file": "original/n_noise_001.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 3.0,
+            "_Column": 1.0,
+            "_Cull": 2.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": -0.009999999776482582,
+            "_DistortionVSpeed": -0.009999999776482582,
+            "_DistortionValue": 1.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 0.18000000715255737,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.10000000149011612,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0,
+            "g": 0.2245393693447113,
+            "b": 0.5372549295425415,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_lan_di05",
+          "position": {
+            "x": 0.0,
+            "y": -1.5
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.0881582498550415,
+            "y": 1.0104618072509766,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_lan_di05",
+          "keywords": [
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_2.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 2.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 10.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0,
+            "g": 1.2121880054473877,
+            "b": 2.5693960189819336,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_lan_di04",
+          "position": {
+            "x": 0.0,
+            "y": -3.4000000953674316
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.1143673658370972,
+            "y": 0.9847326874732971,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_lan_di04",
+          "keywords": [
+            "MASK_ON",
+            "UV_ANIMATION_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/fx_mask_zwt_1.png",
+              "scale": {
+                "x": 3.0,
+                "y": 3.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask03_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": -1.5,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": -0.8999999761581421,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.0784313753247261,
+            "g": 0.4313725531101227,
+            "b": 0.7490196228027344,
+            "a": 1.0
+          }
+        },
+        {
+          "name": "FX_PaiJu_ZuoWei_lan_di06",
+          "position": {
+            "x": 0.0,
+            "y": -1.399999976158142
+          },
+          "size": {
+            "x": 221.32000732421875,
+            "y": 273.8999938964844
+          },
+          "scale": {
+            "x": 1.0989362001419067,
+            "y": 1.0176233053207397,
+            "z": 1.0
+          },
+          "opacity": 1.0,
+          "material": "FX_PaiJu_ZuoWei_lan_di06",
+          "keywords": [
+            "MASK_ON"
+          ],
+          "textures": {
+            "_MainTex": {
+              "file": "original/mask_2.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            "_MaskTex": {
+              "file": "original/fx_paiju_zuowei_mask02_00.png",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          "floats": {
+            "_Alpha": 1.0,
+            "_AlphaClip": 0.0,
+            "_Blend": 0.0,
+            "_BlendMode": 3.0,
+            "_BlendOp": 0.0,
+            "_BumpScale": 1.0,
+            "_CameraFarFadeDistance": 2.0,
+            "_CameraNearFadeDistance": 1.0,
+            "_CircleAngle": 1.0,
+            "_CircleDir": 1.0,
+            "_CircleStartAngle": 1.0,
+            "_ColorMask": 15.0,
+            "_ColorMode": 0.0,
+            "_Column": 1.0,
+            "_Cull": 0.0,
+            "_Cutoff": 0.5,
+            "_DissolveEdge": 0.10000000149011612,
+            "_DissolveInit": 0.0,
+            "_DissolvePointFactor": 0.0,
+            "_DissolvePointX": 0.0,
+            "_DissolvePointY": 0.0,
+            "_DissolveReverse": 0.0,
+            "_DissolveSoft": 0.10000000149011612,
+            "_DissolveUSpeed": 0.0,
+            "_DissolveVSpeed": 0.0,
+            "_DissolveValue": 0.0,
+            "_DissolveWidth": 0.10000000149011612,
+            "_DistortionUSpeed": 0.0,
+            "_DistortionVSpeed": 0.0,
+            "_DistortionValue": 0.0,
+            "_DstBlend": 1.0,
+            "_EmissionUSpeed": 0.0,
+            "_EmissionVSpeed": 0.0,
+            "_EnvironmentReflections": 1.0,
+            "_FresnelsIn": 1.0,
+            "_FresnelsPow": 1.0,
+            "_GlossMapScale": 0.0,
+            "_Glossiness": 0.0,
+            "_GlossyReflections": 0.0,
+            "_IsClip": 0.0,
+            "_MaskCutoff": 0.0,
+            "_MaskRotateCenterU": 0.5,
+            "_MaskRotateCenterV": 0.5,
+            "_MaskRotateSpeed": 0.0,
+            "_MaskRotateValue": 0.0,
+            "_MaskUSpeed": 0.0,
+            "_MaskVSpeed": 0.5,
+            "_MaxX": 1.0,
+            "_MaxY": 1.0,
+            "_Metallic": 0.0,
+            "_MinX": 1.0,
+            "_MinY": 1.0,
+            "_OcclusionStrength": 1.0,
+            "_PloarAngle": 1.0,
+            "_PloarRadius": 1.0,
+            "_QueueOffset": 0.0,
+            "_ReceiveShadows": 1.0,
+            "_RimBias": 1.0,
+            "_RimRatio": 1.0,
+            "_RimScale": 1.0,
+            "_RimShininess": 1.0,
+            "_RotateCenterU": 0.5,
+            "_RotateCenterV": 0.5,
+            "_RotateSpeed": 0.0,
+            "_RotateValue": 0.0,
+            "_Row": 1.0,
+            "_SeSpeed": 1.0,
+            "_Smoothness": 0.5,
+            "_SmoothnessTextureChannel": 0.0,
+            "_SoftParticlesFarFadeDistance": 1.0,
+            "_SoftParticlesNearFadeDistance": 0.0,
+            "_Softvalue": 1.0,
+            "_SpecularHighlights": 1.0,
+            "_SrcBlend": 5.0,
+            "_Stencil": 0.0,
+            "_StencilComp": 8.0,
+            "_StencilOp": 0.0,
+            "_StencilReadMask": 255.0,
+            "_StencilWriteMask": 255.0,
+            "_Surface": 0.0,
+            "_TimeControl": 0.0,
+            "_TimeControlSce": 0.0,
+            "_USpeed": 1.0,
+            "_UVReverseX": 0.0,
+            "_UVReverseY": 0.0,
+            "_UseRealTime": 0.0,
+            "_VSpeed": 0.0,
+            "_WorkflowMode": 1.0,
+            "_ZTest": 0.0,
+            "_ZWrite": 0.0,
+            "_vertex_u": 0.0,
+            "_vertex_v": 0.0
+          },
+          "tint": {
+            "r": 0.5286826491355896,
+            "g": 1.1157267093658447,
+            "b": 1.966328501701355,
+            "a": 1.0
+          }
+        }
+      ],
+      "normalization": {
+        "left": 170.39,
+        "right": 345.89,
+        "bottom": 384.69
+      }
+    }
+  },
+  "textures": {
+    "fx_paiju_zuowei_mask03_00_00.png": {
+      "bundle": "1b60e0890f9bb8d6",
+      "name": "FX_PaiJu_ZuoWei_mask03_00_00",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "045ac42a47379683079c50d2e834683b9d1bfb4674ea966aee059d5adb41dc3d"
+    },
+    "n_noise_001.png": {
+      "bundle": "a81ce7953744d1d2",
+      "name": "N_noise_001",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "c3b0c9428d14a3dc4a63a72443a09e8109e675176226bbaeeb3c10fabed72ac7"
+    },
+    "fx_qifu_beijing_noise02.png": {
+      "bundle": "a81ce7953744d1d2",
+      "name": "FX_QiFu_BeiJing_noise02",
+      "size": [
+        256,
+        256
+      ],
+      "sha256": "d8c5f8723f451a055721dcd56ce58f8ea5395b232722d0ffbef77eff9f1ead27"
+    },
+    "fx_paiju_zuowei_mask03_00.png": {
+      "bundle": "ff4031e715b1dabe",
+      "name": "FX_PaiJu_ZuoWei_mask03_00",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "004e71c4efe276825e90c83a2e0ce8def98b945baea588b020f55abd150228b2"
+    },
+    "fx_paiju_zuowei_mask02_00.png": {
+      "bundle": "bb453012d53993a3",
+      "name": "FX_PaiJu_ZuoWei_mask02_00",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "56510bbecbc8d52d2330d86aa0f801f31f78cdefb4d25318e3b0c643efc26ec7"
+    },
+    "n_noise_002.png": {
+      "bundle": "a367f0d8e8783bbb",
+      "name": "N_noise_002",
+      "size": [
+        256,
+        256
+      ],
+      "sha256": "7453356af5e7c59b2b75a8171c0dfb3e94e789673227a88b1d15b09a8710a78f"
+    },
+    "fx_paiju_zuowei_mask03_000.png": {
+      "bundle": "5602b861572fd0a6",
+      "name": "FX_PaiJu_ZuoWei_mask03_000",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "4b96bf5f87f881bbae20e9de587974153ee106d73a3574c3b769893698bbb7cc"
+    },
+    "fx_paiju_zuowei_mask01_00.png": {
+      "bundle": "bb453012d53993a3",
+      "name": "FX_PaiJu_ZuoWei_mask01_00",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "dcc5c7545e344fb048b594d8787d5218e4ae81687cd21712813e4a80e53a7407"
+    },
+    "mask_022.png": {
+      "bundle": "3f572e96fd859e38",
+      "name": "mask_022",
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "b56ccd62be9d3c1e5764f9671675d273866d897b49ed67feea68e6fcd5f9940b"
+    },
+    "fx_mask_zwt_1.png": {
+      "bundle": "a81ce7953744d1d2",
+      "name": "FX_Mask_ZWT_1",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "cf88a3f31b3e52e6480e76c8057a0c7b5e213fdfe533e718f17c3f3b2ca57666"
+    },
+    "fx_zaobo_ff04.png": {
+      "bundle": "1e62212f494b956a",
+      "name": "Fx_Zaobo_ff04",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "f9fcfacc0aa40494d13c088a3e9bf625551b1bc4fead0dda72159f878f791b3d"
+    },
+    "mask_2.png": {
+      "bundle": "7c2a66f3e052b85b",
+      "name": "Mask_2",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "73978ac1d0ed80c44bffaa1654caa27bda57f9d4ca8a679d995037315cc755f1"
+    },
+    "fx_paiju_zuowei_mask03_1_000.png": {
+      "bundle": "d9600c5bf8f44f60",
+      "name": "FX_PaiJu_ZuoWei_mask03_1_000",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "6de964809e760cb4fc08387de2a483ab4f0965ab365d2c4b5685367bf12a763b"
+    }
+  },
+  "outputs": {
+    "green.png": {
+      "size": [
+        2560,
+        256
+      ],
+      "sha256": "7405a8af63859919d4e140591a13151bbddd48539bfc8ebac70a08baffe920b2"
+    },
+    "orange.png": {
+      "size": [
+        2560,
+        256
+      ],
+      "sha256": "58f7ad929a208c9ad2e9299232ad20f86ab2c339444b493187cd3a8273345aa2"
+    },
+    "red.png": {
+      "size": [
+        2560,
+        256
+      ],
+      "sha256": "5687d4cb4bdde1c974da7ae41559c5a753db1da17f4053e64cc51cb86fc40a9a"
+    },
+    "blue.png": {
+      "size": [
+        2560,
+        256
+      ],
+      "sha256": "91934b500e02ed4cf161b14d747e9e1d89a5804ff1953cc383ec48ef140ff959"
+    }
+  }
+}

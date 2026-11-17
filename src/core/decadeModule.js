@@ -98,6 +98,7 @@ export function initDecadeModule() {
 		const style = getConfigValue("newDecadeStyle", "on");
 		const styleIndex = STYLE_OPTIONS.indexOf(style);
 		this.css(`${decadeUIPath}src/styles/player${styleIndex !== -1 ? styleIndex + 1 : 2}.css`);
+		this.css(`${decadeUIPath}src/styles/source-player-glow.css`);
 		this.css(`${decadeUIPath}src/styles/source-general-font.css`);
 		this.css(`${decadeUIPath}src/styles/source-skill-marks.css`);
 		this.css(`${decadeUIPath}src/styles/equip.css`);
@@ -128,6 +129,7 @@ export function initDecadeModule() {
 				this.css(`${uiPath}styles/lbtn/window/${skinName}.css`);
 				this.css(`${uiPath}styles/skill/window/${skinName}.css`);
 			}
+			this.css(`${decadeUIPath}src/styles/source-active-skill-glow.css`);
 		}
 
 		// 初始化亮将钩子

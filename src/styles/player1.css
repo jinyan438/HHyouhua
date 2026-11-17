@@ -61,18 +61,18 @@
 }
 
 .player::before {
-	background-image: url("../../image/ui/effects/sprites_glow_blue.png");
+	background-image: url("../../assets/player-glow/blue.png");
 }
 
 .player::after {
-	background-image: url("../../image/ui/effects/sprites_glow_red.png");
+	background-image: url("../../assets/player-glow/red.png");
 }
 
 /* 橙色光效(选中/回合中) */
 .player.selected:not(.target)::before,
 .player.glow_phase:not(.selectable):not([data-position="0"])::before {
 	animation-duration: 0.9s;
-	background-image: url("../../image/ui/effects/sprites_glow_orange.png");
+	background-image: url("../../assets/player-glow/orange.png");
 	opacity: 1;
 }
 

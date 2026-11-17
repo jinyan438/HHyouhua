@@ -1,0 +1,46 @@
+/* OL FX_PaiJu_ZuoWei, baked from the original seat masks and materials. */
+#arena > .player {
+	isolation: isolate;
+}
+
+#arena > .player::before,
+#arena > .player::after {
+	left: var(--hh-source-glow-left, -122.45690789473684px) !important;
+	top: calc(-86.9375px * 183 / 184 - 2px) !important;
+	width: var(--hh-source-glow-width, 378.17263157894735px) !important;
+	height: calc(340px * 183 / 184) !important;
+	background-size: 1000% 100% !important;
+	background-repeat: no-repeat;
+	animation-name: hh-source-player-glow !important;
+	animation-timing-function: steps(1) !important;
+	transform: none !important;
+	pointer-events: none;
+	box-shadow: none;
+	mix-blend-mode: normal;
+	/* Keep both effects behind static/dynamic portraits and every camp frame. */
+	z-index: -1 !important;
+	/* Cut out the opaque card body even when a portrait has transparent pixels. */
+	-webkit-mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+	mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+	-webkit-mask-size: 100% 100%, var(--hh-configured-player-width, 136px) 180px;
+	mask-size: 100% 100%, var(--hh-configured-player-width, 136px) 180px;
+	-webkit-mask-position: 0 0, calc(0px - var(--hh-source-glow-left, -122.45690789473684px)) calc(86.9375px * 183 / 184 + 2px);
+	mask-position: 0 0, calc(0px - var(--hh-source-glow-left, -122.45690789473684px)) calc(86.9375px * 183 / 184 + 2px);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+}
+
+@keyframes hh-source-player-glow {
+	0% { background-position: 0 0; }
+	10% { background-position: 11.111111% 0; }
+	20% { background-position: 22.222222% 0; }
+	30% { background-position: 33.333333% 0; }
+	40% { background-position: 44.444444% 0; }
+	50% { background-position: 55.555556% 0; }
+	60% { background-position: 66.666667% 0; }
+	70% { background-position: 77.777778% 0; }
+	80% { background-position: 88.888889% 0; }
+	90%, 100% { background-position: 100% 0; }
+}

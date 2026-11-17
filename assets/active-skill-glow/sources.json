@@ -1,0 +1,96 @@
+{
+  "prefab": {
+    "path": "Assets/Res/Effect/FxEffect/fx_UI_AnNIu_ZhuDong.prefab",
+    "bundle": "0a9fad549d1513ad"
+  },
+  "frame": {
+    "file": "frame-original.png",
+    "path": "Assets/Models/Others/fx_UI_AnNIu_ZhuDong/fx_UI_AnNIu_ZhuDong_00.png",
+    "bundle": "6ef4dd78be0b7819",
+    "size": [
+      256,
+      128
+    ],
+    "rails": {
+      "left": 59,
+      "right": 197,
+      "top": 36,
+      "bottom": 92
+    },
+    "sha256": "d28b351f1967f6b3546f732c39fb402a2455f44494dd9234661fb1dc20daefe7"
+  },
+  "star": {
+    "file": "star-original.png",
+    "name": "FX_jjc_lizi",
+    "bundle": "a367f0d8e8783bbb",
+    "path": "Assets/Models/Common/Group/SkillGroup2/FX_jjc_lizi.png",
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "0f0a87c96694e468fcea424f4c2bf98b27d4203cd4ee0653b1022ef6727a670f"
+  },
+  "frameEmitter": {
+    "rate": 2,
+    "lifetime": 1,
+    "maxParticles": 2,
+    "alphaKeys": [
+      [
+        0,
+        0
+      ],
+      [
+        0.5,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ]
+  },
+  "starEmitter": {
+    "rate": 10,
+    "lifetime": 1,
+    "maxParticles": 50,
+    "speed": [
+      0.1,
+      0.4
+    ],
+    "size": [
+      0.05,
+      0.15
+    ],
+    "alphaKeys": [
+      [
+        0,
+        0
+      ],
+      [
+        0.5,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "seed": 438
+  },
+  "animation": {
+    "frames": 20,
+    "duration": 1,
+    "frameSize": [
+      256,
+      128
+    ]
+  },
+  "output": {
+    "file": "active-skill.png",
+    "size": [
+      5120,
+      128
+    ],
+    "sha256": "2cb0bfbef5ffcab84d9a46aa87826aeca9d25bffef31a1ec28e509d1d92fef7a"
+  }
+}

@@ -108,27 +108,27 @@
 }
 
 #arena > .player::before {
-	background-image: url("../../image/ui/effects/sprites_shadow_orange.png");
+	background-image: url("../../assets/player-glow/orange.png");
 }
 
 #arena > .player::after,
 #arena > .player.selected::after,
 #arena > .player.selectable::after {
-	background-image: url("../../image/ui/effects/sprites_shadow_lvse.png");
+	background-image: url("../../assets/player-glow/green.png");
 	transition: opacity 0.1s linear;
 }
 
 #arena > .player:not([data-position="0"])::after,
 #arena > .player.selected:not([data-position="0"])::after,
 #arena > .player.selectable:not([data-position="0"])::after {
-	background-image: url("../../image/ui/effects/sprites_shadow_red.png");
+	background-image: url("../../assets/player-glow/red.png");
 }
 
 /* 橙色光效(选中) */
 #arena > .player.selectable.selected.target::before,
 #arena > .player.selected:not(.target)::before {
 	animation-duration: 0.9s;
-	background-image: url("../../image/ui/effects/sprites_shadow_orange.png");
+	background-image: url("../../assets/player-glow/orange.png");
 	opacity: 1;
 	z-index: 79;
 }
@@ -136,7 +136,7 @@
 /* 绿色光效(回合中) */
 #arena > .player.glow_phase:not(.selectable)::before {
 	animation-duration: 0.9s;
-	background-image: url("../../image/ui/effects/sprites_shadow_green1.png");
+	background-image: url("../../assets/player-glow/green.png");
 	opacity: 1;
 	z-index: 75;
 }
@@ -144,7 +144,7 @@
 /* 绿色光效(可选中-主玩家) */
 #arena > .player.selectable:not(.selected):not(.target)::before {
 	animation-duration: 0.9s;
-	background-image: url("../../image/ui/effects/sprites_shadow_lvse.png");
+	background-image: url("../../assets/player-glow/green.png");
 	opacity: 1;
 	z-index: 79;
 	top: -38.4px;
@@ -152,7 +152,7 @@
 
 /* 红色光效(可选中-其他玩家) */
 #arena > .player.selectable:not(.selected):not(.target):not([data-position="0"])::before {
-	background-image: url("../../image/ui/effects/sprites_shadow_red.png");
+	background-image: url("../../assets/player-glow/red.png");
 	z-index: 89;
 	top: -38.4px;
 }

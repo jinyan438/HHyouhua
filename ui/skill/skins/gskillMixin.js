@@ -32,6 +32,7 @@ export function updateSkillUsability(nodes, availableSkills, context) {
 
 		item.classList.toggle("usable", isUsable);
 		item.classList.toggle("select", _status.event.skill === skillId);
+		item.classList.toggle("hh-source-active-skill", Boolean(lib.skill[skillId]?.enable));
 	});
 }
 

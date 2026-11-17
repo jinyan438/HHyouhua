@@ -3,7 +3,7 @@ import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 import { setupRescueFlow } from './src/features/rescueFlow.js';
 import { setupLordBlindShot } from './src/features/lordBlindShot.js';
 import { setupEquipMove } from './src/features/equipMove.js';
-import { getPlayerStyleSizing, playerGlowGeometry } from './src/ui/playerStyleSizing.js';
+import { getPlayerStyleSizing } from './src/ui/playerStyleSizing.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
 	const HH_finishSkill = function(skill) {
@@ -435,7 +435,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				};
 				const sizing = getPlayerStyleSizing(lib.config.extension_HH优化_player_width, lib.config.extension_HH优化_newDecadeStyle);
 				const { width: widthValue, borderWidth: borderWidthValue, hpRight: hpRightValue,
-					borderLeft: borderLeftValue, glowWidth, glowLeft, factionLeft: factionLeftValue, nameInset: nameInsetValue } = sizing;
+					borderLeft: borderLeftValue, factionLeft: factionLeftValue, nameInset: nameInsetValue } = sizing;
 				
 
 				
@@ -453,28 +453,9 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				css += `
 					.player {
 						--hh-configured-player-width: ${widthValue}px;
+						--hh-source-glow-width: ${sizing.sourceGlowWidth}px;
+						--hh-source-glow-left: ${sizing.sourceGlowLeft}px;
 						--hh-configured-hp-right: ${hpRightValue}px;
-					}
-					.player::before, .player::after {
-						--hh-glow-edge-left: 56.5;
-						--hh-glow-edge-span: 125.5;
-					}
-					#arena[data-new-decade-style="onlineUI"] > .player::before,
-					#arena[data-new-decade-style="onlineUI"] > .player::after,
-					#arena[data-new-decade-style="off"] > .player::before,
-					#arena[data-new-decade-style="off"] > .player::after {
-						--hh-glow-edge-left: 50;
-						--hh-glow-edge-span: 140;
-					}
-					#arena[data-new-decade-style="onlineUI"] > .player:not([data-position="0"])::after,
-					#arena[data-new-decade-style="off"] > .player:not([data-position="0"])::after {
-						--hh-glow-edge-left: 76.5;
-						--hh-glow-edge-span: 104;
-					}
-					#arena[data-new-decade-style="onlineUI"] > .player.selected:not(.target)::before,
-					#arena[data-new-decade-style="off"] > .player.selected:not(.target)::before {
-						--hh-glow-edge-left: 48.5;
-						--hh-glow-edge-span: 143;
 					}
 					/* 覆盖HH优化所有样式的武将宽度 */
 					#arena[data-new-decade-style="onlineUI"] > .player {
@@ -1098,26 +1079,10 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						sheet.deleteRule(0);
 					}
 					
-					// Stretch between the visible sprite rails, not around its transparent canvas center.
-					// Preserve the previous 136px transform exactly when delta is zero.
-					const baseScale = glowWidth / playerGlowGeometry.canvasWidth;
-					const scale = `calc(${baseScale} + ${sizing.delta * playerGlowGeometry.frameWidth / playerGlowGeometry.displayedFrameWidth} / var(--hh-glow-edge-span))`;
-					const translateX = `calc(${(1 - baseScale) * 50}% + ${glowLeft + 55}px - ${sizing.delta}px * var(--hh-glow-edge-left) / var(--hh-glow-edge-span))`;
-					const scaleStyle = `transform: translateX(${translateX}) scaleX(${scale}) !important; transform-origin: left center !important;`;
-					
-					// 插入新规则
+					// Clear legacy sprite transforms; source-player-glow.css uses the live rail geometry.
 					const rules = [
-						`.player::before { ${scaleStyle} }`,
-						`.player::after { ${scaleStyle} }`,
-						`.player.glow_phase::before { ${scaleStyle} }`,
-						`.player.glow_phase:not(.selectable)::before { ${scaleStyle} }`,
-						`#arena .player::before { ${scaleStyle} }`,
-						`#arena .player::after { ${scaleStyle} }`,
-						`#arena > .player.glow_phase::before { ${scaleStyle} }`,
-						`#arena > .player.glow_phase:not(.selectable)::before { ${scaleStyle} }`,
-						`.player[data-position="0"].glow_phase::before { ${scaleStyle} }`,
-						`#arena > .player[data-position="0"].glow_phase::before { ${scaleStyle} }`,
-						`#arena > .player[data-position="0"].glow_phase:not(.selectable)::before { ${scaleStyle} }`
+						'#arena > .player::before { transform: none !important; }',
+						'#arena > .player::after { transform: none !important; }'
 					];
 					rules.forEach(rule => {
 						try {

@@ -41,7 +41,7 @@
 	width: 230px;
 	height: 262px;
 	opacity: 0;
-	background-image: url("../../image/ui/effects/sprites_glow_blue.png");
+	background-image: url("../../assets/player-glow/blue.png");
 	background-repeat: no-repeat;
 	animation: kf-sprites-glow 0s 0s infinite forwards steps(1);
 	pointer-events: none;
@@ -53,7 +53,7 @@
 .player.selected:not(.target):before,
 .player.glow_phase:not(.selectable):not(*[data-position="0"])::before {
 	animation-duration: 0.9s;
-	background-image: url("../../image/ui/effects/sprites_glow_orange.png");
+	background-image: url("../../assets/player-glow/orange.png");
 	opacity: 1;
 }
 
@@ -72,7 +72,7 @@
 	width: 230px;
 	height: 262px;
 	opacity: 0;
-	background-image: url("../../image/ui/effects/sprites_glow_red.png");
+	background-image: url("../../assets/player-glow/red.png");
 	background-repeat: no-repeat;
 	animation: kf-sprites-glow 0s 0s infinite forwards steps(1);
 	pointer-events: none;

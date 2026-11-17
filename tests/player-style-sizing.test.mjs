@@ -28,7 +28,7 @@ function rendered(width) {
 }
 
 test('the approved 136px appearance stays exact and only width remains in its settings group', () => {
-	assert.deepEqual(playerStyleBaseline, { width: 136, borderWidth: 401, glowWidth: 220, glowLeft: -50, hpRight: 134, borderLeft: -15, factionLeft: 13, nameInset: 26 });
+	assert.deepEqual(playerStyleBaseline, { width: 136, borderWidth: 401, hpRight: 134, borderLeft: -15, factionLeft: 13, nameInset: 26 });
 	const sizing = getPlayerStyleSizing(136);
 	for (const [key, value] of Object.entries(playerStyleBaseline)) assert.equal(sizing[key], value, key);
 	assert.equal(sizing.delta, 0); assert.equal(sizing.borderGrow, 0); assert.equal(sizing.borderShift, 0);
@@ -60,7 +60,7 @@ test('live styles stretch the portrait area, ignore legacy overrides and retain 
 		assert.ok(playerRule.includes('#arena.fewplayer')); assert.ok(playerRule.includes(`width: ${width}px !important;`));
 		assert.equal(/height\s*:/.test(playerRule), false);
 		assert.ok(output.css.includes(`width: calc(401% + ${s.borderGrow}px)`));
-		assert.ok(output.glow.every(rule => rule.includes('transform-origin: left center') && !rule.includes('scaleY')));
+		assert.ok(output.glow.every(rule => rule.includes('transform: none !important')));
 		assert.equal(s.factionLeft, 13); assert.equal(s.nameInset, 26); assert.equal(width - s.hpRight, 2);
 		assert.equal(width - s.armorLeft, 16);
 	}
@@ -137,27 +137,25 @@ test('the OL frame visible rails keep their left anchor and gain exactly the car
 	}
 });
 
-test('visible glow rails stay aligned for turn, selection and target sprites as width changes', () => {
-	const baseScale = 220 / 228, nativeWidth = 228;
-	const cases = [
-		{ selector: '#arena[data-new-decade-style="onlineUI"] > .player::before', file: 'sprites_shadow_green1.png', left: 50, span: 140, nativeLeft: -62 },
-		{ selector: '#arena[data-new-decade-style="onlineUI"] > .player:not([data-position="0"])::after', file: 'sprites_shadow_red.png', left: 76.5, span: 104, nativeLeft: -62 },
-		{ selector: '#arena[data-new-decade-style="onlineUI"] > .player.selected:not(.target)::before', file: 'sprites_shadow_orange.png', left: 48.5, span: 143, nativeLeft: -62 },
-	];
-	for (const profile of cases) {
-		const bytes = fs.readFileSync(new URL('../image/ui/effects/' + profile.file, import.meta.url));
+test('all four source glow colors retain their left anchor, extend right and lift the bottom at every card width', () => {
+	const { frameWidth, frameHeight, left, span, bottom, outset, rightOutset, displayHeight, displayTop } = playerGlowGeometry;
+	for (const color of ['green', 'orange', 'red', 'blue']) {
+		const bytes = fs.readFileSync(new URL('../assets/player-glow/' + color + '.png', import.meta.url));
 		assert.equal(bytes.readUInt32BE(16), playerGlowGeometry.spriteWidth);
-		const sourceLeft = profile.left * 253 / 240, sourceRight = (profile.left + profile.span) * 253 / 240;
-		const baseTranslation = nativeWidth / 2 * (1 - baseScale) + 5;
-		const baseRails = [profile.nativeLeft + baseTranslation + sourceLeft * baseScale, profile.nativeLeft + baseTranslation + sourceRight * baseScale];
-		for (const width of [80, 136, 160, 200]) {
-			const output = rendered(width), block = output.css.split(profile.selector)[1].split('{')[1].split('}')[0];
-			const variables = { '--hh-glow-edge-left': Number(block.match(/--hh-glow-edge-left: ([\d.]+)/)[1]), '--hh-glow-edge-span': Number(block.match(/--hh-glow-edge-span: ([\d.]+)/)[1]) };
-			assert.equal(variables['--hh-glow-edge-left'], profile.left); assert.equal(variables['--hh-glow-edge-span'], profile.span);
-			const transform = output.glow[0], scale = cssNumber(cssArgument(transform, 'scaleX'), variables), translation = cssNumber(cssArgument(transform, 'translateX'), variables, nativeWidth);
-			assert.ok(Math.abs(profile.nativeLeft + translation + sourceLeft * scale - baseRails[0]) < 1e-8, `${profile.file} left drift at ${width}`);
-			assert.ok(Math.abs(profile.nativeLeft + translation + sourceRight * scale - baseRails[1] - (width - 136)) < 1e-8, `${profile.file} right drift at ${width}`);
-		}
+		assert.equal(bytes.readUInt32BE(20), frameHeight);
+	}
+	for (const width of [80, 136, 160, 200]) {
+		const sizing = getPlayerStyleSizing(width), output = rendered(width);
+		const spriteWidth = Number(output.css.match(/--hh-source-glow-width: ([\d.]+)px/)[1]);
+		const spriteLeft = Number(output.css.match(/--hh-source-glow-left: (-?[\d.]+)px/)[1]);
+		const frameWidthPx = 45 * 4.01 + sizing.borderGrow;
+		const frameLeft = -13 + sizing.borderLeft + sizing.borderShift;
+		const frameRails = [playerFrameGeometry.left, playerFrameGeometry.left + playerFrameGeometry.span].map(x => frameLeft + x * frameWidthPx / playerFrameGeometry.width);
+		const glowRails = [left, left + span].map(x => spriteLeft + x * spriteWidth / frameWidth);
+		for (let i = 0; i < 2; i++) assert.ok(Math.abs(glowRails[i] - frameRails[i] - (i ? rightOutset : -outset)) < 1e-8, `Glow rail ${i} has the wrong outset at ${width}px`);
+		assert.ok(Math.abs(displayTop + bottom * displayHeight / frameHeight - 181) < 1e-8);
+		const oldTopReference = 86.9375 / 340;
+		assert.ok(Math.abs(displayTop + oldTopReference * displayHeight + 2) < 1e-8);
 	}
 });
 
