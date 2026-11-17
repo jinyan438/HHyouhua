@@ -2751,7 +2751,7 @@
 		"src/features/extensionToggle.js": "d99b6674cea68bfaa5d414021cdebfd7b9b05d18",
 		"src/features/lordBlindShot.js": "2e928ea865261c57ba7dd1dd9fbf63c528ec0b53",
 		"src/features/luckyCard.js": "3cbf8d639e6769b031f1ef3ce1e43dd6de5ec4b4",
-		"src/features/playerActionTimer.js": "8f5a264b2903cc10e08f650bb1de80e022dafb86",
+		"src/features/playerActionTimer.js": "f1c6a00e0fddf6afb1dec613f43ae490d13108df",
 		"src/features/rescueFlow.js": "387a9fbd04f9d5c3613e8c6b198e25071d5849b4",
 		"src/features/styleHotkeys.js": "8eb70ca23478aa8748e1c7bae25608d3a077922e",
 		"src/libs/eruda.js": "de2aad3942f7312501c92ad1404cf367a48fe4a2",

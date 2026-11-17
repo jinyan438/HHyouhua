@@ -8,9 +8,9 @@ const CHOICES = new Set([
 export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environment = {}) {
 	if (game.hhPlayerActionTimer) return game.hhPlayerActionTimer;
 	const env = { now: () => performance.now(), setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: id => clearInterval(id), ...environment };
-	const hooks = [], announced = new WeakSet(), operations = new WeakMap(), controlOwners = new WeakMap(), retired = new Set();
+	const hooks = [], announced = new WeakSet(), operations = new WeakMap(), controlOwners = new WeakMap(), retired = new Set(), confirmations = new Set();
 	let current = null, consecutive = 0, resolving = 0, stopped = false;
-	let resumeSerial = 0;
+	let resumeSerial = 0, pauseSerial = 0;
 	let confirmFactory, controlFactory;
 	let lastAuto = !!_status.auto, lastPlayer = game.me, timedOutAuto = false;
 	const enabled = () => String(lib.config.extension_HH优化_jindutiaoYangshi) !== '0' && !_status.connectMode && !game.online && !_status.video;
@@ -42,11 +42,12 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 	}
 	function observeControl(control) {
 		if (stopped || !control) return;
-		if (!enabled()) { own(control, null); return; }
+		if (!enabled()) { own(control, null); confirmations.delete(control); return; }
+		confirmations.add(control);
 		const event = _status.event;
 		if (event && typeof event.switchToAuto === 'function') announced.add(event);
 		let owner = operations.get(event);
-		if (!owner && manual(event)) { owner = operation(event); operations.set(event, owner); }
+		if (!owner && event) { owner = operation(event); operations.set(event, owner); }
 		// Reused containers transfer to the new event instead of being swept with the old one.
 		own(control, owner);
 		if (owner?.timedOut && resumeSerial > owner.resumeSerial) (owner.followups ??= new Set()).add(control);
@@ -62,9 +63,25 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 					else control.remove?.();
 				}
 				if (ui.confirm === control && !controlOwners.has(control)) ui.confirm = null;
+				if (!controlOwners.has(control)) {
+					// A skin close animation may leave a clickable node behind.
+					control.remove?.(); ui.controls?.remove?.(control); confirmations.delete(control);
+				}
 			}
 			if (!owner.controls.size) retired.delete(owner);
 		}
+	}
+	function cleanupInactiveControls(event) {
+		if (!enabled() || !_status.gameStarted) return;
+		const waiting = _status.paused && !_status.auto && !game.notMe && !_status.over && !event?.finished
+			&& (event?.isMine?.() === true || _status.imchoosing && (!event?.player || event.name === 'gameDraw'));
+		for (const control of confirmations) {
+			const owner = controlOwners.get(control);
+			if (waiting && (!owner || owner.event === event) && !owner?.timedOut) continue;
+			const stale = owner || operation(event);
+			own(control, stale); retired.add(stale);
+		}
+		cleanupControls();
 	}
 	function refresh() {
 		if (!current) return;
@@ -102,7 +119,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 	}
 	function expire(token) {
 		if (current !== token || _status.event !== token.event || !_status.paused || _status.paused2 || !manual(token.event)) return;
-		token.timedOut = true; token.resumeSerial = resumeSerial; retired.add(token);
+		token.timedOut = true; token.resumeSerial = resumeSerial; token.pauseSerial = pauseSerial; retired.add(token);
 		clear();
 		consecutive++;
 		resolving++;
@@ -132,12 +149,20 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 			lastPlayer = game.me; lastAuto = !!_status.auto;
 		}
 		const event = _status.event;
-		if (enabled() && ui.confirm && !controlOwners.has(ui.confirm)) own(ui.confirm, operations.get(event));
-		if (!_status.paused || !manual(event)) { clear(); cleanupControls(); return; }
+		if (enabled() && ui.confirm) {
+			confirmations.add(ui.confirm);
+			if (!controlOwners.has(ui.confirm)) own(ui.confirm, operations.get(event));
+		}
+		if (!_status.paused || !manual(event)) {
+			clear(); cleanupControls(); if (allowTimeout) cleanupInactiveControls(event); return;
+		}
 		const now = env.now();
 		if (current?.event !== event) {
 			clear();
 			const pending = operations.get(event);
+			// Native PauseManager clears `paused` asynchronously after resume(). Only
+			// a real subsequent pause may reopen this completed event's decision UI.
+			if (pending?.timedOut && pending.pauseSerial === pauseSerial) { cleanupControls(); return; }
 			current = pending && !pending.started ? pending : operation(event);
 			Object.assign(current, { started: true, duration: duration(event), elapsed: 0, lastTime: now, paused: !!_status.paused2, fraction: 1, view: null });
 			operations.set(event, current);
@@ -153,6 +178,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 		token.fraction = token.duration ? Math.max(0, 1 - token.elapsed / token.duration) : 0;
 		token.view?.update(token.fraction);
 		cleanupControls();
+		if (allowTimeout) cleanupInactiveControls(event);
 		if (allowTimeout && token.fraction === 0) expire(token);
 	}
 	function wrap(object, key, create) {
@@ -189,14 +215,15 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 		return original.apply(this, arguments);
 	});
 	wrap(game, 'pause', original => function () {
+		pauseSerial++;
 		const result = original.apply(this, arguments); check(false); return result;
 	});
 	wrap(game, 'resume', original => function () {
-		const token = current;
+		const token = current, wasPaused = !!_status.paused;
 		resumeSerial++;
 		const result = original.apply(this, arguments);
+		if (token && wasPaused && !resolving && !_status.auto) consecutive = 0;
 		if (token && !_status.paused && current === token) {
-			if (!resolving && !_status.auto) consecutive = 0;
 			clear();
 		}
 		if (!resolving) cleanupControls();
@@ -208,7 +235,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 	const timer = env.setInterval(() => check(), 32);
 	function stop() {
 		if (stopped) return;
-		stopped = true; env.clearInterval(timer); clear(); cleanupControls(); consecutive = 0; timedOutAuto = false;
+		stopped = true; env.clearInterval(timer); clear(); cleanupControls(); confirmations.clear(); consecutive = 0; timedOutAuto = false;
 		for (const restore of hooks.reverse()) restore();
 	}
 	lib.onover.push(stop);

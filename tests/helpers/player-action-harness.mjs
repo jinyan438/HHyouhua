@@ -17,8 +17,12 @@ const coreCode = ts.transpileModule(coreSource.slice(coreSource.indexOf('export 
 	compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
 }).outputText;
 const progressCode = fs.readFileSync(new URL('../../src/ui/progress-bar.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replaceAll('export function ', 'function ');
+const pauseCode = ts.transpileModule(fs.readFileSync(new URL('../../../../noname/game/PauseManager.ts', import.meta.url), 'utf8')
+	.replace(/^import[^\n]*\n/gm, '').replace('export default class', 'class') + '\nnew PauseManager();', {
+	compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
+}).outputText;
 
-export function actionHarness({ style = '2', seconds = '15', config = {} } = {}) {
+export function actionHarness({ style = '2', seconds = '15', config = {}, nativePause = false } = {}) {
 	const dom = domFixture(), { document, Element, environment } = dom;
 	document.getElementById = id => document.body.querySelectorAll('div').find(node => node.id === id);
 	const intervals = new Set(), calls = { uses: [], responses: [], discards: [], countdowns: [] };
@@ -30,7 +34,11 @@ export function actionHarness({ style = '2', seconds = '15', config = {} } = {})
 	function clearInterval(token) { if (!token) return; token.active = false; environment.clearTimer(token.timer); intervals.delete(token); }
 	let paused = false, release;
 	const status = { gameStarted: true, imchoosing: false, prehidden_skills: [], pauseManager: { get pause() { return new Promise(resolve => { release = resolve; }); } } };
-	Object.defineProperty(status, 'paused', { get: () => paused, set(value) { const was = paused; paused = value; if (was && !value) { const resolve = release; release = null; resolve?.(); } } });
+	if (nativePause) status.pauseManager = vm.runInNewContext(pauseCode);
+	Object.defineProperty(status, 'paused', nativePause ? {
+		get: () => status.pauseManager.pause.isStarted,
+		set(value) { if (value) status.pauseManager.pause.start(); else status.pauseManager.pause.resolve(); },
+	} : { get: () => paused, set(value) { const was = paused; paused = value; if (was && !value) { const resolve = release; release = null; resolve?.(); } } });
 	const lib = { config: { extension_HH优化_jindutiaoYangshi: style, extension_HH优化_playerActionTime: seconds, extension_HH优化_jindutiaoSet: 22, auto_confirm: false, autoskilllist: [], ...config },
 		onover: [], skill: { global: [] }, filter: { all: () => true, cardDiscardable: card => !card.protected, cardAiIncluded: () => true, wuxieSwap: () => false }, assetURL: '', configOL: { choose_timeout: 15 } };
 	const ui = { selected: { cards: [], buttons: [], targets: [] }, arena: new Element(), auto: new Element(), control: new Element(), create: {}, dialogs: [], controls: [], updatec() {},
