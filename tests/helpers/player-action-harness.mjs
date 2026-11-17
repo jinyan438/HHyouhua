@@ -33,11 +33,21 @@ export function actionHarness({ style = '2', seconds = '15', config = {} } = {})
 	Object.defineProperty(status, 'paused', { get: () => paused, set(value) { const was = paused; paused = value; if (was && !value) { const resolve = release; release = null; resolve?.(); } } });
 	const lib = { config: { extension_HH优化_jindutiaoYangshi: style, extension_HH优化_playerActionTime: seconds, extension_HH优化_jindutiaoSet: 22, auto_confirm: false, autoskilllist: [], ...config },
 		onover: [], skill: { global: [] }, filter: { all: () => true, cardDiscardable: card => !card.protected, cardAiIncluded: () => true, wuxieSwap: () => false }, assetURL: '', configOL: { choose_timeout: 15 } };
-	const ui = { selected: { cards: [], buttons: [], targets: [] }, arena: new Element(), auto: new Element(), control: new Element(), create: {}, dialogs: [],
+	const ui = { selected: { cards: [], buttons: [], targets: [] }, arena: new Element(), auto: new Element(), control: new Element(), create: {}, dialogs: [], controls: [], updatec() {},
 		timer: { show() {}, hide() {} } };
 	ui.control.hide = () => { ui.control.hidden = true; }; ui.control.show = () => { ui.control.hidden = false; };
 	const closable = () => ({ style: {}, buttons: [], content: {}, classList: { add() {}, remove() {} }, open() {}, close() {}, add() {}, addText() {} });
-	ui.create.dialog = () => closable(); ui.create.control = () => closable(); ui.create.cardChooseAll = () => {};
+	ui.create.dialog = () => closable(); ui.create.cardChooseAll = () => {};
+	ui.create.control = (...args) => {
+		const control = new Element(); control.className = 'control';
+		Object.defineProperty(control, 'lastChild', { get: () => control.children.at(-1) });
+		control.close = () => { control.remove(); ui.controls.splice(ui.controls.indexOf(control), 1); if (ui.confirm === control) ui.confirm = null; };
+		for (const link of Array.isArray(args[0]) ? args[0] : args) {
+			if (typeof link !== 'string' || link === 'stayleft' || link === 'nozoom') continue;
+			const button = new Element(); button.link = link; button.textContent = link; control.appendChild(button);
+		}
+		ui.controls.unshift(control); document.body.appendChild(control); return control;
+	};
 	ui.create.confirm = str => {
 		if (ui.confirm?.str === str) return;
 		ui.confirm?.close();
@@ -72,6 +82,7 @@ export function actionHarness({ style = '2', seconds = '15', config = {} } = {})
 		uncheck() { for (const items of Object.values(ui.selected)) items.length = 0; status.imchoosing = false; }, addVideo() {}, broadcast() {}, broadcastAll() {}, log() {}, delay() {},
 	});
 	vm.runInContext('Array.prototype.add = function(v) { if (!this.includes(v)) this.push(v); return this; }; Array.prototype.remove = function(v) { const i = this.indexOf(v); if (i >= 0) this.splice(i, 1); return this; };', context);
+	ui.controls = vm.runInContext('[]', context);
 	vm.runInContext(coreCode, context);
 	vm.runInContext(progressCode + '\ninitPrecontentUI();', context);
 	const timer = setupPlayerActionTimer({ lib, game, ui, get, _status: status }, { now: environment.now, setInterval, clearInterval });
@@ -107,6 +118,15 @@ export function actionHarness({ style = '2', seconds = '15', config = {} } = {})
 		vm.runInContext(source.slice(source.indexOf('export default')).replace('export default', 'globalThis.standardCards ='), context);
 		return context.standardCards.card[name];
 	}
+	function skin(name) {
+		const load = path => vm.runInContext(fs.readFileSync(new URL(path, import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replaceAll('export function ', 'function '), context);
+		load('../../src/core/app.js'); vm.runInContext('initApp(); globalThis.app = window.app;', context);
+		load('../../ui/lbtn/skins/base.js');
+		if (name !== 'base') load(`../../ui/lbtn/skins/${name}.js`);
+		const creator = `create${name.charAt(0).toUpperCase() + name.slice(1)}LbtnPlugin`;
+		const plugin = vm.runInContext(`${creator}(lib, game, ui, get, ai, _status, app)`, context);
+		plugin.initConfirmRewrite(); plugin.initCancelIntercept(); return plugin;
+	}
 	function stop() { for (const fn of lib.onover) fn(); }
-	return { ...dom, lib, game, ui, get, status, player, hand, calls, timer, intervals, context, event, wait, run, flush, card, stop };
+	return { ...dom, lib, game, ui, get, status, player, hand, calls, timer, intervals, context, event, wait, run, flush, card, skin, stop };
 }

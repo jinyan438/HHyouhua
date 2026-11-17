@@ -8,8 +8,10 @@ const CHOICES = new Set([
 export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environment = {}) {
 	if (game.hhPlayerActionTimer) return game.hhPlayerActionTimer;
 	const env = { now: () => performance.now(), setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: id => clearInterval(id), ...environment };
-	const hooks = [], announced = new WeakSet(), timedOut = new WeakSet();
+	const hooks = [], announced = new WeakSet(), operations = new WeakMap(), controlOwners = new WeakMap(), retired = new Set();
 	let current = null, consecutive = 0, resolving = 0, stopped = false;
+	let resumeSerial = 0;
+	let confirmFactory, controlFactory;
 	let lastAuto = !!_status.auto, lastPlayer = game.me, timedOutAuto = false;
 	const enabled = () => String(lib.config.extension_HH优化_jindutiaoYangshi) !== '0' && !_status.connectMode && !game.online && !_status.video;
 	const manual = event => enabled() && _status.gameStarted && !_status.over && !_status.auto && !game.notMe
@@ -25,6 +27,44 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 	function clear() {
 		current?.view?.remove();
 		current = null;
+	}
+	function operation(event) { return { event, controls: new Set(), started: false, timedOut: false }; }
+	function own(control, owner) {
+		if (!control) return;
+		const previous = controlOwners.get(control);
+		if (previous === owner) return;
+		previous?.controls.delete(control);
+		controlOwners.delete(control);
+		if (owner) {
+			owner.controls.add(control); controlOwners.set(control, owner);
+			if (owner.timedOut) retired.add(owner);
+		}
+	}
+	function observeControl(control) {
+		if (stopped || !control) return;
+		if (!enabled()) { own(control, null); return; }
+		const event = _status.event;
+		if (event && typeof event.switchToAuto === 'function') announced.add(event);
+		let owner = operations.get(event);
+		if (!owner && manual(event)) { owner = operation(event); operations.set(event, owner); }
+		// Reused containers transfer to the new event instead of being swept with the old one.
+		own(control, owner);
+		if (owner?.timedOut && resumeSerial > owner.resumeSerial) (owner.followups ??= new Set()).add(control);
+	}
+	function cleanupControls() {
+		for (const owner of [...retired]) {
+			for (const control of [...owner.controls]) {
+				owner.controls.delete(control);
+				if (controlOwners.get(control) !== owner) continue;
+				controlOwners.delete(control);
+				if (control.isConnected !== false || ui.confirm === control) {
+					if (typeof control.close === 'function') control.close();
+					else control.remove?.();
+				}
+				if (ui.confirm === control && !controlOwners.has(control)) ui.confirm = null;
+			}
+			if (!owner.controls.size) retired.delete(owner);
+		}
 	}
 	function refresh() {
 		if (!current) return;
@@ -46,9 +86,12 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 			game.resume();
 		} else if (typeof event.switchToAuto === 'function') {
 			// Custom promise-based choices must use their own resolver, not just game.resume().
+			const serial = resumeSerial;
 			event.switchToAuto();
-			if (_status.event === event && _status.paused) game.resume();
+			if (resumeSerial === serial && _status.event === event && _status.paused) game.resume();
 		} else if (!event.forced) {
+			// Skin cancel handlers treat a selection as "reselect"; expiry must abandon it.
+			game.uncheck();
 			ui.click.cancel();
 		} else {
 			// The next native choice step handles legal mandatory cards/targets and all later effects.
@@ -59,7 +102,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 	}
 	function expire(token) {
 		if (current !== token || _status.event !== token.event || !_status.paused || _status.paused2 || !manual(token.event)) return;
-		timedOut.add(token.event);
+		token.timedOut = true; token.resumeSerial = resumeSerial; retired.add(token);
 		clear();
 		consecutive++;
 		resolving++;
@@ -75,22 +118,33 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 			passive(token.event);
 		} finally {
 			resolving--;
+			// Adopt controls opened for the next choice before releasing the old operation.
+			if (!resolving) check(false);
 		}
 	}
 	function check(allowTimeout = true) {
-		if (stopped || resolving) return;
+		if (stopped) return;
+		watchControls();
+		if (resolving) return;
 		if (lastPlayer !== game.me || lastAuto !== !!_status.auto) {
 			clear(); consecutive = 0;
 			if (!_status.auto || lastPlayer !== game.me) timedOutAuto = false;
 			lastPlayer = game.me; lastAuto = !!_status.auto;
 		}
 		const event = _status.event;
-		if (!_status.paused || !manual(event)) { clear(); return; }
+		if (enabled() && ui.confirm && !controlOwners.has(ui.confirm)) own(ui.confirm, operations.get(event));
+		if (!_status.paused || !manual(event)) { clear(); cleanupControls(); return; }
 		const now = env.now();
 		if (current?.event !== event) {
 			clear();
-			timedOut.delete(event);
-			current = { event, duration: duration(event), elapsed: 0, lastTime: now, paused: !!_status.paused2, fraction: 1, view: null };
+			const pending = operations.get(event);
+			current = pending && !pending.started ? pending : operation(event);
+			Object.assign(current, { started: true, duration: duration(event), elapsed: 0, lastTime: now, paused: !!_status.paused2, fraction: 1, view: null });
+			operations.set(event, current);
+			// A resumed multi-step skill may open controls before pausing its next step.
+			for (const control of pending?.followups || []) if (controlOwners.get(control) === pending) own(control, current);
+			const owner = ui.confirm && controlOwners.get(ui.confirm);
+			if (!owner || owner.event === event) own(ui.confirm, current);
 			refresh();
 		}
 		const token = current;
@@ -98,15 +152,33 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 		token.lastTime = now; token.paused = !!_status.paused2;
 		token.fraction = token.duration ? Math.max(0, 1 - token.elapsed / token.duration) : 0;
 		token.view?.update(token.fraction);
+		cleanupControls();
 		if (allowTimeout && token.fraction === 0) expire(token);
 	}
 	function wrap(object, key, create) {
-		const original = object[key];
+		const original = object?.[key];
 		if (typeof original !== 'function') return;
 		const wrapped = create(original); object[key] = wrapped;
 		hooks.push(() => { if (object[key] === wrapped) object[key] = original; });
+		return wrapped;
 	}
+	function watchControls() {
+		// UI skins load after the timer and may replace these factories again.
+		if (ui.create?.confirm !== confirmFactory) confirmFactory = wrap(ui.create, 'confirm', original => function () {
+			const result = original.apply(this, arguments);
+			observeControl(ui.confirm);
+			return result;
+		});
+		if (ui.create?.control !== controlFactory) controlFactory = wrap(ui.create, 'control', original => function () {
+			const result = original.apply(this, arguments);
+			const links = Array.from(result?.childNodes || []).map(node => node.link).filter(link => link !== undefined);
+			if (links.length && links.every(link => ['ok', 'cancel', '确定', '取消'].includes(link))) observeControl(result);
+			return result;
+		});
+	}
+	watchControls();
 	wrap(game, 'countChoose', original => function () {
+		if (!stopped) watchControls();
 		const event = _status.event;
 		if (event && typeof event.switchToAuto === 'function') announced.add(event);
 		if (!stopped && manual(event)) {
@@ -120,18 +192,14 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 		const result = original.apply(this, arguments); check(false); return result;
 	});
 	wrap(game, 'resume', original => function () {
-		const token = current, event = _status.event, confirm = ui.confirm;
+		const token = current;
+		resumeSerial++;
 		const result = original.apply(this, arguments);
 		if (token && !_status.paused && current === token) {
 			if (!resolving && !_status.auto) consecutive = 0;
 			clear();
 		}
-		// Programmatic cancel/AI submission has no clicked button to close its parent control.
-		// Only release the confirmation owned by this completed timeout, never a later choice.
-		if (confirm && timedOut.has(event) && _status.event === event && !_status.paused && ui.confirm === confirm) {
-			confirm.close();
-			if (ui.confirm === confirm) ui.confirm = null;
-		}
+		if (!resolving) cleanupControls();
 		return result;
 	});
 	for (const key of ['pause2', 'resume2']) wrap(game, key, original => function () {
@@ -140,7 +208,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 	const timer = env.setInterval(() => check(), 32);
 	function stop() {
 		if (stopped) return;
-		stopped = true; env.clearInterval(timer); clear(); consecutive = 0; timedOutAuto = false;
+		stopped = true; env.clearInterval(timer); clear(); cleanupControls(); consecutive = 0; timedOutAuto = false;
 		for (const restore of hooks.reverse()) restore();
 	}
 	lib.onover.push(stop);

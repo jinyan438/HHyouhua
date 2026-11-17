@@ -145,4 +145,5 @@ export async function content(config) {
 	finalizeDecadeUICore(decadeUI, decadeUI.config);
 	registerLegacyModules(decadeUI.config);
 	await loadUIPlugins();
+	game.hhPlayerActionTimer?.check(false);
 }
