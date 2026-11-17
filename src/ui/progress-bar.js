@@ -207,19 +207,19 @@ const createAIProgressBar = isPhase => {
 
 	if (isShousha) {
 		container.style.cssText =
-			"display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);left:3.5px;bottom:-6.2px;";
+			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:5px;height:5px;";
 		boxTime.data = 120;
 		boxTime.style.cssText =
-			"z-index:92;width:120px;height:3px;margin:1px;background-color:#dd9900;position:absolute;top:0;";
+			"z-index:92;left:1px;width:calc(100% - 2px);height:3px;background-color:#dd9900;position:absolute;top:1px;";
 		imgBg.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/uibutton/time.png`;
-		imgBg.style.cssText = "position:absolute;z-index:91;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);top:0;";
+		imgBg.style.cssText = "position:absolute;z-index:91;left:0;top:0;width:100%;height:100%;";
 	} else {
 		container.style.cssText =
-			"display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);left:1.5px;bottom:-14px;";
+			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:5px;height:6px;";
 		boxTime.data = 120;
-		boxTime.style.cssText = "z-index:91;width:120px;height:3.3px;margin:1px;background-color:#f2c84b;position:absolute;top:0;border-radius:3px;";
+		boxTime.style.cssText = "z-index:91;left:1px;width:calc(100% - 2px);height:3.3px;background-color:#f2c84b;position:absolute;top:1px;border-radius:3px;";
 		imgBg.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/uibutton/timeX.png`;
-		imgBg.style.cssText = "position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);top:0;";
+		imgBg.style.cssText = "position:absolute;z-index:90;left:0;top:0;width:100%;height:100%;";
 	}
 
 	container.appendChild(boxTime);
@@ -423,6 +423,10 @@ const setupWatcher = config => {
 			entry.tip = createTipImg("hh-ai-thinking", "tip.png");
 			entry.tip.alt = "出牌 思考中…";
 			entry.tip.setAttribute("role", "status");
+			Object.assign(entry.tip.style, {
+				left: "0", top: "calc(100% + 4px)", bottom: "auto",
+				width: "100%", height: "auto", transform: "none", pointerEvents: "none",
+			});
 			player.appendChild(entry.tip);
 		}
 
