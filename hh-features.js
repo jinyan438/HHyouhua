@@ -358,7 +358,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				if (delay <= 0) return;
 				parents.forEach(parent => { parent._HH_aiThinkChildDelayed = true; });
 				const progress = game.hhAIThinkProgress;
-				const thinking = progress?.begin(player, delay, delay >= 600 && lib.config.extension_HH优化_ai_think_delay_popup !== false);
+				const thinking = progress?.begin(player, delay, delay >= 600 && lib.config.extension_HH优化_ai_think_delay_popup !== false, event);
 				try {
 					await HH_sleep(delay);
 				} finally {

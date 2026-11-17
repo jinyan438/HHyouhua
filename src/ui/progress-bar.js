@@ -463,11 +463,21 @@ const setupWatcher = config => {
 		showAI(player, thought);
 	};
 
-	const showAllAI = () => {
+	const showAllAI = (thought = null) => {
 		const players = game.players.filter(p => p !== game.me);
-		if (aiPlayers.size === players.length && players.every(p => aiPlayers.has(p) && !aiPlayers.get(p).thought)) return;
+		if (aiPlayers.size === players.length && players.every(p => aiPlayers.get(p)?.thought === thought)) return;
 		hideAllAI();
-		players.forEach(p => showAI(p));
+		players.forEach(p => showAI(p, thought));
+	};
+	const isWuxieChoice = event => {
+		const seen = new Set();
+		while (event && !seen.has(event)) {
+			seen.add(event);
+			if (event.type === 'wuxie' || event.name === '_wuxie') return true;
+			if (['useCard', 'useSkill', 'respond', 'phaseUse'].includes(event.name)) break;
+			event = event.getParent?.();
+		}
+		return false;
 	};
 
 	const check = () => {
@@ -476,11 +486,13 @@ const setupWatcher = config => {
 		if (_status.over || game.hhRescueFlow?.active) { hideAllAI(); return; }
 		// 原生暂停状态不覆盖独立的 AI 等待；同一次思考复用节点和起始时间。
 		if (thinking) {
-			showOneAI(thinking.player, thinking);
+			// 无懈询问的所有 AI 共用显示时钟，不能暴露实际响应者。
+			if (thinking.wuxie) showAllAI(thinking);
+			else showOneAI(thinking.player, thinking);
 			return;
 		}
 		const waiting = event?.player && (_status.paused || _status.imchoosing);
-		const isWuxie = event?.type === "wuxie";
+		const isWuxie = isWuxieChoice(event);
 
 		if (waiting) {
 			if (isWuxie) {
@@ -508,9 +520,9 @@ const setupWatcher = config => {
 	};
 
 	game.hhAIThinkProgress = {
-		begin(player, duration, showTip) {
+		begin(player, duration, showTip, event = _status.event) {
 			if (_status.over || !player || !(duration > 0)) return null;
-			thinking = { player, duration, showTip, startedAt: performance.now() };
+			thinking = { player, duration, showTip, startedAt: performance.now(), wuxie: isWuxieChoice(event) };
 			check();
 			return thinking;
 		},

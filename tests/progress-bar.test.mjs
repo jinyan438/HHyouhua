@@ -154,6 +154,51 @@ test('manual player waits and Wuxie multiple-seat timers retain their normal lif
 	assert.ok(h.players.every(player => !bar(player))); h.stop();
 });
 
+test('an unpaused AI Wuxie thought masks the responder across every other seat without inspecting cards or skills', () => {
+	for (const style of ['off', 'on']) {
+		const h = fixture(style), responder = h.players[1];
+		for (const player of h.players) {
+			player.getCards = player.hasWuxie = player.hasSkillTag = () => { throw new Error('Hidden response capability must not affect presentation'); };
+		}
+		h.status.event = { name: 'chooseToUse', type: 'wuxie', player: responder };
+		h.status.paused = false; h.status.imchoosing = false;
+		const token = h.progress.begin(responder, 1920, true), nodes = h.players.slice(1).map(bar);
+		assert.equal(bar(h.game.me), null); assert.ok(nodes.every(Boolean));
+		assert.ok(h.players.slice(1).every(player => player.querySelector('.hh-ai-thinking')));
+		h.advance(960);
+		assert.deepEqual(h.players.slice(1).map(bar), nodes, 'Keep the whole group stable during engine ticks');
+		assert.ok(nodes.every(node => Math.abs(fraction(node) - .936) < 1e-9));
+		h.progress.end(token); h.advance(100);
+		assert.ok(h.players.every(player => !bar(player) && !player.querySelector('.hh-ai-thinking')));
+		h.stop(); assert.equal(h.intervals.size, 0);
+	}
+});
+
+test('nested Wuxie skill choices keep the mask even if the global event changes during the wait', () => {
+	const h = fixture(), responder = h.players[2];
+	const question = { name: 'chooseToUse', type: 'wuxie', getParent: () => ({ name: '_wuxie' }) };
+	const skill = { name: 'chooseButton', player: responder, getParent: () => question };
+	h.status.event = { name: 'skillResolution', player: responder };
+	const first = h.progress.begin(responder, 1920, true, skill);
+	assert.ok(h.players.slice(1).every(player => bar(player) && player.querySelector('.hh-ai-thinking')));
+	h.advance(500);
+	const second = h.progress.begin(h.players[1], 960, false, question), nodes = h.players.slice(1).map(bar);
+	h.progress.end(first); h.advance(480);
+	assert.deepEqual(h.players.slice(1).map(bar), nodes);
+	assert.ok(nodes.every(node => Math.abs(fraction(node) - .968) < 1e-9));
+	assert.ok(h.players.every(player => !player.querySelector('.hh-ai-thinking')), 'Honor the global hint setting for every seat');
+	h.progress.end(second); h.stop(); assert.equal(h.intervals.size, 0);
+});
+
+test('ordinary play inside a resolved Wuxie card keeps its own single-seat thinking display', () => {
+	const h = fixture(), responder = h.players[1];
+	const inquiry = { name: '_wuxie' }, resolved = { name: 'useCard', getParent: () => inquiry };
+	const choice = { name: 'chooseTarget', player: responder, getParent: () => resolved };
+	const token = h.progress.begin(responder, 1920, true, choice);
+	assert.ok(bar(responder)); assert.equal(bar(h.players[2]), null); assert.equal(bar(h.game.me), null);
+	h.progress.end(token); h.stop();
+});
+
 test('rescue prompts take precedence and game over clears bars, hints and animation timers', () => {
 	const h = fixture(), player = h.players[1], token = h.progress.begin(player, 1920, true);
 	h.game.hhRescueFlow = { active: true }; h.advance(100);

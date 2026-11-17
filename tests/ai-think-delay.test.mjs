@@ -108,13 +108,14 @@ test('思考开始即传入实际等待时长，直到等待完成才清理提�
     let finish;
     const h = setup({ schedule: callback => { finish = callback; } }), calls = [], token = {};
     h.game.hhAIThinkProgress = {
-        begin(player, duration, showTip) { calls.push({ player, duration, showTip }); return token; },
+        begin(player, duration, showTip, event) { calls.push({ player, duration, showTip, event }); return token; },
         end(value) { assert.equal(value, token); calls.push('end'); },
     };
-    const pending = h.think.delay(h.use('sha'));
+    const event = h.use('sha'), pending = h.think.delay(event);
     assert.equal(calls.length, 1);
     assert.equal(calls[0].player, h.player);
     assert.equal(calls[0].duration, h.waits[0]);
+    assert.equal(calls[0].event, event, 'Presentation receives the actual decision, including Wuxie context');
     assert.ok(calls[0].duration >= 600); assert.equal(calls[0].showTip, true);
     assert.deepEqual(h.popups, [], 'Use a persistent hint instead of the transient damage popup');
     finish(); await pending;
