@@ -186,7 +186,8 @@
 
 /** 出牌提示 */
 
-#arena > .hand-tip {
+#arena > .hand-tip,
+#jindutiaopl > .hh-ol-progress-prompt {
 	left: 150px;
 	right: 150px;
 	bottom: calc(20% + 14px);
@@ -206,7 +207,8 @@
 	bottom: calc(23% + 18px);
 }
 
-#arena > .hand-tip::before {
+#arena > .hand-tip::before,
+#jindutiaopl > .hh-ol-progress-prompt::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
@@ -220,20 +222,40 @@
 }
 
 /* 提示文字颜色 */
-#arena > .hand-tip > span[data-type="phase"] {
+#arena > .hand-tip > span[data-type="phase"],
+#jindutiaopl > .hh-ol-progress-prompt > span[data-type="phase"] {
 	color: rgb(245, 145, 5);
 }
 
-#arena > .hand-tip > span[data-type="player"] {
+#arena > .hand-tip > span[data-type="player"],
+#jindutiaopl > .hh-ol-progress-prompt > span[data-type="player"] {
 	color: rgb(200, 140, 75);
 }
 
-#arena > .hand-tip > span[data-type="number"] {
+#arena > .hand-tip > span[data-type="number"],
+#jindutiaopl > .hh-ol-progress-prompt > span[data-type="number"] {
 	color: rgb(255, 155, 0);
 }
 
-#arena > .hand-tip > span[data-type="card"] {
+#arena > .hand-tip > span[data-type="card"],
+#jindutiaopl > .hh-ol-progress-prompt > span[data-type="card"] {
 	color: rgb(255, 150, 0);
+}
+
+#jindutiaopl > .hh-ol-progress-prompt {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 4px;
+	height: auto;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	z-index: 3;
+}
+
+body:has(> #jindutiaopl.hh-ol-progress > .hh-ol-progress-prompt:not(:empty)) #arena > .hand-tip {
+	opacity: 0 !important;
+	transition: none;
 }
 
 /* 提示信息栏 */

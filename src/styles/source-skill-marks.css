@@ -27,6 +27,7 @@
 #arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark] {
 	display: flex;
 	position: relative;
+	left: -4px;
 	align-items: center;
 	justify-content: center;
 	width: max-content;

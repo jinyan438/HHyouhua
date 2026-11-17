@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { actionHarness } from './helpers/player-action-harness.mjs';
 
-test('all four player bar styles use the same 15-second deadline and share one time source with expiry', () => {
-	for (const style of ['1', '2', '3', '4']) {
+test('all player bar styles use the same 15-second deadline and share one time source with expiry', () => {
+	for (const style of ['1', '2', '3', '4', '5']) {
 		const h = actionHarness({ style, config: { extension_HH优化_jindutiaoST: '10' } }), evt = h.event('chooseBool'); h.wait(evt);
 		h.advance(7488);
 		const bar = h.document.getElementById('jindutiaopl');

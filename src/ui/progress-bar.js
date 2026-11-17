@@ -158,6 +158,31 @@ const getProgressBarConfig = () => {
 			},
 			clearSpecial: true,
 		},
+		5: {
+			container: {
+				width: "min(748px, calc(100vw - 32px))",
+				height: "15px",
+				position: "fixed",
+				left: "50%",
+				transform: "translateX(-50%)",
+				bottom,
+			},
+			progressBar: {
+				data: 746,
+				style: "position:absolute;z-index:1;left:1px;top:0;width:calc(100% - 2px);height:11px;background-size:100% 100%;background-repeat:no-repeat;",
+				image: "extension/HH优化/assets/ol-client-progress/sliderbar_bar_newgame.png",
+			},
+			backgroundImage: {
+				src: "extension/HH优化/assets/ol-client-progress/sliderbar_bg_newgame.png",
+				style: "position:absolute;z-index:0;left:0;top:0;width:100%;height:100%;",
+			},
+			progressHead: {
+				src: "extension/HH优化/assets/ol-client-progress/sliderbar_bar_newgame_light.png",
+				style: "position:absolute;z-index:2;top:-5px;width:67px;height:19px;transform:translateX(-67px);",
+			},
+			showPrompt: true,
+			clearSpecial: true,
+		},
 	};
 	return configs[styleType] ?? configs[1];
 };
@@ -193,36 +218,30 @@ const createDiv = (data, style) => {
 /**
  * 创建AI进度条
  * @param {boolean} isPhase - 是否为阶段进度条
- * @returns {{container: HTMLDivElement, boxTime: HTMLDivElement}}
+ * @returns {{container: HTMLDivElement, boxTime: HTMLDivElement, head: HTMLImageElement}}
  */
 const createAIProgressBar = isPhase => {
 	const container = document.createElement("div");
 	const boxTime = document.createElement("div");
 	const imgBg = document.createElement("img");
-	const isShousha = isShoushaSyle();
+	const assets = `${lib.assetURL}extension/HH优化/assets/ai-thinking-progress/`;
 
 	container.classList.add(isPhase ? "timePhase" : "timeai");
 
-	if (isShousha) {
-		container.style.cssText =
-			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:3px;height:5px;";
-		boxTime.data = 120;
-		boxTime.style.cssText =
-			"z-index:92;left:1px;width:calc(100% - 2px);height:3px;background-color:#dd9900;position:absolute;top:1px;";
-		imgBg.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/uibutton/time.png`;
-		imgBg.style.cssText = "position:absolute;z-index:91;left:0;top:0;width:100%;height:100%;";
-	} else {
-		container.style.cssText =
-			"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:3px;height:6px;";
-		boxTime.data = 120;
-		boxTime.style.cssText = "z-index:91;left:1px;width:calc(100% - 2px);height:3.3px;background-color:#f2c84b;position:absolute;top:1px;border-radius:3px;";
-		imgBg.src = `${lib.assetURL}extension/HH优化/ui/assets/lbtn/uibutton/timeX.png`;
-		imgBg.style.cssText = "position:absolute;z-index:90;left:0;top:0;width:100%;height:100%;";
-	}
+	container.style.cssText =
+		"display:block;position:absolute;pointer-events:none;z-index:90;left:4px;right:4px;width:auto;bottom:1px;height:6px;";
+	boxTime.data = 120;
+	boxTime.style.cssText =
+		`position:absolute;z-index:92;left:1px;top:1px;width:calc(100% - 2px);height:3.6667px;background-image:url("${assets}seatui_countdown_bar_yellow.png");background-size:100% 100%;background-repeat:no-repeat;`;
+	imgBg.src = `${assets}sliderbar_bg_newgame.png`;
+	imgBg.style.cssText = "position:absolute;z-index:91;left:0;top:0;width:100%;height:100%;";
+	const head = createImg("extension/HH优化/assets/ai-thinking-progress/sliderbar_bar_newgame_light.png",
+		"position:absolute;z-index:93;top:-0.3333px;width:22.3333px;height:6.3333px;transform:translateX(-20.3333px);");
 
 	container.appendChild(boxTime);
 	container.appendChild(imgBg);
-	return { container, boxTime };
+	container.appendChild(head);
+	return { container, boxTime, head };
 };
 
 /**
@@ -277,6 +296,16 @@ export function initPrecontentUI() {
 				container.appendChild(img);
 			});
 		}
+		const progressHead = cfg.progressHead ? createImg(cfg.progressHead.src, cfg.progressHead.style) : null;
+		if (progressHead) container.appendChild(progressHead);
+		let prompt = null;
+		if (cfg.showPrompt) {
+			container.classList.add("hh-ol-progress");
+			prompt = document.createElement("div");
+			prompt.className = "hh-ol-progress-prompt";
+			prompt.setAttribute("aria-hidden", "true");
+			container.appendChild(prompt);
+		}
 
 		document.body.appendChild(container);
 		boxTime.style.width ||= `${cfg.progressBar.data}px`;
@@ -289,9 +318,25 @@ export function initPrecontentUI() {
 			update(fraction) {
 				const remaining = Math.max(0, Math.min(1, fraction));
 				container.setAttribute("aria-valuenow", String(Math.round(remaining * 100)));
-				boxTime.style.transform = `scaleX(${remaining})`;
-				boxTime.style.backgroundColor = remaining <= 1 / 3 ? "rgba(230,56,65,0.88)" : "rgb(230,151,91)";
+				if (cfg.progressBar.image) {
+					// 裁去已消耗的部分，保留原版纹理及末端光效的尺寸。
+					boxTime.style.clipPath = `inset(0 ${(1 - remaining) * 100}% 0 0)`;
+					boxTime.style.backgroundImage = `url("${lib.assetURL}${cfg.progressBar.image}")`;
+					progressHead.style.left = `calc(6px + (100% - 2px) * ${remaining})`;
+					progressHead.style.visibility = remaining > 0 ? "visible" : "hidden";
+				} else {
+					boxTime.style.transform = `scaleX(${remaining})`;
+					boxTime.style.backgroundColor = remaining <= 1 / 3 ? "rgba(230,56,65,0.88)" : "rgb(230,151,91)";
+				}
 				if (boxTime2) boxTime2.style.transform = `scaleX(${remaining})`;
+				if (prompt) {
+					// 原提示仍由出牌模块管理，只在进度条上同步其当前内容。
+					const tip = Array.from(ui.arena?.querySelectorAll?.(".hand-tip") ?? [])
+						.find(node => !node.closed && !node.classList.contains("hidden") && node.style.display !== "none" && node.textContent.trim());
+					const html = tip?.innerHTML ?? "";
+					if (prompt.innerHTML !== html) prompt.innerHTML = html;
+					prompt.dataset.text = tip?.dataset.text ?? "";
+				}
 			},
 			remove() {
 				if (timer !== null) { clearInterval(timer); if (window.timer === timer) delete window.timer; }
@@ -411,7 +456,7 @@ const setupWatcher = config => {
 		removeFirst(player, "timeai");
 		removeFirst(player, "timePhase");
 
-		const { container, boxTime } = createAIProgressBar(_status.currentPhase === player);
+		const { container, boxTime, head } = createAIProgressBar(_status.currentPhase === player);
 		if (thought?.rescue) container.classList.add('hh-rescue-progress');
 		player.appendChild(container);
 		const entry = { container, thought, timer: null, tip: null };
@@ -435,6 +480,8 @@ const setupWatcher = config => {
 			const elapsed = thought?.elapsed?.() ?? performance.now() - startedAt;
 			const remaining = Math.max(0, 1 - elapsed / AI_PROGRESS_DURATION);
 			boxTime.style.transform = `scaleX(${remaining})`;
+			head.style.left = `calc(1px + (100% - 2px) * ${remaining})`;
+			head.style.visibility = remaining > 0 ? "visible" : "hidden";
 			if (remaining === 0) {
 				clearInterval(entry.timer);
 				// 模拟思考由实际等待的 finally 清理，避免动画先结束时闪回普通进度条。

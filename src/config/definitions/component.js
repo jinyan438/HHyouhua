@@ -36,6 +36,7 @@ export const jindutiaoYangshi = {
 		2: "十周年PC端进度条",
 		3: "十周年客户端进度条",
 		4: "一将成名进度条",
+		5: "OL客户端进度条",
 	},
 	update: onJindutiaoYangshiUpdate,
 };
