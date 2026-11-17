@@ -1,5 +1,6 @@
 import { createSelectionPlayerVisual, findSelectionPlayerTemplate, captureSelectionPlayerLayout } from './src/ui/selectionPlayer.js';
 import { createSelectionFreePick } from './src/ui/selectionFreePick.js';
+import { bindSelectionCardInput } from './src/ui/selectionCardInput.js';
 
 // Keep the engine's real buttons, links and chooseButton event throughout selection.
 export function installIdentitySelection(lib, game, ui, get, _status) {
@@ -75,7 +76,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const decorated = new Set();
 		const listen = (node, type, callback, capture = false) => node.addEventListener(type, callback, { capture, signal: listeners.signal });
 		let disposed = false, popup = null, animation = null, seenIdentity = parent._hhRevealedIdentity || '';
-		let pendingButton = null, skillPanel = null;
+		let pendingButton = null, skillPanel = null, skillButton = null;
 		let lordName = '';
 		const later = (callback, delay) => {
 			const timer = setTimeout(() => { timers.delete(timer); if (!disposed) callback(); }, delay);
@@ -96,6 +97,9 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const closeSkills = () => {
 			skillPanel?.remove();
 			skillPanel = null;
+			skillButton?.removeAttribute('aria-controls');
+			skillButton?.removeAttribute('aria-expanded');
+			skillButton = null;
 			for (const button of decorated) {
 				button.removeAttribute('aria-controls');
 				button.removeAttribute('aria-expanded');
@@ -122,16 +126,19 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			return pickedButtons.has(button) ? available(button.link) : originalFilter.call(this, button, ...args);
 		};
 		event.filterButton = pointFilter;
-		const picker = createSelectionFreePick({ lib, ui, get }, { root, available, paintCard, onPick: pickGeneral });
+		const picker = createSelectionFreePick({ lib, ui, get }, {
+			root, available: name => available(name) && !ui.selected.buttons.some(button => source(button.link) === source(name)),
+			paintCard, onPick: pickGeneral, onPreview: showSkills, onClearPreview: closeSkills, onPosition: positionSkills,
+		});
 		listen(pointEntry, 'click', e => {
 			e.stopPropagation();
-			if (disposed || !isCurrent() || root.classList.contains('hh-revealing')) return;
+			if (disposed || !isCurrent() || picker.isOpen || root.classList.contains('hh-revealing')) return;
 			clearPending(); closePopup(); picker.open();
 		});
 		function pickGeneral(name) {
 			if (disposed || !isCurrent() || !available(name)) return;
 			const existing = dialog.buttons.find(button => button.link === name && event.filterButton(button, game.me));
-			if (existing) { existing.focus({ preventScroll: true }); chooseCard(existing); return; }
+			if (existing) { existing.focus({ preventScroll: true }); chooseCard(existing, true); return; }
 			clearPending();
 			if (pointCard && ui.selected.buttons.includes(pointCard)) {
 				// Keep a confirmed first general when picking a second one in double-character games.
@@ -145,7 +152,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			pointSlot.classList.add('hh-point-filled'); decorate(pointCard);
 			// Refresh the native legality cache without clearing a confirmed first general.
 			delete event._buttonChoice; game.check();
-			pointCard.focus({ preventScroll: true }); chooseCard(pointCard);
+			pointCard.focus({ preventScroll: true }); chooseCard(pointCard, true);
 		}
 		main.appendChild(dialog);
 		dialog.classList.add('hh-selection-dialog', 'fixed');
@@ -210,11 +217,15 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		function refreshButton(button, name) {
 			clearPending();
 			closePopup();
-			game.uncheck();
+			ui.selected.buttons.remove(button);
+			button.classList.remove('selected');
 			button.link = name;
 			button.refresh(button, name);
+			delete event._buttonChoice;
 			decorate(button);
 			game.check();
+			button.focus({ preventScroll: true });
+			chooseCard(button);
 		}
 
 		function reroll(button) {
@@ -267,12 +278,12 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				card.setAttribute('role', 'button');
 				card.tabIndex = 0;
 				card.setAttribute('aria-label', get.translation(name));
-				card.addEventListener('click', e => { e.stopPropagation(); refreshButton(button, name); });
-				card.addEventListener('keydown', e => {
-					if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); refreshButton(button, name); }
-				});
+				bindSelectionCardInput(card, { activate: () => refreshButton(button, name), listen, later, cancel });
 			}
 			root.appendChild(popup);
+			for (const type of ['pointerdown', 'mousedown', 'touchstart', 'touchmove', 'touchend', 'click', 'wheel']) {
+				popup.addEventListener(type, e => e.stopPropagation());
+			}
 			// Coordinates are converted to the game window's CSS space (which can be zoomed).
 			const bounds = root.getBoundingClientRect();
 			const anchor = button.getBoundingClientRect();
@@ -285,21 +296,23 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		}
 
 		function positionSkills() {
-			if (!skillPanel || !pendingButton?.isConnected) return;
-			const bounds = root.getBoundingClientRect();
-			const anchor = pendingButton.getBoundingClientRect();
-			const scale = bounds.width / root.clientWidth || 1;
+			if (!skillPanel || !skillButton?.isConnected) return;
+			const host = skillPanel.parentNode, inPicker = host !== root;
+			const bounds = host.getBoundingClientRect();
+			const anchor = skillButton.getBoundingClientRect();
+			const scale = bounds.width / host.clientWidth || 1;
 			const left = (anchor.left - bounds.left) / scale;
 			const right = (anchor.right - bounds.left) / scale;
 			const width = skillPanel.offsetWidth, height = skillPanel.offsetHeight;
 			// Keep the confirmation card clear; the reference panel sits to its left.
-			const x = left - width - 20 >= (doudizhu ? 16 : 654) ? left - width - 20 : right + 20;
-			skillPanel.style.left = `${Math.max(16, Math.min(x, root.clientWidth - width - 16))}px`;
-			skillPanel.style.top = `${Math.max(143, Math.min((anchor.top - bounds.top) / scale - 97, 1110 - height))}px`;
+			const x = left - width - 20 >= (inPicker || doudizhu ? 16 : 654) ? left - width - 20 : right + 20;
+			skillPanel.style.left = `${Math.max(16, Math.min(x, host.clientWidth - width - 16))}px`;
+			skillPanel.style.top = `${Math.max(inPicker ? 112 : 143, Math.min((anchor.top - bounds.top) / scale - 97, (inPicker ? host.clientHeight - 16 : 1110) - height))}px`;
 		}
 
-		function showSkills(button) {
+		function showSkills(button, host = root) {
 			closeSkills();
+			skillButton = button;
 			const panel = document.createElement('div');
 			skillPanel = panel;
 			panel.className = 'hh-skill-panel';
@@ -354,7 +367,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				panel.addEventListener(type, e => e.stopPropagation());
 			}
 			panel.append(content, ...arrows);
-			root.appendChild(panel);
+			host.appendChild(panel);
 			button.setAttribute('aria-controls', panel.id);
 			button.setAttribute('aria-expanded', 'true');
 			positionSkills();
@@ -382,9 +395,9 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			updateConfirmation();
 		}
 
-		function chooseCard(button) {
-			if (disposed || !isCurrent() || root.classList.contains('hh-revealing') ||
-				_status.dragged || _status.justdragged || _status.draggingtouchdialog) return;
+		function chooseCard(button, confirm = false) {
+			// Card movement is checked by our gesture handler, independently of native drag state.
+			if (disposed || !isCurrent() || picker.isOpen || root.classList.contains('hh-revealing')) return;
 			closePopup();
 			const current = _status.event;
 			if (ui.selected.buttons.includes(button)) {
@@ -396,7 +409,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				return;
 			}
 			if (!button.classList.contains('selectable')) return;
-			if (pendingButton !== button) {
+			if (pendingButton !== button && !confirm) {
 				// Preview only. Do not touch engine selection, even when auto-confirm is enabled.
 				pendingButton = button;
 				updateConfirmation();
@@ -438,56 +451,12 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			hint.className = 'hh-variant-hint';
 			hint.textContent = '长按';
 			button.appendChild(hint);
-			let timer, start, held = false, suppressUntil = 0, touchClickUntil = 0, moved = false;
-			const stop = () => { cancel(timer); timer = null; };
-			listen(button, 'pointerdown', e => {
-				if (e.button !== 0 || !e.isPrimary) return;
-				stop(); held = false; suppressUntil = 0; moved = false;
-				start = { x: e.clientX, y: e.clientY, swap: e.target === swap };
-				if (start.swap) { e.preventDefault(); e.stopPropagation(); }
-				timer = later(() => {
-					if (variants(button).length < 2) return;
-					held = true;
-					suppressUntil = Date.now() + 1000;
-					showVariants(button);
-				}, 500);
-			}, true);
-			listen(button, 'pointermove', e => {
-				if (start && Math.hypot(e.clientX - start.x, e.clientY - start.y) > 12) { stop(); start = null; moved = true; }
-			});
-			listen(button, 'pointerleave', () => { stop(); start = null; });
-			listen(button, 'pointercancel', () => { stop(); start = null; moved = true; });
-			listen(button, 'pointerup', e => {
-				stop();
-				if (held || start?.swap) {
-					e.preventDefault(); e.stopPropagation();
-					suppressUntil = Date.now() + 1000;
-					if (!held && start?.swap) reroll(button);
-				}
-				start = null;
-			}, true);
-			// Prevent the engine's own touch-intro timer from competing with the version picker.
-			listen(button, 'mousedown', e => e.stopImmediatePropagation(), true);
-			listen(button, 'touchstart', e => e.stopPropagation(), true);
-			for (const type of ['click', 'touchend']) listen(button, type, e => {
-				e.preventDefault(); e.stopImmediatePropagation();
-				if (e.target === swap || held || Date.now() < suppressUntil) {
-					if (type === 'click' && e.detail === 0 && !held && Date.now() >= suppressUntil) reroll(button);
-					return;
-				}
-				if (moved || (type === 'click' && Date.now() < touchClickUntil)) return;
-				// A tap may synthesize a mouse click; it must never count as both presses.
-				if (type === 'touchend') touchClickUntil = Date.now() + 700;
-				chooseCard(button);
-			}, true);
-			listen(button, 'keydown', e => {
-				if (e.target !== button || !['Enter', ' '].includes(e.key) || e.repeat) return;
-				e.preventDefault(); e.stopPropagation();
-				chooseCard(button);
-			});
-			listen(button, 'contextmenu', e => { e.preventDefault(); e.stopImmediatePropagation(); }, true);
-			listen(swap, 'keydown', e => {
-				if (e.key === 'ArrowDown') { e.preventDefault(); showVariants(button); }
+			bindSelectionCardInput(button, {
+				activate: () => chooseCard(button), swap, reroll: () => reroll(button), listen, later, cancel,
+				hold: () => {
+					if (variants(button).length < 2 || !isCurrent()) return false;
+					showVariants(button); return true;
+				},
 			});
 		}
 
@@ -622,6 +591,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		// decorate() is idempotent; attribute changes are deliberately not observed.
 		sync();
 		const clickAway = e => {
+			if (picker.isOpen) { picker.clearPreview(); return; }
 			if (popup && !popup.contains(e.target) && !e.target.closest('.hh-general')) closePopup();
 			if (skillPanel && !skillPanel.contains(e.target) && !e.target.closest('.hh-general')) clearPending();
 		};

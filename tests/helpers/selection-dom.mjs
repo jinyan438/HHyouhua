@@ -79,8 +79,9 @@ export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role
 	const context = vm.createContext({ document, window, lib, game, get, ui, _status, ResizeObserver: Observer, MutationObserver: Observer, AbortController: Controller, setTimeout: dom.environment.setTimer, clearTimeout: dom.environment.clearTimer,
 		findSelectionPlayerTemplate: () => null, createSelectionPlayerVisual() { throw new Error('Unexpected player initialization'); }, captureSelectionPlayerLayout() {} });
 	const source = fs.readFileSync(new URL('../../identity-selection.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export function ', 'function ');
-	const picker = fs.readFileSync(new URL('../../src/ui/selectionFreePick.js', import.meta.url), 'utf8').replace('export function ', 'function ');
-	vm.runInContext(picker + '\n' + source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
+	const picker = fs.readFileSync(new URL('../../src/ui/selectionFreePick.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export function ', 'function ');
+	const input = fs.readFileSync(new URL('../../src/ui/selectionCardInput.js', import.meta.url), 'utf8').replace('export function ', 'function ');
+	vm.runInContext(input + '\n' + picker + '\n' + source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
 	lib.arenaReady.forEach(fn => fn());
 	return { ...dom, context, lib, game, get, ui, _status, parent, event, dialog, calls, observers, own, open() { dialog.open(); game.check(); return dialog._hhSelection; } };
 }

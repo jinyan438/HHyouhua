@@ -1,10 +1,19 @@
+import { bindSelectionCardInput } from './selectionCardInput.js';
+
 const plain = value => String(value || '').replace(/<[^>]*>/g, '').trim();
 const normalize = value => plain(value).normalize('NFKC').toLowerCase().replace(/\s+/g, '');
 
 // This picker only returns an id. The opening dialog owns selection and submission.
-export function createSelectionFreePick({ lib, ui, get }, { root, available, paintCard, onPick }) {
-	let panel = null, previousFocus = null;
+export function createSelectionFreePick({ lib, ui, get }, { root, available, paintCard, onPick, onPreview, onClearPreview, onPosition }) {
+	let panel = null, previousFocus = null, pending = null, inputs = [];
+	const clearPreview = () => {
+		pending?.classList.remove('hh-pending');
+		pending?.setAttribute('aria-pressed', 'false');
+		pending = null; onClearPreview?.();
+	};
+	const stopInputs = () => { for (const input of inputs) input.destroy(); inputs = []; };
 	const close = (restoreFocus = true) => {
+		clearPreview(); stopInputs();
 		panel?.remove(); panel = null;
 		if (restoreFocus && previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
 	};
@@ -36,16 +45,23 @@ export function createSelectionFreePick({ lib, ui, get }, { root, available, pai
 				const card = ui.create.button(id, 'character', undefined, true);
 				card.classList.add('hh-general'); paintCard(card); card.tabIndex = 0;
 				card.setAttribute('role', 'button'); card.setAttribute('aria-label', plain(get.translation(id)));
-				const pick = () => { if (available(id)) { close(false); onPick(id); } };
-				card.addEventListener('click', e => { e.stopPropagation(); pick(); });
-				card.addEventListener('keydown', e => {
-					if (['Enter', ' '].includes(e.key) && !e.repeat) { e.preventDefault(); e.stopPropagation(); pick(); }
-				});
+				card.setAttribute('aria-pressed', 'false');
+				const confirmation = document.createElement('span');
+				confirmation.className = 'hh-card-confirm'; confirmation.textContent = '确认选择'; card.appendChild(confirmation);
+				inputs.push(bindSelectionCardInput(card, { activate: () => {
+					if (!available(id)) { clearPreview(); return; }
+					if (pending !== card) {
+						clearPreview(); pending = card; card.classList.add('hh-pending'); card.setAttribute('aria-pressed', 'true');
+						onPreview?.(card, panel); return;
+					}
+					close(false); onPick(id);
+				} }));
 				grid.appendChild(card);
 			}
 			shown = Math.min(shown + 40, filtered.length);
 		}
 		function render() {
+			clearPreview(); stopInputs();
 			const query = normalize(search.value);
 			filtered = names.filter(id => (!pack || Object.hasOwn(lib.characterPack[pack], id)) && (!query || index.get(id).includes(query)));
 			grid.replaceChildren(); grid.scrollTop = 0; shown = 0;
@@ -63,7 +79,10 @@ export function createSelectionFreePick({ lib, ui, get }, { root, available, pai
 			addPack(id, plain(lib.translate?.[id + '_character_config'] || lib.translate?.[id] || id.replace(/^mode_extension_/, '')));
 		}
 		search.addEventListener('input', render);
-		grid.addEventListener('scroll', () => { if (grid.scrollHeight - grid.scrollTop - grid.clientHeight < 500) more(); });
+		grid.addEventListener('scroll', () => {
+			onPosition?.();
+			if (grid.scrollHeight - grid.scrollTop - grid.clientHeight < 500) more();
+		});
 		panel.addEventListener('keydown', e => {
 			if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
 			if (e.key !== 'Tab') return;
@@ -72,9 +91,12 @@ export function createSelectionFreePick({ lib, ui, get }, { root, available, pai
 			if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
 			else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
 		});
+		for (const type of ['pointerdown', 'touchstart', 'click']) panel.addEventListener(type, e => {
+			if (!e.target.closest('.hh-general') && !e.target.closest('.hh-skill-panel')) clearPreview();
+		});
 		// Keep taps, wheel scrolling and text editing local to the picker.
 		for (const type of ['pointerdown', 'mousedown', 'touchstart', 'touchmove', 'touchend', 'click', 'wheel']) panel.addEventListener(type, e => e.stopPropagation());
 		root.appendChild(panel); render(); search.focus({ preventScroll: true });
 	}
-	return { open, close, get isOpen() { return !!panel; } };
+	return { open, close, clearPreview, get isOpen() { return !!panel; } };
 }

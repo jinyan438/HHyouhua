@@ -104,13 +104,17 @@ test('identity still uses the same hook with its identity sidebar and single sub
 	const first = h.dialog.buttons[0]; first.emit('click'); first.emit('click'); assert.equal(h.calls.ok, 1); h.dialog.close();
 });
 
-function pointPick(root, id) {
+function pointPick(root, id, previewOnly = false) {
 	root.querySelector('.hh-point-entry').emit('click');
 	const picker = root.querySelector('.hh-point-picker'), search = picker.querySelector('.hh-point-search');
 	search.value = id; search.emit('input');
 	const card = picker.querySelector('.hh-point-grid').querySelectorAll('.hh-general').find(button => button.link === id);
 	assert.ok(card, `Missing free-pick character ${id}`); card.emit('click');
-	assert.equal(root.querySelector('.hh-point-picker'), null);
+	assert.ok(root.querySelector('.hh-point-picker')); assert.ok(card.classList.contains('hh-pending'));
+	assert.equal(card.querySelector('.hh-card-confirm').textContent, '确认选择');
+	assert.equal(picker.querySelector('.hh-skill-panel').getAttribute('aria-label'), id + '技能');
+	if (previewOnly) return card;
+	card.emit('click'); assert.equal(!!root.querySelector('.hh-point-picker'), false);
 }
 
 for (const options of [{ mode: 'identity', count: 8 }, { role: 'zhu' }, { role: 'fan' }, { fixed: true, teammate: true, role: 'fan' }]) {
@@ -118,13 +122,14 @@ for (const options of [{ mode: 'identity', count: 8 }, { role: 'zhu' }, { role: 
 		const h = selectionFixture(options), filter = h.event.filterButton, root = h.open(), original = [...h.dialog.buttons];
 		assert.ok(root.querySelector('.hh-general-grid').contains(root.querySelector('.hh-point-slot')));
 		h.event._buttonChoice = { 0: [...original] };
-		pointPick(root, 'general20');
+		const preview = pointPick(root, 'general20', true);
+		assert.equal(h.calls.ok, 0); assert.equal(h.dialog.buttons.length, original.length); assert.equal(h.ui.selected.buttons.length, 0);
+		preview.emit('click');
 		const picked = h.dialog.buttons.at(-1);
 		assert.equal(picked.link, 'general20'); assert.equal(h.dialog.buttons.length, original.length + 1);
 		assert.equal(h.event._buttonChoice, undefined); assert.equal(h.event.filterButton(picked, h.game.me), true);
-		assert.equal(h.ui.selected.buttons.length, 0); assert.equal(h.calls.ok, 0); assert.ok(picked.classList.contains('hh-pending'));
-		assert.ok(root.querySelector('.hh-skill-panel')); assert.equal(picked.querySelector('.hh-general-swap').hidden, true);
-		picked.emit('click'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons[0], picked);
+		assert.equal(picked.querySelector('.hh-general-swap').hidden, true);
+		assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons[0], picked);
 		h.dialog.close(); assert.equal(h.event.filterButton, filter); assert.equal(h.document.body.querySelector('.hh-point-picker'), null);
 		assert.equal(h.timers.size, 0); assert.ok(h.observers.every(observer => observer.disconnected));
 	});
@@ -158,22 +163,27 @@ test('point-pick batches a large pool, replaces a preview and keeps both native 
 		const grid = root.querySelector('.hh-point-grid'); assert.equal(grid.children.length, 40);
 		grid.scrollTop = grid.scrollHeight; grid.emit('scroll'); assert.equal(grid.children.length, 80);
 		root.querySelector('.hh-point-picker').emit('keydown', { key: 'Escape' });
-		pointPick(root, 'general20'); pointPick(root, 'general21');
+		pointPick(root, 'general20', true);
+		const picker = root.querySelector('.hh-point-picker'), search = picker.querySelector('.hh-point-search');
+		search.value = 'general21'; search.emit('input'); assert.equal(!!picker.querySelector('.hh-skill-panel'), false);
+		const preview = picker.querySelector('.hh-general'); preview.emit('click');
+		assert.ok(preview.classList.contains('hh-pending')); assert.equal(h.dialog.buttons.length, 6);
 		assert.equal(h.dialog.buttons.some(button => button.link === 'general20'), false);
+		if (firstFree) preview.emit('click'); else picker.emit('keydown', { key: 'Escape' });
 		const first = firstFree ? h.dialog.buttons.at(-1) : h.dialog.buttons[0];
-		if (!firstFree) first.emit('click'); first.emit('click');
+		if (!firstFree) { first.emit('click'); first.emit('click'); }
 		assert.equal(h.ui.selected.buttons[0], first); assert.equal(h.calls.ok, 0);
 		pointPick(root, 'general22'); const second = h.dialog.buttons.at(-1);
 		assert.equal(h.ui.selected.buttons[0], first); assert.equal(first.isConnected, true);
-		second.emit('click'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons.length, 2);
+		assert.equal(second.link, 'general22'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons.length, 2);
 		h.dialog.close();
 	}
 });
 
-test('point-picking an existing candidate previews it without duplicating it or submitting on a single click', () => {
+test('point-picking an existing candidate previews its skills before submitting without duplicating it', () => {
 	const h = selectionFixture(), root = h.open(), count = h.dialog.buttons.length;
-	pointPick(root, 'general0'); assert.equal(h.dialog.buttons.length, count); assert.equal(h.calls.ok, 0);
-	assert.ok(h.dialog.buttons[0].classList.contains('hh-pending'));
+	const preview = pointPick(root, 'general0', true); assert.equal(h.dialog.buttons.length, count); assert.equal(h.calls.ok, 0);
+	preview.emit('click'); assert.equal(h.dialog.buttons.length, count); assert.equal(h.calls.ok, 1);
 	root.querySelector('.hh-point-entry').emit('click'); h.dialog.close();
 	assert.equal(h.document.body.querySelector('.hh-point-picker'), null); assert.equal(h.event.filterButton(h.dialog.buttons[0]), true);
 });
@@ -190,7 +200,58 @@ test('native engine Check rebuilds its cached candidate list for a free pick and
 	pointPick(root, 'general20'); const picked = h.dialog.buttons.at(-1);
 	assert.equal(h.event._buttonChoice[0].includes(picked), true); assert.equal(h.ui.selected.buttons[0], first);
 	assert.equal(h.dialog.buttons[3].classList.contains('selectable'), false);
-	picked.emit('click'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons.length, 2); h.dialog.close();
+	assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons.length, 2); h.dialog.close();
+});
+
+for (const input of ['mouse', 'touch', 'touch-only']) test(`long press and version switch leave the next confirmation usable (${input})`, () => {
+	const h = selectionFixture(), root = h.open(), button = h.dialog.buttons[0];
+	h.lib.characterReplace.general0 = ['general0', 'general20']; button._link = 'general0';
+	if (input !== 'touch-only') button.emit('pointerdown');
+	if (input !== 'mouse') button.emit('touchstart', { touches: [{ clientX: 0, clientY: 0 }] });
+	h.advance(500); assert.ok(root.querySelector('.hh-variant-panel'));
+	if (input !== 'touch-only') button.emit('pointerup');
+	if (input !== 'mouse') button.emit('touchend');
+	button.emit('click'); assert.equal(h.calls.ok, 0);
+	const variant = root.querySelector('.hh-variant-panel').querySelectorAll('.hh-general').find(card => card.link === 'general20');
+	h._status.dragged = true; h._status.justdragged = true;
+	h.event._buttonChoice = { 0: [] }; variant.emit('click');
+	assert.equal(button.link, 'general20'); assert.equal(h.event._buttonChoice, undefined);
+	assert.ok(button.classList.contains('hh-pending')); assert.ok(root.querySelector('.hh-skill-panel')); assert.equal(h.calls.ok, 0);
+	if (input !== 'touch-only') { button.emit('pointerdown'); button.emit('pointerup'); }
+	if (input !== 'mouse') { button.emit('touchstart', { touches: [{ clientX: 0, clientY: 0 }] }); button.emit('touchend'); }
+	button.emit('click'); assert.equal(h.calls.ok, 1); assert.equal(h.ui.selected.buttons[0], button); h.dialog.close();
+});
+
+test('dragging and pointer cancellation never confirm a card and do not block the following taps', () => {
+	const h = selectionFixture(), root = h.open(), button = h.dialog.buttons[0];
+	button.emit('pointerdown'); button.emit('pointermove', { clientX: 50 }); button.emit('pointerup'); button.emit('click');
+	assert.equal(!!root.querySelector('.hh-skill-panel'), false); assert.equal(h.calls.ok, 0);
+	button.emit('pointerdown'); button.emit('pointercancel'); button.emit('touchcancel'); button.emit('click');
+	assert.equal(h.calls.ok, 0);
+	for (let i = 0; i < 2; i++) { button.emit('pointerdown'); button.emit('pointerup'); button.emit('click'); }
+	assert.equal(h.calls.ok, 1); h.dialog.close();
+});
+
+test('point-pick touch gestures preview once, suppress their synthetic click and confirm on the next tap', () => {
+	const h = selectionFixture(), root = h.open(); root.querySelector('.hh-point-entry').emit('click');
+	const picker = root.querySelector('.hh-point-picker'), search = picker.querySelector('.hh-point-search');
+	search.value = 'general20'; search.emit('input'); const card = picker.querySelector('.hh-general');
+	const tap = () => { card.emit('pointerdown'); card.emit('touchstart', { touches: [{ clientX: 0, clientY: 0 }] }); card.emit('pointerup'); card.emit('touchend'); card.emit('click'); };
+	tap(); assert.equal(h.calls.ok, 0); assert.ok(picker.querySelector('.hh-skill-panel')); assert.ok(card.classList.contains('hh-pending'));
+	tap(); assert.equal(h.calls.ok, 1); assert.equal(!!root.querySelector('.hh-point-picker'), false); h.dialog.close();
+});
+
+for (const area of ['picker', 'outside']) test(`clicking non-card space cancels the point-pick preview (${area})`, () => {
+	const h = selectionFixture(), root = h.open(), card = pointPick(root, 'general20', true);
+	const picker = root.querySelector('.hh-point-picker'), target = area === 'picker' ? picker : root;
+	for (const type of area === 'picker' ? ['pointerdown', 'touchstart', 'click'] : ['pointerdown']) {
+		target.emit(type, { target });
+		assert.equal(card.classList.contains('hh-pending'), false); assert.equal(card.getAttribute('aria-pressed'), 'false');
+		assert.equal(!!picker.querySelector('.hh-skill-panel'), false); assert.equal(h.calls.ok, 0);
+		card.emit('click'); assert.ok(card.classList.contains('hh-pending')); assert.ok(picker.querySelector('.hh-skill-panel'));
+		assert.equal(h.calls.ok, 0);
+	}
+	h.dialog.close();
 });
 
 for (const reason of ['bidding', 'ai', 'connect', 'online', 'brawl', 'free-pick', 'other-mode', 'in-game-skill']) test(`opening hook leaves ${reason} dialogs alone`, () => {
