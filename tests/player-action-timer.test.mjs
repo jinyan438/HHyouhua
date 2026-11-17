@@ -109,6 +109,27 @@ test('native mandatory discard finishes its legal choice and executes the normal
 	assert.equal(h.calls.discards.length, 1); assert.equal(h.calls.discards[0][0], h.hand[1]); assert.equal(h.status.auto, undefined); h.stop();
 });
 
+test('a timed-out native play idle point closes its confirm buttons and preserves the next response controls', async () => {
+	for (const skill of [undefined, 'pendingSkill']) {
+		const h = actionHarness(), evt = h.event('chooseToUse'), pending = h.run(evt);
+		await h.flush(); h.ui.create.confirm('oc');
+		const old = h.ui.confirm; evt.skill = skill;
+		h.advance(15040); await pending;
+		assert.equal(old.isConnected, false, 'The timed-out confirmation must leave the DOM');
+		assert.equal(h.ui.confirm, null); assert.equal(h.document.body.querySelectorAll('.confirm').length, 0);
+		const next = h.event('chooseBool'); h.wait(next); h.ui.create.confirm('oc');
+		const fresh = h.ui.confirm; h.advance(500);
+		assert.equal(h.ui.confirm, fresh); assert.equal(fresh.isConnected, true, 'Keep the new decision usable'); h.stop();
+	}
+});
+
+test('native mandatory auto-selection also removes the confirm it creates after the timeout', async () => {
+	const h = actionHarness(), evt = h.event('chooseToDiscard', { forced: true, selectCard: 1 }), pending = h.run(evt);
+	await h.flush(); h.ui.create.confirm('o'); h.advance(15040); await pending;
+	assert.equal(evt.result.bool, true); assert.equal(h.calls.discards.length, 1);
+	assert.equal(h.ui.confirm, null); assert.equal(h.document.body.querySelectorAll('.confirm').length, 0); h.stop();
+});
+
 test('native Nanman and Wanjian still apply damage and finish their card effect after a response timeout', async () => {
 	for (const name of ['nanman', 'wanjian']) {
 		const h = actionHarness(), order = [], attacker = { hasSkillTag: () => false };

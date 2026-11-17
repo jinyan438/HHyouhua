@@ -244,15 +244,14 @@ export function setupAutoSelect() {
 		if (ok) return;
 
 		setTimeout(() => {
-			if (_status.event !== event) return;
-			if (_status.paused && !_status.imchoosing) return;
+			if (_status.event !== event || !_status.paused || !_status.imchoosing) return;
 
 			const changed = performAutoSelectCard() || performAutoSelectTarget();
 			if (changed) {
 				game.check();
 				// 自动选卡后，如果不是强制事件，需要确保取消按钮可用
 				// 因为 game.check 中 get.noSelected() 会返回 false（已有选中项），导致取消按钮不显示
-				if (!event.forced && !event.fakeforce && ui.confirm?.str === "o") {
+				if (_status.event === event && _status.paused && _status.imchoosing && !event.forced && !event.fakeforce && ui.confirm?.str === "o") {
 					ui.create.confirm("oc");
 				}
 			}

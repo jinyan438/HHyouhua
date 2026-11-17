@@ -8,7 +8,7 @@ const CHOICES = new Set([
 export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environment = {}) {
 	if (game.hhPlayerActionTimer) return game.hhPlayerActionTimer;
 	const env = { now: () => performance.now(), setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: id => clearInterval(id), ...environment };
-	const hooks = [], announced = new WeakSet();
+	const hooks = [], announced = new WeakSet(), timedOut = new WeakSet();
 	let current = null, consecutive = 0, resolving = 0, stopped = false;
 	let lastAuto = !!_status.auto, lastPlayer = game.me, timedOutAuto = false;
 	const enabled = () => String(lib.config.extension_HH优化_jindutiaoYangshi) !== '0' && !_status.connectMode && !game.online && !_status.video;
@@ -59,6 +59,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 	}
 	function expire(token) {
 		if (current !== token || _status.event !== token.event || !_status.paused || _status.paused2 || !manual(token.event)) return;
+		timedOut.add(token.event);
 		clear();
 		consecutive++;
 		resolving++;
@@ -77,7 +78,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 		}
 	}
 	function check(allowTimeout = true) {
-		if (stopped) return;
+		if (stopped || resolving) return;
 		if (lastPlayer !== game.me || lastAuto !== !!_status.auto) {
 			clear(); consecutive = 0;
 			if (!_status.auto || lastPlayer !== game.me) timedOutAuto = false;
@@ -88,6 +89,7 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 		const now = env.now();
 		if (current?.event !== event) {
 			clear();
+			timedOut.delete(event);
 			current = { event, duration: duration(event), elapsed: 0, lastTime: now, paused: !!_status.paused2, fraction: 1, view: null };
 			refresh();
 		}
@@ -118,11 +120,17 @@ export function setupPlayerActionTimer({ lib, game, ui, get, _status }, environm
 		const result = original.apply(this, arguments); check(false); return result;
 	});
 	wrap(game, 'resume', original => function () {
-		const token = current;
+		const token = current, event = _status.event, confirm = ui.confirm;
 		const result = original.apply(this, arguments);
 		if (token && !_status.paused && current === token) {
 			if (!resolving && !_status.auto) consecutive = 0;
 			clear();
+		}
+		// Programmatic cancel/AI submission has no clicked button to close its parent control.
+		// Only release the confirmation owned by this completed timeout, never a later choice.
+		if (confirm && timedOut.has(event) && _status.event === event && !_status.paused && ui.confirm === confirm) {
+			confirm.close();
+			if (ui.confirm === confirm) ui.confirm = null;
 		}
 		return result;
 	});

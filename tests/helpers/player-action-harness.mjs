@@ -38,14 +38,22 @@ export function actionHarness({ style = '2', seconds = '15', config = {} } = {})
 	ui.control.hide = () => { ui.control.hidden = true; }; ui.control.show = () => { ui.control.hidden = false; };
 	const closable = () => ({ style: {}, buttons: [], content: {}, classList: { add() {}, remove() {} }, open() {}, close() {}, add() {}, addText() {} });
 	ui.create.dialog = () => closable(); ui.create.control = () => closable(); ui.create.cardChooseAll = () => {};
-	ui.create.confirm = str => { ui.confirm = { str, classList: { add() {} }, close() { ui.confirm = null; } }; };
+	ui.create.confirm = str => {
+		if (ui.confirm?.str === str) return;
+		ui.confirm?.close();
+		if (!str) return;
+		const control = new Element(); control.className = 'control confirm'; control.str = str;
+		control.close = () => { control.remove(); if (ui.confirm === control) ui.confirm = null; };
+		for (const key of str) { const button = new Element(); button.link = key === 'o' ? 'ok' : 'cancel'; button.textContent = button.link; control.appendChild(button); }
+		ui.confirm = control; document.body.appendChild(control);
+	};
 	let game;
 	const get = { event: () => status.event, links: items => items.map(item => item.link), info: () => ({}), select: value => Array.isArray(value) ? value : [value ?? 1, value ?? 1],
 		card: () => ui.selected.cards[0], autoViewAs: card => card, objtype: () => 'div', itemtype: value => value?.close ? 'dialog' : undefined,
 		translation: value => value?.name || value, cnNumber: String, numStr: String };
 	const ai = { basic: { chooseCard() {
 		const event = status.event, cards = player.getCards(event.position).filter(card => event.filterCard(card, player));
-		ui.selected.cards.push(...cards.slice(0, get.select(event.selectCard)[0])); return ui.selected.cards.length > 0;
+		ui.selected.cards.push(...cards.slice(0, get.select(event.selectCard)[0])); game.check(); return ui.selected.cards.length > 0;
 	} } };
 	const context = vm.createContext({ document, window: {}, lib, ui, get, ai, _status: status, performance: { now: environment.now },
 		setInterval, clearInterval, setTimeout: environment.setTimer, clearTimeout: environment.clearTimer });
@@ -61,7 +69,7 @@ export function actionHarness({ style = '2', seconds = '15', config = {} } = {})
 	game.me = player; game.players = [player];
 	Object.assign(game, { expandSkills: skills => skills, countDown: (...args) => calls.countdowns.push(args), checkMod: () => 'unchanged',
 		check() { const event = status.event; const ok = ui.selected.cards.length >= get.select(event.selectCard)[0]; ui.create.confirm((ok ? 'o' : '') + (event.forced ? '' : 'c')); game.countChoose(); return ok; },
-		uncheck() { for (const items of Object.values(ui.selected)) items.length = 0; }, addVideo() {}, broadcast() {}, broadcastAll() {}, log() {}, delay() {},
+		uncheck() { for (const items of Object.values(ui.selected)) items.length = 0; status.imchoosing = false; }, addVideo() {}, broadcast() {}, broadcastAll() {}, log() {}, delay() {},
 	});
 	vm.runInContext('Array.prototype.add = function(v) { if (!this.includes(v)) this.push(v); return this; }; Array.prototype.remove = function(v) { const i = this.indexOf(v); if (i >= 0) this.splice(i, 1); return this; };', context);
 	vm.runInContext(coreCode, context);
