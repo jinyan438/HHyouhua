@@ -75,6 +75,8 @@ export function playerDraw(num, init, config) {
 		}
 	}
 
+	if (isDrawCard && game.hhEquipMove?.drawsEquip(cards, this)) return;
+
 	if (_status.event && _status.event.name) {
 		if (
 			(function (event) {
@@ -339,6 +341,7 @@ export function playerThrow(cards, time, record, nosource) {
 		card = cards[i];
 		if (card) {
 			clone = card.copy("thrown");
+			game.hhEquipMove?.prepareClone(card, clone, player);
 			if (duiMod && (card.throwWith == "h" || card.throwWith == "s")) {
 				clone.tx = Math.round(hand.x + card.tx);
 				clone.ty = Math.round(hand.y + 30 + card.ty);
@@ -397,6 +400,7 @@ export function playerThrow(cards, time, record, nosource) {
  */
 export function playerThrowordered2(card, nosource) {
 	if (_status.connectMode) ui.todiscard = [];
+	if (game.hhEquipMove?.show(card)) return card;
 
 	const _dui = getDui();
 

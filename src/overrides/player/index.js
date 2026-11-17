@@ -28,6 +28,8 @@ export {
 	playerUseCard,
 	playerRespond,
 	playerLose,
+	playerEquip,
+	playerAddVirtualEquip,
 	playerUseCardAnimateBefore,
 	playerRespondAnimateBefore,
 	playerHandleEquipChange,

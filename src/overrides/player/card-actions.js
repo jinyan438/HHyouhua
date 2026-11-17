@@ -7,6 +7,18 @@
 import { lib, game, ui, get, ai, _status } from "noname";
 import { getBasePlayerMethods, playShowCardAudio } from "./base.js";
 
+export function playerEquip() {
+	const event = getBasePlayerMethods().equip.apply(this, arguments);
+	game.hhEquipMove?.beginEquip(event, this);
+	return event;
+}
+
+export function playerAddVirtualEquip(card, cards) {
+	const result = getBasePlayerMethods().$addVirtualEquip.apply(this, arguments);
+	if (!game.online) game.hhEquipMove?.placed(card, cards, this);
+	return result;
+}
+
 /**
  * 使用卡牌覆写
  * @description 在原有逻辑基础上添加出牌音效和目标高亮效果
