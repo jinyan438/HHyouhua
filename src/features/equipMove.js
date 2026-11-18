@@ -81,12 +81,15 @@ export function setupEquipMove({ lib, game, ui, get, _status }, environment = {}
 	function destination(state) {
 		const equips = state.target?.node?.equips;
 		const slots = Array.from(equips?.children || []);
+		const bar = localRect(equips);
 		const slot = slots.find(card => card === state.source || card.cardid && card.cardid === state.source.cardid
 			|| card.cards?.includes(state.source) || card[card.cardSymbol]?.cards?.includes(state.source)
 			|| card.name === state.equip.name);
 		const rect = localRect(slot);
-		if (rect) return rect;
-		const bar = localRect(equips);
+		if (rect) {
+			const compact = equips.classList?.contains("hh-source-equipment-layout") && equips.parentNode?.classList?.contains("player");
+			return compact && bar ? { ...rect, layoutLeft: bar.left, layoutWidth: bar.width } : rect;
+		}
 		if (bar) return { ...bar, height: Math.min(bar.height, 16) };
 		const player = localRect(state.target);
 		return player && { left: player.left + player.width * .17, top: player.top + player.height * .8, width: player.width * .7, height: 16 };

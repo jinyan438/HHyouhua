@@ -62,6 +62,19 @@ test('waits for the card arrival callback, then slides the full strip for the na
 	assert.equal(c.style.clipPath, 'none'); assert.equal(h.controller.activeCount, 0); assert.equal(h.timers.size, 0);
 });
 
+test('half horse strips share the native off-seat start and include the right-lane offset in their travel', () => {
+	for (const left of [0, 73]) {
+		const h = harness(), p = h.player(), c = h.card();
+		Object.assign(p.node.equips, { offsetWidth: 146, classList: { contains: name => name === 'hh-source-equipment-layout' }, parentNode: { classList: { contains: name => name === 'player' } } });
+		c.offsetLeft = left; c.offsetWidth = 73; c.node.name2.offsetWidth = 73;
+		h.controller.observe(p); h.put(c, p); h.flush();
+		const a = h.animations[0], travel = Number(a.frames[0].transform.match(/translateX\(([-\d.]+)px\)/)[1]);
+		assert.ok(Math.abs(travel + 173 + left) < 1e-8); assert.equal(a.options.duration, 300);
+		assert.equal(c.style.clipPath, `inset(0px ${-(75 - left)}px 0px ${-(left + 2)}px)`); a.finish();
+		assert.equal(c.style.clipPath, 'none');
+	}
+});
+
 test('existing equipment, placeholders, text updates and in-column sorting do not replay entry', () => {
 	const h = harness(), p = h.player(), old = h.card(); h.put(old, p); h.controller.observe(p); h.flush();
 	for (const c of [h.card('empty_equip1', ['card', 'emptyequip']), h.card('feichu_equip2', ['card', 'feichu'])]) h.put(c, p);

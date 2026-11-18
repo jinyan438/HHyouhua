@@ -1,0 +1,29 @@
+{
+	"source": "E:/AI/sanguosha/sanguosha2/work/main.js",
+	"sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+	"functions": {
+		"AMt.LayoutEquipCards": "7954a36fe8d8e25890e5ad9b2709d03e70150b9a516e0c22ae7a3407cfe654ae",
+		"AMt.startEquipCardMotion": "6d10b16c18c8526c222a41b2ad443b8ff8e50b606099b24b31bb1aec4dc5738a",
+		"fns.UpdateCardFace": "7e394589c264d56829ac6e41b9210d2e88b4ca4ef35fcf0df89d2aab8e846299",
+		"xUt.updateUI": "fd764c90d50100d25b0f23f6280e8a8998f2f92b1b61f505fb79fb7ef58cbe08",
+		"lrs.HasZone": "bfc47500fc5407db15f25ae9aacc26838a3e5ccbc7519425e51717b524fa6cd9",
+		"lrs.HasEquipByType": "36069aa83d6f53ad862c6ef675045e7f18bd05849c24f3d817528e86377f98e3"
+	},
+	"width": 146,
+	"rowHeight": 30,
+	"rows": 4,
+	"positions": {
+		"weapon": 0,
+		"armor": 1,
+		"defenseHorse": 2,
+		"treasure": 3
+	},
+	"halfWidth": 73,
+	"halfHorseName": false,
+	"notes": [
+		"Attack horse uses row 2 while the defense zone is empty and available, otherwise row 3 while the treasure zone is empty and available, otherwise row 2 right half.",
+		"Real horses use half width only if neither horse zone nor the treasure zone is empty and available.",
+		"Abolished horse rows use treasure equipment/abolition to choose full/half presentation.",
+		"HH skill placeholders participate as occupied/unavailable slots; expanded or special slots retain real nodes within four rows."
+	]
+}

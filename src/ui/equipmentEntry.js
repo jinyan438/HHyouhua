@@ -42,12 +42,15 @@ export function setupEquipmentEntry({ lib, game }, environment = {}) {
 		const width = state.label.offsetWidth || state.card.offsetWidth;
 		if (!width || typeof state.label.animate !== "function") return finish(state);
 		state.label.style.visibility = state.visibility;
-		// Keep the moving strip inside its slot, including the existing 2px background overhang.
-		state.card.style.clipPath = "inset(0px -2px)";
+		const compact = state.container.classList?.contains("hh-source-equipment-layout") && state.container.parentNode?.classList?.contains("player");
+		const fullWidth = state.container.offsetWidth || width, offset = state.card.offsetLeft || 0;
+		// Half strips cross the whole row; clipping to their final half would hide most of the native slide.
+		state.card.style.clipPath = compact ? `inset(0px ${-(fullWidth - offset - (state.card.offsetWidth || width) + 2)}px 0px ${-(offset + 2)}px)` : "inset(0px -2px)";
 		state.appliedClip = state.card.style.clipPath;
+		const travel = compact ? fullWidth * TRAVEL_RATIO + offset : width * TRAVEL_RATIO;
 		try {
 			state.animation = state.label.animate([
-				{ transform: `translateX(${-width * TRAVEL_RATIO}px)` },
+				{ transform: `translateX(${-travel}px)` },
 				{ transform: "translateX(0px)" },
 			], { duration: DURATION_MS, easing: "linear", fill: "none" });
 			state.animation.onfinish = state.animation.oncancel = () => finish(state);

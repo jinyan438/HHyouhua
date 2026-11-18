@@ -23,7 +23,8 @@ export function equipmentMotionPlan(player, width, height, self = false) {
 
 export function equipmentArrivalPose(slot, height, scale) {
 	const n = nativeEquipmentMotion;
-	return { x: slot.left - slot.width * n.equipInset / n.equipWidth, y: slot.top + (slot.height - height * scale) / 2, scale };
+	const width = slot.layoutWidth ?? slot.width, left = slot.layoutLeft ?? slot.left;
+	return { x: left - width * n.equipInset / n.equipWidth - (width - slot.width), y: slot.top + (slot.height - height * scale) / 2, scale };
 }
 
 export const equipmentPoseTransform = pose => `translate(${pose.x}px,${pose.y}px) scale(${pose.scale})`;

@@ -21,7 +21,8 @@ test('Vite-normalized directory URL keeps the separator before icon, suit and ra
 	const source = readFileSync(new URL('../src/ui/equipment.js', import.meta.url), 'utf8');
 	// This is the directory URL emitted by the real Vite development server.
 	const servedRoot = 'http://127.0.0.1:8080/extension/HH%E4%BC%98%E5%8C%96/assets/equipment';
-	const transformed = source.replace('new URL("../../assets/equipment/", import.meta.url)', `new URL(${JSON.stringify(servedRoot)})`);
+	const transformed = source.replace('new URL("../../assets/equipment/", import.meta.url)', `new URL(${JSON.stringify(servedRoot)})`)
+		.replace('"./sourceEquipmentLayout.js"', JSON.stringify(new URL('../src/ui/sourceEquipmentLayout.js', import.meta.url).href));
 	const { refreshEquipmentDisplay: refresh } = await import('data:text/javascript,' + encodeURIComponent(transformed));
 	const f = fixture();
 	refresh(f.card, f.get);
@@ -75,8 +76,9 @@ test('refresh after native replacement is idempotent and preserves disabled/gran
 	refreshPlayerEquipment(player, f.get);
 	refreshPlayerEquipment(player, f.get);
 	assert.equal(f.card.node.name2.children.length, 5);
-	assert.equal(disabled.node.name2.textContent, '武器栏 已废除');
-	assert.equal(granted.node.name2.textContent, '青龙偃月刀 武圣');
+	assert.equal(disabled.node.name2._hhSlotOriginal, '武器栏 已废除');
+	assert.equal(disabled.node.name2.children[1].textContent, '废除');
+	assert.equal(granted.node.name2.children[1].textContent, '青龙偃月刀 武圣');
 });
 
 test('equipment-zone observer repairs late native label replacement and leaves its own rendering intact', () => {
