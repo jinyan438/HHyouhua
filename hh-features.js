@@ -86,22 +86,32 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				'chooseCardTarget',
 				'chooseButtonTarget',
 				'chooseControl',
-				'chooseBool'
+				'chooseBool',
+				'chooseToGive',
+				'chooseToMove',
+				'chooseToMove_new',
+				'chooseNumbers',
+				'chooseSkill'
 			];
 			const HH_AI_THINK_EVENT_PROFILE = {
-				chooseToUse: [900, 2100],
-				chooseToRespond: [650, 1500],
-				chooseCard: [450, 1300],
-				chooseTarget: [500, 1500],
-				chooseButton: [500, 1600],
-				choosePlayerCard: [550, 1500],
-				discardPlayerCard: [600, 1700],
-				gainPlayerCard: [600, 1700],
-				chooseToDiscard: [450, 1400],
-				chooseCardTarget: [850, 2600],
-				chooseButtonTarget: [800, 2400],
-				chooseControl: [350, 1100],
-				chooseBool: [300, 1000]
+				chooseToUse: [1400, 2600],
+				chooseToRespond: [1100, 2200],
+				chooseCard: [1100, 2200],
+				chooseTarget: [1300, 2400],
+				chooseButton: [1200, 2400],
+				choosePlayerCard: [1200, 2400],
+				discardPlayerCard: [1300, 2500],
+				gainPlayerCard: [1300, 2500],
+				chooseToDiscard: [1100, 2300],
+				chooseCardTarget: [1600, 2600],
+				chooseButtonTarget: [1500, 2600],
+				chooseControl: [1000, 1900],
+				chooseBool: [950, 1800],
+				chooseToGive: [1300, 2400],
+				chooseToMove: [1700, 2600],
+				chooseToMove_new: [1700, 2600],
+				chooseNumbers: [1300, 2300],
+				chooseSkill: [1400, 2500]
 			};
 			const HH_clamp = function(value, min, max) {
 				return Math.max(min, Math.min(max, value));
@@ -192,8 +202,9 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			const HH_getAIThinkPace = function(player, event) {
 				const result = event.result || {};
 				if (event._HH_rescueQuestion) return event.dying === player ? 'quick' : 'deliberate';
-				// 脚本指定的结果没有交互；引擎代选/唯一选项仍保留人的确认点击时间。
-				if (event.responded || event.directresult) return 'instant';
+				if (event.responded) return 'instant';
+				// 代选、唯一选项和预选牌仍留出观察及确认时间。
+				if (event.directresult) return 'quick';
 				if (result.autochoose) return 'quick';
 				if (event.name == 'chooseBool' && event.frequentSkill) return 'quick';
 				const optionCount = HH_getEventOptionCount(event);
@@ -269,7 +280,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const configMax = Math.max(configMin, HH_parseNumberConfig('ai_think_delay_max', 2600, 0, 15000));
 				const pace = HH_getAIThinkPace(player, event);
 				const profile = HH_getAIThinkProfile(player);
-				const eventProfile = pace == 'deliberate' ? [900, 2300] : HH_AI_THINK_EVENT_PROFILE[event && event.name] || [configMin, configMax];
+				const eventProfile = pace == 'deliberate' ? [1600, 2600] : HH_AI_THINK_EVENT_PROFILE[event && event.name] || [configMin, configMax];
 				let min = HH_clamp(eventProfile[0], configMin, configMax);
 				let max = HH_clamp(eventProfile[1], min, configMax);
 				const now = Date.now();
@@ -307,9 +318,11 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				if (pace == 'instant' || configMax == 0) return 0;
 				if (pace == 'quick' || pace == 'response') {
 					const play = HH_isAIPlayDecision(event);
-					const range = pace == 'response' ? [520, 1450] : play ? [560, 1180] : [180, 420];
-					const floor = pace == 'response' ? 480 : play ? 500 : 150;
-					const delay = Math.round(Math.min(configMax, Math.max(floor, HH_randHumanDelay(...range) * profile.speed)));
+					const range = pace == 'response' ? [1100, 2300] : play ? [1100, 2100] : [900, 1800];
+					const floor = Math.max(configMin, pace == 'response' || play ? 1000 : 900);
+					const low = Math.min(configMax, Math.max(floor, range[0] * profile.speed));
+					const high = Math.min(configMax, Math.max(low, range[1] * profile.speed));
+					const delay = Math.round(HH_randHumanDelay(low, high));
 					profile.lastThink = now + delay;
 					return delay;
 				}
@@ -326,7 +339,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const longThink = pace == 'deliberate' && Math.random() < 0.06;
 				if (longThink) delay += 500 + Math.random() * 1000;
 				const hardMax = longThink ? Math.min(15000, configMax + 1500) : configMax;
-				const floor = inPhaseUse && HH_isAIPlayDecision(event) ? Math.min(configMax, Math.max(configMin, 750)) : configMin;
+				const floor = Math.min(configMax, Math.max(configMin, inPhaseUse && HH_isAIPlayDecision(event) ? 1200 : 900));
 				// 平滑接近上限，避免复杂操作都被截成完全一样的固定时长。
 				if (hardMax > floor && delay > floor) delay = floor + (hardMax - floor) * -Math.expm1(-(delay - floor) / (hardMax - floor));
 				delay = Math.round(HH_clamp(delay, floor, hardMax));
@@ -334,7 +347,6 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				return delay;
 			};
 			const HH_shouldDelayAI = function(event, player) {
-				if (_status.auto && (player || event?.player) === game.me && game.hhPlayerActionTimer?.timedOutAuto) return false;
 				if (!lib.config.extension_HH优化_enable_ai_think_delay) return false;
 				if (_status.connectMode || game.online || _status.video || _status.over) return false;
 				// 只处理交互选择，摸牌/伤害/获得牌等系统结算不增加思考。
@@ -375,10 +387,10 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				if (!HH_shouldDelayAI(event, player)) return;
 				// 等引擎给出真实结果再判断。技能按钮/取消重选还不是最终出牌。
 				const result = event.result;
-				if (!result || typeof result != 'object' || result.cancel) return;
-				if (result.bool === undefined && result.control === undefined) return;
+				if (!result || typeof result != 'object' || result.cancel || result.cancelled) return;
+				if (result.bool === undefined && result.control === undefined && !['cards', 'targets', 'links', 'moved', 'numbers', 'skill'].some(key => result[key] !== undefined)) return;
 				const skillInfo = result.skill && typeof get.info == 'function' && get.info(result.skill);
-				if (skillInfo && skillInfo.chooseButton && !result.card) return;
+				if (['chooseToUse', 'chooseToRespond'].includes(event.name) && skillInfo && skillInfo.chooseButton && !result.card) return;
 				event._HH_aiThinkDelayed = true;
 				player = player || event.player;
 				const parents = HH_getAIThinkParents(event, player);
@@ -397,10 +409,20 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			const HH_hookAIThinkDelay = function() {
 				if (!lib.element) return;
 				const wrapContentMap = function(contentMap) {
-					if (!contentMap || contentMap._HH_aiThinkDelayHooked) return;
-					contentMap._HH_aiThinkDelayHooked = true;
+					if (!contentMap) return;
 					HH_AI_THINK_EVENTS.forEach(name => {
-						const original = contentMap[name];
+						let original = contentMap[name];
+						if (!original || original._HH_aiThinkDelayHooked) return;
+						if (typeof original === 'function' && original.constructor.name !== 'AsyncFunction' && !original.compiled && lib.element.GameEvent) {
+							original = new lib.element.GameEvent(name, false).setContent(original).content;
+						}
+						if (original.compiled && Array.isArray(original.originals)) {
+							// Reuse the native step compiler's sandboxed bodies and original step indices.
+							original = original.originals.map(body => function(event, trigger, player) {
+								return body.call(this, { _status, ai, game, get, lib, ui }, event, trigger, player);
+							});
+						} else if (original.compiled && Array.isArray(original.original)) original = original.original;
+						else if (original.compiled && original.original?.constructor?.name === 'AsyncFunction') original = original.original;
 						if (Array.isArray(original)) {
 							// 逐步包装而非插入新步骤，保留 goto(0)、redo() 及第四参数 result。
 							contentMap[name] = original.map((step, index) => async function(event, trigger, player) {
@@ -416,13 +438,30 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 								await HH_aiThinkDelay(event, player);
 								return result;
 							};
+						} else if (typeof original === 'function' && original.compiled) {
+							// Opaque extension compilers cannot expose a final-result boundary: think before entering.
+							const wrapped = async function(event, trigger, player) {
+								const question = { name: event.name, type: event.type, player: player || event.player,
+									result: event.result || { bool: true }, responded: event.responded,
+									_HH_aiThinkDelayed: event._HH_aiThinkDelayed, _HH_aiThinkChildDelayed: event._HH_aiThinkChildDelayed,
+									_HH_rescueThought: event._HH_rescueThought,
+									getParent: (...args) => event.getParent?.(...args), isMine: () => event.isMine?.(), isOnline: () => event.isOnline?.() };
+								await HH_aiThinkDelay(question, player);
+								if (question._HH_aiThinkDelayed) event._HH_aiThinkDelayed = true;
+								return original.apply(this, arguments);
+							};
+							Object.assign(wrapped, { compiled: true, type: original.type, original: original.original });
+							contentMap[name] = wrapped;
 						}
+						if (contentMap[name] !== original || Array.isArray(original)) contentMap[name]._HH_aiThinkDelayHooked = true;
 					});
 				};
 				wrapContentMap(lib.element.content);
 				wrapContentMap(lib.element.contents);
 			};
 			HH_hookAIThinkDelay();
+			game.hhAIThink = { refreshHooks: HH_hookAIThinkDelay };
+			(lib.arenaReady ||= []).push(HH_hookAIThinkDelay);
 			setupLordBlindShot({ lib, game, get, _status });
 
 			// ========== 濒死逐人求桃 ==========
@@ -2072,7 +2111,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_settlement_optimize: {
 				name: "优化结算速度",
 				init: true,
-				intro: "减少卡牌、技能与多目标结算中的重复等待，立即生效；保留当前游戏速度、动画时长和AI思考设置",
+				intro: "减少重复布局和移牌停顿，立即生效；保留卡牌、技能、多目标及其他特效的展示时间，不改变游戏速度、动画时长和AI思考设置",
 				onclick: function(value) {
 					game.saveConfig('extension_HH优化_enable_settlement_optimize', value);
 					lib.config.extension_HH优化_enable_settlement_optimize = value;
@@ -2092,7 +2131,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_ai_think_delay: {
 				name: "启用AI思考延迟",
 				init: true,
-				intro: "每次出牌独立模拟观察和操作停顿，杀闪也有自然响应时间；连续用牌、摸到新牌和场面变化会调整节奏，关键取舍偶尔长考。纯系统结算保持快速"
+				intro: "出牌、杀闪、发动技能、弃牌、给牌、移牌及选择选项分别留出观察和思考时间；唯一选项、强制选择及频繁技能也保留停顿，连续操作不会越出越快。纯系统结算不增加思考"
 			},
 			ai_think_delay_popup: {
 				name: "显示思考提示",
@@ -2102,7 +2141,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			ai_think_delay_min: {
 				name: "最短思考时间(ms)",
 				init: "250",
-				intro: "普通思考的最短等待时间，默认250毫秒；杀闪响应约0.5～2秒，顺手用牌约0.5～1.6秒，简单确认约150～570毫秒，不因提高此下限而长考；均遵守最长时间设置",
+				intro: "所有实际AI选择均遵守此下限，默认250毫秒；默认节奏下简单确认通常0.9～2秒，出牌及杀闪通常1～2.6秒，复杂取舍更久；最长时间仍可进一步限制等待",
 				input: true,
 				onblur: function() {
 					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();

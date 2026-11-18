@@ -9,7 +9,7 @@ function harness({ enabled = true, yieldTask = () => Promise.resolve() } = {}) {
 	const lib = { config: { game_speed: 'mid', duration: 500, animation: true, extension_HH优化_speed_multiplier: 2.5,
 		extension_HH优化_enable_ai_think_delay: true, extension_HH优化_ai_think_delay_min: '250', extension_HH优化_ai_think_delay_max: '2600' },
 		card: { sha: { content() {} } }, skill: { testSkill: { content() {} } } };
-	const _status = { event: { name: 'useCard' }, pauseManager: { setDelay(promise) { registered.push(promise); return promise; } } };
+	const _status = { event: { name: 'gain', animate: false }, pauseManager: { setDelay(promise) { registered.push(promise); return promise; } } };
 	const game = { delay(...args) { const result = { method: 'delay', owner: this, args }; calls.push(result); return result; },
 		delayx(...args) { const result = { method: 'delayx', owner: this, args }; calls.push(result); return result; },
 		saveConfig(key, value) { saves.push([key, value]); } };
@@ -18,18 +18,19 @@ function harness({ enabled = true, yieldTask = () => Promise.resolve() } = {}) {
 	return { lib, game, get, _status, controller, calls, saves, registered, setNow(value) { now = value; } };
 }
 
-test('only settlement padding is removed; medium game speed, explicit durations, animation and AI settings stay intact', async () => {
+test('only silent data padding is removed; card/skill display waits, medium speed and explicit durations stay native', async () => {
 	const h = harness(), before = { ...h.lib.config };
-	await h.game.delayx(); await h.game.delay(); await h.game.delayx(.5);
+	await h.game.delayx(); await h.game.delay();
 	assert.equal(h.calls.length, 0);
-	h._status.event = { name: 'sha' }; await h.game.delayx();
-	h._status.event = { name: 'testSkill' }; await h.game.delay();
-	h._status.event = { name: 'testSkillContentBefore', skill: 'testSkill' }; await h.game.delayx();
+	for (const event of [{ name: 'useCard' }, { name: 'useSkill' }, { name: 'sha' }, { name: 'testSkill' }, { name: 'testSkillContentBefore', skill: 'testSkill' }]) {
+		h._status.event = event; const count = h.calls.length;
+		await h.game.delayx(); await h.game.delayx(.5); assert.equal(h.calls.length, count + 2);
+	}
 	const receiver = {}; const result = h.game.delay.call(receiver, .5, 17);
 	assert.equal(result.owner, receiver); assert.deepEqual(result.args, [.5, 17]);
-	h.game.delayx(2); assert.equal(h.calls.length, 2);
+	h.game.delayx(2); assert.equal(h.calls.length, 12);
 	assert.deepEqual(h.lib.config, before);
-	assert.equal(h.controller.snapshot().defaultWaits, 5); assert.equal(h.controller.snapshot().targetWaits, 1);
+	assert.equal(h.controller.snapshot().defaultWaits, 2);
 });
 
 test('choices, AI decisions, rescue, judge, phase pacing, requested waits and custom animation callbacks remain native', () => {
@@ -56,9 +57,9 @@ test('pause ownership, online rooms, replay, live disabling and repeated setup a
 });
 
 test('native delay events inherit settlement scope; only the known batch-gain padding matches fixed durations', async () => {
-	const h = harness(); h._status.event = { name: 'delayx', _args: [], parent: { name: 'useCard' } }; await h.game.delayx();
+	const h = harness(); h._status.event = { name: 'delayx', _args: [], parent: { name: 'gain', animate: false } }; await h.game.delayx();
 	h._status.event = { name: 'delayx', _args: [2], parent: { name: 'useCard' } }; h.game.delayx(2); assert.equal(h.calls.length, 1);
-	h._status.event = { name: 'loseAsync', gain_list: [], animate: 'giveAuto' }; await h.game.delay(0, 500); await h.game.delay(0, 700);
+	h._status.event = { name: 'loseAsync', gain_list: [], animate: 'giveAuto', _HH_gainMotionManaged: true }; await h.game.delay(0, 500); await h.game.delay(0, 700);
 	h.game.delay(0, 600); assert.equal(h.calls.length, 2);
 	h._status.event.animate = () => {}; h.game.delay(0, 500); assert.equal(h.calls.length, 3);
 	assert.equal(h.controller.snapshot().batchHolds, 2);
@@ -72,12 +73,14 @@ test('long automatic chains yield through the native pause manager even when the
 	release(); await later; await h.game.delayx(); assert.equal(h.controller.snapshot().yields, 1);
 	assert.equal(h.calls.length, 0);
 	h._status.event = { name: 'gain', animate: 'draw' };
+	h.game.hhDrawMotion = { enabled: true, waitForGain: () => Promise.resolve() };
 	for (let i = 0; i < 63; i++) assert.equal(h.controller.fastGain(h._status.event), true);
 	assert.equal(h.registered.length, 2, 'consecutive gains also yield when they have no default delay call');
 });
 
 function gainHarness(enabled) {
 	const h = harness({ enabled }), timers = [], visual = [], updates = [];
+	h.game.hhDrawMotion = { enabled: true, waitForGain: () => Promise.resolve() };
 	function node() { return { childNodes: [], appendChild(child) { if (child.fragment) { for (const c of [...child.childNodes]) this.appendChild(c); return; } this.childNodes.push(child); child.parentNode = this; } }; }
 	const hand = node(), player = { node: { handcards1: hand }, getCards: () => [], update: () => updates.push('update'), $draw: count => visual.push(count) };
 	const cards = [{ style: {}, vanishtag: [], fix() {}, addGaintag() {}, addKnower() {} }], event = { name: 'gain', animate: 'draw', cards, gaintag: [] };
@@ -101,6 +104,50 @@ test('actual HH gain inserts and displays the same cards without its 466ms pause
 	assert.equal(original.timers[0].ms, 466); assert.equal(original.updates.length, 0);
 	original.controller.setEnabled(true); original.timers[0].fn(...original.timers[0].args);
 	assert.equal(original._status.paused, false); assert.equal(original.updates.length, 1);
+});
+
+test('unmanaged draw/gain animations retain their native waits when arrival tracking is absent or disabled', async () => {
+	for (const mode of ['missing', 'disabled']) {
+		const h = gainHarness(true);
+		if (mode === 'missing') delete h.game.hhDrawMotion; else h.game.hhDrawMotion.enabled = false;
+		await h.context.gain(h.event, null, h.player);
+		assert.equal(h.timers[0].ms, 466); assert.equal(h._status.paused, true);
+		h.timers[0].fn(...h.timers[0].args); assert.equal(h._status.paused, false);
+		h._status.event = { name: 'loseAsync', animate: 'draw', gain_list: [] };
+		h.game.delay(0, 500); assert.equal(h.calls.at(-1).method, 'delay');
+	}
+});
+
+test('all visual event families and unknown third-party card/skill waits delegate unchanged with optimization enabled', () => {
+	const h = harness();
+	const names = ['damage', 'recover', 'loseHp', 'changeHp', 'changeHujia', 'link', 'turnOver', 'equip', 'replaceEquip', 'addJudge', 'removeJudge',
+		'judge', 'rejudge', 'dying', 'die', 'respond', 'useCard', 'useSkill', 'pindian', 'compare', 'showCards', 'viewCards', 'lose', 'discard', 'recast', 'gain'];
+	h.lib.skill.unknownVisual = { content() {} };
+	for (const name of [...names, 'unknownVisual']) {
+		h._status.event = { name }; const before = h.calls.length;
+		h.game.delay(); h.game.delayx(); h.game.delayx(.5); h.game.delay(0, 900);
+		assert.equal(h.calls.length, before + 4, name);
+		assert.deepEqual(h.calls.slice(before).map(c => c.args), [[], [], [.5], [0, 900]]);
+	}
+	h._status.event = { name: 'delayx', _args: [] }; assert.equal(h.controller.canOptimize(), false);
+	assert.equal(h.controller.snapshot().defaultWaits, 0);
+});
+
+test('native batch arrival management is scoped to the wrapper and restored on success or failure', async () => {
+	const h = harness(), source = fs.readFileSync(new URL('../src/overrides/content.js', import.meta.url), 'utf8');
+	const start = source.indexOf('export function createContentGainMultiple('), end = source.indexOf('\n/**', start);
+	let release, waited = false; const arrival = new Promise(resolve => { release = resolve; });
+	h.game.hhDrawMotion = { enabled: true, captureGain() {}, waitForGain() { waited = true; return arrival; } };
+	const context = vm.createContext(h); vm.runInContext(source.slice(start, end).replace('export function', 'function') + ';globalThis.wrap=createContentGainMultiple', context);
+	const event = { name: 'loseAsync', animate: 'draw', gain_list: [] }, owner = {}; let completed = false;
+	const wrapped = context.wrap(async function(value) { assert.equal(this, owner); assert.equal(value, event); assert.equal(event._HH_gainMotionManaged, true); return 'native-result'; });
+	const result = wrapped.call(owner, event).then(value => { completed = true; return value; });
+	for (let i = 0; !waited && i < 10; i++) await Promise.resolve();
+	assert.equal(waited, true); assert.equal(completed, false); release(); assert.equal(await result, 'native-result');
+	assert.equal(Object.hasOwn(event, '_HH_gainMotionManaged'), false);
+	event._HH_gainMotionManaged = false;
+	await assert.rejects(context.wrap(async () => { throw Error('native failure'); })(event), /native failure/);
+	assert.equal(event._HH_gainMotionManaged, false);
 });
 
 test('actual HH animation transition sync remains native with settlement optimization both on and off', () => {

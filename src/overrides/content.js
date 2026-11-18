@@ -20,9 +20,16 @@ export function createContentGainMultiple(base) {
 	if (typeof base !== "function") return base;
 	return async function (event, trigger, player) {
 		game.hhDrawMotion?.captureGain(event, player);
-		const result = await base.call(this, event, trigger, player);
-		if (game.hhSettlement?.canOptimize(event)) await game.hhDrawMotion?.waitForGain(event);
-		return result;
+		const previous = event._HH_gainMotionManaged;
+		event._HH_gainMotionManaged = game.hhDrawMotion?.enabled === true && typeof game.hhDrawMotion.waitForGain === "function";
+		try {
+			const result = await base.call(this, event, trigger, player);
+			if (game.hhSettlement?.canOptimize(event)) await game.hhDrawMotion?.waitForGain(event);
+			return result;
+		} finally {
+			if (previous === undefined) delete event._HH_gainMotionManaged;
+			else event._HH_gainMotionManaged = previous;
+		}
 	};
 }
 

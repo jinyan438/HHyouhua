@@ -8,6 +8,7 @@ import { spine } from '../src/libs/spine4-core.js';
 import { decodeKillCombo } from '../src/effects/killCombo.js';
 import { sourceSkillAsset as asset } from '../src/effects/sourceSkillAssets.js';
 import { createSourceSkillPopup } from '../src/effects/sourceSkillPopup.js';
+import { setupSettlementOptimization } from '../src/features/settlementOptimization.js';
 
 const root = new URL('../assets/skill-popup/', import.meta.url);
 const read = name => fs.readFileSync(new URL(name, root));
@@ -52,6 +53,20 @@ function fixture({ animation = true } = {}) {
 	const manager = createSourceSkillPopup({ lib }, environment);
 	return { Element, lib, game, player, manager, calls, document, timers, listeners, environment };
 }
+
+test('settlement toggle preserves skill brush CSS duration and its cleanup timer', () => {
+	const results = [];
+	for (const enabled of [false, true]) {
+		const h = fixture(), status = { event: { name: 'useSkill' } };
+		h.game.delayx = () => 'native-display';
+		setupSettlementOptimization({ lib: h.lib, game: h.game, get: {}, _status: status }, { enable_settlement_optimize: enabled });
+		h.manager.play(h.player, '散谣'); assert.equal(h.game.delayx(), 'native-display');
+		const timer = [...h.timers.values()][0]; assert.equal(timer.ms, asset.duration + 40);
+		results.push({ css: h.document.head.children[0].textContent, duration: timer.ms });
+		assert.equal(h.manager.activeCount, 1); timer.fn(); assert.equal(h.manager.activeCount, 0);
+	}
+	assert.deepEqual(results[0], results[1]);
+});
 
 test('repeated skills replace only that player’s popup and stale timers cannot remove the new one', () => {
 	const h = fixture(), other = new h.Element();

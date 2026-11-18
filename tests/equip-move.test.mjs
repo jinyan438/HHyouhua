@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import vm from 'node:vm';
 import { setupEquipMove } from '../src/features/equipMove.js';
+import { setupSettlementOptimization } from '../src/features/settlementOptimization.js';
 
 const movement = readFileSync(new URL('../src/overrides/player/card-movement.js', import.meta.url), 'utf8');
 const throws = movement.slice(movement.indexOf('export function playerThrow('), movement.indexOf('export function playerPhaseJudge(')).replaceAll('export function', 'function');
@@ -121,6 +122,20 @@ function harness({ zoom = 1, enabled = true } = {}) {
 	function flushFrames() { for (const fn of frames.splice(0)) fn(); }
 	return { lib, game, ui, get, _status, context, controller, env, timers, advance, source, use, equipSlot, throwCards, transform, target, actor, normal, frames, copies, videos, flushFrames, node, visual };
 }
+
+test('settlement toggle preserves the complete equipment popup and shrink clock', async () => {
+	const results = [];
+	for (const enabled of [false, true]) {
+		const h = harness(), card = h.source();
+		setupSettlementOptimization(h, { enable_settlement_optimize: enabled }); h.use([card]); h.equipSlot(card);
+		const clone = h.throwCards([card]), initial = clone.style.transform; await h.game.delayx();
+		h.advance(200); const popup = clone.style.transform; assert.equal(h.controller.activeCount, 1);
+		h.advance(199); assert.equal(h.controller.activeCount, 1);
+		h.advance(1); assert.equal(h.controller.activeCount, 0); assert.equal(clone.parentNode, null); assert.equal(h.timers.size, 0);
+		results.push({ initial, popup });
+	}
+	assert.deepEqual(results[0], results[1]);
+});
 
 test('actual throw hooks show equipment at its target upper-left, then shrink to the left edge of the newly inserted slot', () => {
 	const h = harness(), card = h.source(); h.use([card]);

@@ -8,6 +8,7 @@ import { spine } from '../src/libs/spine4-core.js';
 import { decodeKillCombo, KillComboRenderer } from '../src/effects/killCombo.js';
 import { sourceCards, sourceCardAssets, sourceCardNatures, sourceCardSkills } from '../src/effects/sourceCardAssets.js';
 import { createSourceCardPlayer, setupSourceCardAnimations, sourceCardEffect, sourceCardPlacement, replacedCardEffectNames } from '../src/effects/sourceCardAnimations.js';
+import { setupSettlementOptimization } from '../src/features/settlementOptimization.js';
 
 const assetRoot = new URL('../assets/card-effects/', import.meta.url);
 const flush = () => new Promise(resolve => setImmediate(resolve));
@@ -116,6 +117,27 @@ function harness({ fail = false, graphicsFail = false } = {}) {
 	}
 	return { context, player, actor, victim, parent, audio, log, uploaded, released, drawn, advance, frames, timers };
 }
+
+test('settlement toggle preserves real healing, fire/thunder, trick and equipment Spine timelines until their final frame', async () => {
+	const results = [];
+	const ids = [...['tao', 'jiu', 'wuzhong', 'huogong', 'tiesuo', 'shandian', 'bagua'].map(name => sourceCards.find(card => card.name === name).effect), sourceCardNatures.fire, sourceCardNatures.thunder];
+	for (const enabled of [false, true]) {
+		const h = harness(), samples = [];
+		h.context.game.delayx = () => 'native-display'; h.context.game.delay = () => 'native-display';
+		setupSettlementOptimization(h.context, { enable_settlement_optimize: enabled });
+		h.context._status.event = { name: 'useCard' };
+		for (const id of ids) {
+			assert.equal(await h.player.playAsset(id, h.actor), true);
+			assert.equal(h.context.game.delayx(), 'native-display'); h.advance(100);
+			const draw = h.drawn.at(-1), duration = draw.model.animation.duration;
+			assert.ok(Math.abs(draw.time - .1) < 1e-8); samples.push({ id, duration, time: draw.time });
+			h.advance(duration * 1000 - 101); assert.equal(h.player.diagnostics.active, 1, id);
+			h.advance(2); assert.equal(h.player.diagnostics.active, 0, id); assert.equal(h.timers.size, 0);
+		}
+		results.push(samples); h.player.stop();
+	}
+	assert.deepEqual(results[0], results[1]);
+});
 
 test('normal/view-as clone hooks deduplicate the same event but preserve independent uses and responses', async () => {
 	const h = harness(), card = { name: 'tao' }, event = { name: 'useCard', player: h.actor, card, targets: [h.victim] };

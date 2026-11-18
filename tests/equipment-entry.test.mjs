@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { setupEquipmentEntry } from '../src/ui/equipmentEntry.js';
+import { setupSettlementOptimization } from '../src/features/settlementOptimization.js';
 
 function harness({ waiting = false, animation = true } = {}) {
 	let now = 0, nextId = 0, arrival, removedWaits = 0;
@@ -33,6 +34,20 @@ function harness({ waiting = false, animation = true } = {}) {
 	const flush = () => observers.forEach(o => o.callback());
 	return { lib, game, controller, animations, timers, observers, advance, player, card, put, remove, flush, arrive: () => arrival?.(), get removedWaits() { return removedWaits; } };
 }
+
+test('settlement toggle preserves equipment arrival ordering and the full 300ms strip slide', () => {
+	const results = [];
+	for (const enabled of [false, true]) {
+		const h = harness({ waiting: true }), p = h.player(), c = h.card();
+		h.game.delayx = () => 'native-display';
+		setupSettlementOptimization({ lib: h.lib, game: h.game, get: {}, _status: { event: { name: 'equip' } } }, { enable_settlement_optimize: enabled });
+		h.controller.observe(p); h.put(c, p); h.flush(); assert.equal(h.animations.length, 0);
+		assert.equal(h.game.delayx(), 'native-display'); h.arrive(); const a = h.animations[0];
+		results.push({ frames: a.frames, options: a.options }); assert.equal(a.options.duration, 300);
+		h.advance(299); assert.equal(h.controller.activeCount, 1); a.finish(); assert.equal(h.controller.activeCount, 0); assert.equal(h.timers.size, 0);
+	}
+	assert.deepEqual(results[0], results[1]);
+});
 
 test('waits for the card arrival callback, then slides the full strip for the native 300 ms', () => {
 	const h = harness({ waiting: true }), p = h.player(), c = h.card(); h.controller.observe(p); h.put(c, p); h.flush();

@@ -7,7 +7,7 @@ import ts from 'typescript';
 import { setupSettlementOptimization } from '../src/features/settlementOptimization.js';
 
 const extension = readFileSync(new URL('../hh-features.js', import.meta.url), 'utf8');
-const thinkCode = extension.slice(extension.indexOf('const HH_parseNumberConfig'), extension.indexOf('HH_hookAIThinkDelay();') + 'HH_hookAIThinkDelay();'.length);
+const thinkCode = extension.slice(extension.indexOf('const HH_parseNumberConfig'), extension.indexOf('setupLordBlindShot({ lib, game, get, _status });'));
 const rescueBridge = extension.slice(extension.indexOf('// ========== 濒死逐人求桃'), extension.indexOf('// ========== HH优化样式覆盖功能'));
 const coreSource = readFileSync(new URL('../../../noname/library/element/content.ts', import.meta.url), 'utf8');
 const coreCode = ts.transpileModule(coreSource.slice(coreSource.indexOf('export const Content')).replace('export const Content', 'const Content') + '\nglobalThis.coreContent = Content;', {
@@ -130,7 +130,7 @@ test('快速操作和关闭文字提示仍同步进度，等待异常也会清�
         const token = {}; let started = false, ended = false;
         h.game.hhAIThinkProgress = {
             begin(player, duration, showTip) {
-                started = true; assert.ok(duration > 0); if (mode === 'quick') assert.ok(duration >= 500 && duration < 1600);
+                started = true; assert.ok(duration > 0); if (mode === 'quick') assert.ok(duration >= 1000 && duration <= 2600);
                 assert.equal(showTip, mode !== 'hidden' && duration >= 600); return token;
             },
             end(value) { assert.equal(value, token); ended = true; },
@@ -141,11 +141,11 @@ test('快速操作和关闭文字提示仍同步进度，等待异常也会清�
     }
 });
 
-test('因操作超时托管的本地角色快速执行，其他AI仍保留原思考节奏', async () => {
+test('因操作超时托管的本地角色与其他AI一致思考，不再走快速旁路', async () => {
     const h = setup(); h.game.me = h.player; h.status.auto = true; h.game.hhPlayerActionTimer = { timedOutAuto: true };
-    await h.think.delay(h.use('sha')); assert.equal(h.waits.length, 0);
+    await h.think.delay(h.use('sha')); assert.equal(h.waits.length, 1); assert.ok(h.waits[0] >= 1000);
     const other = { ...h.player };
-    await h.think.delay(h.use('sha', { player: other })); assert.equal(h.waits.length, 1);
+    await h.think.delay(h.use('sha', { player: other })); assert.equal(h.waits.length, 2); assert.ok(h.waits[1] >= 1000);
 });
 
 test('求桃预思考沿用救人长考和自救点击节奏，不预先查询是否有桃', () => {
@@ -156,7 +156,7 @@ test('求桃预思考沿用救人长考和自救点击节奏，不预先查询�
     const noCards = h.rescueDelay(h.player, dying, parent);
     assert.ok(hasCards >= 600 && noCards >= 600);
     const selfSave = h.rescueDelay(h.player, h.player, parent);
-    assert.ok(selfSave > 0 && selfSave < 600);
+    assert.ok(selfSave >= 900 && selfSave <= 2600);
     assert.deepEqual(h.popups, []);
 });
 
@@ -184,7 +184,7 @@ test('求桃预思考后不重复等待出牌/转化子选择，出牌结算中�
     assert.equal(h.waits.length, 1);
 });
 
-test('实际 chooseToUse：无中生有保留点击时间，不受10秒思考下限影响，并保持出牌结果', async () => {
+test('实际 chooseToUse：顺手用牌也遵守用户的思考下限，并保持出牌结果', async () => {
     const h = setup({ config: { extension_HH优化_ai_think_delay_min: 10000 } });
     const evt = h.use('wuzhong');
     evt.selectedResult = evt.result;
@@ -194,7 +194,7 @@ test('实际 chooseToUse：无中生有保留点击时间，不受10秒思考下
     assert.equal(h.actions[0].result, evt.selectedResult);
     assert.equal(h.actions[0].waits.length, 1);
     assert.equal(h.waits.length, 1);
-    assert.ok(h.waits[0] >= 500 && h.waits[0] < 1600);
+    assert.equal(h.waits[0], 10000);
     assert.deepEqual(h.popups, []);
 });
 
@@ -233,7 +233,7 @@ test('实际 chooseToRespond：出闪前观察响应一次，保留响应牌和�
     let response;
     h.player.respond = (cards, card) => {
         assert.equal(h.waits.length, 1);
-        assert.ok(h.waits[0] >= 480 && h.waits[0] < 2000);
+        assert.ok(h.waits[0] >= 1000 && h.waits[0] <= 2600);
         response = { cards, card };
         return { set() {} };
     };
@@ -250,7 +250,7 @@ test('自己吃桃、濒死自救酒、装备空栏保留点击；救别人、�
         await h.think.delay(evt);
     }
     assert.equal(h.waits.length, 3);
-    assert.ok(h.waits.every(ms => ms >= 500 && ms < 1600));
+    assert.ok(h.waits.every(ms => ms >= 1000 && ms <= 2600));
     const dying = { hp: 0 };
     const rescue = h.use('tao', { type: 'dying', dying });
     rescue.result.targets = [dying];
@@ -262,8 +262,8 @@ test('自己吃桃、濒死自救酒、装备空栏保留点击；救别人、�
     assert.ok(h.waits.slice(3).every(ms => ms >= 600));
 });
 
-test('普通出闪/响应杀保留观察停顿，残血及持有桃无懈不引发十秒长考', async () => {
-    const h = setup({ config: { extension_HH优化_ai_think_delay_min: 10000 } });
+test('普通出闪/响应杀保留完整停顿，残血及持有桃无懈仍采用普通响应上限', async () => {
+    const h = setup();
     h.player.hp = 1;
     h.hand.push({ name: 'wuxie' });
     for (const name of ['shan', 'sha']) {
@@ -271,7 +271,7 @@ test('普通出闪/响应杀保留观察停顿，残血及持有桃无懈不引�
         await h.think.delay(evt);
     }
     assert.equal(h.waits.length, 2);
-    assert.ok(h.waits.every(ms => ms >= 480 && ms < 2000));
+    assert.ok(h.waits.every(ms => ms >= 1000 && ms <= 2600));
     assert.deepEqual(h.popups, []);
 });
 
@@ -284,7 +284,7 @@ test('无普通响应不等待；简单代选和结束出牌阶段仍有点击�
     await h.think.delay(h.event('chooseToDiscard', { result: { bool: true, autochoose: true } }));
     await h.think.delay(h.event('chooseToUse', { result: { bool: false } }));
     assert.equal(h.waits.length, 2);
-    assert.ok(h.waits.every(ms => ms > 0 && ms < 600));
+    assert.ok(h.waits.every(ms => ms >= 900 && ms <= 2600));
 });
 
 test('强制弃光和唯一控制项模拟点击，多选项及多牌取舍正常等待', async () => {
@@ -292,7 +292,7 @@ test('强制弃光和唯一控制项模拟点击，多选项及多牌取舍正�
     await h.think.delay(h.event('chooseToDiscard', { forced: true, selectCard: 3, result: { bool: true, cards: h.hand } }));
     await h.think.delay(h.event('chooseControl', { controls: ['ok'], result: { control: 'ok' } }));
     assert.equal(h.waits.length, 2);
-    assert.ok(h.waits.every(ms => ms > 0 && ms < 600));
+    assert.ok(h.waits.every(ms => ms >= 900 && ms <= 2600));
     await h.think.delay(h.event('chooseControl', { controls: ['draw', 'recover'], result: { control: 'draw' } }));
     await h.think.delay(h.event('chooseToDiscard', { forced: true, selectCard: 1, result: { bool: true, cards: [h.hand[0]] } }));
     assert.equal(h.waits.length, 4);
@@ -304,7 +304,7 @@ test('实际 chooseControl 和单体 chooseBool 返回结果后应用节奏', as
     await h.run(h.event('chooseControl', { controls: ['draw', 'recover'], choice: 0 }));
     await h.run(h.event('chooseBool', { choice: true, frequentSkill: 'yingzi' }));
     assert.equal(h.waits.length, 2);
-    assert.ok(h.waits[1] > 0 && h.waits[1] < 600);
+    assert.ok(h.waits[1] >= 900 && h.waits[1] <= 2600);
     await h.run(h.event('chooseBool', { choice: true }));
     assert.equal(h.waits.length, 3);
 });
@@ -315,7 +315,7 @@ test('技能消耗牌不作为使用牌，虚拟牌按最终牌名判断', () =>
     assert.ok(h.think.calc(h.player, evt) > 0);
     evt.result.card = { name: 'wuzhong' };
     const delay = h.think.calc(h.player, evt);
-    assert.ok(delay >= 500 && delay < 1600);
+    assert.ok(delay >= 1000 && delay <= 2600);
 });
 
 test('技能中的独立选择分别等待，出牌包装不重复等待，结算中新响应独立思考', async () => {
@@ -365,7 +365,7 @@ test('包装保留 goto/redo、this、第四参数和原返回值，不插入额
     assert.deepEqual(visits, [0, 1, 0, 1, 1, 2]);
     assert.equal(evt._result, 'unchanged');
     assert.equal(h.waits.length, 1);
-    assert.ok(h.waits[0] >= 500 && h.waits[0] < 1600);
+    assert.ok(h.waits[0] >= 1000 && h.waits[0] <= 2600);
     const wrapped = h.lib.element.content.chooseToUse;
     h.think.hook();
     assert.equal(h.lib.element.content.chooseToUse, wrapped);
@@ -428,7 +428,7 @@ test('不额外执行自动选择、过滤或AI决策回调，弃牌不按所弃
     assert.equal(h.waits.length, 1);
 });
 
-test('系统结算事件不接入延迟，已经指定结果的拆牌直接结算', async () => {
+test('系统结算事件不接入思考，预选牌的交互仍保留观察确认', async () => {
     const system = async function() { return 'resolved'; };
     const content = Object.fromEntries(['useCard', 'draw', 'gain', 'discard', 'damage', 'recover', 'showCards'].map(name => [name, system]));
     const h = setup({ content });
@@ -437,8 +437,9 @@ test('系统结算事件不接入延迟，已经指定结果的拆牌直接结�
         assert.equal(h.lib.element.content[name], system);
         await h.think.delay(h.event(name, { result: { bool: true } }));
     }
-    await h.think.delay(h.event('discardPlayerCard', { directresult: h.hand, result: { bool: true, cards: h.hand } }));
     assert.equal(h.waits.length, 0);
+    await h.think.delay(h.event('discardPlayerCard', { directresult: h.hand, result: { bool: true, cards: h.hand } }));
+    assert.equal(h.waits.length, 1); assert.ok(h.waits[0] >= 900);
 });
 
 test('实际火攻：展示和弃同花色牌各思考一次，展示及伤害结算不额外思考', async () => {
@@ -550,11 +551,13 @@ test('启用结算优化后每张主动牌和每次杀闪响应仍单独等待�
             response.selectedResult = response.result; delete response.result; await h.run(response);
         }
         assert.equal(h.actions.length, 12); assert.equal(responses, 12); assert.equal(h.waits.length, 24);
-        assert.ok(h.waits.every(ms => ms >= 480));
+        assert.ok(h.waits.every(ms => ms >= 1000));
         assert.ok(new Set(h.waits).size >= 20, '不能连续使用同一个固定停顿');
         sequences.push(h.waits.slice());
         h.status.event = h.event('useCard'); await h.game.delayx();
-        assert.equal(settlement.snapshot().defaultWaits, enabled ? 1 : 0, '系统结算独立保持优化');
+        assert.equal(settlement.snapshot().defaultWaits, 0, '使用牌的展示等待保持原样');
+        h.status.event = h.event('gain', { animate: false }); await h.game.delayx();
+        assert.equal(settlement.snapshot().defaultWaits, enabled ? 1 : 0, '静默数据结算独立保持优化');
         h.lib.config.extension_HH优化_enable_ai_think_delay = false;
         await h.think.delay(h.use('sha', { parent: phase })); assert.equal(h.waits.length, 24);
         assert.equal(h.lib.config.game_speed, 'mid'); assert.equal(h.lib.config.extension_HH优化_speed_multiplier, 2.5); assert.equal(h.lib.config.animation, true);
@@ -588,7 +591,7 @@ test('连续用牌不会越出越快，摸到新牌和公开场面变化后重�
     assert.ok(play() > planned, '体力变化后重新取舍');
     play(); h.game.players[1].node = { equips: { childElementCount: 1 } };
     assert.ok(play() > planned, '装备变化后重新取舍');
-    assert.ok(Array.from({ length: 50 }, play).every(ms => ms >= 750 && ms <= 2600));
+    assert.ok(Array.from({ length: 50 }, play).every(ms => ms >= 1200 && ms <= 2600));
 });
 
 test('角色和每次决策有不同节奏，复杂操作不会全挤到最长时长', () => {
@@ -601,13 +604,73 @@ test('角色和每次决策有不同节奏，复杂操作不会全挤到最长�
         complex.push(h.think.calc(h.player, h.use('sha', { parent: phase, complexCard: true, selectCard: [1, 3], selectTarget: [1, 3] })));
     }
     for (const values of [active, response, easy, complex]) assert.ok(new Set(values).size > 150);
-    assert.ok(active.every(ms => ms >= 750 && ms <= 2600));
-    assert.ok(response.every(ms => ms >= 480 && ms < 2000));
-    assert.ok(easy.every(ms => ms >= 500 && ms < 1600));
+    assert.ok(active.every(ms => ms >= 1200 && ms <= 2600));
+    assert.ok(response.every(ms => ms >= 1000 && ms <= 2600));
+    assert.ok(easy.every(ms => ms >= 1000 && ms <= 2600));
     assert.ok(complex.every(ms => ms <= 2600));
     const mean = values => values.reduce((a, b) => a + b) / values.length;
     assert.ok(mean(active) > mean(response)); assert.ok(mean(complex) > mean(active));
     const other = { ...h.player }; delete other._HH_aiThinkProfile;
     h.think.calc(other, h.use('sha', { player: other }));
     assert.notEqual(other._HH_aiThinkProfile.speed, h.player._HH_aiThinkProfile.speed);
+});
+
+test('代选、唯一选项、频繁技能和结束阶段均有可感知且变化的停顿', async () => {
+    const h = setup({ random: seededRandom(318) });
+    const choices = [
+        () => h.event('chooseControl', { controls: ['ok'], result: { control: 'ok' } }),
+        () => h.event('chooseBool', { frequentSkill: 'yingzi', result: { bool: true } }),
+        () => h.event('chooseToDiscard', { forced: true, selectCard: -1, result: { bool: true, cards: h.hand } }),
+        () => h.event('chooseCard', { result: { bool: true, autochoose: true, cards: [h.hand[0]] } }),
+        () => h.event('chooseToUse', { result: { bool: false } }),
+    ];
+    for (let i = 0; i < 10; i++) for (const choice of choices) await h.think.delay(choice());
+    assert.equal(h.waits.length, 50); assert.ok(h.waits.every(ms => ms >= 900 && ms <= 2600));
+    assert.ok(new Set(h.waits).size > 40, '简单操作也不能连续使用固定的最低时长');
+});
+
+test('新增给牌、移牌、选数和选技能入口保留最终结果，并对不同结果形状分别计时', async () => {
+    const content = Object.fromEntries(['chooseToGive', 'chooseToMove', 'chooseToMove_new', 'chooseNumbers', 'chooseSkill'].map(name => [name, async function(event) {
+        event.result = event.selectedResult; return event.result;
+    }]));
+    const h = setup({ content }); h.lib.skill.transform = { chooseButton: {} };
+    const values = [{ bool: true, cards: [h.hand[0]] }, { bool: true, moved: [h.hand] }, { moved: [h.hand] }, { numbers: [2, 3] }, { bool: true, skill: 'transform' }];
+    for (const [index, name] of Object.keys(content).entries()) {
+        const event = h.event(name, { selectedResult: values[index] }); await h.run(event);
+        assert.equal(event.result, values[index]); assert.equal(h.waits.length, index + 1);
+    }
+    assert.ok(h.waits.every(ms => ms >= 900));
+});
+
+test('实际原生选技能：选到带选择按钮的技能也在结果交还前思考一次', async () => {
+    const h = setup(); h.get.max = list => list[0]; h.get.skillRank = () => 1;
+    h.lib.skill.transform = { chooseButton: {} };
+    const event = h.event('chooseSkill', { target: { getGainableSkills: () => ['transform', 'other'] } });
+    await h.run(event); assert.equal(event.result.skill, 'transform'); assert.equal(h.waits.length, 1); assert.ok(h.waits[0] >= 900);
+});
+
+test('竞技场初始化后重接其他扩展替换的选择函数，重复安装不叠加等待', async () => {
+    const h = setup(), replacement = [async function(event) { event.result = { bool: true, cards: [h.hand[0]] }; }];
+    h.lib.element.content.chooseCard = replacement;
+    for (const callback of h.lib.arenaReady) callback();
+    const wrapped = h.lib.element.content.chooseCard; assert.notEqual(wrapped, replacement);
+    for (const callback of h.lib.arenaReady) callback(); assert.equal(h.lib.element.content.chooseCard, wrapped);
+    await h.run(h.event('chooseCard')); assert.equal(h.waits.length, 1); assert.ok(h.waits[0] >= 900);
+});
+
+test('已编译的旧式步骤复用原索引、沙盒依赖和this，在提交操作前等待', async () => {
+    const compiled = Object.assign(async function() { throw Error('must reuse native compiled step bodies'); }, { compiled: true, originals: [
+        function(top, event, trigger, player) { assert.equal(this, event); assert.equal(top.game, h.game); assert.equal(player, h.player); event.result = { bool: true, cards: [h.hand[0]] }; },
+        function(top, event) { assert.equal(this, event); assert.equal(h.waits.length, 1); event.committed = true; return 'kept'; },
+    ] });
+    const h = setup({ content: { chooseCard: compiled } }), event = h.event('chooseCard');
+    await h.run(event); assert.equal(event.committed, true); assert.equal(event._result, 'kept'); assert.equal(h.waits.length, 1);
+});
+
+test('不透明的扩展编译器在进入选择前思考，不改变原返回值和this', async () => {
+    const callbacks = []; let entered = false;
+    const original = Object.assign(async function(event) { assert.equal(this, event); entered = true; event.result = { bool: true }; return 'same'; }, { compiled: true });
+    const h = setup({ content: { chooseCard: original }, schedule: callback => callbacks.push(callback) }), event = h.event('chooseCard');
+    const result = h.run(event); assert.equal(entered, false); assert.equal(callbacks.length, 1);
+    callbacks.shift()(); assert.equal(await result, 'same'); assert.equal(entered, true); assert.equal(h.waits.length, 1);
 });

@@ -9,6 +9,7 @@ const CHOICES = new Set([
 	"judge", "rejudge", "dying", "die", "gameDraw", "gameStart", "gameOver", "_wuxie", "_save",
 ]);
 const GAIN_ANIMATIONS = new Set(["draw", "gain", "gain2", "draw2", "give", "giveAuto"]);
+const SILENT_SYSTEM = new Set(["draw", "gain", "lose", "loseAsync", "discard", "cardsDiscard", "orderingDiscard", "cardsGotoOrdering", "cardsGotoPile", "cardsGotoSpecial"]);
 
 export function setupSettlementOptimization({ lib, game, get, _status }, config = {}, environment = {}) {
 	if (game.hhSettlement) return game.hhSettlement;
@@ -19,7 +20,7 @@ export function setupSettlementOptimization({ lib, game, get, _status }, config 
 		if (typeof requestAnimationFrame === "function") frame = requestAnimationFrame(done);
 	}), ...environment };
 	const original = { delay: game.delay, delayx: game.delayx };
-	const stats = { defaultWaits: 0, targetWaits: 0, gainHolds: 0, batchHolds: 0, layoutPassesSaved: 0, yields: 0 };
+	const stats = { defaultWaits: 0, gainHolds: 0, batchHolds: 0, layoutPassesSaved: 0, yields: 0 };
 	let fallback = config.enable_settlement_optimize !== false, lastYield = env.now(), operations = 0, yielding;
 	const enabled = () => (lib.config[KEY] ?? fallback) === true;
 
@@ -32,11 +33,23 @@ export function setupSettlementOptimization({ lib, game, get, _status }, config 
 		if (event.forceWait || event.waitingForTransition || event.dialog || typeof event.animate === "function"
 			|| typeof event.delay === "number" || typeof event.autodelay === "number" || event.delay_time != null) return false;
 		if (name === "delay" || name === "delayx") {
-			return !event._args?.length && canOptimize(event.parent || event.getParent?.());
+			const parent = event.parent || event.getParent?.();
+			return !event._args?.length && !!parent && parent !== event && canOptimize(parent);
 		}
 		return SYSTEM.has(name) || ["card", "precard", "postcard"].includes(event.type)
 			|| typeof lib.card?.[name]?.content === "function" || Array.isArray(lib.card?.[name]?.content)
 			|| !!lib.skill?.[event.skill || name]?.content;
+	}
+	function paddingScope(event) {
+		if (["delay", "delayx"].includes(event?.name) && !event._args?.length) return paddingScope(event.parent || event.getParent?.());
+		return event;
+	}
+	function canSkipPadding(event) {
+		const scope = paddingScope(event);
+		// Default card/skill waits also pace CSS, canvas and Spine effects, including third-party ones.
+		// Only a managed arrival or an explicitly silent data operation proves this padding redundant.
+		return scope?._HH_gainMotionManaged === true || SILENT_SYSTEM.has(scope?.name)
+			&& (scope.animate === false || lib.config.animation === false);
 	}
 
 	function yieldControl() {
@@ -56,13 +69,9 @@ export function setupSettlementOptimization({ lib, game, get, _status }, config 
 		game[method] = function (...args) {
 			const event = _status.event;
 			if (canOptimize(event)) {
-				if (!args.length) { stats.defaultWaits++; return yieldControl(); }
-				// These two native useCard/useSkill sites only separate consecutive targets.
-				if (method === "delayx" && args.length === 1 && args[0] === .5 && ["useCard", "useSkill"].includes(event.name)) {
-					stats.targetWaits++; return yieldControl();
-				}
+				if (!args.length && canSkipPadding(event)) { stats.defaultWaits++; return yieldControl(); }
 				// Native gaincardMultiple puts these cosmetic holds in front of its child gains.
-				if (method === "delay" && args.length === 2 && args[0] === 0 && event.gain_list && GAIN_ANIMATIONS.has(event.animate)
+				if (method === "delay" && args.length === 2 && args[0] === 0 && event._HH_gainMotionManaged && event.gain_list && GAIN_ANIMATIONS.has(event.animate)
 					&& [500, 700].some(ms => args[1] === (get.delayx ? get.delayx(ms, ms) : ms))) {
 					stats.batchHolds++; return yieldControl();
 				}
@@ -74,7 +83,8 @@ export function setupSettlementOptimization({ lib, game, get, _status }, config 
 	const controller = {
 		canOptimize,
 		fastGain(event) {
-			if (!GAIN_ANIMATIONS.has(event.animate) || !canOptimize(event)) return false;
+			if (!GAIN_ANIMATIONS.has(event.animate) || !canOptimize(event) || !game.hhDrawMotion?.enabled
+				|| typeof game.hhDrawMotion.waitForGain !== "function") return false;
 			stats.gainHolds++; void yieldControl(); return true;
 		},
 		coalesceLayout() {
