@@ -1,5 +1,6 @@
 import { lib, game, ui, get, ai, _status } from 'noname';
 import { createRecoveryExtension, recoverPendingUpdate, updateConfig } from './updater.js';
+import { setupBackgrounds, refreshExtensionBackground } from './src/ui/backgrounds.js';
 
 export const type = 'extension';
 
@@ -40,10 +41,12 @@ export default async function () {
 			if (legacyAlreadyLoaded) return new Promise(() => game.reload());
 			window.decadeUIName = 'HH优化';
 			window.decadeUIPath = `${lib.assetURL}extension/HH优化/`;
+			await setupBackgrounds(lib, game, get);
 			await precontent.call(this, options);
 			await hh.precontent.call(this, options);
 		},
 		async content(options, packageData) {
+			refreshExtensionBackground(lib, game);
 			await content.call(this, options, packageData);
 			await hh.content.call(this, options, packageData);
 		},

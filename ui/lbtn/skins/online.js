@@ -4,6 +4,7 @@
  */
 import { lib, game, ui, get, ai, _status } from "noname";
 import { createBaseLbtnPlugin } from "./base.js";
+import { getBackgroundImage } from "../../../src/ui/backgrounds.js";
 
 export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 	const base = createBaseLbtnPlugin(lib, game, ui, get, ai, _status, app);
@@ -521,7 +522,7 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 						}
 					});
 				} else {
-					img.setBackgroundImage(`image/background/${fileName}.jpg`);
+					img.setBackgroundImage(getBackgroundImage(fileName));
 				}
 
 				if (fileName === lib.config.image_background) ui.create.div(".bgxuanzhong", img);

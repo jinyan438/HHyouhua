@@ -4,6 +4,7 @@
  */
 import { lib, game, ui, get, ai, _status } from "noname";
 import { addCharacterCatalogMenu } from "../../../src/ui/characterBrowserMenu.js";
+import { getBackgroundImage } from "../../../src/ui/backgrounds.js";
 
 /**
  * 创建基础lbtn插件
@@ -202,7 +203,7 @@ export function createBaseLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 						reader.readAsDataURL(fileToLoad, "UTF-8");
 					});
 				} else {
-					img.setBackgroundImage(`image/background/${fileName}.jpg`);
+					img.setBackgroundImage(getBackgroundImage(fileName));
 				}
 
 				if (fileName === lib.config.image_background) {
