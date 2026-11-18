@@ -627,6 +627,135 @@ test('借刀要求出杀或交武器都需要取舍，不套用普通响应/放�
     }
 });
 
+test('原生借刀在没有杀直接交武器前完成思考，有杀出杀或放弃均只思考一次', async () => {
+    for (const mode of ['no-sha', 'use-sha', 'pass']) {
+        const callbacks = [], h = setup({ schedule: callback => callbacks.push(callback) });
+        const content = h.loadCardPack('standard').jiedao, actor = h.player, owner = h.game.players[1], victim = { hp: 3 };
+        const weapon = { name: 'zhuge' }, source = h.event('jiedao', { player: owner, target: actor, addedTarget: victim, card: { name: 'jiedao' } });
+        const skill = h.lib.skill._HH_ai_jiedao_think;
+        let probes = 0, given = 0, choices = 0;
+        h.lib.config.skip_shan = true; actor.hasSha = () => { probes++; return mode !== 'no-sha'; };
+        actor.getGainableCards = () => [weapon]; owner.gain = async cards => { assert.deepEqual(cards, [weapon]); assert.equal(h.waits.length, 1); given++; };
+        actor.chooseToUse = () => { choices++; return h.choice('chooseToUse', mode === 'use-sha' ? { bool: true, card: { name: 'sha' }, targets: [victim] } : { bool: false }, { parent: source, type: undefined }); };
+        assert.ok(h.lib.skill.global.includes('_HH_ai_jiedao_think')); assert.equal(skill.filter(source, actor), true);
+        const pending = (async () => { await skill.content({}, source, actor); await content.content(source, undefined, owner); })();
+        assert.equal(callbacks.length, 1); assert.equal(probes, 0); assert.equal(choices, 0); assert.equal(given, 0);
+        callbacks.shift()(); await pending;
+        assert.equal(probes, 1); assert.equal(choices, mode === 'no-sha' ? 0 : 1); assert.equal(h.waits.length, 1);
+        assert.equal(h.actions.length, mode === 'use-sha' ? 1 : 0); assert.equal(given, mode === 'use-sha' ? 0 : 1);
+        assert.equal(skill.filter(source, actor), false, '同一被借刀者不重复预思考');
+        assert.ok(h.waits[0] >= 900); // 关键决策保留原来的可变长考范围。
+        const resolution = h.event('useCard', { player: actor, parent: source });
+        const response = h.use('shan', { name: 'chooseToRespond', type: undefined, parent: resolution });
+        const next = h.think.delay(response); assert.equal(callbacks.length, 1); callbacks.shift()(); await next;
+        assert.equal(h.waits.length, 2, '借刀后实际杀的响应仍是独立决策');
+    }
+});
+
+test('借刀预思考遵守真人、联机、关闭开关、无目标及强制命中限制', async () => {
+    for (const mode of ['mine', 'online', 'connect', 'disabled', 'zero', 'directHit', 'no-target']) {
+        const h = setup(), actor = h.player, skill = h.lib.skill._HH_ai_jiedao_think;
+        const source = h.event('jiedao', { player: h.game.players[1], target: actor, addedTarget: {}, card: { name: 'jiedao' } });
+        if (mode === 'mine') actor.isMine = () => true;
+        if (mode === 'online') h.game.online = true;
+        if (mode === 'connect') h.status.connectMode = true;
+        if (mode === 'disabled') h.lib.config.extension_HH优化_enable_ai_think_delay = false;
+        if (mode === 'zero') Object.assign(h.lib.config, { extension_HH优化_ai_think_delay_min: 0, extension_HH优化_ai_think_delay_max: 0 });
+        if (mode === 'directHit') source.directHit = true;
+        if (mode === 'no-target') delete source.addedTarget;
+        if (skill.filter(source, actor)) await skill.content({}, source, actor);
+        assert.equal(h.waits.length, 0, mode);
+    }
+});
+
+function useTargetFixture(options) {
+    const h = setup(options);
+    h.lib.filter.cardEnabled = h.lib.filter.cardUsable = () => true;
+    h.get.is = { object: () => true }; h.get.itemtype = () => undefined; h.get.copy = value => value;
+    h.get.info = () => ({ notarget: true });
+    return h;
+}
+
+test('原生 chooseUseTarget 通过第四参数传回唯一目标结果时，在实际用牌前阻塞', async () => {
+    const callbacks = [], h = useTargetFixture({ schedule: callback => callbacks.push(callback) }); let used = 0;
+    h.player.useCard = () => { assert.equal(h.waits.length, 1); used++; return {}; };
+    const event = h.event('chooseUseTarget', { card: { name: 'wuzhong' }, forced: true, targets: [] }), pending = h.run(event);
+    for (let i = 0; !callbacks.length && i < 20; i++) await Promise.resolve();
+    assert.equal(callbacks.length, 1); assert.equal(used, 0); assert.equal(event.result, undefined, '不提前改写引擎结果');
+    callbacks.shift()(); await pending;
+    assert.equal(used, 1); assert.equal(h.waits.length, 1); assert.equal(event.result.bool, true); assert.ok(h.waits[0] >= 1000);
+});
+
+test('chooseUseTarget 的确认子选择与外层共用一次等待，结果和返回值仍保持原样', async () => {
+    const h = useTargetFixture(); let used = 0, root;
+    h.player.chooseBool = () => h.choice('chooseBool', { bool: true }, { choice: true, parent: root });
+    h.player.useCard = () => { used++; return {}; };
+    root = h.event('chooseUseTarget', { card: { name: 'wuzhong' }, targets: [], forced: false, ai: () => true });
+    await h.run(root); assert.equal(used, 1); assert.equal(h.waits.length, 1);
+    const returned = { control: 'decline' }, replacement = async () => returned;
+    h.lib.element.content.chooseControl = replacement; h.think.hook();
+    const evt = h.event('chooseControl'); assert.equal(await h.run(evt), returned); assert.equal(evt.result, undefined); assert.equal(h.waits.length, 2);
+});
+
+test('原生 chooseButton 的同步回调执行前已结束思考，不重跑 processAI 或更改回调参数', async () => {
+    const callbacks = [], h = setup({ schedule: callback => callbacks.push(callback) });
+    let committed = 0, processed = 0, ended = false;
+    h.game.hhAIThinkProgress = { begin() { return {}; }, end() { ended = true; } };
+    const selected = { bool: true, links: ['answer'] }, evt = h.choice('chooseButton', selected, {
+        dialog: h.ui.create.dialog(), processAI() { processed++; return selected; }, callback(player, result) {
+            assert.equal(ended, true); assert.equal(player, h.player); assert.equal(result, selected); committed++;
+        },
+    });
+    const pending = h.run(evt);
+    for (let i = 0; !callbacks.length && i < 20; i++) await Promise.resolve();
+    assert.equal(callbacks.length, 1); assert.equal(committed, 0); assert.equal(processed, 0);
+    callbacks.shift()(); await pending;
+    assert.equal(committed, 1); assert.equal(processed, 1); assert.equal(h.waits.length, 1); assert.equal(evt.result, selected);
+});
+
+test('原生摸牌或回血的唯一操作在效果之前等待，多选项子选择不再重复计时', async () => {
+    for (const forced of [true, false]) {
+        const h = setup(); let count = 0, root;
+        const target = { isDamaged: () => false, draw(n) { assert.equal(h.waits.length, 1); assert.equal(n, 2); count++; return { gaintag: { addArray() {} } }; } };
+        h.player.chooseControl = controls => h.choice('chooseControl', undefined, { controls, choice: 0, parent: root });
+        root = h.event('chooseDrawRecover', { target, forced, num1: 2, num2: 1, prompt: '摸牌或回血', ai: () => 0 });
+        await h.run(root); assert.equal(count, 1); assert.equal(h.waits.length, 1); assert.equal(root.result.control, 'draw_card');
+    }
+});
+
+test('原生恢复和废除装备栏按真正的选择来源思考，目标是真人也不影响AI来源的停顿', async () => {
+    for (const name of ['chooseToEnable', 'chooseToDisable']) for (const humanSource of [false, true]) {
+        const h = setup(), affected = { ...h.player, isMine: () => true, hasDisabledSlot: i => i === 1, hasEnabledSlot: i => i === 1 };
+        let changed = 0;
+        affected[name === 'chooseToEnable' ? 'enableEquip' : 'disableEquip'] = async slot => {
+            assert.equal(h.waits.length, humanSource ? 0 : 1); assert.equal(slot, 'equip1'); changed++;
+        };
+        h.player.isMine = () => humanSource;
+        const event = h.event(name, { player: affected, source: h.player });
+        await h.run(event); assert.equal(changed, 1); assert.equal(h.waits.length, humanSource ? 0 : 1);
+    }
+});
+
+test('其他扩展的数组及不透明编译装备栏选择也在效果前等待真正操作者，保留返回值', async () => {
+    for (const format of ['array', 'compiled']) {
+        let committed = 0;
+        const body = async function(event) { assert.equal(this, event); assert.equal(h.waits.length, 1); committed++; event.result = { control: 'equip1' }; return 'kept'; };
+        const original = format === 'array' ? [body] : Object.assign(body, { compiled: true });
+        const h = setup({ content: { chooseToEnable: original } }), target = { ...h.player, isMine: () => true };
+        const evt = h.event('chooseToEnable', { player: target, source: h.player });
+        const result = await h.run(evt); assert.equal(committed, 1); assert.equal(h.waits.length, 1);
+        assert.equal(format === 'array' ? evt._result : result, 'kept');
+    }
+});
+
+test('拼点和议事使用的原生多人选牌入口逐人思考，交还结果数组前已完成所有选择', async () => {
+    const h = setup(), participants = [h.player, { ...h.player }, { ...h.player }];
+    const root = h.event('chooseCardOL', { list: participants, _args: [], _set: { forced: true } });
+    participants.forEach((player, i) => { player.chooseCard = () => h.choice('chooseCard', { bool: true, cards: [h.hand[i]] }, { player, parent: root }); });
+    await h.run(root); assert.equal(h.waits.length, 3); assert.equal(root.result.length, 3);
+    root.result.forEach((result, i) => assert.equal(result.cards[0], h.hand[i]));
+});
+
 test('先前出牌思考不吞掉后续独立选择，重复进入同一个选择事件只等待一次', async () => {
     const h = setup();
     const parent = h.use('sha');

@@ -75,6 +75,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			};
 			const HH_AI_THINK_EVENTS = [
 				'chooseToUse',
+				'chooseUseTarget',
 				'chooseToRespond',
 				'chooseCard',
 				'chooseTarget',
@@ -91,10 +92,14 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				'chooseToMove',
 				'chooseToMove_new',
 				'chooseNumbers',
-				'chooseSkill'
+				'chooseSkill',
+				'chooseDrawRecover',
+				'chooseToEnable',
+				'chooseToDisable'
 			];
 			const HH_AI_THINK_EVENT_PROFILE = {
 				chooseToUse: [1400, 2600],
+				chooseUseTarget: [1400, 2600],
 				chooseToRespond: [1100, 2200],
 				chooseCard: [1100, 2200],
 				chooseTarget: [1300, 2400],
@@ -111,8 +116,13 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				chooseToMove: [1700, 2600],
 				chooseToMove_new: [1700, 2600],
 				chooseNumbers: [1300, 2300],
-				chooseSkill: [1400, 2500]
+				chooseSkill: [1400, 2500],
+				chooseDrawRecover: [1200, 2200],
+				chooseToEnable: [1200, 2200],
+				chooseToDisable: [1200, 2200]
 			};
+			const HH_stageResults = new WeakMap(), HH_preThoughts = new WeakMap();
+			const HH_getDecisionResult = event => event.result && typeof event.result == 'object' ? event.result : HH_stageResults.get(event) || {};
 			const HH_clamp = function(value, min, max) {
 				return Math.max(min, Math.min(max, value));
 			};
@@ -164,10 +174,10 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				return event.getParent && event.getParent('phaseUse', true, true) || event;
 			};
 			const HH_getAIThinkCard = function(event) {
-				if (!['chooseToUse', 'chooseToRespond'].includes(event.name)) return null;
-				const result = event.result || {};
+				if (!['chooseToUse', 'chooseUseTarget', 'chooseToRespond'].includes(event.name)) return null;
+				const result = HH_getDecisionResult(event);
 				// 技能的消耗牌不等于最终使用的牌（例如丈八、武圣、各类转化技）。
-				return result.card || (!result.skill && result.cards && result.cards[0]) || null;
+				return result.card || (event.name == 'chooseUseTarget' && event.card) || (!result.skill && result.cards && result.cards[0]) || null;
 			};
 			const HH_getAIThinkCardName = function(event, player) {
 				const card = HH_getAIThinkCard(event);
@@ -217,7 +227,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			const HH_isCriticalAIThinkEvent = function(event, player) {
 				if (!event) return false;
 				const name = HH_getAIThinkCardName(event, player);
-				const targets = event.result && event.result.targets || [];
+				const targets = HH_getDecisionResult(event).targets || [];
 				if (event.type == 'wuxie' || name == 'wuxie') return true;
 				if (event.name == 'chooseToUse' && HH_getAIThinkSourceCardName(event) == 'jiedao') return true;
 				if (event.dying && event.dying != player) return true;
@@ -228,7 +238,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				return false;
 			};
 			const HH_getAIThinkPace = function(player, event) {
-				const result = event.result || {};
+				const result = HH_getDecisionResult(event);
 				if (event._HH_rescueQuestion) return event.dying === player ? 'quick' : 'deliberate';
 				if (event.responded) return 'instant';
 				// 代选、唯一选项和预选牌仍留出观察及确认时间。
@@ -250,7 +260,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						if (range && (range[0] >= game.players.length || range[1] == -1) && game.players.every(target => result.targets.includes(target))) return 'quick';
 					}
 				}
-				const isUse = event.name == 'chooseToUse';
+				const isUse = ['chooseToUse', 'chooseUseTarget'].includes(event.name);
 				const isRespond = event.name == 'chooseToRespond';
 				if (isUse || isRespond) {
 					if (result.bool === false) {
@@ -283,7 +293,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					const handCount = player.countCards('h');
 					score += Math.min(12, handCount) * 30;
 				}
-				const targets = event.result && event.result.targets || [];
+				const targets = HH_getDecisionResult(event).targets || [];
 				if (targets.length > 1) score += Math.min(400, (targets.length - 1) * 100);
 				const selectCard = HH_getSelectRange(event.selectCard);
 				const selectTarget = HH_getSelectRange(event.selectTarget);
@@ -301,9 +311,9 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				return Math.max(-400, score);
 			};
 			const HH_isAIPlayDecision = function(event) {
-				const result = event.result || {};
-				return ['chooseToUse', 'chooseToRespond'].includes(event.name) && result.bool === true
-					&& !!(result.card || result.skill || result.cards?.length);
+				const result = HH_getDecisionResult(event);
+				return ['chooseToUse', 'chooseUseTarget', 'chooseToRespond'].includes(event.name) && result.bool === true
+					&& !!(result.card || result.skill || result.cards?.length || event.name == 'chooseUseTarget' && event.card);
 			};
 			const HH_calcAIThinkDelay = function(player, event) {
 				const configMin = HH_parseNumberConfig('ai_think_delay_min', 250, 0, 10000);
@@ -387,6 +397,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const seenRescueParents = new Set();
 				while (rescueParent && !seenRescueParents.has(rescueParent)) {
 					seenRescueParents.add(rescueParent);
+					if (HH_preThoughts.get(rescueParent)?.has(player)) return false;
 					if (rescueParent._HH_rescueThought && rescueParent.player === player) return false;
 					if (['useCard', 'useSkill', 'respond', 'phaseUse'].includes(rescueParent.name)) break;
 					rescueParent = rescueParent.getParent && rescueParent.getParent();
@@ -407,7 +418,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					if (HH_AI_THINK_EVENTS.includes(parent.name)) {
 						if (parent.player != player) break;
 						// 仅合并等待技能子选择结果的出牌包装；其他独立选择各自计时。
-						if (['chooseToUse', 'chooseToRespond'].includes(parent.name) && !parent._HH_aiThinkDelayed) parents.push(parent);
+						if (['chooseToUse', 'chooseUseTarget', 'chooseToRespond'].includes(parent.name) && !parent._HH_aiThinkDelayed) parents.push(parent);
 					}
 					parent = parent.getParent && parent.getParent();
 				}
@@ -416,7 +427,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			const HH_aiThinkDelay = async function(event, player) {
 				if (!HH_shouldDelayAI(event, player)) return;
 				// 等引擎给出真实结果再判断。技能按钮/取消重选还不是最终出牌。
-				const result = event.result;
+				const result = HH_getDecisionResult(event);
 				if (!result || typeof result != 'object' || result.cancel || result.cancelled) return;
 				if (result.bool === undefined && result.control === undefined && !['cards', 'targets', 'links', 'moved', 'numbers', 'skill'].some(key => result[key] !== undefined)) return;
 				const skillInfo = result.skill && typeof get.info == 'function' && get.info(result.skill);
@@ -436,7 +447,25 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				} finally {
 					progress?.end(thinking);
 				}
+				return delay;
 			};
+			// These native contents commit inside the same function that computes the result.
+			// Observe before entering, then share that pause with their delegated choices.
+			const HH_thinkBeforeContent = async function(event, player, extra = {}) {
+				if (event._HH_aiThinkDelayed || event._HH_aiThinkChildDelayed) return;
+				const question = { name: event.name, type: event.type, player, result: { bool: true },
+					forced: event.forced, controls: event.controls, choiceList: event.choiceList, dialog: event.dialog,
+					selectCard: event.selectCard, selectTarget: event.selectTarget, selectButton: event.selectButton,
+					complexCard: event.complexCard, complexSelect: event.complexSelect, complexTarget: event.complexTarget,
+					card: event.card, getParent: () => event,
+					isMine: () => player === event.player ? event.isMine?.() : player?.isMine?.(),
+					isOnline: () => player === event.player ? event.isOnline?.() : player?.isOnline?.(), ...extra };
+				if (await HH_aiThinkDelay(question, player) > 0) {
+					if (!HH_preThoughts.has(event)) HH_preThoughts.set(event, new Set());
+					HH_preThoughts.get(event).add(player);
+				}
+			};
+			const HH_inlineChoices = new Set(['chooseDrawRecover', 'chooseToEnable', 'chooseToDisable']);
 			const HH_hookAIThinkDelay = function() {
 				if (!lib.element) return;
 				const wrapContentMap = function(contentMap) {
@@ -457,21 +486,37 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						if (Array.isArray(original)) {
 							// 逐步包装而非插入新步骤，保留 goto(0)、redo() 及第四参数 result。
 							contentMap[name] = original.map((step, index) => async function(event, trigger, player) {
+								if (HH_inlineChoices.has(name)) {
+									if (index == 0) await HH_thinkBeforeContent(event, ['chooseToEnable', 'chooseToDisable'].includes(name) ? event.source || player : player);
+									return step.apply(this, arguments);
+								}
+								if (arguments[3] && typeof arguments[3] == 'object') HH_stageResults.set(event, arguments[3]);
 								if (index > 0) await HH_aiThinkDelay(event, player);
+								if (name == 'chooseButton' && index == original.length - 1 && typeof event.callback == 'function') await HH_thinkBeforeContent(event, player);
 								const result = await step.apply(this, arguments);
+								if (result && typeof result == 'object') HH_stageResults.set(event, result);
 								if (event.finished || index == original.length - 1) await HH_aiThinkDelay(event, player);
 								return result;
 							});
 						} else if (typeof original == 'function' && original.constructor.name == 'AsyncFunction' && !original.compiled) {
 							// 单体异步选择在返回结果前等待；旧式 step 函数留给原编译器处理。
 							contentMap[name] = async function(event, trigger, player) {
+								if (HH_inlineChoices.has(name)) {
+									await HH_thinkBeforeContent(event, ['chooseToEnable', 'chooseToDisable'].includes(name) ? event.source || player : player);
+									return original.apply(this, arguments);
+								}
 								const result = await original.apply(this, arguments);
+								if (result && typeof result == 'object') HH_stageResults.set(event, result);
 								await HH_aiThinkDelay(event, player);
 								return result;
 							};
 						} else if (typeof original === 'function' && original.compiled) {
 							// Opaque extension compilers cannot expose a final-result boundary: think before entering.
 							const wrapped = async function(event, trigger, player) {
+								if (HH_inlineChoices.has(name)) {
+									await HH_thinkBeforeContent(event, ['chooseToEnable', 'chooseToDisable'].includes(name) ? event.source || player : player);
+									return original.apply(this, arguments);
+								}
 								const question = { name: event.name, type: event.type, player: player || event.player,
 									result: event.result || { bool: true }, responded: event.responded,
 									_HH_aiThinkDelayed: event._HH_aiThinkDelayed, _HH_aiThinkChildDelayed: event._HH_aiThinkChildDelayed,
@@ -511,6 +556,20 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			};
 			game.finishSkill?.('_HH_ai_missing_shan');
 			if (!game.finishSkill) game.addGlobalSkill?.('_HH_ai_missing_shan');
+			lib.skill._HH_ai_jiedao_think = {
+				trigger: { target: 'jiedaoBegin' }, lastDo: true,
+				silent: true, charlotte: true, forced: true, popup: false,
+				filter(trigger, player) {
+					return !trigger.directHit && !!trigger.addedTarget
+						&& HH_shouldDelayAI({ name: 'chooseToUse', player, getParent: () => trigger }, player);
+				},
+				async content(event, trigger, player) {
+					await HH_thinkBeforeContent(trigger, player, { name: 'chooseToUse', type: 'jiedao',
+						respondTo: [trigger.player, trigger.card], complexSelect: true, complexTarget: true });
+				},
+			};
+			game.finishSkill?.('_HH_ai_jiedao_think');
+			if (!game.finishSkill) game.addGlobalSkill?.('_HH_ai_jiedao_think');
 			setupLordBlindShot({ lib, game, get, _status });
 
 			// ========== 濒死逐人求桃 ==========
@@ -2180,7 +2239,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_ai_think_delay: {
 				name: "启用AI思考延迟",
 				init: true,
-				intro: "出牌、杀闪、发动技能、弃牌、给牌、移牌及选择选项分别留出观察和思考时间；无牌响应、唯一选项、强制选择及频繁技能也保留停顿，连续操作不会越出越快。无懈可击沿用原节奏，纯系统结算不增加思考"
+				intro: "出牌、杀闪、借刀出杀或交武器、技能直接用牌及各类选择分别留出思考时间；无牌响应、唯一选项、强制选择及频繁技能也保留停顿。无懈可击沿用原节奏，思考上下限继续生效"
 			},
 			ai_think_delay_popup: {
 				name: "显示思考提示",
