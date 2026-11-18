@@ -27,7 +27,8 @@ function setup({ config = {}, random = 0.5, content, schedule = callback => call
         useResult: result => { actions.push({ result, waits: [...waits] }); return {}; },
     };
     const game = { players: [player, { hp: 3 }], check: () => true, expandSkills() {}, resume() {}, stopCountChoose() {},
-        addVideo() {}, broadcast() {}, broadcastAll() {}, log() {}, delay() {}, createButtonCardsetion() {} };
+        addVideo() {}, broadcast() {}, broadcastAll() {}, log() {}, delay() {}, createButtonCardsetion() {},
+        addGlobalSkill(name) { if (!lib.skill.global.includes(name)) lib.skill.global.push(name); } };
     const ui = { click: { ok() { status.event.result = status.event.selectedResult; }, cancel() { status.event.result = { bool: false }; } },
         arena: { classList: { remove() {} } }, create: {}, dialogs: [] };
     const get = {
@@ -178,6 +179,7 @@ test('求桃预思考后不重复等待出牌/转化子选择，出牌结算中�
     const parent = h.use('tao', { type: 'dying', dying, _HH_rescueThought: true });
     await h.think.delay(parent);
     await h.think.delay(h.event('chooseButton', { parent, result: { bool: true, links: [1] } }));
+    parent.result = { bool: false }; await h.think.delay(parent);
     assert.equal(h.waits.length, 0);
     const resolution = h.event('useCard', { parent });
     await h.think.delay(h.use('shan', { name: 'chooseToRespond', type: undefined, parent: resolution }));
@@ -275,16 +277,122 @@ test('普通出闪/响应杀保留完整停顿，残血及持有桃无懈仍采�
     assert.deepEqual(h.popups, []);
 });
 
-test('无普通响应不等待；简单代选和结束出牌阶段仍有点击时间', async () => {
+test('无普通响应也按响应节奏观察；无懈跳过和结束出牌阶段保留原节奏', async () => {
     const h = setup();
     await h.think.delay(h.event('chooseToRespond', { result: { bool: false } }));
     await h.think.delay(h.event('chooseToUse', { type: undefined, result: { bool: false } }));
+    assert.equal(h.waits.length, 2); assert.ok(h.waits.every(ms => ms >= 1000 && ms <= 2600));
     await h.think.delay(h.event('chooseToUse', { type: 'wuxie', result: { bool: false } }));
-    assert.equal(h.waits.length, 0);
+    await h.think.delay(h.event('chooseToRespond', { parent: h.event('_wuxie'), result: { bool: false } }));
+    assert.equal(h.waits.length, 2);
     await h.think.delay(h.event('chooseToDiscard', { result: { bool: true, autochoose: true } }));
     await h.think.delay(h.event('chooseToUse', { result: { bool: false } }));
-    assert.equal(h.waits.length, 2);
+    assert.equal(h.waits.length, 4);
     assert.ok(h.waits.every(ms => ms >= 900 && ms <= 2600));
+});
+
+test('原生自动跳过无杀/闪及普通无牌选择在交还失败结果之前阻塞，自动检查只执行一次', async () => {
+    for (const name of ['chooseToRespond', 'chooseToUse']) {
+        const callbacks = [], h = setup({ schedule: callback => callbacks.push(callback) });
+        h.hand.length = 0; h.lib.config.skip_shan = true;
+        let checks = 0, completed = false;
+        const evt = h.choice(name, { bool: false }, { type: name === 'chooseToUse' ? 'respondShan' : undefined,
+            autochoose: () => { checks++; return true; } });
+        const pending = h.run(evt).then(() => { completed = true; });
+        for (let i = 0; !callbacks.length && i < 30; i++) await Promise.resolve();
+        assert.equal(callbacks.length, 1); assert.equal(completed, false);
+        assert.equal(evt.result.bool, false); assert.equal(h.waits.length, 1); assert.ok(h.waits[0] >= 1000);
+        callbacks.shift()(); await pending;
+        assert.equal(completed, true); assert.equal(h.actions.length, 0);
+        assert.equal(checks, name === 'chooseToRespond' ? 1 : 0);
+    }
+});
+
+function shaFixture(options = {}) {
+    const h = setup(options), sha = h.loadCardPack('standard').sha;
+    const defender = h.player, attacker = h.game.players[1], skill = h.lib.skill._HH_ai_missing_shan, events = [];
+    const source = h.event('sha', { player: attacker, target: defender, card: { name: 'sha' } });
+    h.lib.config.skip_shan = true; h.hand.length = 0;
+    h.lib.element.VCard = class { constructor(data) { Object.assign(this, data); } }; h.lib.filter.cardEnabled = () => false;
+    defender.hasShan = () => false;
+    defender.chooseToUse = () => { throw Error('原生快速跳过不能被改成一次实际选牌'); };
+    defender.damage = async () => { events.push(['damage', h.waits.length]); };
+    h.game.hasNature = () => false; h.get.nature = () => undefined;
+    source.trigger = name => {
+        events.push([name, h.waits.length]);
+        if (name === 'shaHit' && skill.filter(source, defender)) return skill.content({}, source, defender);
+    };
+    const run = () => sha.content(source, undefined, attacker);
+    return { ...h, source, defender, attacker, skill, events, run };
+}
+
+test('原版杀完全跳过无闪询问时，受伤之前仍有同步进度的思考，且只补一次', async () => {
+    const callbacks = [], h = shaFixture({ schedule: callback => callbacks.push(callback) }), progress = [];
+    h.game.hhAIThinkProgress = { begin(player, duration, showTip, question) {
+        assert.equal(player, h.defender); assert.equal(question.type, 'respondShan'); assert.ok(showTip);
+        progress.push(['begin', duration]); return question;
+    }, end() { progress.push(['end']); } };
+    assert.ok(h.lib.skill.global.includes('_HH_ai_missing_shan'));
+    const pending = h.run();
+    for (let i = 0; !callbacks.length && i < 20; i++) await Promise.resolve();
+    assert.equal(callbacks.length, 1); assert.deepEqual(h.events, [['shaHit', 0]]);
+    assert.ok(h.waits[0] >= 1000 && h.waits[0] <= 2600); assert.equal(progress.length, 1);
+    callbacks.shift()(); await pending;
+    assert.equal(h.waits.length, 1); assert.equal(h.skill.filter(h.source, h.defender), false);
+    assert.deepEqual(h.events, [['shaHit', 0], ['damage', 1], ['shaDamage', 1]]); assert.equal(progress.length, 2);
+});
+
+test('原生杀已经询问并思考过的失败响应不再补停顿，需两闪时后续无闪仍独立思考', async () => {
+    for (const partial of [false, true]) {
+        const h = shaFixture(); let availableChecks = 0, choices = 0;
+        h.defender.hasShan = () => { availableChecks++; return availableChecks === 1; };
+        h.defender.isLinked = () => false; h.defender.hasSkillTag = () => false; h.defender.hasSkill = () => false;
+        h.defender.mayHaveShan = () => 2;
+        h.attacker.hasSkillTag = () => false; h.get.damageEffect = () => -1;
+        h.source.shanRequired = partial ? 2 : 1;
+        h.defender.chooseToUse = () => {
+            choices++;
+            return { set() { return this; }, async forResult() {
+                const result = partial ? { bool: true, card: { name: 'shan' }, result: 'shaned' } : { bool: false };
+                await h.think.delay(h.event('chooseToUse', { type: 'respondShan', parent: h.source, result }));
+                return result;
+            } };
+        };
+        await h.run();
+        assert.equal(choices, 1); assert.equal(availableChecks, partial ? 2 : 1, '不额外探测是否有闪');
+        assert.equal(h.waits.length, partial ? 2 : 1); assert.ok(h.waits.every(ms => ms >= 1000));
+        assert.equal(h.events.filter(([name]) => name === 'damage').length, 1);
+    }
+});
+
+test('无闪补充停顿不介入强命中、自动闪避、真人、关闭开关及联机录像等流程', async () => {
+    for (const mode of ['directHit', 'directHit2', 'skipShan', 'disabled', 'zero', 'mine', 'controlled', 'connect', 'online', 'video', 'over']) {
+        const h = shaFixture();
+        if (['directHit', 'directHit2', 'skipShan'].includes(mode)) h.source[mode] = true;
+        if (mode === 'disabled') h.lib.config.extension_HH优化_enable_ai_think_delay = false;
+        if (mode === 'zero') Object.assign(h.lib.config, { extension_HH优化_ai_think_delay_min: 0, extension_HH优化_ai_think_delay_max: 0 });
+        if (mode === 'mine') h.defender.isMine = () => true;
+        if (mode === 'controlled') h.defender.isUnderControl = () => true;
+        if (mode === 'connect') h.status.connectMode = true;
+        if (mode === 'online') h.game.online = true;
+        if (mode === 'video') h.status.video = true;
+        if (mode === 'over') h.status.over = true;
+        if (h.skill.filter(h.source, h.defender)) await h.skill.content({}, h.source, h.defender);
+        assert.equal(h.waits.length, 0, mode);
+    }
+});
+
+test('无牌响应逐次取样，结算开关及速度倍率不改变停顿；提前结束的选择也先完成思考', async () => {
+    const sequences = [];
+    for (const enabled of [false, true]) {
+        const h = setup({ random: seededRandom(837), content: { chooseToRespond: [async function(event) { event.result = { bool: false }; event.finish(); }] } });
+        h.game.delayx = () => Promise.resolve(); h.lib.config.extension_HH优化_speed_multiplier = enabled ? 2.5 : 1;
+        setupSettlementOptimization({ lib: h.lib, game: h.game, get: h.get, _status: h.status }, { enable_settlement_optimize: enabled });
+        for (let i = 0; i < 20; i++) await h.run(h.event('chooseToRespond'));
+        assert.equal(h.waits.length, 20); assert.ok(new Set(h.waits).size >= 18);
+        assert.ok(h.waits.every(ms => ms >= 1000 && ms <= 2600)); sequences.push(h.waits);
+    }
+    assert.deepEqual(sequences[0], sequences[1]);
 });
 
 test('强制弃光和唯一控制项模拟点击，多选项及多牌取舍正常等待', async () => {

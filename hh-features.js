@@ -186,6 +186,34 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				}
 				return null;
 			};
+			const HH_isWuxieQuestion = function(event) {
+				const seen = new Set();
+				while (event && !seen.has(event)) {
+					seen.add(event);
+					if (event.type == 'wuxie' || event.name == '_wuxie') return true;
+					if (['useCard', 'useSkill', 'respond', 'phaseUse'].includes(event.name)) break;
+					event = event.getParent && event.getParent();
+				}
+				return false;
+			};
+			// A Sha can skip chooseToUse entirely when skip_shan finds no Dodge.
+			// Track each required Dodge separately so a later missing Dodge still gets its own pause.
+			const HH_shanThoughts = new WeakMap();
+			const HH_noteResponseThought = function(event, player) {
+				let response = false;
+				const seen = new Set();
+				while (event && !seen.has(event)) {
+					seen.add(event);
+					if (['chooseToUse', 'chooseToRespond'].includes(event.name) && event.player === player) response = true;
+					if (response && event.name == 'sha' && event.target === player) {
+						if (!HH_shanThoughts.has(event)) HH_shanThoughts.set(event, new Set());
+						HH_shanThoughts.get(event).add(event.shanRequired);
+						return;
+					}
+					if (['useCard', 'useSkill', 'respond', 'phaseUse'].includes(event.name)) break;
+					event = event.getParent && event.getParent();
+				}
+			};
 			const HH_isCriticalAIThinkEvent = function(event, player) {
 				if (!event) return false;
 				const name = HH_getAIThinkCardName(event, player);
@@ -226,9 +254,11 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const isRespond = event.name == 'chooseToRespond';
 				if (isUse || isRespond) {
 					if (result.bool === false) {
-						// 借刀放弃出杀意味着交武器；普通无响应不让所有角色逐个长考。
+						// 无牌与主动放弃都先观察再提交；无懈沿用原来的快速跳过。
 						if (isUse && HH_getAIThinkSourceCardName(event) == 'jiedao') return 'deliberate';
-						return HH_isPhaseUseDecision(event, player) ? 'quick' : 'instant';
+						if (HH_isPhaseUseDecision(event, player)) return 'quick';
+						if (HH_isWuxieQuestion(event)) return 'instant';
+						return HH_isCriticalAIThinkEvent(event, player) ? 'deliberate' : 'response';
 					}
 					const name = HH_getAIThinkCardName(event, player);
 					const targets = result.targets || [];
@@ -397,6 +427,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				if (event._HH_aiThinkChildDelayed) return;
 				const delay = HH_calcAIThinkDelay(player, event);
 				if (delay <= 0) return;
+				HH_noteResponseThought(event, player);
 				parents.forEach(parent => { parent._HH_aiThinkChildDelayed = true; });
 				const progress = game.hhAIThinkProgress;
 				const thinking = progress?.begin(player, delay, delay >= 600 && lib.config.extension_HH优化_ai_think_delay_popup !== false, event);
@@ -428,7 +459,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 							contentMap[name] = original.map((step, index) => async function(event, trigger, player) {
 								if (index > 0) await HH_aiThinkDelay(event, player);
 								const result = await step.apply(this, arguments);
-								if (index == original.length - 1) await HH_aiThinkDelay(event, player);
+								if (event.finished || index == original.length - 1) await HH_aiThinkDelay(event, player);
 								return result;
 							});
 						} else if (typeof original == 'function' && original.constructor.name == 'AsyncFunction' && !original.compiled) {
@@ -462,6 +493,24 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			HH_hookAIThinkDelay();
 			game.hhAIThink = { refreshHooks: HH_hookAIThinkDelay };
 			(lib.arenaReady ||= []).push(HH_hookAIThinkDelay);
+			const HH_missingShanQuestion = (trigger, player) => ({
+				name: 'chooseToUse', type: 'respondShan', player, result: { bool: false },
+				respondTo: [trigger.player, trigger.card], getParent: () => trigger,
+			});
+			lib.skill._HH_ai_missing_shan = {
+				trigger: { target: 'shaHit' }, firstDo: true, priority: 10000,
+				silent: true, charlotte: true, forced: true, popup: false,
+				filter(trigger, player) {
+					return !trigger.directHit && !trigger.directHit2 && !trigger.skipShan
+						&& !HH_shanThoughts.get(trigger)?.has(trigger.shanRequired)
+						&& HH_shouldDelayAI(HH_missingShanQuestion(trigger, player), player);
+				},
+				async content(event, trigger, player) {
+					await HH_aiThinkDelay(HH_missingShanQuestion(trigger, player), player);
+				},
+			};
+			game.finishSkill?.('_HH_ai_missing_shan');
+			if (!game.finishSkill) game.addGlobalSkill?.('_HH_ai_missing_shan');
 			setupLordBlindShot({ lib, game, get, _status });
 
 			// ========== 濒死逐人求桃 ==========
@@ -2131,7 +2180,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_ai_think_delay: {
 				name: "启用AI思考延迟",
 				init: true,
-				intro: "出牌、杀闪、发动技能、弃牌、给牌、移牌及选择选项分别留出观察和思考时间；唯一选项、强制选择及频繁技能也保留停顿，连续操作不会越出越快。纯系统结算不增加思考"
+				intro: "出牌、杀闪、发动技能、弃牌、给牌、移牌及选择选项分别留出观察和思考时间；无牌响应、唯一选项、强制选择及频繁技能也保留停顿，连续操作不会越出越快。无懈可击沿用原节奏，纯系统结算不增加思考"
 			},
 			ai_think_delay_popup: {
 				name: "显示思考提示",
