@@ -3,7 +3,7 @@ import test from 'node:test';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import { setupDrawMotion } from '../src/features/drawMotion.js';
-import { nativeDrawMotion as native, deckDrawPoints, seatDrawPoints, drawControlPoint, drawMotionFrames, drawPosition, sineOut } from '../src/ui/sourceDrawMotion.js';
+import { nativeDrawMotion as native, deckDrawPoints, seatDrawPoints, drawControlPoint, drawMotionFrames, drawPosition, sineOut, groupDrawSources } from '../src/ui/sourceDrawMotion.js';
 
 function harness({ zoom = 1 } = {}) {
 	let now = 0, next = 0;
@@ -45,7 +45,7 @@ function harness({ zoom = 1 } = {}) {
 	const context = vm.createContext({ lib, game, ui, get, _status, getDui: () => dui, applyCardBorder() {}, getBasePlayerMethods: () => ({ $gain() { fallback.push('gain'); } }),
 		document: { createDocumentFragment() { return Object.assign(node(), { fragment: true }); } } });
 	vm.runInContext(hooks + ';globalThis.hooks={playerDraw,playerGain,playerGain2,playerGive}', context);
-	return { ...context.hooks, lib, game, ui, get, _status, controller, card, node, me, other, sender, hand, timers, animations, copies, advance, observers, videos, broadcasts, logs, fallback };
+	return { ...context.hooks, context, lib, game, ui, get, _status, controller, card, node, me, other, sender, hand, timers, animations, copies, advance, observers, videos, broadcasts, logs, fallback };
 }
 
 test('native source/destination spacing, perpendicular transfer bend and independent fade timing', () => {
@@ -130,4 +130,118 @@ test('initial deals and hand exchanges animate, snapshot restoration stays still
 	h.playerGain.call(h.other, 3, false); assert.equal(h.controller.activeCount, 3); assert.equal(h.videos.at(-1)[0], 'gain');
 	h.controller.clear(); h.lib.config.animation = false; h.playerGain.call(h.other, 1, false);
 	assert.deepEqual(h.fallback, ['gain']); assert.equal(h.controller.prepareHand([d]), false); assert.equal(setupDrawMotion(h), h.controller);
+});
+
+test('standalone counted own gain is not mistaken for an already animated sparse card array', () => {
+	const h = harness(); h.playerGain.call(h.me, 2, false);
+	assert.equal(h.animations.length, 2); assert.equal(h.animations[0].options.duration, 300);
+	h.controller.clear();
+});
+
+function provenance(h) {
+	h.get.owner = card => card?.owner;
+	h.get.position = card => card?.zone;
+	return (name, zone, owner) => Object.assign(h.card(name), { zone, owner });
+}
+
+function translation(frame) {
+	const [, x, y] = frame.transform.match(/translate\(([-\d.]+)px,([-\d.]+)px\)/); return { x: Number(x), y: Number(y) };
+}
+
+test('mixed deck, table and player zones keep separate native fans and curves after the physical loss', () => {
+	const h = harness(), make = provenance(h);
+	const deck = [make('deck-a', 'c'), make('deck-b', 'c')], table = make('table', 'o');
+	const hands = [make('hand-a', 'h', h.sender), make('hand-b', 'h', h.sender)], equip = make('equip', 'e', h.sender);
+	const publicClone = h.node({ left: 320, top: 210, width: 75.6, height: 105 }); h.ui.arena.appendChild(publicClone); table.clone = publicClone;
+	// A stale clone on a pile card must never turn a fresh deck draw into a public gain.
+	deck[0].clone = publicClone;
+	const cards = [deck[0], table, hands[0], equip, deck[1], hands[1]], event = { name: 'gain', player: h.other, animate: 'gain2', cards };
+	h.controller.captureGain(event, h.other); cards.forEach(c => { c.zone = 's'; c.owner = undefined; }); h._status.event = event;
+	const descriptions = h.controller.describe(cards, h.other);
+	assert.deepEqual(groupDrawSources(descriptions).map(g => g.indices), [[0, 4], [1], [2, 5], [3]]);
+	assert.deepEqual(descriptions.map(d => d.zone), ['c', 'o', 'h', 'e', 'c', 'h']);
+	assert.deepEqual(descriptions.map(d => d.seatToSeat), [false, false, true, true, false, true]);
+	h.playerGain2.call(h.other, cards);
+	const frames = new Map(h.copies.map((clone, i) => [clone.name, h.animations[i].frames]));
+	assert.ok(Math.abs(translation(frames.get('deck-a')[0]).x - 454.4) < 1e-8);
+	assert.ok(Math.abs(translation(frames.get('deck-b')[0]).x - 470) < 1e-8);
+	assert.deepEqual(translation(frames.get('table')[0]), { x: 320, y: 210 });
+	assert.ok(Math.abs(translation(frames.get('hand-a')[0]).x - 90.2) < 1e-8);
+	assert.ok(Math.abs(translation(frames.get('deck-a')[30]).x - 785.4) < 1e-8);
+	assert.ok(Math.abs(translation(frames.get('hand-a')[30]).x - 785.4) < 1e-8);
+	assert.ok(Math.abs(translation(frames.get('equip')[30]).x - 790.2) < 1e-8);
+	assert.ok(Math.abs(translation(frames.get('table')[30]).x - 790.2) < 1e-8);
+	assert.equal(h.controller.activeCount, cards.length); h.controller.clear(); assert.equal(h.timers.size, 0);
+});
+
+test('the gain content captures zones before its native lose phase without changing that phase or its return', async () => {
+	const h = harness(), make = provenance(h), cards = [make('h', 'h', h.sender), make('e', 'e', h.sender)];
+	const text = fs.readFileSync(new URL('../src/overrides/content.js', import.meta.url), 'utf8');
+	const start = text.indexOf('export function createContentGain('), end = text.indexOf('\n/**', start);
+	vm.runInContext(text.slice(start, end).replace('export function', 'function') + ';globalThis.makeGain=createContentGain;', h.context);
+	const marker = {}, event = { name: 'gain', player: h.other, animate: 'gain2', cards }; let calls = 0;
+	const phases = h.context.makeGain([async function (received, trigger, player) {
+		assert.equal(this, marker); assert.equal(received, event); assert.equal(player, h.other); calls++;
+		cards.forEach(c => { c.zone = 's'; c.owner = undefined; }); return 'native-result';
+	}, () => {}, () => {}]);
+	assert.equal(await phases[0].call(marker, event, null, h.other), 'native-result'); assert.equal(calls, 1);
+	assert.deepEqual(h.controller.describe(cards, h.other, event).map(d => d.zone), ['h', 'e']);
+});
+
+test('hidden counted gains retain source batches without rendering or recording any hidden faces', () => {
+	const h = harness(), make = provenance(h), cards = [make('hidden-a', 'h', h.sender), make('hidden-b', 'c'), make('hidden-c', 'e', h.sender)];
+	const event = { name: 'gain', player: h.other, cards, animate: 'draw' }; h.controller.captureGain(event); h._status.event = event;
+	cards.forEach(c => { c.zone = 's'; c.owner = undefined; }); h.playerDraw.call(h.other, 3);
+	assert.ok(h.ui.arena.children.every(card => card.name === undefined)); assert.equal(h.videos[0][0], 'draw'); assert.equal(h.videos[0][2], 3);
+	const starts = h.animations.map(a => translation(a.frames[0]));
+	assert.ok(Math.abs(starts[0].x - 90.2) < 1e-8); assert.equal(starts[1].x, 462.2); assert.ok(Math.abs(starts[2].x - 90.2) < 1e-8);
+});
+
+test('same owner outside-card channels stay separate and missing public cards use the native stack fallback', () => {
+	const h = harness(), make = provenance(h), a = make('outside-a', 'x', h.sender), b = make('outside-b', 'x', h.sender), missing = make('missing', 'd');
+	a.gaintag = ['skill-a']; b.gaintag = ['skill-b']; const cards = [a, b, missing], event = { name: 'gain', player: h.other, cards };
+	h.controller.captureGain(event); h._status.event = event;
+	const sources = h.controller.describe(cards, h.other); assert.equal(groupDrawSources(sources).length, 3); assert.equal(sources[0].seatToSeat, false);
+	h.playerGain2.call(h.other, cards); const index = h.copies.findIndex(c => c.name === 'missing');
+	assert.deepEqual(translation(h.animations[index].frames[0]), { x: 500, y: 291 });
+});
+
+test('physical cards flattened out of virtual equipment retain the wrapper owner and equipment channel', () => {
+	const h = harness(), make = provenance(h), physical = [make('part-a', 's'), make('part-b', 's')];
+	const equip = make('virtual-equip', 'e', h.sender); equip.cards = physical;
+	const event = { name: 'gain', player: h.other, cards: [equip], animate: 'gain2' }; h.controller.captureGain(event);
+	event.cards = physical;
+	const sources = h.controller.describe(physical, h.other, event);
+	assert.ok(sources.every(s => s.source === h.sender && s.zone === 'e' && s.seatToSeat));
+	assert.equal(groupDrawSources(sources).length, 1);
+});
+
+test('later batches have independent animation completion and a new own-hand batch restarts the native hand tween', () => {
+	const h = harness(); h.playerDraw.call(h.other, 2); const first = [...h.animations]; h.advance(130); h.playerDraw.call(h.other, 1);
+	first.forEach(a => a.finish()); assert.equal(h.controller.activeCount, 1); assert.equal(h.animations.at(-1).canceled, false);
+	h.controller.clear();
+	const a = h.card('first', { left: 420, top: 460, width: 75.6, height: 105 }); a.offsetWidth = 108;
+	h.controller.prepareHand([a], null, { animate: 'draw' }); h.hand.appendChild(a); h.controller.settleHand(a); const old = h.animations.at(-1); old.currentTime = 110;
+	const b = h.card('later', { left: 500, top: 460, width: 75.6, height: 105 }); b.offsetWidth = 108;
+	h.controller.prepareHand([b], null, { animate: 'draw' }); h.hand.appendChild(b); h.controller.settleHand(a);
+	assert.equal(old.canceled, true); assert.equal(h.animations.at(-1).options.duration, 300);
+	h.controller.settleHand(b); h.controller.clear(); assert.equal(a.style.opacity, ''); assert.equal(b.style.opacity, ''); assert.equal(h.timers.size, 0);
+});
+
+test('async multi-recipient gains keep each recipient source batch and defer own visuals until actual insertion', async () => {
+	const h = harness(), make = provenance(h), a = make('foreign-hand', 'h', h.sender), b = make('deck', 'c');
+	const c = make('own-receive', 'e', h.sender), d = make('public-receive', 'd');
+	const event = { name: 'loseAsync', cards: [a, c], gain_list: [[h.other, [a, b]], [h.me, [c, d]]] };
+	const text = fs.readFileSync(new URL('../src/overrides/content.js', import.meta.url), 'utf8');
+	const start = text.indexOf('export function createContentGainMultiple('), end = text.indexOf('\nexport function createContentGain(', start);
+	vm.runInContext(text.slice(start, end).replace('export function', 'function') + ';globalThis.makeMultiple=createContentGainMultiple;', h.context);
+	let calls = 0; const native = h.context.makeMultiple(async received => { assert.equal(received, event); calls++; [a, b, c, d].forEach(card => { card.zone = 's'; card.owner = undefined; }); return 42; });
+	assert.equal(await native(event, null, h.sender), 42); assert.equal(calls, 1); h._status.event = event;
+	h.playerDraw.call(h.other, 2); const starts = h.animations.map(a => translation(a.frames[0]));
+	assert.ok(Math.abs(starts[0].x - 90.2) < 1e-8); assert.equal(starts[1].x, 462.2);
+	h.playerDraw.call(h.me, 2); h.playerGain2.call(h.me, [c, d]); assert.equal(h.animations.length, 2, 'own cards get one later hand animation, not an earlier placeholder flight');
+	const child = { name: 'gain', player: h.me, cards: [c, d], getParent: name => name === 'loseAsync' ? event : null };
+	h.controller.captureGain(child, h.me);
+	assert.deepEqual(h.controller.describe([c, d], h.me, child).map(s => s.zone), ['e', 'd']);
+	h.controller.clear(); assert.equal(h.timers.size, 0);
 });

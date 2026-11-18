@@ -2,11 +2,23 @@
 export const nativeDrawMotion = Object.freeze({
 	cardWidth: 126, cardHeight: 174, seatWidth: 174, seatHeight: 232,
 	deckGap: 26, arrivalGap: 16, seatSourceY: 20,
+	stackCenterOffsetY: 15,
 	handMs: 300, flyMs: 700, fadeDelayMs: 800, fadeMs: 400, watchdogMs: 2500,
 	minBend: 200,
 });
 export const sineOut = t => Math.sin(t * Math.PI / 2);
 export const drawTransform = p => `translate(${p.x}px,${p.y}px) scale(${p.scale})`;
+
+// Each original move message keeps its FromID / FromZone / FromZoneParam batch.
+export function groupDrawSources(sources) {
+	const groups = [];
+	sources.forEach((source, index) => {
+		let group = groups.find(g => g.source === source.source && g.zone === source.zone && g.channel === source.channel);
+		if (!group) groups.push(group = { source: source.source, zone: source.zone, channel: source.channel, indices: [] });
+		group.indices.push(index);
+	});
+	return groups;
+}
 
 export function deckDrawPoints(arena, count, width, height, unit) {
 	const gap = nativeDrawMotion.deckGap * unit;

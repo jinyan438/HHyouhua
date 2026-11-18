@@ -5,6 +5,15 @@
   "entryPoints": ["Rk.fromCardpileFunc / fromDiscardpileFunc / fromStackFunc / fromHandFunc / fromEquipFunc", "Rk.toHandFunc", "lrs.DrawCards"],
   "ownHand": ["xvi.DrawCard", "xvi.getHandCardMoveStartPosCenter", "xvi.setCardUIPos", "xvi.startHandCardTween", "Yki.UpdateCoordinates"],
   "otherPlayers": ["NMt.GetCardsPoint", "NMt.ShowCardMotion", "NMt.playNextCardMotion", "Yki.InitBezierPoint / getMiddle / UpdateCoordinatesByBezier", "Zv.StartCardMotionTween / onUpdateCardMotion"],
+  "grouping": {
+    "messageFields": ["FromID", "FromZone", "FromZoneParam"],
+    "captureBeforeLoss": true,
+    "sameFrame": "NMt keeps each cardMotionDatas entry fan separate while sharing one Zv tween pool",
+    "laterFrames": "Each later batch starts at its actual trigger time; no synthetic stagger or randomized speed",
+    "handRestartMs": 300,
+    "publicFallback": "GMt.GetStackCardsPoint: missing public cards share the stack center",
+    "hhMultipleRecipients": "Capture gaincardMultiple before loss and inherit the sources through loseAsync into each recipient gain"
+  },
   "defaults": {
     "parameterClass": "VUt",
     "cardSize": [126, 174],
@@ -14,6 +23,7 @@
     "arrivalOverlap": -110,
     "arrivalSpacing": 16,
     "otherSeatSourceOffsetY": 20,
+    "stackFallbackCenterOffsetY": 15,
     "handMs": 300,
     "flyMs": 700,
     "fadeDelayMs": 800,

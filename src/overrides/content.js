@@ -15,14 +15,27 @@ export function setBaseContentMethods(methods) {
 	baseContentMethods = methods;
 }
 
-/**
- * 创建获得卡牌覆写内容
- * @param {Object} baseGain - 基础gain方法数组
- * @returns {Array} 覆写后的gain方法数组
- */
+/** Preserve the source batches before native multi-recipient gain performs its losses. */
+export function createContentGainMultiple(base) {
+	if (typeof base !== "function") return base;
+	return async function (event, trigger, player) {
+		game.hhDrawMotion?.captureGain(event, player);
+		return base.call(this, event, trigger, player);
+	};
+}
+
+/** Create the gain phases, retaining card provenance before the native loss phase. */
 export function createContentGain(baseGain) {
+	const phases = baseGain.slice(0, -2);
+	if (phases.length) {
+		const beforeLose = phases[0];
+		phases[0] = async function (event, trigger, player) {
+			game.hhDrawMotion?.captureGain(event, player);
+			return beforeLose.call(this, event, trigger, player);
+		};
+	}
 	return [
-		...baseGain.slice(0, -2),
+		...phases,
 		async (event, trigger, player) => {
 			let { cards, gaintag } = event;
 			const handcards = player.node.handcards1;

@@ -1,10 +1,11 @@
-import { nativeDrawMotion as native, deckDrawPoints, seatDrawPoints, drawControlPoint, drawMotionFrames, drawTransform } from "../ui/sourceDrawMotion.js";
+import { nativeDrawMotion as native, deckDrawPoints, seatDrawPoints, drawControlPoint, drawMotionFrames, drawTransform, groupDrawSources } from "../ui/sourceDrawMotion.js";
 
 export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {}) {
 	if (game.hhDrawMotion) return game.hhDrawMotion;
 	const env = { getDui: () => globalThis.decadeUI, Observer: globalThis.MutationObserver,
 		setTimer: (fn, ms) => setTimeout(fn, ms), clearTimer: id => clearTimeout(id), ...environment };
 	const pending = new WeakMap(), waitingCards = new Set(), handStates = new WeakMap(), observed = new WeakSet(), active = new Set();
+	let gainSources = new WeakMap(), handGeneration = 0;
 	const enabled = () => lib.config?.animation !== false && !game.chess && typeof ui.arena?.animate === "function";
 	const arenaSize = () => ({ width: ui.arena.offsetWidth, height: ui.arena.offsetHeight });
 	function clearWaiting(card, restore = true) {
@@ -64,14 +65,66 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 		} catch { finish(state); }
 		return state;
 	}
-	function sourceFor(card, options) {
-		if (options.animate === "draw") return null;
-		if (options.animate === "give" || options.animate === "giveAuto") {
-			for (const [id, groups] of Object.entries(options.losing_map || {})) {
-				if (groups.some(group => Array.isArray(group) && group.includes(card))) return (_status.connectMode ? lib.playerOL : game.playerMap)?.[id];
+	function gainEvent(player, options) {
+		if (options.event) return options.event;
+		if (Array.isArray(options.cards) || options.losing_map) return options;
+		const current = _status.event;
+		if (current?.gain_list?.some(pair => pair[0] === player)) return current;
+		const event = current?.name === "gain" ? current : current?.getParent?.("gain", true, true);
+		if (event?.player === player) return event;
+		const multiple = current?.getParent?.("loseAsync", true, true);
+		return multiple?.gain_list?.some(pair => pair[0] === player) ? multiple : null;
+	}
+	function recipientCards(event, player) {
+		const batch = event?.gain_list?.find(pair => pair[0] === player)?.[1];
+		return batch ? (Array.isArray(batch) ? batch : [batch]) : event?.cards;
+	}
+	function describeCard(card, player, event = {}, options = {}, beforeLose = false) {
+		let source, zone;
+		for (const [id, groups] of Object.entries(event.losing_map || {})) {
+			if (!groups[0]?.includes(card)) continue;
+			source = (_status.connectMode ? lib.playerOL : game.playerMap)?.[id];
+			if (groups[1]?.includes(card)) zone = "h";
+			else {
+				const loss = source && event.getl?.(source);
+				for (const position of ["e", "j", "x", "s"]) if (loss?.[position + "s"]?.includes(card)) { zone = position; break; }
+				if (!zone && /^[hejsx]$/.test(card?.original || "")) zone = card.original;
+			}
+			break;
+		}
+		const publicOrigin = card && controller.origin(card);
+		if (!source && !beforeLose && ["gain2", "draw2"].includes(event.animate || options.animate) && publicOrigin) {
+			return { source: null, zone: "o", channel: "", origin: publicOrigin, seatToSeat: false };
+		}
+		if (card && get.position) {
+			const liveSource = get.owner?.(card, "judge"), liveZone = get.position(card, true);
+			// After insertion, the recipient is no longer the card's source.
+			if (beforeLose || liveSource !== player) {
+				if (!source) source = options.source || liveSource;
+				if (!zone && (!source || source === liveSource)) zone = liveZone;
 			}
 		}
-		return options.source || null;
+		if (!source) source = options.source || (!beforeLose && event.animate !== "draw" ? event.source : null);
+		if (!zone) zone = source ? "h" : publicOrigin && event.animate !== "draw" ? "o" : "c";
+		if (["c", "d", "o"].includes(zone)) source = null;
+		const channel = zone === "x" ? [...(card?.gaintag || [])].sort().join("|") : "";
+		const origin = source === game.me ? rect(card) : ["d", "o"].includes(zone) ? publicOrigin : null;
+		return { source: source || null, zone, channel, origin, seatToSeat: !!source && ["h", "e", "j", "s"].includes(zone) };
+	}
+	function sourcePoints(sources, m) {
+		const points = [], width = m.width * m.scale, height = m.height * m.scale;
+		for (const group of groupDrawSources(sources)) {
+			const seat = group.source && rect(group.source);
+			const size = arenaSize(), stack = ["d", "o"].includes(group.zone);
+			const froms = seat ? seatDrawPoints(seat, group.indices.length, width, height, m.unit)
+				: stack ? group.indices.map(() => ({ x: size.width / 2, y: size.height / 2 - native.stackCenterOffsetY * m.unit }))
+				: deckDrawPoints(size, group.indices.length, width, height, m.unit);
+			group.indices.forEach((index, i) => {
+				const origin = sources[index].origin;
+				points[index] = origin ? { x: origin.left, y: origin.top } : froms[i];
+			});
+		}
+		return points;
 	}
 	function observeHand(container) {
 		if (!container || !env.Observer || observed.has(container)) return;
@@ -84,7 +137,36 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 		position: rect,
 		get enabled() { return enabled(); },
 		canPlay(player) { return enabled() && !!rect(player); },
-		handlesHand(cards, player) { return player === game.me && cards.length > 0 && cards.every(card => pending.has(card) || handStates.has(card)); },
+		handlesHand(cards, player) {
+			if (!enabled() || player !== game.me || !cards.length) return false;
+			if (Array.from(cards).every(card => card && (pending.has(card) || handStates.has(card)))) return true;
+			const event = gainEvent(player, {}), batch = event?.gain_list && recipientCards(event, player);
+			return !!batch && cards.length === batch.length && Array.from(cards).every(card => !card || batch.includes(card));
+		},
+		captureGain(event, player = event?.player) {
+			if (!enabled() || !event || gainSources.has(event)) return;
+			const cards = event.gain_list ? event.gain_list.flatMap(pair => Array.isArray(pair[1]) ? pair[1] : [pair[1]]) : event.cards;
+			if (!Array.isArray(cards)) return;
+			const parent = event.getParent?.("loseAsync", true, true), inherited = parent && gainSources.get(parent);
+			const sources = new Map();
+			for (const card of cards) {
+				if (typeof card?.copy !== "function" && !Array.isArray(card?.cards)) continue;
+				const source = inherited?.get(card) || describeCard(card, player, event, {}, true);
+				sources.set(card, source);
+				for (const physical of card.cards || [card]) {
+					sources.set(physical, inherited?.get(physical) || source);
+				}
+			}
+			gainSources.set(event, sources);
+		},
+		describe(cards, player, options = {}) {
+			const event = gainEvent(player, options), saved = event && gainSources.get(event);
+			const batch = recipientCards(event, player);
+			return Array.from(cards, (card, i) => {
+				const physical = card || (batch?.length === cards.length ? batch[i] : null);
+				return saved?.get(physical) || describeCard(physical, player, event || options, options);
+			});
+		},
 		origin(card) {
 			const clone = card?.clone;
 			return clone?.parentNode === ui.arena ? rect(clone) : null;
@@ -92,24 +174,12 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 		prepareHand(cards, boundsCaches, options = {}) {
 			if (!enabled() || !game.me || !ui.arena?.animate || !cards.length) return false;
 			if (typeof options.animate === "function" || options.animate === false) return false;
-			const m = metrics(), points = deckDrawPoints(arenaSize(), cards.length, m.width * m.scale, m.height * m.scale, m.unit);
+			const m = metrics(), sources = controller.describe(cards, game.me, options), points = sourcePoints(sources, m);
+			handGeneration++;
 			cards.forEach((card, i) => {
 				if (!card?.copy) return;
 				clearWaiting(card); if (handStates.has(card)) finish(handStates.get(card));
-				const source = sourceFor(card, options);
-				let from;
-				if (options.animate === "gain2" || options.animate === "draw2") {
-					const r = controller.origin(card); if (r) from = { x: r.left, y: r.top };
-				}
-				if (!from && source) {
-					// Rk.fromHandFunc uses the sender's card point, not an old discard clone.
-					const r = source === game.me && rect(card);
-					if (r) from = { x: r.left, y: r.top };
-					else { const seat = rect(source); if (seat) from = seatDrawPoints(seat, 1, m.width * m.scale, m.height * m.scale, m.unit)[0]; }
-				} else if (!from && options.animate !== "draw") {
-					const r = controller.origin(card); if (r) from = { x: r.left, y: r.top };
-				}
-				pending.set(card, { from: from || points[i], transition: card.style.transition, container: game.me.node.handcards1,
+				pending.set(card, { from: points[i], transition: card.style.transition, container: game.me.node.handcards1,
 					timer: env.setTimer(() => clearWaiting(card), native.watchdogMs) });
 				waitingCards.add(card);
 				// The final layout is measured without the legacy 400ms CSS interpolation.
@@ -130,8 +200,10 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 			const r = rect(card); if (!r) return;
 			const end = { x: r.left, y: r.top, scale: r.width / card.offsetWidth };
 			if (old) {
-				if (Math.abs(end.x - old.end.x) + Math.abs(end.y - old.end.y) < .5) return;
-				const current = rect(old.clone), remaining = Math.max(16, old.duration - (old.animation.currentTime || 0));
+				const newDeal = old.generation !== handGeneration;
+				if (!newDeal && Math.abs(end.x - old.end.x) + Math.abs(end.y - old.end.y) < .5) return;
+				const current = rect(old.clone), remaining = newDeal ? native.handMs : Math.max(16, old.duration - (old.animation.currentTime || 0));
+				old.generation = handGeneration;
 				if (current) try { animate(old, { x: current.left, y: current.top, scale: current.width / old.clone.offsetWidth }, end, null, remaining); } catch { finish(old); }
 				return;
 			}
@@ -142,7 +214,7 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 			clone.style.width = `${card.offsetWidth}px`;
 			clone.style.height = `${card.offsetHeight}px`;
 			const state = startClone(clone, { ...waiting.from, scale: end.scale }, end, null,
-				{ real: card, container: card.parentNode, opacity: card.style.opacity, transition: waiting.transition });
+				{ real: card, container: card.parentNode, opacity: card.style.opacity, transition: waiting.transition, generation: handGeneration });
 			if (state.finished) { card.style.transition = waiting.transition; return; }
 			handStates.set(card, state); card.style.opacity = "0";
 			state.interact = () => finish(state);
@@ -152,19 +224,23 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 			if (!enabled() || !cards.length || !ui.arena?.animate) return false;
 			const target = rect(player); if (!target) return false;
 			const m = metrics(), width = m.width * m.scale, height = m.height * m.scale;
-			const starts = options.source && rect(options.source);
-			const froms = starts ? seatDrawPoints(starts, cards.length, width, height, m.unit) : deckDrawPoints(arenaSize(), cards.length, width, height, m.unit);
-			const ends = seatDrawPoints(target, cards.length, width, height, m.unit, true);
+			const sources = options.sources || controller.describe(cards, player, options);
+			const froms = sourcePoints(sources, m), ends = [];
+			for (const group of groupDrawSources(sources)) {
+				const points = seatDrawPoints(target, group.indices.length, width, height, m.unit, true);
+				group.indices.forEach((index, i) => ends[index] = points[i]);
+			}
 			cards.forEach((card, i) => {
-				const origin = options.origins?.[i];
+				const source = sources[i];
+				const origin = source.origin || (source.source === game.me || ["d", "o"].includes(source.zone) ? options.origins?.[i] : null);
 				const start = { ...(origin ? { x: origin.left, y: origin.top } : froms[i]), scale: origin ? origin.width / m.width : m.scale };
 				const end = { ...ends[i], scale: m.scale };
 				const hand = player === game.me;
-				startClone(card, start, end, hand ? null : drawControlPoint(start, end, ui.arena.offsetHeight, m.unit, !!options.source), { hand });
+				startClone(card, start, end, hand ? null : drawControlPoint(start, end, ui.arena.offsetHeight, m.unit, sources[i].seatToSeat), { hand });
 			});
 			return true;
 		},
-		clear() { for (const card of [...waitingCards]) clearWaiting(card); for (const state of [...active]) finish(state); },
+		clear() { for (const card of [...waitingCards]) clearWaiting(card); for (const state of [...active]) finish(state); gainSources = new WeakMap(); },
 		get activeCount() { return active.size; },
 	};
 	game.hhDrawMotion = controller;
