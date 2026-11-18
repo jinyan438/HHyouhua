@@ -89,8 +89,8 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				'chooseBool'
 			];
 			const HH_AI_THINK_EVENT_PROFILE = {
-				chooseToUse: [650, 1800],
-				chooseToRespond: [250, 950],
+				chooseToUse: [900, 2100],
+				chooseToRespond: [650, 1500],
 				chooseCard: [450, 1300],
 				chooseTarget: [500, 1500],
 				chooseButton: [500, 1600],
@@ -137,7 +137,10 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						comboCount: 0,
 						lastThink: 0,
 						lastEventName: '',
-						phaseUseToken: null
+						phaseUseToken: null,
+						phaseHandCount: 0,
+						phaseGainCount: 0,
+						phaseBoard: ''
 					};
 				}
 				return player._HH_aiThinkProfile;
@@ -227,7 +230,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 						if (!result.skill && info && info.type == 'equip' && info.subtype && player.getEquips && !player.getEquips(info.subtype).length) return 'quick';
 					}
 					if (HH_isCriticalAIThinkEvent(event, player)) return 'deliberate';
-					if ((isRespond || !HH_isPhaseUseDecision(event, player)) && ['shan', 'sha'].includes(name) && !result.skill && !event.complexCard && !event.complexSelect && !event.complexTarget && (!result.cards || result.cards.length <= 1)) return 'quick';
+					if ((isRespond || !HH_isPhaseUseDecision(event, player)) && ['shan', 'sha'].includes(name) && !result.skill && !event.complexCard && !event.complexSelect && !event.complexTarget && (!result.cards || result.cards.length <= 1)) return 'response';
 				}
 				if (HH_isCriticalAIThinkEvent(event, player)) return 'deliberate';
 				return 'normal';
@@ -256,6 +259,11 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				if (HH_isCriticalAIThinkEvent(event, player)) score += 360;
 				return Math.max(-400, score);
 			};
+			const HH_isAIPlayDecision = function(event) {
+				const result = event.result || {};
+				return ['chooseToUse', 'chooseToRespond'].includes(event.name) && result.bool === true
+					&& !!(result.card || result.skill || result.cards?.length);
+			};
 			const HH_calcAIThinkDelay = function(player, event) {
 				const configMin = HH_parseNumberConfig('ai_think_delay_min', 250, 0, 10000);
 				const configMax = Math.max(configMin, HH_parseNumberConfig('ai_think_delay_max', 2600, 0, 15000));
@@ -266,36 +274,51 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				let max = HH_clamp(eventProfile[1], min, configMax);
 				const now = Date.now();
 				const inPhaseUse = HH_isPhaseUseDecision(event, player);
+				let reviewPlan = false;
 				if (inPhaseUse) {
 					const phaseUseToken = HH_getPhaseUseToken(event, player);
+					const handCount = player?.countCards?.('h') || 0;
+					const gainCount = player?.actionHistory?.at(-1)?.gain?.length || 0;
+					// 只看公开场面和自己的得牌记录，不重跑选牌、目标或技能 AI。
+					const board = (game.players || []).map(target => `${target.hp}:${target.hujia || 0}:${target.node?.equips?.childElementCount || 0}:${target.node?.judges?.childElementCount || 0}`).join('|');
 					if (profile.phaseUseToken !== phaseUseToken) {
 						profile.phaseUseToken = phaseUseToken;
 						profile.phaseThinkCount = 0;
 						profile.comboCount = 0;
 					}
-					if (profile.phaseThinkCount > 0 && profile.lastThink && now - profile.lastThink < 5000 && profile.lastEventName == 'chooseToUse') {
+					reviewPlan = profile.phaseThinkCount == 0 || handCount > profile.phaseHandCount
+						|| gainCount !== profile.phaseGainCount || board !== profile.phaseBoard || profile.lastEventName !== 'chooseToUse';
+					if (!reviewPlan && profile.lastThink && now - profile.lastThink < 5000) {
 						profile.comboCount++;
 					} else {
 						profile.comboCount = 0;
 					}
 					// 摸牌/吃桃等顺手操作不消耗本阶段首次规划的停顿。
 					if (pace == 'normal' || pace == 'deliberate') profile.phaseThinkCount++;
+					profile.phaseHandCount = handCount;
+					profile.phaseGainCount = gainCount;
+					profile.phaseBoard = board;
 				} else if (event && event.name != profile.lastEventName) {
 					profile.comboCount = 0;
 				}
 				profile.lastThink = now;
 				profile.lastEventName = event && event.name || '';
-				// 顺手操作保留约150～570ms的点击时间，不受思考下限和长考影响。
+				// 出杀/闪也需要观察并点击，独立于结算速度和游戏倍率。
 				if (pace == 'instant' || configMax == 0) return 0;
-				if (pace == 'quick') {
-					const delay = Math.round(Math.min(configMax, HH_randHumanDelay(180, 420) * profile.speed));
+				if (pace == 'quick' || pace == 'response') {
+					const play = HH_isAIPlayDecision(event);
+					const range = pace == 'response' ? [520, 1450] : play ? [560, 1180] : [180, 420];
+					const floor = pace == 'response' ? 480 : play ? 500 : 150;
+					const delay = Math.round(Math.min(configMax, Math.max(floor, HH_randHumanDelay(...range) * profile.speed)));
 					profile.lastThink = now + delay;
 					return delay;
 				}
 				let delay = HH_randHumanDelay(min, max);
 				delay += HH_calcAIThinkComplexity(player, event);
-				if (inPhaseUse && profile.phaseThinkCount <= 1) delay += 350 + Math.random() * 450;
-				if (profile.comboCount > 0) delay *= Math.max(0.58, 1 - profile.comboCount * 0.14);
+				if (inPhaseUse && reviewPlan) delay += 350 + Math.random() * 450;
+				// 熟悉的连招偶尔顺手接续，几张之后重新观察；不随连招次数不断加速。
+				if (inPhaseUse && !reviewPlan && profile.comboCount > 0 && profile.comboCount % 3 != 0
+					&& Math.random() < 0.45 + profile.decisive * 0.2) delay *= 0.84 + Math.random() * 0.12;
 				delay *= profile.speed;
 				delay *= 1 - profile.decisive * 0.16;
 				if (HH_isCriticalAIThinkEvent(event, player)) delay *= 1 + profile.risk * 0.22;
@@ -303,14 +326,17 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const longThink = pace == 'deliberate' && Math.random() < 0.06;
 				if (longThink) delay += 500 + Math.random() * 1000;
 				const hardMax = longThink ? Math.min(15000, configMax + 1500) : configMax;
-				delay = Math.round(HH_clamp(delay, configMin, hardMax));
+				const floor = inPhaseUse && HH_isAIPlayDecision(event) ? Math.min(configMax, Math.max(configMin, 750)) : configMin;
+				// 平滑接近上限，避免复杂操作都被截成完全一样的固定时长。
+				if (hardMax > floor && delay > floor) delay = floor + (hardMax - floor) * -Math.expm1(-(delay - floor) / (hardMax - floor));
+				delay = Math.round(HH_clamp(delay, floor, hardMax));
 				profile.lastThink = now + delay;
 				return delay;
 			};
 			const HH_shouldDelayAI = function(event, player) {
 				if (_status.auto && (player || event?.player) === game.me && game.hhPlayerActionTimer?.timedOutAuto) return false;
 				if (!lib.config.extension_HH优化_enable_ai_think_delay) return false;
-				if (_status.connectMode || game.online) return false;
+				if (_status.connectMode || game.online || _status.video || _status.over) return false;
 				// 只处理交互选择，摸牌/伤害/获得牌等系统结算不增加思考。
 				if (!event || !HH_AI_THINK_EVENTS.includes(event.name) || event._HH_aiThinkDelayed || event.responded) return false;
 				player = player || event.player;
@@ -2065,18 +2091,18 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			},
 			enable_ai_think_delay: {
 				name: "启用AI思考延迟",
-				init: false,
-				intro: "濒死时依次显示“桃 思考中…”并模拟救人取舍；自救保留短暂点击时间。出牌、火攻、拆顺、借刀及五谷等选择分别思考；纯系统结算不额外等待"
+				init: true,
+				intro: "每次出牌独立模拟观察和操作停顿，杀闪也有自然响应时间；连续用牌、摸到新牌和场面变化会调整节奏，关键取舍偶尔长考。纯系统结算保持快速"
 			},
 			ai_think_delay_popup: {
 				name: "显示思考提示",
 				init: true,
-				intro: "开启后，预计思考时长达到600毫秒时持续显示“出牌 思考中”提示；进度条满条固定代表15秒，按实际耗时缩短，思考结束后移除；顺手操作和快速响应只显示进度条"
+				intro: "开启后，预计思考时长达到600毫秒时持续显示“出牌 思考中”提示；进度条满条固定代表15秒，按实际耗时缩短，思考结束后移除；不足600毫秒时只显示进度条"
 			},
 			ai_think_delay_min: {
 				name: "最短思考时间(ms)",
 				init: "250",
-				intro: "需要思考时的最短等待时间，默认250毫秒；顺手操作及快速响应约150～570毫秒，仍模拟点击，不受此下限限制",
+				intro: "普通思考的最短等待时间，默认250毫秒；杀闪响应约0.5～2秒，顺手用牌约0.5～1.6秒，简单确认约150～570毫秒，不因提高此下限而长考；均遵守最长时间设置",
 				input: true,
 				onblur: function() {
 					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
