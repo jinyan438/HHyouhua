@@ -68,6 +68,7 @@ export {
 	setBasePlayerDraw,
 	playerDraw,
 	playerGain2,
+	playerGain,
 	playerGive,
 	playerThrow,
 	playerThrowordered2,

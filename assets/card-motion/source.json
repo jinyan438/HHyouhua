@@ -1,0 +1,27 @@
+{
+  "source": "E:/AI/sanguosha/sanguosha2/work/main.js",
+  "sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+  "client": "Classic identity; Laya trajectories adapted to HH card dimensions, seat positions and actual hand layout",
+  "entryPoints": ["Rk.fromCardpileFunc / fromDiscardpileFunc / fromStackFunc / fromHandFunc / fromEquipFunc", "Rk.toHandFunc", "lrs.DrawCards"],
+  "ownHand": ["xvi.DrawCard", "xvi.getHandCardMoveStartPosCenter", "xvi.setCardUIPos", "xvi.startHandCardTween", "Yki.UpdateCoordinates"],
+  "otherPlayers": ["NMt.GetCardsPoint", "NMt.ShowCardMotion", "NMt.playNextCardMotion", "Yki.InitBezierPoint / getMiddle / UpdateCoordinatesByBezier", "Zv.StartCardMotionTween / onUpdateCardMotion"],
+  "defaults": {
+    "parameterClass": "VUt",
+    "cardSize": [126, 174],
+    "seatSize": [174, 232],
+    "deckOverlap": -100,
+    "deckSpacing": 26,
+    "arrivalOverlap": -110,
+    "arrivalSpacing": 16,
+    "otherSeatSourceOffsetY": 20,
+    "handMs": 300,
+    "flyMs": 700,
+    "fadeDelayMs": 800,
+    "fadeMs": 400,
+    "ease": "sineOut",
+    "watchdogMs": 2500,
+    "deckControlOffsetY": 126,
+    "minimumSeatTransferBend": 200
+  },
+  "notes": "No frame-sequence asset is needed: native movement is procedural. Preserve HH card faces, backs and native visibility/broadcast/video rules. Existing hand layout determines the exact local destination."
+}

@@ -6,6 +6,7 @@
 
 import { lib, game, ui, get, ai, _status } from "noname";
 import { applyCardBorder } from "../../ui/cardStyles.js";
+import { getBasePlayerMethods } from "./base.js";
 
 /** @type {Function|null} 基础摸牌方法引用 */
 let basePlayerDraw = null;
@@ -76,6 +77,7 @@ export function playerDraw(num, init, config) {
 	}
 
 	if (isDrawCard && game.hhEquipMove?.drawsEquip(cards, this)) return;
+	if (isDrawCard && game.hhDrawMotion?.handlesHand(cards, this)) return;
 
 	if (_status.event && _status.event.name) {
 		if (
@@ -109,6 +111,7 @@ export function playerDraw(num, init, config) {
 		fragment.appendChild(card);
 	}
 
+	if (game.hhDrawMotion?.play(cards, player)) return;
 	_dui.layoutDrawCards(cards, player, true);
 	ui.arena.appendChild(fragment);
 
@@ -142,16 +145,24 @@ export function playerGain2(cards, log) {
 		this,
 		cards
 	);
+	if (game.hhDrawMotion?.handlesHand(cards, this)) {
+		const gains = cards.filter(card => card.clone?.parentNode === ui.arena), draws = cards.filter(card => !gains.includes(card));
+		if (gains.length) game.addVideo("gain2", this, get.cardsInfo(gains));
+		if (draws.length) game.addVideo("drawCard", this, get.cardsInfo(draws));
+		return;
+	}
 
 	const gains = [];
 	const draws = [];
 	let card;
 	let clone;
 	const player = this;
+	const gainOrigins = [], drawOrigins = [];
 
 	for (let i = 0; i < cards.length; i++) {
 		clone = cards[i].clone;
-		card = cards[i].copy("thrown", "gainingcard");
+		const origin = game.hhDrawMotion?.origin(cards[i]);
+		card = game.hhDrawMotion ? cards[i].copy("thrown", "gainingcard", false) : cards[i].copy("thrown", "gainingcard");
 		card.fixed = true;
 
 		if (player !== game.me) {
@@ -162,8 +173,10 @@ export function playerGain2(cards, log) {
 			card.scaled = true;
 			card.style.transform = clone.style.transform;
 			gains.push(card);
+			gainOrigins.push(origin);
 		} else {
 			draws.push(card);
+			drawOrigins.push(origin);
 		}
 	}
 
@@ -174,6 +187,7 @@ export function playerGain2(cards, log) {
 
 	cards = gains.concat(draws);
 	const _dui = getDui();
+	if (game.hhDrawMotion?.play(cards, player, { origins: gainOrigins.concat(drawOrigins) })) return;
 
 	_dui.layoutDrawCards(draws, this, true);
 
@@ -185,6 +199,35 @@ export function playerGain2(cards, log) {
 		_dui.layoutDrawCards(cards, player);
 		_dui.delayRemoveCards(cards, 460, 220);
 	});
+}
+
+/** Generic gain shares the source client's deal motion instead of the old random zoom. */
+export function playerGain(num, log, init, cardsetion) {
+	if (!game.hhDrawMotion?.canPlay(this) || game.chess || this.$gainmod) return getBasePlayerMethods().$gain.apply(this, arguments);
+	if (!cardsetion && cardsetion !== false && lib.config.card_animation_info) cardsetion = get.cardsetion(this);
+	const type = get.itemtype(num), known = type === "cards" || type === "card";
+	const originals = type === "cards" ? num : type === "card" ? [num] : new Array(typeof num === "number" ? Math.max(0, Math.trunc(num)) : 1);
+	if (init !== false) {
+		game.broadcast((player, cards, init, section) => player.$gain(cards, false, init, section), this, num, init, cardsetion);
+		game.addVideo(known ? "gainCard" : "gain", this, known ? get.cardsInfo(originals) : originals.length);
+	}
+	if (log !== false && !_status.video) {
+		if (known) game.log(this, "获得了", originals);
+		else game.log(this, "获得了" + get.cnNumber(originals.length) + "张牌");
+	}
+	if (num?.duiMod && this === game.me || game.hhDrawMotion.handlesHand(originals, this)) return;
+	const dui = getDui(), cards = Array.from(originals, original => {
+		const card = original ? original.copy("thrown", "gainingcard", false) : dui.element.create("card thrown gainingcard");
+		card.fixed = true;
+		if (cardsetion) {
+			const section = ui.create.div(".cardsetion", cardsetion, card);
+			section.style.setProperty("display", "block", "important");
+			if (card.node) { card.node.cardsetion?.remove(); card.node.cardsetion = section; }
+		}
+		if (this !== game.me) applyCardBorder(card, this);
+		return card;
+	});
+	game.hhDrawMotion.play(cards, this);
 }
 
 /**
@@ -246,7 +289,7 @@ export function playerGive(cards, target, log, record) {
 		return;
 	}
 
-	if (duiMod) return;
+	if (duiMod || game.hhDrawMotion?.handlesHand(cards, target)) return;
 
 	let card;
 	const _dui = getDui();
@@ -290,6 +333,9 @@ export function playerGive(cards, target, log, record) {
 
 	if (draws.length) _dui.layoutDrawCards(draws, player);
 	ui.arena.appendChild(fragment);
+	if (game.hhDrawMotion?.play(cards, target, {
+		source: player, origins: player === game.me ? cards.map(card => game.hhDrawMotion.position(card)) : undefined,
+	})) return;
 
 	_dui.queueNextFrameTick(function () {
 		_dui.layoutDrawCards(cards, target);

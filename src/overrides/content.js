@@ -52,7 +52,7 @@ export function createContentGain(baseGain) {
 			const gainTo = function (cards, nodelay) {
 				cards.duiMod = event.source;
 				if (player == game.me) {
-					_dui.layoutHandDraws(cards);
+					_dui.layoutHandDraws(cards, event);
 					_dui.queueNextFrameTick(_dui.layoutHand, _dui);
 					game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
 				}

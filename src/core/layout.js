@@ -110,6 +110,7 @@ export function createLayoutModule() {
 				card.style.transform = `translate(${x}px,${y}px) scale(${cs})`;
 				card._transform = card.style.transform;
 				card.updateTransform(card.classList.contains("selected"));
+				game.hhDrawMotion?.settleHand(card);
 			});
 
 			const container = ui.handcards1Container;

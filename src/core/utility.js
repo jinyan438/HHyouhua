@@ -63,7 +63,9 @@ export const registerDecadeUIUtilityModule = decadeUI => {
 	};
 
 	decadeUI.layoutHand = () => decadeUI.layout.updateHand();
-	decadeUI.layoutHandDraws = cards => layoutHandDraws(cards, decadeUI.boundsCaches);
+	decadeUI.layoutHandDraws = (cards, options) => {
+		if (!game.hhDrawMotion?.prepareHand(cards, decadeUI.boundsCaches, options)) layoutHandDraws(cards, decadeUI.boundsCaches);
+	};
 	decadeUI.layoutDrawCards = (cards, player, center) => layoutDrawCards(cards, player, center, decadeUI.boundsCaches);
 	decadeUI.layoutDiscard = () => decadeUI.layout.updateDiscard();
 	decadeUI.cardTempSuitNum = (card, suit, number) => cardTempSuitNum(card, suit, number, decadeUI.element);
