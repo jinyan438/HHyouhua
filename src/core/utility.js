@@ -52,6 +52,9 @@ export const registerDecadeUIUtilityModule = decadeUI => {
 	 */
 	decadeUI.queueNextFrameTick = (callback, ctx) => {
 		decadeUI._frameTickEntries ??= [];
+		if ((callback === decadeUI.layoutHand || callback === decadeUI.layoutDiscard)
+			&& decadeUI._frameTickEntries.some(entry => entry.callback === callback && entry.ctx === ctx)
+			&& game.hhSettlement?.coalesceLayout()) return;
 		decadeUI._frameTickEntries.push({ ctx, callback });
 		if (decadeUI._queueFrameTick) return;
 		decadeUI._queueFrameTick = requestAnimationFrame(() => {

@@ -109,6 +109,15 @@ test('rapid reflow, interaction, removal and game over restore real cards withou
 	assert.equal(c.style.transition, ''); assert.equal(h.timers.size, 0);
 });
 
+test('a gain consumed before the next layout frame clears its pending animation and restores the card', () => {
+	const h = harness(), consumed = h.card(), kept = h.card('shan');
+	h.controller.prepareHand([consumed, kept], null, { animate: 'draw' }); h.hand.appendChild(consumed); h.hand.appendChild(kept);
+	consumed.remove(); h.observers.forEach(observer => observer.fn()); h.controller.settleHand(consumed);
+	assert.equal(h.animations.length, 0); assert.equal(consumed.style.transition, ''); assert.equal(h.timers.size, 1);
+	h.controller.settleHand(kept); assert.equal(h.animations.length, 1); h.animations[0].finish();
+	assert.equal(h.controller.activeCount, 0); assert.equal(h.timers.size, 0); assert.equal(kept.style.opacity, '');
+});
+
 test('public gain2 prefers a visible table card over its previous owner and failures never hide real cards', () => {
 	const h = harness(), c = h.card('sha', { left: 420, top: 460, width: 75.6, height: 105 }); c.offsetWidth = 108;
 	const old = h.node({ left: 350, top: 200, width: 75.6, height: 105 }); h.ui.arena.appendChild(old); c.clone = old;

@@ -130,6 +130,10 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 		if (!container || !env.Observer || observed.has(container)) return;
 		observed.add(container);
 		new env.Observer(() => {
+			for (const card of [...waitingCards]) {
+				const state = pending.get(card);
+				if (state?.container === container && card.parentNode !== container) clearWaiting(card);
+			}
 			for (const state of [...active]) if (state.real && state.container === container && state.real.parentNode !== container) finish(state);
 		}).observe(container, { childList: true });
 	}

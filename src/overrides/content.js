@@ -38,6 +38,7 @@ export function createContentGain(baseGain) {
 		...phases,
 		async (event, trigger, player) => {
 			let { cards, gaintag } = event;
+			const fastSettlement = game.hhSettlement?.fastGain(event) === true;
 			const handcards = player.node.handcards1;
 			const fragment = document.createDocumentFragment();
 			for (let i = 0; i < cards.length; i++) {
@@ -96,20 +97,20 @@ export function createContentGain(baseGain) {
 				}
 			};
 			if (event.animate == "draw") {
-				game.pause();
-				gainTo(cards);
+				if (!fastSettlement) game.pause();
+				gainTo(cards, fastSettlement);
 				player.$draw(cards.length);
 			} else if (event.animate == "gain") {
-				game.pause();
-				gainTo(cards);
+				if (!fastSettlement) game.pause();
+				gainTo(cards, fastSettlement);
 				player.$gain(cards, event.log);
 			} else if (event.animate == "gain2" || event.animate == "draw2") {
-				game.pause();
-				gainTo(cards);
+				if (!fastSettlement) game.pause();
+				gainTo(cards, fastSettlement);
 				player.$gain2(cards, event.log);
 			} else if (event.animate == "give" || event.animate == "giveAuto") {
-				game.pause();
-				gainTo(cards);
+				if (!fastSettlement) game.pause();
+				gainTo(cards, fastSettlement);
 				const evtmap = event.losing_map;
 				if (event.animate == "give") {
 					for (const i in evtmap) {
@@ -357,7 +358,7 @@ export function createContentLose(baseLose) {
 					evt.discardid,
 					event.visible
 				);
-				if (lib.config.sync_speed && cards[0]?.clone) {
+				if (lib.config.sync_speed && cards[0]?.clone && !game.hhSettlement?.skipTransition(evt)) {
 					if (evt.delay != false) {
 						const waitingForTransition = get.time();
 						evt.waitingForTransition = waitingForTransition;

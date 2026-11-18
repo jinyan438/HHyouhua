@@ -3,6 +3,7 @@ import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 import { setupRescueFlow } from './src/features/rescueFlow.js';
 import { setupLordBlindShot } from './src/features/lordBlindShot.js';
 import { setupEquipMove } from './src/features/equipMove.js';
+import { setupSettlementOptimization } from './src/features/settlementOptimization.js';
 import { getPlayerStyleSizing } from './src/ui/playerStyleSizing.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
@@ -59,6 +60,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					return Math.min(max, multiplier * num);
 				};
 			}
+			setupSettlementOptimization({ lib, game, get, _status }, config);
 
 			// ========== AI模拟真人思考延迟 ==========
 			const HH_parseNumberConfig = function(key, defaultValue, min, max) {
@@ -2039,6 +2041,16 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					
 					// 立即应用速度
 					lib.config.extension_HH优化_speed_multiplier = multiplier;
+				}
+			},
+			enable_settlement_optimize: {
+				name: "优化结算速度",
+				init: true,
+				intro: "减少卡牌、技能与多目标结算中的重复等待，立即生效；保留当前游戏速度、动画时长和AI思考设置",
+				onclick: function(value) {
+					game.saveConfig('extension_HH优化_enable_settlement_optimize', value);
+					lib.config.extension_HH优化_enable_settlement_optimize = value;
+					game.hhSettlement?.setEnabled(value);
 				}
 			},
 			enable_lord_blind_shot: {
