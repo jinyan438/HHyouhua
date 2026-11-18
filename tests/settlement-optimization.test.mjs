@@ -103,17 +103,20 @@ test('actual HH gain inserts and displays the same cards without its 466ms pause
 	assert.equal(original._status.paused, false); assert.equal(original.updates.length, 1);
 });
 
-test('actual HH cosmetic transition sync is omitted only for eligible settlement and restored when off', () => {
+test('actual HH animation transition sync remains native with settlement optimization both on and off', () => {
 	const h = harness(), text = fs.readFileSync(new URL('../src/overrides/content.js', import.meta.url), 'utf8');
 	const start = text.indexOf('if (lib.config.sync_speed &&'), end = text.indexOf('\n\t\t\tgame.addVideo("lose"', start);
 	let callback; const evt = { name: 'useCard', delay: true }, clone = { listenTransition(fn) { callback = fn; } };
 	h.lib.config.sync_speed = true; h.get.time = () => 123; h.game.resume = () => { h._status.paused = false; };
 	const block = text.slice(start, end).replace(/\n\t\t\t\}\s*$/, '');
-	const context = vm.createContext({ ...h, cards: [{ clone }], evt }); vm.runInContext(block, context);
-	assert.equal(callback, undefined); assert.equal(evt.waitingForTransition, undefined);
-	h.controller.setEnabled(false); vm.runInContext(block, context);
-	assert.equal(evt.waitingForTransition, 123); assert.equal(typeof callback, 'function');
-	h._status.waitingForTransition = 123; h._status.paused = true; callback(); assert.equal(h._status.paused, false); assert.equal(evt.waitingForTransition, undefined);
+	const context = vm.createContext({ ...h, cards: [{ clone }], evt });
+	for (const enabled of [true, false]) {
+		h.controller.setEnabled(enabled); vm.runInContext(block, context);
+		assert.equal(evt.waitingForTransition, 123); assert.equal(typeof callback, 'function');
+		assert.equal(h.controller.canOptimize(evt), false, 'a visible transition must reach the native completion callback');
+		h._status.waitingForTransition = 123; h._status.paused = true; callback(); assert.equal(h._status.paused, false); assert.equal(evt.waitingForTransition, undefined);
+		delete h._status.waitingForTransition;
+	}
 });
 
 test('the requested extension toggle is enabled by default, persists clicks and switches immediately', () => {

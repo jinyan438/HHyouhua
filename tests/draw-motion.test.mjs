@@ -14,6 +14,7 @@ function harness({ zoom = 1 } = {}) {
 	function node(box = {}, names = []) {
 		const classes = new Set(names), listeners = new Map();
 		const n = { style: { opacity: '', transition: '' }, children: [], offsetWidth: box.width || 108, offsetHeight: box.height || 150,
+			get childNodes() { return this.children; },
 			box: { left: 0, top: 0, width: 108, height: 150, ...box }, dataset: {},
 			classList: { add: (...items) => items.forEach(x => classes.add(x)), remove: (...items) => items.forEach(x => classes.delete(x)), contains: x => classes.has(x) },
 			getBoundingClientRect() { const b = this.box; return { left: 20 + b.left * zoom, top: 40 + b.top * zoom, width: b.width * zoom, height: b.height * zoom }; },
@@ -116,6 +117,66 @@ test('a gain consumed before the next layout frame clears its pending animation 
 	assert.equal(h.animations.length, 0); assert.equal(consumed.style.transition, ''); assert.equal(h.timers.size, 1);
 	h.controller.settleHand(kept); assert.equal(h.animations.length, 1); h.animations[0].finish();
 	assert.equal(h.controller.activeCount, 0); assert.equal(h.timers.size, 0); assert.equal(kept.style.opacity, '');
+});
+
+test('optimized actual gain waits for its own hand animation to start and arrive before the following move', async () => {
+	const h = harness(), c = h.card('sha', { left: 420, top: 460, width: 75.6, height: 105 }), frames = [];
+	Object.assign(c, { vanishtag: [], fix() {}, addKnower() {}, addGaintag() {} });
+	Object.assign(h.lib.config, { sort_card: () => 0 }); h.get.position = () => 'c'; h.ui.cardPile = { childNodes: [] };
+	h.game.hhSettlement = { fastGain: () => true }; h.game.pause = () => { throw Error('must not take a global pause'); };
+	h.me.getCards = () => []; h.me.update = () => {}; h.me.$draw = count => h.playerDraw.call(h.me, count);
+	const dui = h.context.getDui(); h.context.window = { decadeUI: dui };
+	dui.layoutHandDraws = (cards, event) => h.controller.prepareHand(cards, null, event);
+	dui.layoutHand = () => h.hand.children.forEach(card => h.controller.settleHand(card)); dui.queueNextFrameTick = fn => frames.push(fn);
+	const text = fs.readFileSync(new URL('../src/overrides/content.js', import.meta.url), 'utf8');
+	const start = text.indexOf('export function createContentGain('), end = text.indexOf('\n/**', start);
+	vm.runInContext(text.slice(start, end).replace('export function', 'function') + ';globalThis.gain=createContentGain([])[0]', h.context);
+	const event = { name: 'gain', player: h.me, cards: [c], gaintag: [], animate: 'draw' }; h._status.event = event;
+	let nextMove = false; const gain = h.context.gain(event, null, h.me).then(() => { nextMove = true; });
+	await Promise.resolve(); assert.equal(nextMove, false); assert.equal(c.parentNode, h.hand); assert.equal(h.animations.length, 0);
+	frames.shift()(); assert.equal(h.animations.length, 1); assert.equal(h.animations[0].options.duration, 300);
+	h.advance(299); await Promise.resolve(); assert.equal(nextMove, false);
+	h.advance(1); await gain; assert.equal(nextMove, true);
+	h.controller.clear(); assert.equal(c.style.opacity, ''); assert.equal(h.timers.size, 0);
+});
+
+test('fly arrival waits from actual animation readiness for 700ms while its 1200ms fade remains independent', async () => {
+	const h = harness(), event = { name: 'gain', player: h.other }; h._status.event = event;
+	let start; const ready = new Promise(resolve => { start = resolve; });
+	const card = h.node(); const animate = card.animate;
+	card.animate = (...args) => Object.assign(animate(...args), { ready });
+	h.controller.play([card], h.other); let arrived = false;
+	const wait = h.controller.waitForGain(event, h.other).then(() => { arrived = true; });
+	h.advance(200); await Promise.resolve(); assert.equal(arrived, false, 'layout/start delay cannot count as flight time');
+	start(); await Promise.resolve(); h.advance(699); await Promise.resolve(); assert.equal(arrived, false);
+	h.animations[0].currentTime = 700; h.advance(1); await wait; assert.equal(arrived, true); assert.equal(h.controller.activeCount, 1);
+	assert.equal(h.animations[0].options.duration, 1200); assert.equal(h.animations[0].canceled, false);
+	h.controller.clear(); assert.equal(h.timers.size, 0);
+});
+
+test('gain arrival promises release on pending removal, copy failure, animation failure and game over', async () => {
+	for (const mode of ['remove', 'copy', 'animation', 'over']) {
+		const h = harness(), c = h.card(), event = { name: 'gain', player: h.me, animate: 'draw' };
+		h.controller.prepareHand([c], null, event); h.hand.appendChild(c);
+		const wait = h.controller.waitForGain(event, h.me);
+		if (mode === 'remove') { c.remove(); h.observers.forEach(o => o.fn()); }
+		if (mode === 'copy') { c.copy = () => { throw Error('copy failed'); }; h.controller.settleHand(c); }
+		if (mode === 'animation') { const copy = c.copy; c.copy = (...args) => { const clone = copy(...args); clone.animate = () => { throw Error('animation failed'); }; return clone; }; h.controller.settleHand(c); }
+		if (mode === 'over') h.lib.onover.forEach(fn => fn());
+		await wait; assert.equal(h.controller.activeCount, 0, mode); assert.equal(h.timers.size, 0, mode); assert.equal(c.style.opacity, '', mode);
+	}
+});
+
+test('multi-recipient arrival waits for its child hand animation and its own flight, excluding unrelated gains', async () => {
+	const h = harness(), root = { name: 'loseAsync', gain_list: [[h.me, []], [h.other, []]] };
+	const child = { name: 'gain', animate: 'draw', player: h.me, getParent: () => root }, c = h.card();
+	h.controller.prepareHand([c], null, child); h.hand.appendChild(c); h.controller.settleHand(c);
+	h._status.event = root; h.playerDraw.call(h.other, 1);
+	let done = false; const wait = h.controller.waitForGain(root).then(() => { done = true; });
+	h.advance(300); await Promise.resolve(); assert.equal(done, false);
+	h._status.event = { name: 'gain', player: h.other }; h.playerDraw.call(h.other, 1);
+	h.advance(400); await wait; assert.equal(done, true, 'only this batch must have arrived');
+	assert.equal(h.controller.activeCount, 3); h.controller.clear(); assert.equal(h.timers.size, 0);
 });
 
 test('public gain2 prefers a visible table card over its previous owner and failures never hide real cards', () => {

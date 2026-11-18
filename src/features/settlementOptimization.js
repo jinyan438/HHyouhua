@@ -19,7 +19,7 @@ export function setupSettlementOptimization({ lib, game, get, _status }, config 
 		if (typeof requestAnimationFrame === "function") frame = requestAnimationFrame(done);
 	}), ...environment };
 	const original = { delay: game.delay, delayx: game.delayx };
-	const stats = { defaultWaits: 0, targetWaits: 0, gainHolds: 0, batchHolds: 0, transitionHolds: 0, layoutPassesSaved: 0, yields: 0 };
+	const stats = { defaultWaits: 0, targetWaits: 0, gainHolds: 0, batchHolds: 0, layoutPassesSaved: 0, yields: 0 };
 	let fallback = config.enable_settlement_optimize !== false, lastYield = env.now(), operations = 0, yielding;
 	const enabled = () => (lib.config[KEY] ?? fallback) === true;
 
@@ -76,10 +76,6 @@ export function setupSettlementOptimization({ lib, game, get, _status }, config 
 		fastGain(event) {
 			if (!GAIN_ANIMATIONS.has(event.animate) || !canOptimize(event)) return false;
 			stats.gainHolds++; void yieldControl(); return true;
-		},
-		skipTransition(event) {
-			if (!canOptimize(event)) return false;
-			stats.transitionHolds++; void yieldControl(); return true;
 		},
 		coalesceLayout() {
 			if (!enabled() || game.online || _status.connectMode || _status.video) return false;

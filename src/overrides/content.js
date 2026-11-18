@@ -20,7 +20,9 @@ export function createContentGainMultiple(base) {
 	if (typeof base !== "function") return base;
 	return async function (event, trigger, player) {
 		game.hhDrawMotion?.captureGain(event, player);
-		return base.call(this, event, trigger, player);
+		const result = await base.call(this, event, trigger, player);
+		if (game.hhSettlement?.canOptimize(event)) await game.hhDrawMotion?.waitForGain(event);
+		return result;
 	};
 }
 
@@ -137,6 +139,8 @@ export function createContentGain(baseGain) {
 			} else {
 				gainTo(cards, true);
 			}
+			// Rules can skip padding, but the next move must not consume a card before its visible arrival.
+			if (fastSettlement) await game.hhDrawMotion?.waitForGain(event, player);
 		},
 		async (event, trigger, player) => {
 			if (event.updatePile) game.updateRoundNumber();
@@ -358,7 +362,7 @@ export function createContentLose(baseLose) {
 					evt.discardid,
 					event.visible
 				);
-				if (lib.config.sync_speed && cards[0]?.clone && !game.hhSettlement?.skipTransition(evt)) {
+				if (lib.config.sync_speed && cards[0]?.clone) {
 					if (evt.delay != false) {
 						const waitingForTransition = get.time();
 						evt.waitingForTransition = waitingForTransition;

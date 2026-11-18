@@ -8,11 +8,17 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 	let gainSources = new WeakMap(), handGeneration = 0;
 	const enabled = () => lib.config?.animation !== false && !game.chess && typeof ui.arena?.animate === "function";
 	const arenaSize = () => ({ width: ui.arena.offsetWidth, height: ui.arena.offsetHeight });
+	function arrival() {
+		let resolveArrival;
+		const arrived = new Promise(resolve => { resolveArrival = resolve; });
+		return { arrived, resolveArrival };
+	}
 	function clearWaiting(card, restore = true) {
 		const state = pending.get(card); if (!state) return;
 		env.clearTimer(state.timer); pending.delete(card); waitingCards.delete(card);
 		if (restore && card.parentNode === state.container) card.classList.remove("drawinghidden");
 		if (restore && card.style.transition === "none") card.style.transition = state.transition;
+		if (restore) state.resolveArrival();
 	}
 	function rect(node) {
 		const arena = ui.arena, a = arena?.getBoundingClientRect(), r = node?.getBoundingClientRect?.();
@@ -29,6 +35,7 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 	function finish(state) {
 		if (state.finished) return;
 		state.finished = true;
+		state.resolveArrival();
 		for (const timer of state.timers) env.clearTimer(timer);
 		if (state.animation) { state.animation.onfinish = state.animation.oncancel = null; state.animation.cancel(); }
 		state.clone.remove();
@@ -53,9 +60,29 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 		state.duration = plan.duration;
 		state.animation = state.clone.animate(plan.frames, { duration: plan.duration, easing: "linear", fill: "both" });
 		state.animation.onfinish = state.animation.oncancel = () => finish(state);
+		if (state.arrivalTimer != null) env.clearTimer(state.arrivalTimer);
+		const animation = state.animation;
+		const started = () => {
+			if (state.finished || state.animation !== animation) return;
+			// Own cards hand off on the actual finish event, after the last rendered frame.
+			if ((state.real || state.hand) && "finished" in animation) return;
+			const moveMs = state.real || state.hand ? plan.duration : native.flyMs;
+			const later = ms => {
+				state.arrivalTimer = env.setTimer(() => {
+					if (state.finished || state.animation !== animation) return;
+					const remaining = animation.ready?.then ? moveMs - Number(animation.currentTime || 0) : 0;
+					if (remaining > 1) later(Math.max(16, remaining));
+					else state.resolveArrival();
+				}, ms);
+				state.timers.push(state.arrivalTimer);
+			};
+			later(moveMs);
+		};
+		if (animation.ready?.then) animation.ready.then(started, () => { if (state.animation === animation) finish(state); });
+		else started();
 	}
 	function startClone(clone, start, end, control, options = {}) {
-		const state = { clone, timers: [], ...options };
+		const state = { clone, timers: [], ...arrival(), ...options };
 		clone.fixed = true;
 		active.add(state);
 		try {
@@ -140,6 +167,17 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 	const controller = {
 		position: rect,
 		get enabled() { return enabled(); },
+		waitForGain(event, player) {
+			const arrivals = [];
+			const matches = state => state && (!player || state.player === player) && (state.event === event
+				|| event?.gain_list && state.event?.getParent?.("loseAsync", true, true) === event);
+			for (const card of waitingCards) {
+				const state = pending.get(card);
+				if (matches(state)) arrivals.push(state.arrived);
+			}
+			for (const state of active) if (matches(state)) arrivals.push(state.arrived);
+			return Promise.all(arrivals);
+		},
 		canPlay(player) { return enabled() && !!rect(player); },
 		handlesHand(cards, player) {
 			if (!enabled() || player !== game.me || !cards.length) return false;
@@ -183,7 +221,7 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 			cards.forEach((card, i) => {
 				if (!card?.copy) return;
 				clearWaiting(card); if (handStates.has(card)) finish(handStates.get(card));
-				pending.set(card, { from: points[i], transition: card.style.transition, container: game.me.node.handcards1,
+				pending.set(card, { ...arrival(), event: options, player: game.me, from: points[i], transition: card.style.transition, container: game.me.node.handcards1,
 					timer: env.setTimer(() => clearWaiting(card), native.watchdogMs) });
 				waitingCards.add(card);
 				// The final layout is measured without the legacy 400ms CSS interpolation.
@@ -214,11 +252,12 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 			clearWaiting(card, false);
 			let clone;
 			try { clone = card.copy("thrown", "drawingcard", false); }
-			catch { card.style.transition = waiting.transition; return; }
+			catch { card.style.transition = waiting.transition; waiting.resolveArrival(); return; }
 			clone.style.width = `${card.offsetWidth}px`;
 			clone.style.height = `${card.offsetHeight}px`;
 			const state = startClone(clone, { ...waiting.from, scale: end.scale }, end, null,
-				{ real: card, container: card.parentNode, opacity: card.style.opacity, transition: waiting.transition, generation: handGeneration });
+				{ real: card, container: card.parentNode, opacity: card.style.opacity, transition: waiting.transition, generation: handGeneration,
+					event: waiting.event, player: waiting.player, arrived: waiting.arrived, resolveArrival: waiting.resolveArrival });
 			if (state.finished) { card.style.transition = waiting.transition; return; }
 			handStates.set(card, state); card.style.opacity = "0";
 			state.interact = () => finish(state);
@@ -228,7 +267,7 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 			if (!enabled() || !cards.length || !ui.arena?.animate) return false;
 			const target = rect(player); if (!target) return false;
 			const m = metrics(), width = m.width * m.scale, height = m.height * m.scale;
-			const sources = options.sources || controller.describe(cards, player, options);
+			const event = gainEvent(player, options), sources = options.sources || controller.describe(cards, player, options);
 			const froms = sourcePoints(sources, m), ends = [];
 			for (const group of groupDrawSources(sources)) {
 				const points = seatDrawPoints(target, group.indices.length, width, height, m.unit, true);
@@ -240,7 +279,7 @@ export function setupDrawMotion({ lib, game, ui, get, _status }, environment = {
 				const start = { ...(origin ? { x: origin.left, y: origin.top } : froms[i]), scale: origin ? origin.width / m.width : m.scale };
 				const end = { ...ends[i], scale: m.scale };
 				const hand = player === game.me;
-				startClone(card, start, end, hand ? null : drawControlPoint(start, end, ui.arena.offsetHeight, m.unit, sources[i].seatToSeat), { hand });
+				startClone(card, start, end, hand ? null : drawControlPoint(start, end, ui.arena.offsetHeight, m.unit, sources[i].seatToSeat), { hand, event, player });
 			});
 			return true;
 		},
