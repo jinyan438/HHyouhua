@@ -297,6 +297,7 @@ export function createPlayerElement(position, noclick) {
 	});
 	observer.observe(playerExtend.node.equips, { childList: true });
 	observePlayerEquipment(player, get);
+	game.hhEquipmentEntry?.observe(player);
 
 	// 事件绑定
 	if (!noclick) {

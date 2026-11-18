@@ -263,6 +263,7 @@
 	position: relative !important;
 	display: block;
 	flex: 0 0 auto;
+	animation: none !important;
 	width: 100%;
 	height: calc(var(--hh-equip-unit) * 30);
 	min-height: 0;
@@ -301,6 +302,7 @@
 :is(.player, .equips-wrap) > .equips > .card > .name2 {
 	position: absolute !important;
 	display: block !important;
+	transition: none;
 	width: 100%;
 	height: 100%;
 	left: 0;

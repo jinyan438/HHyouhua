@@ -128,16 +128,16 @@ test('actual throw hooks show equipment at its target upper-left, then shrink to
 	assert.equal(h.ui.thrown.length, 0); assert.equal(h.normal.length, 0); assert.equal(h.frames.length, 0);
 	assert.equal(clone.parentNode, h.ui.arena); assert.equal(card.fixed, undefined);
 	const start = h.transform(clone);
-	assert.equal(start.x, 706.8); assert.equal(start.y, 106);
-	assert.ok(Math.abs(start.scale * 108 - 136 * .66) < 1e-8);
-	h.advance(290); h.equipSlot(card); assert.deepEqual(h.transform(clone), start);
+	assert.ok(Math.abs(start.x - 709.191724137931) < 1e-8); assert.ok(Math.abs(start.y - 106.67586206896551) < 1e-8);
+	assert.ok(Math.abs(start.scale - 1.088) < 1e-8);
+	h.advance(190); h.equipSlot(card); assert.deepEqual(h.transform(clone), start);
 	h.advance(10);
 	const end = h.transform(clone);
 	assert.ok(end.scale < start.scale);
-	assert.ok(Math.abs(end.x - 724) < 1e-8);
+	assert.ok(Math.abs(end.x - (724 - 104 * 27 / 146)) < 1e-8);
 	assert.ok(Math.abs(end.y + 150 * end.scale / 2 - 274) < 1e-8);
-	assert.match(clone.style.transition, /450ms/);
-	h.advance(480); assert.equal(clone.isConnected, false); assert.equal(card.clone, undefined);
+	assert.match(clone.style.transition, /200ms linear/);
+	h.advance(200); assert.equal(clone.isConnected, false); assert.equal(card.clone, undefined);
 	assert.equal(h.controller.activeCount, 0); assert.equal(h.timers.size, 0);
 });
 
@@ -187,10 +187,10 @@ test('slow nested useCard and transformed multi-card equipment use event identit
 test('arena CSS zoom and offsets preserve both the upper-left origin and equipment slot destination', () => {
 	const h = harness({ zoom: 1.6 }), card = h.source(); h.use([card]); h.equipSlot(card);
 	const clone = h.throwCards([card]);
-	assert.ok(Math.abs(h.transform(clone).x - 706.8) < 1e-8);
-	assert.ok(Math.abs(h.transform(clone).y - 106) < 1e-8);
+	assert.ok(Math.abs(h.transform(clone).x - 709.191724137931) < 1e-8);
+	assert.ok(Math.abs(h.transform(clone).y - 106.67586206896551) < 1e-8);
 	h.advance(300); const end = h.transform(clone);
-	assert.ok(Math.abs(end.x - 724) < 1e-8);
+	assert.ok(Math.abs(end.x - (724 - 104 * 27 / 146)) < 1e-8);
 	assert.ok(Math.abs(end.y + 150 * end.scale / 2 - 274) < 1e-8);
 	h.controller.clear();
 });
@@ -199,7 +199,7 @@ test('the local player can shrink equipment into a separate equipment panel outs
 	const h = harness(), card = h.source(); h.use([card]);
 	h.equipSlot(card, { left: 50, top: 540, width: 130, height: 27 });
 	const clone = h.throwCards([card]); h.advance(300); const end = h.transform(clone);
-	assert.ok(Math.abs(end.x - 50) < 1e-8);
+	assert.ok(Math.abs(end.x - (50 - 130 * 27 / 146)) < 1e-8);
 	assert.ok(Math.abs(end.y + 150 * end.scale / 2 - 553.5) < 1e-8);
 	h.controller.clear();
 });
@@ -207,15 +207,15 @@ test('the local player can shrink equipment into a separate equipment panel outs
 test('an old clone expiring cannot delete the next clone reference for the same physical card', () => {
 	const h = harness(), card = h.source(); h.use([card]);
 	const old = h.throwCards([card]); h.advance(300);
-	const current = h.throwCards([card]); h.advance(480);
+	const current = h.throwCards([card]); h.advance(150);
 	assert.equal(old.isConnected, false); assert.equal(card.clone, current); assert.equal(current.isConnected, true);
-	h.advance(300); assert.equal(current.isConnected, false); assert.equal(card.clone, undefined);
+	h.advance(250); assert.equal(current.isConnected, false); assert.equal(card.clone, undefined);
 });
 
 test('watchdog removes prepared clones even if the ordered throw never runs', () => {
 	const h = harness(), card = h.source(); h.use([card]);
 	const clone = card.copy(); h.ui.arena.appendChild(clone);
-	h.controller.prepareClone(card, clone, h.actor); h.advance(1000);
+	h.controller.prepareClone(card, clone, h.actor); h.advance(1500);
 	assert.equal(clone.isConnected, false); assert.equal(h.controller.activeCount, 0); assert.equal(h.timers.size, 0);
 });
 
@@ -229,6 +229,28 @@ test('missing general bounds, slot read errors and a removed clone all finish wi
 		h.advance(2000);
 		assert.equal(clone.isConnected, false, failure); assert.equal(h.controller.activeCount, 0, failure); assert.equal(h.timers.size, 0, failure);
 	}
+});
+
+test('arrival callbacks match the destination and physical card, and can unsubscribe', () => {
+	const h = harness(), card = h.source(); h.use([card]); h.throwCards([card]);
+	let calls = 0;
+	assert.equal(h.controller.afterArrival(card, h.actor, () => calls++), null);
+	assert.equal(h.controller.afterArrival({ name: card.name, cardid: 'another-card' }, h.target, () => calls++), null);
+	const cancel = h.controller.afterArrival(card, h.target, () => calls++); cancel();
+	h.controller.afterArrival({ name: card.name, cardid: card.cardid }, h.target, () => calls++);
+	h.advance(399); assert.equal(calls, 0);
+	h.advance(1); assert.equal(calls, 1);
+	h.controller.clear(); h.advance(2000); assert.equal(calls, 1);
+});
+
+test('a transformed equipment strip waits for all of its physical card animations', () => {
+	const h = harness(), cards = [h.source('sha', 'a'), h.source('shan', 'b')];
+	h.use(cards, { card: { name: 'hanbing', type: 'equip', cards } }); h.throwCards(cards);
+	let calls = 0;
+	h.controller.afterArrival({ name: 'hanbing', cards }, h.target, () => calls++);
+	h.copies[0].remove(); h.advance(200);
+	assert.equal(calls, 0); assert.equal(h.controller.activeCount, 1);
+	h.advance(200); assert.equal(calls, 1); assert.equal(h.controller.activeCount, 0);
 });
 
 test('game over clears every pending equipment clone and installation is idempotent', () => {
@@ -265,13 +287,13 @@ for (const name of ['shufazijinguan', 'linglongshimandai', 'hongmianbaihuapao', 
 		assert.equal(h.controller.activeCount, 1); assert.equal(h.copies.length, 2);
 		const [oldGain, newEquip] = h.copies, start = newEquip.style.transform;
 		assert.equal(oldGain.isConnected, false); assert.equal(newEquip.isConnected, true);
-		assert.ok(Math.abs(h.transform(newEquip).x - 706.8) < 1e-8);
+		assert.ok(Math.abs(h.transform(newEquip).x - 709.191724137931) < 1e-8);
 		h.flushFrames(); assert.equal(newEquip.style.transform, start, 'queued old gain frame cannot move the new clone');
-		h.advance(300); assert.equal(h.transform(newEquip).x, 724);
-		assert.match(newEquip.style.transition, /450ms/);
-		h.advance(400); assert.equal(newEquip.isConnected, true, 'old gain removal timer cannot delete the new clone');
-		h.advance(80); assert.equal(newEquip.isConnected, false); assert.equal(h.controller.activeCount, 0);
-		assert.equal(created.parentNode, h.target.node.equips); assert.equal(h.timers.size, 0);
+		h.advance(200); assert.ok(Math.abs(h.transform(newEquip).x - (724 - 104 * 27 / 146)) < 1e-8);
+		assert.match(newEquip.style.transition, /200ms linear/);
+		h.advance(199); assert.equal(newEquip.isConnected, true, 'native shrinking still runs after old gain callbacks');
+		h.advance(1); assert.equal(newEquip.isConnected, false); assert.equal(h.controller.activeCount, 0);
+		h.advance(400); assert.equal(created.parentNode, h.target.node.equips); assert.equal(h.timers.size, 0);
 	});
 }
 

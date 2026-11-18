@@ -1,0 +1,35 @@
+{
+  "source": "E:/AI/sanguosha/sanguosha2/work/main.js",
+  "sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+  "implementation": "Classic identity client; Laya display objects adapted to HH DOM coordinates and Web Animations",
+  "chain": [
+    "AMt.Seat_Equipment / startEquipCardMotion",
+    "GMt.onCreateCardMotion / onFirstMotionComplete",
+    "GMt.showACardMotion / onMotionComplete",
+    "AMt.setAEquipCardActive / LayoutEquipCards",
+    "Yki.Run"
+  ],
+  "defaults": {
+    "parameterClass": "VUt",
+    "seatSize": [174, 232],
+    "cardSize": [126, 174],
+    "equipLayoutWidth": 146,
+    "equipBitmapWidth": 140,
+    "popScale": 1.2,
+    "popOffsetRatio": 0.1,
+    "popEase": "sineOut",
+    "popMs": 200,
+    "selfPopMs": 267,
+    "rise": 15,
+    "selfRise": 30,
+    "shrinkScale": 0.1,
+    "shrinkMs": 200,
+    "selfShrinkMs": 267,
+    "shrinkEase": "linear",
+    "slideFromSeatX": -146,
+    "slideToSeatX": 27,
+    "slideMs": 300,
+    "slideEase": "linear",
+    "watchdogMs": 1500
+  }
+}

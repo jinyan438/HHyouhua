@@ -1,5 +1,4 @@
-const DISPLAY_MS = 300;
-const SHRINK_MS = 450;
+import { nativeEquipmentMotion, equipmentMotionPlan, equipmentArrivalPose, equipmentPoseTransform, equipmentMotionFrames } from "../ui/sourceEquipmentMotion.js";
 
 // Only animation clones enter this controller. Real cards keep the engine's zone lifecycle.
 export function setupEquipMove({ lib, game, ui, get, _status }, environment = {}) {
@@ -21,11 +20,20 @@ export function setupEquipMove({ lib, game, ui, get, _status }, environment = {}
 		for (const timer of state.timers) env.clearTimeout(timer);
 		state.timers.length = 0;
 		active.delete(state);
+		if (state.animation) {
+			state.animation.onfinish = state.animation.oncancel = null;
+			state.animation.cancel();
+			state.animation = null;
+		}
 		const index = ui.thrown?.indexOf(state.clone) ?? -1;
 		if (index >= 0) ui.thrown.splice(index, 1);
 		// The engine's delete() can wait for a transition that never arrives. Remove directly.
 		state.clone.remove();
 		if (state.source.clone === state.clone) delete state.source.clone;
+		for (const callback of [...state.arrivals]) {
+			try { callback(); } catch {}
+		}
+		state.arrivals.clear();
 	}
 
 	function later(state, callback, delay) {
@@ -36,7 +44,7 @@ export function setupEquipMove({ lib, game, ui, get, _status }, environment = {}
 	}
 
 	function prepare(source, clone, equip, target, event) {
-		const state = { source, clone, equip, target, event, timers: [], finished: false, shown: false };
+		const state = { source, clone, equip, target, event, timers: [], arrivals: new Set(), finished: false, shown: false };
 		states.set(clone, state);
 		sources.set(source, state);
 		active.add(state);
@@ -46,7 +54,7 @@ export function setupEquipMove({ lib, game, ui, get, _status }, environment = {}
 			if (!state.finished && player) state.target = player;
 			return this;
 		};
-		later(state, () => finish(state), 1000);
+		later(state, () => finish(state), nativeEquipmentMotion.watchdogMs);
 	}
 
 	function removePreviousClone(source) {
@@ -84,19 +92,56 @@ export function setupEquipMove({ lib, game, ui, get, _status }, environment = {}
 		return player && { left: player.left + player.width * .17, top: player.top + player.height * .8, width: player.width * .7, height: 16 };
 	}
 
+	function tween(state, pose, duration, sineOut, complete) {
+		const from = state.pose;
+		state.pose = pose;
+		const transform = equipmentPoseTransform(pose);
+		if (typeof state.clone.animate !== "function") {
+			state.clone.style.transition = `transform ${duration}ms ${sineOut ? "cubic-bezier(.39,.575,.565,1)" : "linear"}`;
+			void state.clone.offsetWidth;
+			state.clone.style.transform = transform;
+			later(state, complete, duration);
+			return;
+		}
+		state.clone.style.transition = "none";
+		state.clone.style.transform = transform;
+		const animation = state.clone.animate(equipmentMotionFrames(from, pose, sineOut), { duration, easing: "linear", fill: "none" });
+		state.animation = animation;
+		let ended = false;
+		const done = () => {
+			if (ended || state.finished) return;
+			ended = true;
+			animation.onfinish = animation.oncancel = null;
+			animation.cancel();
+			if (state.animation === animation) state.animation = null;
+			try { complete(); } catch { finish(state); }
+		};
+		animation.onfinish = done;
+		animation.oncancel = () => finish(state);
+		// Backgrounded pages may not dispatch a completion event.
+		later(state, done, duration + 80);
+	}
+
 	function shrink(state) {
-		// Arm removal before reading the slot: replacement skills may already have removed it.
-		later(state, () => finish(state), SHRINK_MS + 30);
 		const rect = destination(state);
 		if (!rect || !state.clone.isConnected) return finish(state);
-		const scale = Math.min(rect.width / state.width, rect.height / state.height, state.scale * .38);
-		const x = rect.left;
-		const y = rect.top + (rect.height - state.height * scale) / 2;
-		state.clone.style.transition = `transform ${SHRINK_MS}ms cubic-bezier(.4,0,.2,1)`;
-		state.clone.style.transform = `translate(${x}px,${y}px) scale(${scale})`;
+		const pose = equipmentArrivalPose(rect, state.height, state.plan.endScale);
+		tween(state, pose, state.plan.shrinkMs, false, () => finish(state));
 	}
 
 	const controller = {
+		afterArrival(card, player, callback) {
+			const matches = [...active].filter(state => state.target === player && (
+				card === state.source || card.cardid && card.cardid === state.source.cardid
+				|| card.cards?.includes(state.source) || card[card.cardSymbol]?.cards?.includes(state.source)
+				|| (!card.cardid || !state.source.cardid) && card.name === state.equip.name
+			));
+			if (!matches.length) return null;
+			let remaining = matches.length;
+			const arrived = () => { if (--remaining === 0) callback(); };
+			for (const state of matches) state.arrivals.add(arrived);
+			return () => { for (const state of matches) state.arrivals.delete(arrived); };
+		},
 		prepareClone(source, clone, actor) {
 			if (!source || source.throwWith === 'e' || source.original === 'e' || source.parentNode?.classList?.contains('equips')) return false;
 			const event = useEvent(source);
@@ -144,16 +189,16 @@ export function setupEquipMove({ lib, game, ui, get, _status }, environment = {}
 			if (state.shown || state.finished) return true;
 			state.shown = true;
 			try {
-				Object.assign(clone.style, { left: '0px', top: '0px', margin: '0px', transformOrigin: '0 0', transition: 'none', opacity: '1', pointerEvents: 'none', zIndex: '100' });
+				Object.assign(clone.style, { left: '0px', top: '0px', margin: '0px', transformOrigin: '0 0', transition: 'none', animation: 'none', opacity: '1', pointerEvents: 'none', zIndex: '100' });
 				ui.arena.appendChild(clone);
 				const player = localRect(state.target);
 				state.width = clone.offsetWidth;
 				state.height = clone.offsetHeight;
 				if (!player || !state.width || !state.height) { finish(state); return true; }
-				state.scale = Math.min(player.width * .66 / state.width, player.height * .7 / state.height);
-				const x = player.left + player.width * .05, y = player.top + player.height * .03;
-				clone.style.transform = `translate(${x}px,${y}px) scale(${state.scale})`;
-				later(state, () => shrink(state), DISPLAY_MS);
+				state.plan = equipmentMotionPlan(player, state.width, state.height, state.target === game.me);
+				state.pose = state.plan.initial;
+				clone.style.transform = equipmentPoseTransform(state.pose);
+				tween(state, state.plan.popup, state.plan.popMs, true, () => shrink(state));
 			} catch { finish(state); }
 			return true;
 		},
