@@ -302,6 +302,8 @@
 :is(.player, .equips-wrap) > .equips > .card > .name2 {
 	position: absolute !important;
 	display: block !important;
+	/* Native choosing styles dim name2 to 0.6; the strip already has its own artwork alpha. */
+	opacity: 1 !important;
 	transition: none;
 	width: 100%;
 	height: 100%;
