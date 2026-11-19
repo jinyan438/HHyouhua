@@ -32,6 +32,31 @@
 	mask-composite: exclude;
 }
 
+/* All themes share the same target states; turn glows keep their theme colors. */
+#arena > .player::after,
+#arena > .player:is(.selectable, .selected, .hh-target-resolving)::before {
+	opacity: 0 !important;
+}
+
+#arena > .player.selectable:not(.selected)::before {
+	background-image: url("../../assets/player-glow/blue.png") !important;
+	animation-duration: 0.9s !important;
+	opacity: 1 !important;
+}
+
+#arena > .player.selected::before {
+	background-image: url("../../assets/player-glow/orange.png") !important;
+	filter: sepia(1) saturate(6) hue-rotate(350deg) brightness(1.6);
+	animation-duration: 0.9s !important;
+	opacity: 1 !important;
+}
+
+#arena > .player.hh-target-resolving:not(.selectable):not(.selected)::after {
+	background-image: url("../../assets/player-glow/red.png") !important;
+	animation-duration: 0.9s !important;
+	opacity: 1 !important;
+}
+
 @keyframes hh-source-player-glow {
 	0% { background-position: 0 0; }
 	10% { background-position: 11.111111% 0; }

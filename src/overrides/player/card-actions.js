@@ -23,7 +23,7 @@ export function playerAddVirtualEquip(card, cards) {
 
 /**
  * 使用卡牌覆写
- * @description 在原有逻辑基础上添加出牌音效和目标高亮效果
+ * @description 在原有逻辑基础上添加出牌音效
  * @returns {Object} 事件对象
  * @this {Object} 玩家对象
  */
@@ -33,19 +33,6 @@ export function playerUseCard() {
 
 	// 播放出牌音效
 	playShowCardAudio();
-
-	// 添加目标高亮处理器
-	event.pushHandler("decadeUI_TargetHighlight", (event, option) => {
-		if (option.state === "begin" && event.step === 1 && !event.hideTargets) {
-			event.targets?.forEach(target => target.classList.add("target"));
-		}
-	});
-
-	const originalFinish = event.finish;
-	event.finish = function () {
-		originalFinish?.apply(this, arguments);
-		this.targets?.forEach(target => target.classList.remove("target"));
-	};
 
 	return event;
 }
