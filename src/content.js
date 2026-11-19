@@ -41,6 +41,7 @@ import { setupOutcropAvatar } from "./ui/outcropAvatar.js";
 import { setupEquipmentEntry } from "./ui/equipmentEntry.js";
 import { setupDrawMotion } from "./features/drawMotion.js";
 import { setupTargetHighlight } from "./features/targetHighlight.js";
+import { setupCardDistribution } from "./features/cardDistribution.js";
 
 // 技能模块
 import { initSkills } from "./skills/index.js";
@@ -72,6 +73,7 @@ export const finalizeDecadeUICore = (decadeUI, config) => {
 	setupEquipmentEntry({ lib, game });
 	setupDrawMotion({ lib, game, ui, get, _status });
 	setupTargetHighlight({ lib, game, get, _status });
+	setupCardDistribution({ lib, game, ui, get, _status });
 
 	setupGameAnimation(lib, game, ui, get, ai, _status);
 	setupEffects();
