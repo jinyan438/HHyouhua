@@ -46,7 +46,8 @@ export function setupTargetHighlight({ lib, game, get, _status }) {
 		}
 		return declared(event) && explicitRange(event, info);
 	}
-	lib.hooks?.checkEnd?.push(function hhTargetSelection(event) {
+	// Native auto-confirm clears selected cards and restores skill selectors; capture their range first.
+	lib.hooks?.checkEnd?.unshift(function hhTargetSelection(event) {
 		if (event.filterTarget) selectionRanges.set(event, explicitRange(event, {}, false));
 	});
 	function addTargets(state, targets, explicit) {

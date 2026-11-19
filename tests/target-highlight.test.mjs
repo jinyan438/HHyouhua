@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import fs from 'node:fs';
+import vm from 'node:vm';
 import { setupTargetHighlight } from '../src/features/targetHighlight.js';
 
 function deferred() {
@@ -7,9 +9,9 @@ function deferred() {
 	const promise = new Promise((yes, no) => { resolve = yes; reject = no; });
 	return { promise, resolve, reject };
 }
-function harness() {
+function harness({ beforeSetup = () => {} } = {}) {
 	const lib = { skill: { sampleSkill: { content() {}, selectTarget: 1 }, activeSkill: { selectTarget: 1 } },
-		card: { sha: { selectTarget: 1 }, nanman: { selectTarget: -1 }, wuzhong: { selectTarget: -1, toself: true }, shan: { notarget: true } },
+		card: { sha: { selectTarget: 1 }, nanman: { selectTarget: -1 }, wanjian: { selectTarget: -1 }, wuzhong: { selectTarget: -1, toself: true }, shan: { notarget: true } },
 		hooks: { checkEnd: [] }, onover: [] }, _status = {};
 	const actor = player(); _status.currentPhase = actor;
 	const game = { createEvent(name) {
@@ -23,7 +25,8 @@ function harness() {
 		if (typeof value === 'function') value = value();
 		return Array.isArray(value) ? value : [value ?? 1, value ?? 1];
 	} };
-	const context = { lib, game, get, _status }, controller = setupTargetHighlight(context);
+	const context = { lib, game, get, _status }; beforeSetup(context);
+	const controller = setupTargetHighlight(context);
 	function player() {
 		const classes = new Set(['player']);
 		return { classList: { contains: name => classes.has(name), add: name => classes.add(name), remove: name => classes.delete(name) },
@@ -190,4 +193,31 @@ test('automatic internal choices and another player response cannot add targets 
 		choice.result = { bool: true, targets: [target] }; await choice.start(); assert.equal(target.glowing, false);
 	}
 	hold.resolve(); await completion;
+});
+
+test('native auto-confirm cannot turn cleared AOE selection into a one-target snapshot', async () => {
+	const source = fs.readFileSync(new URL('../../../noname/library/hooks/index.ts', import.meta.url), 'utf8');
+	const from = source.indexOf('function autoConfirm('), to = source.indexOf('function createChooseAll(', from);
+	const code = source.slice(from, to).trim().replace(/,$/, '');
+	for (const name of ['nanman', 'wanjian', 'sha']) {
+		let selected = { name }, choice, target;
+		const h = harness({ beforeSetup(context) {
+			const autoConfirm = vm.runInNewContext('(' + code + ')', { ...context,
+				get: { info: () => ({}) }, ui: { click: { ok() {
+					choice.result = { bool: true, card: selected, targets: [target] };
+					selected = undefined;
+				} } },
+			});
+			context.lib.hooks.checkEnd.push(autoConfirm);
+		} });
+		target = h.player();
+		choice = { name: 'chooseToUse', type: 'phase', player: h.actor, filterTarget: true, isMine: () => true,
+			selectTarget: () => selected && h.lib.card[selected.name].selectTarget };
+		h._status.event = choice;
+		for (const hook of h.lib.hooks.checkEnd) hook(choice, { ok: true, auto: true, autoConfirm: true });
+		assert.equal(selected, undefined, 'the actual native hook confirmed and cleared selection');
+		const event = h.game.createEvent('useCard'); event.card = choice.result.card; event.targets = [target]; event.parent = choice;
+		event.body = () => { assert.equal(target.glowing, name === 'sha', name + ' must keep its pre-confirm target semantics'); };
+		await event.start(); assert.equal(target.glowing, false);
+	}
 });
