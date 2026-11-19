@@ -52,8 +52,19 @@
 }
 
 #arena > .player.hh-target-resolving:not(.selectable):not(.selected)::after {
-	background-image: url("../../assets/player-glow/red.png") !important;
-	animation-duration: 0.9s !important;
+	--hh-target-glow-width: calc(var(--hh-source-glow-width, 378.17263157894735px) * 95 / 89);
+	--hh-target-glow-left: calc(var(--hh-source-glow-left, -122.45690789473684px) + var(--hh-source-glow-width, 378.17263157894735px) * 80 / 256 - var(--hh-target-glow-width) * 83 / 256);
+	left: var(--hh-target-glow-left) !important;
+	top: -104.25px !important;
+	width: var(--hh-target-glow-width) !important;
+	height: 448px !important;
+	background-image: url("../../assets/player-glow/red-steady.png") !important;
+	background-size: 100% 100% !important;
+	background-position: 0 0 !important;
+	animation: none !important;
+	transition: none !important;
+	-webkit-mask-position: 0 0, calc(0px - var(--hh-target-glow-left)) 104.25px !important;
+	mask-position: 0 0, calc(0px - var(--hh-target-glow-left)) 104.25px !important;
 	opacity: 1 !important;
 }
 

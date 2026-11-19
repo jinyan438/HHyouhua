@@ -1,0 +1,40 @@
+{
+  "source": "E:/AI/sanguosha/sanguosha2/work/main.js",
+  "sourceSHA256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+  "offsetKind": "UTF-16 code units",
+  "references": {
+    "ServerProxy_PubGsCUseSpell": 7720607,
+    "ServerProxy_PubGsCUseCard": 7727825,
+    "InActiveState2": 18897073,
+    "SetSeatStatus": 19313978,
+    "ClearAction": 18906416
+  },
+  "redFrame": {
+    "source": "E:/AI/sanguosha/extract/laya/sprites/02__4e60ff4b/02__zuowei02_00.png",
+    "sourceEffect": "FX_paiju_zuowei02",
+    "sourceAtlas": "4e60ff4b",
+    "frame": 0,
+    "sha256": "4ca32eb38b989173dd715d29e2118545e7d0192b2545e7ab0b8d52739489d8cc",
+    "copiedWithoutModification": true,
+    "size": [
+      256,
+      256
+    ],
+    "rails": {
+      "left": 83,
+      "right": 172,
+      "bottom": 163
+    },
+    "display": {
+      "height": 448,
+      "top": -104.25
+    },
+    "animation": "none"
+  },
+  "rules": [
+    "Only the active actor in its own round, outside asked/response contexts, marks current targets.",
+    "Only explicit destination IDs are marked; automatic AOE expansion is used separately for direction lines.",
+    "The actor itself, dead and hidden/inactive seats are excluded.",
+    "Selection has priority over the current-target frame."
+  ]
+}

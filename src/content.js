@@ -71,7 +71,7 @@ export const finalizeDecadeUICore = (decadeUI, config) => {
 	decadeUI.init();
 	setupEquipmentEntry({ lib, game });
 	setupDrawMotion({ lib, game, ui, get, _status });
-	setupTargetHighlight({ lib, game, _status });
+	setupTargetHighlight({ lib, game, get, _status });
 
 	setupGameAnimation(lib, game, ui, get, ai, _status);
 	setupEffects();

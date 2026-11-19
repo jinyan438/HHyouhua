@@ -8,20 +8,28 @@ function deferred() {
 	return { promise, resolve, reject };
 }
 function harness() {
-	const lib = { skill: { sampleSkill: { content() {} } }, onover: [] }, _status = {};
+	const lib = { skill: { sampleSkill: { content() {}, selectTarget: 1 }, activeSkill: { selectTarget: 1 } },
+		card: { sha: { selectTarget: 1 }, nanman: { selectTarget: -1 }, wuzhong: { selectTarget: -1, toself: true }, shan: { notarget: true } },
+		hooks: { checkEnd: [] }, onover: [] }, _status = {};
+	const actor = player(); _status.currentPhase = actor;
 	const game = { createEvent(name) {
-		return { name, handlers: [], pushHandler(handler) { this.handlers.push(handler); },
+		return { name, player: actor, card: name === 'useCard' ? { name: 'sha' } : undefined, skill: name === 'useSkill' ? 'activeSkill' : undefined,
+			handlers: [], pushHandler(handler) { this.handlers.push(handler); },
 			start() { return this.body?.call(this); },
 			sync() { for (const handler of this.handlers) handler(this); },
 		};
 	} };
-	const context = { lib, game, _status }, controller = setupTargetHighlight(context);
+	const get = { info: card => lib.card[card.name], select: value => {
+		if (typeof value === 'function') value = value();
+		return Array.isArray(value) ? value : [value ?? 1, value ?? 1];
+	} };
+	const context = { lib, game, get, _status }, controller = setupTargetHighlight(context);
 	function player() {
 		const classes = new Set(['player']);
 		return { classList: { contains: name => classes.has(name), add: name => classes.add(name), remove: name => classes.delete(name) },
 			get glowing() { return classes.has('hh-target-resolving'); } };
 	}
-	return { ...context, controller, player };
+	return { ...context, controller, player, actor };
 }
 
 test('confirmed targets stay red through finished content, child resolution and after events', async () => {
@@ -36,7 +44,7 @@ test('confirmed targets stay red through finished content, child resolution and 
 	assert.equal(target.glowing, false); assert.equal(h.controller.activeCount, 0);
 });
 
-test('active and triggered skills track late targets; nested cards cannot clear an outer target', async () => {
+test('active named skills track late targets; nested events cannot clear an outer target', async () => {
 	const h = harness(), target = h.player(), late = h.player(), outerHold = deferred(), innerHold = deferred();
 	const outer = h.game.createEvent('useSkill'); outer.targets = [target]; outer.body = () => outerHold.promise;
 	const a = outer.start();
@@ -106,4 +114,80 @@ test('game-over cleanup clears all frames and repeated setup preserves the nativ
 	h._status.over = true; h.lib.onover.forEach(callback => callback());
 	event.sync(); assert.equal(target.glowing, false); assert.equal(h.controller.activeCount, 0);
 	hold.resolve(); await completion; assert.equal(target.glowing, false);
+});
+
+test('the actor itself is excluded, while another actor can explicitly target the local player', async () => {
+	const h = harness(), local = h.player(), hold = deferred(); h.game.me = local;
+	const event = h.game.createEvent('useCard'); event.targets = [h.actor, local]; event.body = () => hold.promise;
+	const completion = event.start(); assert.equal(h.actor.glowing, false); assert.equal(local.glowing, true);
+	hold.resolve(); await completion; assert.equal(local.glowing, false);
+});
+
+test('automatic all-target, self-only, no-target and equipment definitions never create a current target', async () => {
+	for (const info of [{ selectTarget: -1 }, { selectTarget: [1, -1] }, { selectTarget: 0 },
+		{ toself: true, selectTarget: 1 }, { notarget: true, selectTarget: 1 }, { type: 'equip', selectTarget: 1 }, { content() {} }]) {
+		const h = harness(), target = h.player(); h.lib.card.test = info;
+		const event = h.game.createEvent('useCard'); event.card = { name: 'test' }; event.targets = [h.actor, target];
+		event.body = () => { assert.equal(target.glowing, false, JSON.stringify(info)); };
+		await event.start(); assert.equal(target.glowing, false);
+	}
+	const h = harness(), target = h.player(); h.lib.skill.noTargetSkill = { content() {} };
+	const skill = h.game.createEvent('useSkill'); skill.skill = 'noTargetSkill'; skill.targets = [target];
+	skill.body = () => { assert.equal(target.glowing, false); }; await skill.start();
+});
+
+test('explicit multi-target choices remain current targets even when they include every other seat', async () => {
+	const h = harness(), first = h.player(), second = h.player(), hold = deferred();
+	h.game.players = [h.actor, first, second]; h.lib.card.multiple = { selectTarget: [1, Infinity], multitarget: true };
+	const event = h.game.createEvent('useCard'); event.card = { name: 'multiple' }; event.targets = [h.actor, first, second]; event.body = () => hold.promise;
+	const completion = event.start(); assert.equal(h.actor.glowing, false); assert.equal(first.glowing, true); assert.equal(second.glowing, true);
+	hold.resolve(); await completion; assert.equal(first.glowing, false); assert.equal(second.glowing, false);
+});
+
+test('out-of-turn, response and asked trigger contexts do not mark new targets', async () => {
+	for (const context of ['outside-turn', 'respondTo', 'wuxie', 'dying', 'trigger', 'nested-trigger', 'other-actor']) {
+		const h = harness(), target = h.player(), event = h.game.createEvent('useCard'); event.targets = [target];
+		if (context === 'outside-turn') h._status.currentPhase = h.player();
+		if (context === 'respondTo') event.respondTo = [{}, {}];
+		if (context === 'wuxie') event.parent = { name: 'chooseToUse', type: 'wuxie' };
+		if (context === 'dying') event.parent = { name: 'dying' };
+		if (context === 'trigger') { event.name = 'sampleSkill'; event._trigger = { name: 'damage' }; }
+		if (context === 'nested-trigger') event.parent = { name: 'sampleSkill', player: h.actor, _trigger: { name: 'phaseBegin' } };
+		if (context === 'other-actor') event.parent = { name: 'useSkill', player: h.player() };
+		event.body = () => { assert.equal(target.glowing, false, context); }; await event.start();
+	}
+});
+
+test('dead, removed and out-of-play seats are excluded without affecting legal targets', async () => {
+	const h = harness(), dead = h.player(), out = h.player(), removed = h.player(), target = h.player();
+	dead.isDead = () => true; out.isOut = () => true; removed.removed = true;
+	const event = h.game.createEvent('useCard'); event.targets = [dead, out, removed, target];
+	event.body = () => { assert.equal(dead.glowing, false); assert.equal(out.glowing, false); assert.equal(removed.glowing, false); assert.equal(target.glowing, true); };
+	await event.start(); assert.equal(target.glowing, false);
+});
+
+test('dynamic choice ranges are refreshed during selection and retained after leaving the choice context', async () => {
+	const h = harness(), target = h.player(), choice = { name: 'chooseToUse', type: 'phase', player: h.actor, filterTarget: true };
+	let maximum = -1;
+	choice.selectTarget = () => { assert.equal(h._status.event, choice); return [1, maximum]; };
+	h._status.event = choice; h.lib.hooks.checkEnd.forEach(hook => hook(choice));
+	maximum = 2; h.lib.hooks.checkEnd.forEach(hook => hook(choice));
+	h._status.event = {};
+	const event = h.game.createEvent('useCard'); event.targets = [target]; event.parent = choice;
+	event.body = () => { assert.equal(target.glowing, true); }; await event.start();
+	maximum = -1; h._status.event = choice; h.lib.hooks.checkEnd.forEach(hook => hook(choice)); h._status.event = {};
+	const automatic = h.game.createEvent('useCard'); automatic.targets = [target]; automatic.parent = choice;
+	automatic.body = () => { assert.equal(target.glowing, false); }; await automatic.start();
+});
+
+test('automatic internal choices and another player response cannot add targets to an active skill', async () => {
+	const h = harness(), target = h.player(), hold = deferred();
+	const skill = h.game.createEvent('useSkill'); skill.body = () => hold.promise; const completion = skill.start();
+	for (const otherPlayer of [false, true]) {
+		const choice = h.game.createEvent('chooseTarget'); choice.parent = skill;
+		choice.selectTarget = otherPlayer ? 1 : -1;
+		if (otherPlayer) choice.player = h.player();
+		choice.result = { bool: true, targets: [target] }; await choice.start(); assert.equal(target.glowing, false);
+	}
+	hold.resolve(); await completion;
 });
