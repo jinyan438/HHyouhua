@@ -43,7 +43,7 @@ export function createLayoutModule() {
 			const handNode = ui.handcards1;
 			if (!handNode) return console.error("hand undefined");
 
-			const cards = [...handNode.childNodes].filter(card => {
+			const cards = [...handNode.childNodes, ...(game.hhCardDistribution?.handCards || [])].filter(card => {
 				if (card.classList.contains("removing")) {
 					card.scaled = false;
 					return false;
@@ -124,6 +124,7 @@ export function createLayoutModule() {
 				container.style.overflowX = container.style.overflowY = "";
 				handNode.style.width = "100%";
 			}
+			game.hhCardDistribution?.updateHandWidth(handNode.style.width);
 		},
 
 		/**

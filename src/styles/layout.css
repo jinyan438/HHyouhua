@@ -257,6 +257,41 @@ body > .background {
 	cursor: pointer;
 }
 
+/* Display-only distribution cards share the hand layout without becoming owned cards. */
+.hand-cards > .handcards.hh-distribution-hand {
+	left: 0;
+	pointer-events: none;
+	z-index: 4;
+}
+
+.hh-distribution-hand > .card {
+	pointer-events: auto;
+}
+
+.hh-distribution-hand > .card > .hh-distribution-recipient {
+	left: 2px;
+	bottom: 3px;
+	width: auto;
+	max-width: calc(100% - 6px);
+	padding: 3px 12px 3px 5px;
+	box-sizing: border-box;
+	background: #9b4a20;
+	clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+	color: #ffe6b0;
+	font-family: "FZLBGBK", "xinwei", serif;
+	font-size: 16px;
+	line-height: 22px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	pointer-events: none;
+	z-index: 10;
+}
+
+#arena > .dialog.hh-distribution-prompt {
+	display: none !important;
+}
+
 /* 特殊手牌区 */
 .hand-special {
 	left: auto;
