@@ -261,7 +261,6 @@ body > .background {
 .hand-cards > .handcards.hh-distribution-hand {
 	left: 0;
 	pointer-events: none;
-	z-index: 4;
 }
 
 .hh-distribution-hand > .card {
