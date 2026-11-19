@@ -230,7 +230,12 @@ export const createDecadeUIObject = () => ({
 						$changeZhuanhuanji: lib.element.player.$changeZhuanhuanji,
 						trySkillAnimate: lib.element.player.trySkillAnimate,
 					},
-					content: { lose: lib.element.content.lose, gain: lib.element.content.gain, judge: lib.element.content.judge },
+					content: {
+						lose: lib.element.content.lose,
+						gain: lib.element.content.gain,
+						gaincardMultiple: lib.element.content.gaincardMultiple,
+						judge: lib.element.content.judge,
+					},
 					dialog: { close: lib.element.dialog.close },
 				},
 				init: { cssstyles: lib.init.cssstyles },
