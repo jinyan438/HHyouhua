@@ -22,6 +22,9 @@ export function getSourceRevealOwner(event, lib) {
 }
 
 const arenas = new WeakMap();
+const judgeRefreshers = new WeakMap();
+
+export function refreshSourceRevealJudge(event) { judgeRefreshers.get(event)?.(); }
 
 function getBoard({ ui, lib, game }) {
 	let board = arenas.get(ui.arena);
@@ -64,6 +67,7 @@ function getBoard({ ui, lib, game }) {
 		for (const item of session.items) {
 			item.motion?.cancel();
 			item.node.remove();
+			item.node.classList.remove('hh-source-judge-card');
 			item.node.fixed = item.fixed;
 		}
 		showCurrent();
@@ -80,7 +84,7 @@ function getBoard({ ui, lib, game }) {
 				if (existing) return existing;
 				const old = this.items.find(item => item.card === card);
 				if (old) { node.remove(); card.clone = old.node; return old; }
-				const item = { node, card, fixed: node.fixed };
+				const item = { node, card, fixed: '_hhJudgeOriginalFixed' in node ? node._hhJudgeOriginalFixed : node.fixed };
 				this.items.splice(index, 0, item);
 				node.fixed = true;
 				node.classList.add('hh-source-reveal-card');
@@ -116,7 +120,7 @@ export function decorateSourceRevealDialog(dialog, event, context) {
 	if (!ui.arena || _status.connectMode || game.online || _status.video || game.chess || !event || !['showCards', 'judge'].includes(event.name)) return false;
 	if (event.name === 'showCards' && (event.flashAnimation || event.hiddencards?.length || event.createDialog || event.dialog != null || event.customButton || event.triggeronly ||
 		!event.cards?.length || event.cards.some(card => !['c', 'o'].includes(get.position(card, true)) || get.owner(card)))) return false;
-	const owner = getSourceRevealOwner(event, lib);
+	const owner = getSourceRevealOwner(event, lib) || (event.name === 'judge' ? event : null);
 	if (!owner?.insertAfter) return false;
 	const nodes = event.name === 'judge' ? [event.node] : dialog.buttons;
 	if (!nodes?.length || !nodes[0]) return false;
@@ -126,9 +130,9 @@ export function decorateSourceRevealDialog(dialog, event, context) {
 	if (event.name === 'judge' && !event._hhRevealJudgeHook) {
 		event._hhRevealJudgeHook = true;
 		let item = session.items.find(item => item.node === event.node);
-		event.pushHandler?.((judge, option) => {
-			if (option.state !== 'end' || session.closed) return;
-			const card = judge.result?.card || judge.player?.judging?.[0];
+		const refresh = () => {
+			if (session.closed) return;
+			const card = event.result?.card || event.player?.judging?.[0];
 			// Rejudging keeps the final card and its original result animation.
 			if (card && card !== item?.card && card.clone) {
 				const index = session.items.indexOf(item);
@@ -136,8 +140,14 @@ export function decorateSourceRevealDialog(dialog, event, context) {
 				item.motion?.cancel(); item.node.remove(); item.node.fixed = item.fixed;
 				session.items.splice(index, 1);
 				item = session.add(card.clone, card, '', index);
+				if (game.hhJudgeEffects?.has(event)) {
+					item.node.classList.add('hh-source-judge-card');
+					item.node.querySelector('.used-info')?.remove();
+				}
 			}
-		});
+		};
+		judgeRefreshers.set(event, refresh);
+		event.pushHandler?.((judge, option) => { if (option.state === 'end') refresh(); });
 	}
 	dialog.classList.add('hh-source-reveal-dialog');
 	dialog.peaceDialog = true;

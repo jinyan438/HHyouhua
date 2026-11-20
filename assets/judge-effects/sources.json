@@ -1,0 +1,122 @@
+{
+  "apk": "E:\\AI\\sanguosha\\sanguosha2\\yoka.game_g_android_4.0.2.apk",
+  "logic": "sanguosha2/work/main.js",
+  "logic_sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+  "methods": [
+    "GMt.AddCard",
+    "GMt.PlayJudgeAnimation",
+    "oCs.PlayJudgeAnimate",
+    "qEs.PlayJudgeAnimate",
+    "q_s.UpdateJudgeResultAnim",
+    "AMt.ShowEffectJudgeCard",
+    "VUt.JudgeFadeDelay",
+    "VUt.JudgeFadeDuration"
+  ],
+  "timing": {
+    "enter": 200,
+    "result": 1800,
+    "fadeDelay": 1500,
+    "fadeDuration": 300
+  },
+  "files": [
+    {
+      "file": "panding.skel",
+      "original_path": "/res/assets/animate/game/fight/panding.skel",
+      "cache_key": "c73c7f98",
+      "bytes": 5943,
+      "sha256": "b90fb15d3ddf47661d9fa09db259586ebbe74e5132156d2f629cbe51d5c68d47"
+    },
+    {
+      "file": "panding.atlas.txt",
+      "original_path": "/res/assets/animate/game/fight/panding.atlas.txt",
+      "cache_key": "ae80ad43",
+      "bytes": 188,
+      "sha256": "ff7b78d7bb80d75f61c20db3249501bfb01daeacc84512a51aea5174f71fcb94"
+    },
+    {
+      "file": "panding.png",
+      "original_path": "/res/assets/animate/game/fight/panding.png",
+      "cache_key": "75827701",
+      "bytes": 7539,
+      "sha256": "a01fb6a6b7545a9dc2a16cf6aed7acbf1ccc2675f417fc2aa96a55074393dbd5"
+    },
+    {
+      "file": "judge_status_0.png",
+      "original_path": "/res/assets/cards/cards.atlas",
+      "atlas_key": "bec0945b",
+      "texture_path": "/res/assets/cards/cards.png",
+      "texture_key": "ba0005aa",
+      "frame": {
+        "frame": {
+          "h": 56,
+          "idx": 0,
+          "w": 62,
+          "x": 1899,
+          "y": 530
+        },
+        "sourceSize": {
+          "h": 56,
+          "w": 62
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "bytes": 5769,
+      "sha256": "c3ee02a93769ac53c744f0ef286d0e6c8251d286263e22a020d19d68696826ec"
+    },
+    {
+      "file": "judge_status_1.png",
+      "original_path": "/res/assets/cards/cards.atlas",
+      "atlas_key": "bec0945b",
+      "texture_path": "/res/assets/cards/cards.png",
+      "texture_key": "ba0005aa",
+      "frame": {
+        "frame": {
+          "h": 56,
+          "idx": 0,
+          "w": 62,
+          "x": 1899,
+          "y": 472
+        },
+        "sourceSize": {
+          "h": 56,
+          "w": 62
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "bytes": 5439,
+      "sha256": "5ddbba00107e56df3e54c4de4dafb134556051872840ac56536297c2910ef571"
+    },
+    {
+      "file": "judge_status_2.png",
+      "original_path": "/res/assets/cards/cards.atlas",
+      "atlas_key": "bec0945b",
+      "texture_path": "/res/assets/cards/cards.png",
+      "texture_key": "ba0005aa",
+      "frame": {
+        "frame": {
+          "h": 56,
+          "idx": 0,
+          "w": 62,
+          "x": 582,
+          "y": 1942
+        },
+        "sourceSize": {
+          "h": 56,
+          "w": 62
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "bytes": 5573,
+      "sha256": "2f484b20044d338b74b42cf968c826ea1a5c49cfaf580e4772fd754ecfd600ec"
+    }
+  ]
+}

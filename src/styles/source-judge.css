@@ -1,0 +1,30 @@
+.hh-source-judge-card > .used-info {
+	display: none !important;
+}
+
+.hh-source-judge-stamp {
+	position: absolute;
+	left: 25.3968%;
+	top: 33.908%;
+	width: 49.2063%;
+	height: 32.1839%;
+	pointer-events: none;
+	z-index: 20;
+}
+
+.hh-source-judge-effects {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 181;
+}
+
+.hh-source-judge-effects > canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
