@@ -1,0 +1,38 @@
+{
+  "source": "E:/AI/sanguosha/sanguosha2/work/main.js",
+  "sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+  "skill": "JiZhan / Wgi",
+  "stack": "GMt",
+  "methods": [
+    "AddCardByCardIds",
+    "AddCard",
+    "layoutStackCardUis",
+    "startEnterFrame",
+    "ClearPermanentCards"
+  ],
+  "cardSize": [
+    126,
+    174
+  ],
+  "stackScale": 0.87,
+  "gap": 5,
+  "duration": 250,
+  "easing": "Laya.Ease.sineOut",
+  "verification": {
+    "nativeLayoutComparisons": 24,
+    "widths": [
+      1000,
+      844,
+      390,
+      180
+    ],
+    "counts": [
+      1,
+      2,
+      3,
+      6,
+      12,
+      30
+    ]
+  }
+}

@@ -3,6 +3,7 @@
  */
 import { lib, game, ui, get, ai, _status } from "noname";
 import { decorateSourceMoveDialog, closeSourceMoveDialog } from "../ui/sourceMoveDialog.js";
+import { decorateSourceRevealDialog } from "../ui/sourceReveal.js";
 
 /** @type {Function|null} 基础方法引用 */
 let baseDialogClose = null;
@@ -21,6 +22,7 @@ export function setBaseDialogMethods(base) {
  */
 export function dialogOpen() {
 	if (this.noopen) return;
+	decorateSourceRevealDialog(this, _status.event, { ui, get, lib, game, _status });
 
 	for (let i = 0; i < ui.dialogs.length; i++) {
 		if (ui.dialogs[i] === this) {

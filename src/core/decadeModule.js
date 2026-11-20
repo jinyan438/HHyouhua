@@ -104,6 +104,7 @@ export function initDecadeModule() {
 		this.css(`${decadeUIPath}src/styles/equip.css`);
 		this.css(`${decadeUIPath}src/styles/layout.css`);
 		this.css(`${decadeUIPath}src/styles/source-move-dialog.css`);
+		this.css(`${decadeUIPath}src/styles/source-reveal.css`);
 		document.body.setAttribute("data-style", style);
 
 		if (getConfigValue("meanPrettify", false)) {
