@@ -5,6 +5,8 @@
 
 import { lib, ui, get } from "noname";
 
+const DISMISS_EVENTS = ["pointerdown", "touchstart", "click"];
+
 export class SkillButtonTooltip {
 	constructor() {
 		/** @type {HTMLDivElement|null} */
@@ -13,6 +15,11 @@ export class SkillButtonTooltip {
 		this.currentButton = null;
 		/** @type {number|null} */
 		this.hideTimeout = null;
+		this.handleOutsideInteraction = event => {
+			if (this.currentButton && !this.currentButton.contains(event.target)) {
+				this.hide();
+			}
+		};
 	}
 
 	/**
@@ -255,6 +262,10 @@ export class SkillButtonTooltip {
 
 		clearTimeout(this.hideTimeout);
 		this.currentButton = button;
+		// 捕获阶段处理，避免游戏内按钮阻止冒泡后无法关闭。
+		for (const type of DISMISS_EVENTS) {
+			document.addEventListener(type, this.handleOutsideInteraction, true);
+		}
 
 		const tooltip = this.createTooltip();
 
@@ -274,7 +285,9 @@ export class SkillButtonTooltip {
 
 		// 等待下一帧再计算位置（确保内容已渲染）
 		requestAnimationFrame(() => {
-			this.positionTooltip(tooltip, button);
+			if (this.currentButton === button && this.tooltip === tooltip) {
+				this.positionTooltip(tooltip, button);
+			}
 		});
 	}
 
@@ -312,8 +325,12 @@ export class SkillButtonTooltip {
 	 * 隐藏提示框
 	 */
 	hide() {
+		for (const type of DISMISS_EVENTS) {
+			document.removeEventListener(type, this.handleOutsideInteraction, true);
+		}
 		if (!this.tooltip) return;
 
+		clearTimeout(this.hideTimeout);
 		this.tooltip.style.opacity = "0";
 		this.currentButton = null;
 
@@ -345,8 +362,12 @@ export class SkillButtonTooltip {
 		});
 
 		button.addEventListener("mouseleave", function () {
-			self.hide();
+			if (self.currentButton === button) self.hide();
 		});
+
+		button.addEventListener("touchend", function () {
+			self.show(button, skillName, player);
+		}, { passive: true });
 
 		// 添加标记，表示已绑定
 		button.dataset.tooltipAttached = "true";
@@ -356,6 +377,7 @@ export class SkillButtonTooltip {
 	 * 销毁提示框
 	 */
 	destroy() {
+		this.hide();
 		if (this.tooltip && this.tooltip.parentNode) {
 			this.tooltip.parentNode.removeChild(this.tooltip);
 		}
