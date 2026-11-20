@@ -110,12 +110,7 @@ export function tryAddPlayerCardUseTag(card, player, event, decadeUI) {
 		tagText = handleDefaultTag(card, player, event, decadeUI);
 	}
 
-	if (tagText == null) {
-		tagNode.remove();
-		delete card.$usedtag;
-	} else {
-		tagNode.innerHTML = tagText;
-	}
+	tagNode.innerHTML = tagText;
 }
 
 /**
@@ -127,11 +122,6 @@ export function tryAddPlayerCardUseTag(card, player, event, decadeUI) {
  */
 function handleJudgeTag(card, event, decadeUI) {
 	const initialText = event.judgestr + "的判定牌";
-	if (game.hhJudgeEffects?.begin(event, card, resultCard => {
-		if (event.result.suit !== get.suit(resultCard) || event.result.number !== get.number(resultCard)) {
-			cardTempSuitNum(resultCard, event.result.suit, event.result.number, decadeUI.element);
-		}
-	})) return null;
 
 	event.addMessageHook?.("judgeResult", function () {
 		const evt = this;
