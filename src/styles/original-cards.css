@@ -16,6 +16,25 @@
 	border-radius: 0;
 }
 
+/* State overlays follow the PNG alpha, including its four antialiased corners. */
+.card.hh-original-card > .card-mask,
+.card.hh-original-card > .used-info {
+	-webkit-mask-image: var(--hh-original-card-face);
+	mask-image: var(--hh-original-card-face);
+	mask-mode: alpha;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: 100% 174px;
+	mask-size: 100% 174px;
+	-webkit-mask-position: left bottom;
+	mask-position: left bottom;
+}
+
+.card.hh-original-card > .card-mask {
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+}
+
 body[data-style] .hand-cards > .handcards > .card {
 	left: 0;
 }

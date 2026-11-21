@@ -50,7 +50,7 @@ test('all 75 PNGs and the original client method snapshots retain their hashes',
 function cardFixture() {
 	const { Element } = domFixture();
 	const card = new Element(), node = new Element(), num = new Element('span'), suit = new Element('span');
-	for (const el of [node, num, suit]) el.style.removeProperty = function (key) { delete this[key.replace(/-([a-z])/g, (_, c) => c.toUpperCase())]; };
+	for (const el of [card, node, num, suit]) el.style.removeProperty = function (key) { delete this[key.startsWith('--') ? key : key.replace(/-([a-z])/g, (_, c) => c.toUpperCase())]; };
 	node.className = 'suit-num'; suit.className = 'suit';
 	node.$num = num; node.$suit = suit; card.$suitnum = node;
 	card.appendChild(node); node.append(num, suit);
@@ -62,6 +62,7 @@ test('all 52 rank/suit combinations use original red and black glyphs and cleanl
 	for (const suit of ['spade', 'club', 'heart', 'diamond']) for (let number = 1; number <= 13; number++) {
 		assert.ok(applyOriginalCardFace(h.card, [suit, number, 'sha', 'fire'], '/'));
 		assert.ok(h.card.style.backgroundImage.endsWith('/sha_fire.png")'));
+		assert.equal(h.card.style['--hh-original-card-face'], h.card.style.backgroundImage);
 		assert.ok(h.suit.style.backgroundImage.endsWith(`/${suit}.png")`));
 		const match = h.num.style.backgroundImage.match(/\/((red|black)_[a-z0-9]+\.png)/);
 		assert.equal(match[2], ['heart', 'diamond'].includes(suit) ? 'red' : 'black');
@@ -75,6 +76,7 @@ test('all 52 rank/suit combinations use original red and black glyphs and cleanl
 	assert.ok(applyOriginalCardFace(h.card, { name: 'shan', suit: 'spade', number: 11 }));
 	assert.equal(applyOriginalCardFace(h.card, { name: 'custom', suit: 'heart', number: 5 }), false);
 	assert.equal(h.card.classList.contains('hh-original-card'), false);
+	assert.equal(h.card.style['--hh-original-card-face'], undefined);
 	assert.equal(h.suit.dataset.sourceGlyph, undefined);
 });
 

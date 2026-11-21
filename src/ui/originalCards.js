@@ -63,11 +63,13 @@ export function applyOriginalCardFace(element, card, assetURL = "") {
 	const filename = originalCardFilename(name, nature);
 	element.classList.toggle("hh-original-card", !!filename);
 	if (!filename) {
+		element.style.removeProperty("--hh-original-card-face");
 		applyOriginalGlyphs(element.$suitnum || element.querySelector(".suit-num"), null, null, assetURL);
 		return false;
 	}
 	element.classList.add("decade-card");
 	element.style.backgroundImage = `url("${assetURL}extension/HH优化/assets/original-cards/${filename}.png")`;
+	element.style.setProperty("--hh-original-card-face", element.style.backgroundImage);
 	applyOriginalGlyphs(element.$suitnum || element.querySelector(".suit-num"), suit, number, assetURL);
 	return true;
 }
