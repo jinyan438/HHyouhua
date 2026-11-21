@@ -589,6 +589,11 @@
 	z-index: 61;
 }
 
+.player:not(.fullskin2):not(.double-character):not(.double):not([data-double="1"]):not([data-mode="guozhan"]) > .primary-avatar {
+	clip-path: inset(0 1px 0 0);
+	-webkit-clip-path: inset(0 1px 0 0);
+}
+
 .player.fullskin2 > .primary-avatar {
 	width: 50%;
 	border-radius: 6px 0 0 6px;
@@ -1169,8 +1174,8 @@
 .player > .identity,
 #arena > .player:not(.minskin) > .identity {
 	left: auto;
-	top: -12px;
-	right: -7px;
+	top: 0;
+	right: 0;
 	width: 36px;
 	height: 40px;
 	line-height: 31px;
@@ -1178,7 +1183,7 @@
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	background-position: center;
-	transform: none;
+	transform: translate(50%, -50%);
 	transition: none;
 	z-index: 89;
 }
@@ -1221,6 +1226,7 @@
 	top: -9px;
 	width: 37px;
 	height: 42px;
+	transform: none;
 }
 
 /** 伤害/文字弹出 */
