@@ -48,7 +48,8 @@ test('all 75 PNGs and the original client method snapshots retain their hashes',
 });
 
 function cardFixture() {
-	const { Element } = domFixture();
+	const { Element, document } = domFixture();
+	document.baseURI = 'https://noname.test/game/';
 	const card = new Element(), node = new Element(), num = new Element('span'), suit = new Element('span');
 	for (const el of [card, node, num, suit]) el.style.removeProperty = function (key) { delete this[key.startsWith('--') ? key : key.replace(/-([a-z])/g, (_, c) => c.toUpperCase())]; };
 	node.className = 'suit-num'; suit.className = 'suit';
@@ -56,6 +57,22 @@ function cardFixture() {
 	card.appendChild(node); node.append(num, suit);
 	return { card, node, num, suit };
 }
+
+test('face and alpha mask share an absolute URL for browser, subdirectory and local-file launches', () => {
+	for (const [baseURI, assetURL, expected] of [
+		['https://noname.test/game/', '', 'https://noname.test/game/extension/HH%E4%BC%98%E5%8C%96/assets/original-cards/sha.png'],
+		['https://noname.test/game/index.html', './', 'https://noname.test/game/extension/HH%E4%BC%98%E5%8C%96/assets/original-cards/sha.png'],
+		['https://noname.test/game/', '/assets/', 'https://noname.test/assets/extension/HH%E4%BC%98%E5%8C%96/assets/original-cards/sha.png'],
+		['https://noname.test/game/', 'https://cdn.test/', 'https://cdn.test/extension/HH%E4%BC%98%E5%8C%96/assets/original-cards/sha.png'],
+		['file:///F:/noname/index.html', '', 'file:///F:/noname/extension/HH%E4%BC%98%E5%8C%96/assets/original-cards/sha.png'],
+	]) {
+		const { card } = cardFixture();
+		card.ownerDocument.baseURI = baseURI;
+		applyOriginalCardFace(card, { name: 'sha', suit: 'spade', number: 7 }, assetURL);
+		assert.equal(card.style.backgroundImage, `url("${expected}")`);
+		assert.equal(card.style['--hh-original-card-face'], card.style.backgroundImage);
+	}
+});
 
 test('all 52 rank/suit combinations use original red and black glyphs and cleanly fall back', () => {
 	const h = cardFixture();

@@ -533,6 +533,7 @@ body > .background {
 }
 
 .card.invalided > .card-mask,
+.dialog .buttons > .card.button:has(> .cardsetion) > .card-mask,
 #arena.selecting:not(.video) .handcards > .card:not(.selectable) > .card-mask,
 #arena.thrownhighlight > .card.thrown:not(.thrownhighlight):not(.drawingcard),
 #arena.thrownhighlight > .card.thrown:not(.thrownhighlight):not(.drawingcard) > .card-mask {

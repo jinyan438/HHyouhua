@@ -68,7 +68,9 @@ export function applyOriginalCardFace(element, card, assetURL = "") {
 		return false;
 	}
 	element.classList.add("decade-card");
-	element.style.backgroundImage = `url("${assetURL}extension/HH优化/assets/original-cards/${filename}.png")`;
+	// Custom-property URLs resolve against the consuming stylesheet unless absolute.
+	const faceURL = new URL(`${assetURL}extension/HH优化/assets/original-cards/${filename}.png`, element.ownerDocument.baseURI).href;
+	element.style.backgroundImage = `url("${faceURL}")`;
 	element.style.setProperty("--hh-original-card-face", element.style.backgroundImage);
 	applyOriginalGlyphs(element.$suitnum || element.querySelector(".suit-num"), suit, number, assetURL);
 	return true;
