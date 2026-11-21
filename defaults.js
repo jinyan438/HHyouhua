@@ -149,6 +149,7 @@ export const defaultSettings = Object.freeze({
 	"enable_ui_crop": false,
 	"identity_fullscreen": true,
 	"player_width": "136",
+	"player_height": "180",
 	"show_combo_text": true,
 	"speed_multiplier": 2.5,
 	"suit_num_left": "0",

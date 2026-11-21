@@ -1,3 +1,5 @@
+import { getPlayerStyleSizing } from './playerStyleSizing.js';
+
 // The visual-only player used by both opening selection and the character catalog.
 export function findSelectionPlayerTemplate(game) {
 	return game.players?.find(player => player !== game.me && player.node?.campWrap) || game.me;
@@ -14,7 +16,7 @@ export function selectionPlayerSize(template, game, lib) {
 	if (recorded?.width > 0 && recorded.height > 0 && recorded.playerWidth > 0 && recorded.playerHeight > 0 && recorded.playerScale > 0) return recorded;
 	const measured = captureSelectionPlayerLayout(template);
 	if (measured) return measured;
-	const width = parseFloat(lib?.config?.extension_HH优化_player_width) || 128, height = 180;
+	const { width, height } = getPlayerStyleSizing(lib?.config?.extension_HH优化_player_width, lib?.config?.extension_HH优化_newDecadeStyle, lib?.config?.extension_HH优化_player_height);
 	return { width, height, playerWidth: width, playerHeight: height, playerScale: 1 };
 }
 

@@ -609,8 +609,8 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					const parsed = parseFloat(val);
 					return isNaN(parsed) ? defaultVal : parsed;
 				};
-				const sizing = getPlayerStyleSizing(lib.config.extension_HH优化_player_width, lib.config.extension_HH优化_newDecadeStyle);
-				const { width: widthValue, borderWidth: borderWidthValue, hpRight: hpRightValue,
+				const sizing = getPlayerStyleSizing(lib.config.extension_HH优化_player_width, lib.config.extension_HH优化_newDecadeStyle, lib.config.extension_HH优化_player_height);
+				const { width: widthValue, height: heightValue, borderWidth: borderWidthValue, hpRight: hpRightValue,
 					borderLeft: borderLeftValue, factionLeft: factionLeftValue, nameInset: nameInsetValue } = sizing;
 				
 
@@ -629,8 +629,13 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				css += `
 					.player {
 						--hh-configured-player-width: ${widthValue}px;
+						--hh-configured-player-height: ${heightValue}px;
 						--hh-source-glow-width: ${sizing.sourceGlowWidth}px;
 						--hh-source-glow-left: ${sizing.sourceGlowLeft}px;
+						--hh-source-glow-height: ${sizing.sourceGlowHeight}px;
+						--hh-source-glow-top: ${sizing.sourceGlowTop}px;
+						--hh-target-glow-height: ${sizing.targetGlowHeight}px;
+						--hh-target-glow-top: ${sizing.targetGlowTop}px;
 						--hh-configured-hp-right: ${hpRightValue}px;
 					}
 					/* 覆盖HH优化所有样式的武将宽度 */
@@ -644,11 +649,12 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					#arena[data-new-decade-style="codename"] > .player {
 						--w: ${widthValue}px !important;
 					}
-					/* 只修改宽度，高度保持原样 */
+					/* 武将牌宽高独立设置，覆盖各主题及人数布局 */
 					#arena.fewplayer > .player:not(.minskin),
 					#arena:not(.fewplayer) > .player:not(.minskin),
 					#arena:not(.fewplayer):not(*[data-player_height=""]) > .player:not(.minskin) {
 						width: ${widthValue}px !important;
+						height: ${heightValue}px !important;
 					}
 					/* 武将头像使用cover填充，保持图片不变形 */
 					.player > .primary-avatar,
@@ -677,6 +683,11 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					.player > .camp-wrap > .camp-border {
 						width: calc(${borderWidthValue}% + ${sizing.borderGrow}px) !important;
 						left: ${borderLeftValue + sizing.borderShift}px !important;
+						transform: scaleY(${sizing.frameHeightScale}) !important;
+						transform-origin: 0 ${sizing.frameHeightOrigin}px !important;
+					}
+					body[data-style="onlineUI"] .player > .camp-wrap > .camp-back {
+						bottom: calc(1% - ${sizing.heightDelta}px) !important;
 					}
 					#arena.decadeUI[data-border-level="one"] .player > .camp-wrap > .camp-border,
 					#arena.decadeUI[data-border-level="two"] .player > .camp-wrap > .camp-border,
@@ -2280,12 +2291,12 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			ui_style_separator: {
 				name: '<span style="color:#ffcc00;">━━━ 武将牌样式 ━━━</span>',
 				clear: true,
-				intro: "调整武将宽度，边框、发光、勾玉和文字位置自动适配"
+				intro: "调整武将宽高，边框、发光、勾玉和文字位置自动适配"
 			},
 			player_width: {
 				name: "武将宽度(px)",
 				init: "136",
-				intro: "设置武将卡牌的宽度（80-200像素），默认136。高度不变，边框、发光、勾玉和文字位置按当前136像素样式自动适配。",
+				intro: "设置武将卡牌的宽度（80-200像素），默认136，修改后立即生效。",
 				input: true,
 				onblur: function() {
 					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
@@ -2296,6 +2307,25 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					if (String(value) !== String(lib.config.extension_HH优化_player_width)) delete game.hhSelectionCardLayout;
 					game.saveConfig('extension_HH优化_player_width', String(value));
 					lib.config.extension_HH优化_player_width = String(value);
+					if (window._speedControlUpdateStyle) {
+						window._speedControlUpdateStyle();
+					}
+				}
+			},
+			player_height: {
+				name: "武将高度(px)",
+				init: "180",
+				intro: "设置武将卡牌的高度（120-300像素），默认180，修改后立即生效。",
+				input: true,
+				onblur: function() {
+					this.innerHTML = this.innerHTML.replace(/<br>/g, '').trim();
+					let value = parseInt(this.innerHTML);
+					if (isNaN(value)) value = 180;
+					value = Math.max(120, Math.min(300, value));
+					this.innerHTML = value;
+					if (String(value) !== String(lib.config.extension_HH优化_player_height)) delete game.hhSelectionCardLayout;
+					game.saveConfig('extension_HH优化_player_height', String(value));
+					lib.config.extension_HH优化_player_height = String(value);
 					if (window._speedControlUpdateStyle) {
 						window._speedControlUpdateStyle();
 					}
@@ -2377,8 +2407,8 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				'<li>• 支持的音频格式：mp3, ogg, wav 等' +
 				'<li><hr>' +
 				'<li><strong>HH优化样式覆盖：</strong>' +
-				'<li>• 武将宽度：设置武将卡牌宽度（80-200像素），只改宽度不改高度，图片用cover填充不变形' +
-				'<li>• 边框、发光、勾玉和文字位置均以136像素样式为基准，随武将宽度自动调整' +
+				'<li>• 武将宽高：宽度80-200像素，高度120-300像素，默认136×180，图片用cover填充不变形' +
+				'<li>• 边框、发光、勾玉和文字位置随武将牌尺寸自动适配' +
 				'<li>• 这些设置会覆盖HH优化扩展的默认样式' +
 				'<li>• 修改后实时生效，无需重启游戏' +
 				'<li><hr>' +

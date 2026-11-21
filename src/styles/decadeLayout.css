@@ -98,7 +98,7 @@
 /* 8人座 */
 #arena[data-layout="mobile"][data-number="8"] > .player[data-position="1"] {
 	left: auto;
-	top: calc(50% - 90px);
+	top: calc(50% - var(--hh-configured-player-height, 180px) / 2);
 	right: 0;
 }
 
@@ -131,13 +131,13 @@
 
 #arena[data-layout="mobile"][data-number="8"] > .player[data-position="7"] {
 	left: 0;
-	top: calc(50% - 90px);
+	top: calc(50% - var(--hh-configured-player-height, 180px) / 2);
 }
 
 /* 7人座 */
 #arena[data-layout="mobile"][data-number="7"] > .player[data-position="1"] {
 	left: auto;
-	top: calc(50% - 90px);
+	top: calc(50% - var(--hh-configured-player-height, 180px) / 2);
 	right: 0;
 }
 
@@ -165,7 +165,7 @@
 
 #arena[data-layout="mobile"][data-number="7"] > .player[data-position="6"] {
 	left: 0;
-	top: calc(50% - 90px);
+	top: calc(50% - var(--hh-configured-player-height, 180px) / 2);
 }
 
 /* 6人座 */

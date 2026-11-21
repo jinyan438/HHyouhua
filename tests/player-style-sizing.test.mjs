@@ -5,19 +5,20 @@ import vm from 'node:vm';
 import { defaultSettings } from '../defaults.js';
 import { originalCardStylePriority } from '../src/ui/originalCards.js';
 import { getPlayerStyleSizing, playerStyleBaseline, playerFrameGeometry, playerGlowGeometry } from '../src/ui/playerStyleSizing.js';
+import { selectionPlayerSize } from '../src/ui/selectionPlayer.js';
 
 const source = fs.readFileSync(new URL('../hh-features.js', import.meta.url), 'utf8');
 const removed = ['player_border_width', 'glow_border_width', 'glow_border_left', 'hp_right_offset', 'border_left_offset', 'faction_left_offset', 'name_left_offset'];
 function configuration() {
-	const calls = [], lib = { config: { extension_HH优化_player_width: '136' } }, game = { hhSelectionCardLayout: { width: 136 }, saveConfig: (...args) => calls.push(args) }, window = { _speedControlUpdateStyle() { calls.push(['refresh']); } };
+	const calls = [], lib = { config: { extension_HH优化_player_width: '136', extension_HH优化_player_height: '180' } }, game = { hhSelectionCardLayout: { width: 136 }, saveConfig: (...args) => calls.push(args) }, window = { _speedControlUpdateStyle() { calls.push(['refresh']); } };
 	const realm = vm.createContext({ lib, game, window, get: {}, ui: {}, ai: {}, _status: {}, getPlayerStyleSizing, originalCardStylePriority });
 	vm.runInContext(source.replace(/^import .*;\r?\n/gm, '').replace('export function ', 'function ') + '\nglobalThis.options = createHHFeatures(lib, game, ui, get, ai, _status).config;', realm);
 	return { ...realm, calls };
 }
 
-function rendered(width) {
+function rendered(width, height, theme) {
 	const sheet = { cssRules: [], insertRule(rule, index) { this.cssRules.splice(index, 0, rule); }, deleteRule(index) { this.cssRules.splice(index, 1); } };
-	const style = {}, lib = { config: { extension_HH优化_player_width: width } }, glow = { sheet };
+	const style = {}, lib = { config: { extension_HH优化_player_width: width, extension_HH优化_player_height: height, extension_HH优化_newDecadeStyle: theme } }, glow = { sheet };
 	// Previously saved independent controls must no longer affect appearance.
 	for (const key of removed) lib.config['extension_HH优化_' + key] = '999';
 	const document = { getElementById: () => glow, body: { appendChild() {} } }, window = {};
@@ -28,14 +29,15 @@ function rendered(width) {
 	return { css: style.textContent, glow: sheet.cssRules };
 }
 
-test('the approved 136px appearance stays exact and only width remains in its settings group', () => {
-	assert.deepEqual(playerStyleBaseline, { width: 136, borderWidth: 401, hpRight: 134, borderLeft: -15, factionLeft: 13, nameInset: 26 });
+test('the approved 136x180 appearance stays exact with adjacent width and height settings', () => {
+	assert.deepEqual(playerStyleBaseline, { width: 136, height: 180, borderWidth: 401, hpRight: 134, borderLeft: -15, factionLeft: 13, nameInset: 26 });
 	const sizing = getPlayerStyleSizing(136);
 	for (const [key, value] of Object.entries(playerStyleBaseline)) assert.equal(sizing[key], value, key);
 	assert.equal(sizing.delta, 0); assert.equal(sizing.borderGrow, 0); assert.equal(sizing.borderShift, 0);
 	const { options } = configuration(), keys = Object.keys(options);
-	assert.deepEqual(keys.slice(keys.indexOf('ui_style_separator') + 1, keys.indexOf('ui_crop_separator')), ['player_width']);
+	assert.deepEqual(keys.slice(keys.indexOf('ui_style_separator') + 1, keys.indexOf('ui_crop_separator')), ['player_width', 'player_height']);
 	assert.equal(options.player_width.init, '136');
+	assert.equal(options.player_height.init, '180'); assert.equal(defaultSettings.player_height, '180');
 	for (const key of removed) { assert.equal(options[key], undefined); assert.equal(defaultSettings[key], undefined); }
 });
 
@@ -49,7 +51,7 @@ test('width input saves just the width, refreshes styles and invalidates stale o
 	}
 });
 
-test('live styles stretch the portrait area, ignore legacy overrides and retain height and the left column', () => {
+test('live styles stretch the portrait area, ignore legacy overrides and retain the default height and left column', () => {
 	for (const width of [80, 136, 160, 200]) {
 		const s = getPlayerStyleSizing(width), output = rendered(String(width));
 		for (const [property, value, unit] of [['left', s.borderLeft + s.borderShift, 'px'], ['right', s.hpRight, 'px'], ['left', s.factionLeft, 'px'], ['left', s.nameInset, '%'], ['right', s.nameInset, '%']]) {
@@ -57,15 +59,54 @@ test('live styles stretch the portrait area, ignore legacy overrides and retain 
 		}
 		assert.ok(output.css.includes(`--hh-configured-player-width: ${width}px;`));
 		assert.ok(output.css.includes(`--hh-configured-hp-right: ${s.hpRight}px;`));
-		const playerRule = output.css.slice(output.css.indexOf('/* 只修改宽度'), output.css.indexOf('/* 武将头像'));
+		const playerRule = output.css.slice(output.css.indexOf('/* 武将牌宽高'), output.css.indexOf('/* 武将头像'));
 		assert.ok(playerRule.includes('#arena.fewplayer')); assert.ok(playerRule.includes(`width: ${width}px !important;`));
-		assert.equal(/height\s*:/.test(playerRule), false);
+		assert.ok(playerRule.includes('height: 180px !important;'));
 		assert.ok(output.css.includes(`width: calc(401% + ${s.borderGrow}px)`));
 		assert.ok(output.glow.every(rule => rule.includes('transform: none !important')));
 		assert.equal(s.factionLeft, 13); assert.equal(s.nameInset, 26); assert.equal(width - s.hpRight, 2);
 		assert.equal(width - s.armorLeft, 16);
 	}
 	assert.equal(getPlayerStyleSizing(undefined).width, 136); assert.equal(getPlayerStyleSizing('invalid').width, 136);
+});
+
+test('height input refreshes and persists independently, validates limits and clears only changed measurements', () => {
+	const h = configuration(), input = { innerHTML: ' 240<br> ' };
+	h.options.player_height.onblur.call(input);
+	assert.equal(input.innerHTML, 240); assert.equal(h.lib.config.extension_HH优化_player_height, '240');
+	assert.equal(h.lib.config.extension_HH优化_player_width, '136');
+	assert.equal(h.game.hhSelectionCardLayout, undefined);
+	assert.deepEqual(h.calls, [['extension_HH优化_player_height', '240'], ['refresh']]);
+	const measured = { height: 240 }; h.game.hhSelectionCardLayout = measured;
+	input.innerHTML = String(input.innerHTML);
+	h.options.player_height.onblur.call(input); assert.equal(h.game.hhSelectionCardLayout, measured);
+	for (const [value, expected] of [['500', 300], ['20', 120], ['', 180], ['invalid', 180], ['215.5', 215]]) {
+		input.innerHTML = value; h.options.player_height.onblur.call(input); assert.equal(input.innerHTML, expected);
+		assert.equal(h.lib.config.extension_HH优化_player_height, String(expected));
+	}
+});
+
+test('height changes preserve width geometry and extend both glow bottoms to the new card edge', () => {
+	for (const height of [120, 180, 240, 300]) for (const width of [80, 136, 200]) {
+		const s = getPlayerStyleSizing(width, 'onlineUI', height), baseline = getPlayerStyleSizing(width), output = rendered(width, height);
+		assert.equal(s.height, height); assert.equal(s.width, width);
+		for (const key of ['borderGrow', 'borderShift', 'hpRight', 'sourceGlowWidth', 'sourceGlowLeft']) assert.equal(s[key], baseline[key]);
+		assert.ok(output.css.includes(`height: ${height}px !important;`));
+		assert.ok(output.css.includes(`--hh-configured-player-height: ${height}px;`));
+		assert.ok(Math.abs(s.sourceGlowTop + playerGlowGeometry.bottom * s.sourceGlowHeight / playerGlowGeometry.frameHeight - height - 1) < 1e-8);
+		assert.ok(Math.abs(s.targetGlowTop + 163 * s.targetGlowHeight / 256 - height - 1) < 1e-8);
+	}
+	assert.equal(getPlayerStyleSizing(136, 'onlineUI', undefined).height, 180);
+	assert.equal(getPlayerStyleSizing(136, 'onlineUI', 'invalid').height, 180);
+	assert.equal(getPlayerStyleSizing(136, 'onlineUI', 500).height, 300);
+	assert.equal(getPlayerStyleSizing(136, 'onlineUI', 20).height, 120);
+});
+
+test('preview fallback follows saved width and height before any arena measurements exist', () => {
+	for (const height of [120, 180, 240, 300]) {
+		const lib = { config: { extension_HH优化_player_width: '160', extension_HH优化_player_height: String(height) } };
+		assert.deepEqual(selectionPlayerSize(null, {}, lib), { width: 160, height, playerWidth: 160, playerHeight: height, playerScale: 1 });
+	}
 });
 
 function cssArgument(text, name) {
