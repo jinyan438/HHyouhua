@@ -1,0 +1,40 @@
+{
+	"source": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+	"path": "/res/assets/animate/game/seat/FX_paiju_guoduhu",
+	"cacheKeys": {
+		".atlas.txt": "cf0295ce",
+		".skel": "58c5e272",
+		".png": "33fb3847"
+	},
+	"action": "play",
+	"duration": 1,
+	"sourceVersion": "4.0.56",
+	"conversion": "Serialization only: original transforms, keyframes, attachments, blending and texture pixels.",
+	"files": [
+		{
+			"file": "FX_paiju_guoduhu.atlas.txt",
+			"bytes": 1314,
+			"sha256": "1a898a1e9bd0b083aa320a140fd7e9a2571f4b6a58a888ca34a116a02f412d77"
+		},
+		{
+			"file": "FX_paiju_guoduhu.skel",
+			"bytes": 2086,
+			"sha256": "cc0333d0f65b2f69dd1d0f6ad4e7ddf12818fdad5b2ec18cb1ce8d78497a8b15"
+		},
+		{
+			"file": "FX_paiju_guoduhu.png",
+			"bytes": 73239,
+			"sha256": "7680c34ace800d3d7ff42c22661c150ed7955d58c4ebdec1c37d911e57756dcb"
+		},
+		{
+			"file": "FX_paiju_guoduhu.atlas",
+			"bytes": 2053,
+			"sha256": "35e4a51a3f06009d5a0ab2fb5325891344ef83486dd7a43932375b9a7f796eff"
+		},
+		{
+			"file": "FX_paiju_guoduhu.json",
+			"bytes": 11374,
+			"sha256": "c114dcbcd66b4dbb4c7813c774b41247bbba231875f5d13cb6696228fd1ac41a"
+		}
+	]
+}

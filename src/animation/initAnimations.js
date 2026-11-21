@@ -5,9 +5,10 @@
  */
 
 import { lib, game, ui, get, ai, _status } from "noname";
-import { skillDefines, cardDefines, chupaiAnimations } from "./configs/skillAnimations.js";
+import { skillDefines, cardDefines } from "./configs/skillAnimations.js";
 import { cardTriggers } from "./configs/cardTriggers.js";
 import { setupSourceCardAnimations } from "../effects/sourceCardAnimations.js";
+import { setupTargetIndicators } from "./targetIndicator.js";
 
 /**
  * 初始化技能动画定义和绑定
@@ -42,52 +43,7 @@ export function initSkillAnimations(animation) {
 		animation.playSpine({ name: animName, action: String(num) }, options);
 	};
 
-	// 玩家初始化钩子 - 添加出牌指示观察器
-	lib.element.player.inits = [].concat(lib.element.player.inits || []).concat(async player => {
-		if (player.ChupaizhishiXObserver) return;
-
-		let timer = null;
-		const DELAY = 300;
-
-		const startAnimation = element => {
-			if (element.ChupaizhishiXid || timer) return;
-			window.chupaiload = true;
-			timer = setTimeout(() => {
-				const config = decadeUI.config.chupaizhishi;
-				const animConfig = chupaiAnimations[config];
-				if (config !== "off" && animConfig) {
-					element.ChupaizhishiXid = animation.playSpine(
-						{ name: animConfig.name, loop: true },
-						{ parent: element, scale: animConfig.scale }
-					);
-				}
-				timer = null;
-			}, DELAY);
-		};
-
-		const stopAnimation = element => {
-			if (element.ChupaizhishiXid) {
-				animation.stopSpine(element.ChupaizhishiXid);
-				delete element.ChupaizhishiXid;
-			}
-			if (timer) {
-				clearTimeout(timer);
-				timer = null;
-			}
-		};
-
-		const observer = new MutationObserver(mutations => {
-			for (const mutation of mutations) {
-				if (mutation.attributeName !== "class") continue;
-				const target = mutation.target;
-				if (target.classList.contains("selectable")) startAnimation(target);
-				else stopAnimation(target);
-			}
-		});
-
-		observer.observe(player, { attributes: true, attributeFilter: ["class"] });
-		player.ChupaizhishiXObserver = observer;
-	});
+	setupTargetIndicators({ lib, game, ui, animation, getConfig: () => decadeUI.config.chupaizhishi });
 
 	// 注册卡牌动画
 	for (const [cardName, config] of Object.entries(cardDefines)) {

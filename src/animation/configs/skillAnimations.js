@@ -87,7 +87,7 @@ export const cardDefines = {
 
 /**
  * 出牌指示动画配置
- * @type {Object.<string, {name: string, scale: number}>}
+ * @type {Object.<string, {name: string, scale: number, action?: string, fileType?: string}>}
  */
 export const chupaiAnimations = {
 	jiangjun: { name: "SF_xuanzhong_eff_jiangjun", scale: 0.6 },
@@ -95,7 +95,7 @@ export const chupaiAnimations = {
 	cheqijiangjun: { name: "SF_xuanzhong_eff_cheqijiangjun", scale: 0.6 },
 	biaoqijiangjun: { name: "SF_xuanzhong_eff_biaoqijiangjun", scale: 0.5 },
 	dajiangjun: { name: "SF_xuanzhong_eff_dajiangjun", scale: 0.6 },
-	dasima: { name: "SF_xuanzhong_eff_dasima", scale: 0.6 },
+	dasima: { name: "ol-selected-swords/FX_paiju_guoduhu", action: "play", fileType: "json", scale: 0.66 },
 	shoushaX: { name: "aar_chupaizhishiX", scale: 0.55 },
 	shousha: { name: "aar_chupaizhishi", scale: 0.55 },
 };

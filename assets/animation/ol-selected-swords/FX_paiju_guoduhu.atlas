@@ -1,0 +1,124 @@
+FX_paiju_guoduhu.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+image/effect/lizi006_0001
+  rotate: true
+  xy: 183, 72
+  size: 76, 66
+  orig: 256, 256
+  offset: 86, 94
+  index: -1
+image/effect/lizi006_0002
+  rotate: false
+  xy: 85, 2
+  size: 78, 68
+  orig: 256, 256
+  offset: 84, 94
+  index: -1
+image/effect/lizi006_0003
+  rotate: false
+  xy: 165, 2
+  size: 78, 68
+  orig: 256, 256
+  offset: 84, 94
+  index: -1
+image/effect/lizi006_0004
+  rotate: false
+  xy: 335, 30
+  size: 81, 70
+  orig: 256, 256
+  offset: 87, 92
+  index: -1
+image/effect/lizi006_0005
+  rotate: false
+  xy: 274, 102
+  size: 87, 74
+  orig: 256, 256
+  offset: 81, 88
+  index: -1
+image/effect/lizi006_0006
+  rotate: false
+  xy: 274, 178
+  size: 91, 76
+  orig: 256, 256
+  offset: 79, 86
+  index: -1
+image/effect/lizi006_0007
+  rotate: false
+  xy: 85, 72
+  size: 96, 76
+  orig: 256, 256
+  offset: 80, 86
+  index: -1
+image/effect/lizi006_0008
+  rotate: false
+  xy: 184, 172
+  size: 88, 82
+  orig: 256, 256
+  offset: 88, 80
+  index: -1
+image/effect/lizi006_0009
+  rotate: true
+  xy: 251, 30
+  size: 70, 82
+  orig: 256, 256
+  offset: 100, 80
+  index: -1
+image/effect/lizi006_0010
+  rotate: true
+  xy: 367, 178
+  size: 76, 86
+  orig: 256, 256
+  offset: 96, 76
+  index: -1
+image/effect/lizi006_0011
+  rotate: true
+  xy: 2, 4
+  size: 62, 75
+  orig: 256, 256
+  offset: 114, 87
+  index: -1
+image/effect/lizi006_0012
+  rotate: false
+  xy: 455, 188
+  size: 30, 66
+  orig: 256, 256
+  offset: 114, 96
+  index: -1
+image/effect/lizi006_0013
+  rotate: false
+  xy: 418, 34
+  size: 30, 66
+  orig: 256, 256
+  offset: 114, 96
+  index: -1
+image/effect/lizi006_0014
+  rotate: true
+  xy: 418, 2
+  size: 30, 66
+  orig: 256, 256
+  offset: 114, 96
+  index: -1
+image/guoduhu2_00
+  rotate: false
+  xy: 85, 150
+  size: 97, 104
+  orig: 273, 258
+  offset: 85, 76
+  index: -1
+image/guoduhu3_00
+  rotate: true
+  xy: 363, 102
+  size: 74, 81
+  orig: 273, 258
+  offset: 97, 89
+  index: -1
+image/shangjiangjun_00
+  rotate: false
+  xy: 2, 68
+  size: 81, 186
+  orig: 173, 198
+  offset: 45, 3
+  index: -1

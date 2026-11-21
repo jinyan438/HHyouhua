@@ -5,7 +5,6 @@
  */
 import { lib, game, ui, get, _status } from "noname";
 import { refreshCardSkin } from "../../overrides/card.js";
-import { chupaiAnimations } from "../../animation/configs/skillAnimations.js";
 import { parseInputValue } from "../utils.js";
 
 /**
@@ -180,19 +179,5 @@ export function onChupaizhishiUpdate() {
 	decadeUI.config.chupaizhishi = config === "random" ? options.randomGet() : config;
 	ui.arena.dataset.chupaizhishi = config;
 
-	if (!game.players || !decadeUI.animation) return;
-	game.players.forEach(player => {
-		// 停止现有动画
-		if (player.ChupaizhishiXid) {
-			decadeUI.animation.stopSpine(player.ChupaizhishiXid);
-			delete player.ChupaizhishiXid;
-		}
-		// 播放新动画
-		if (player.classList.contains("selectable") && config !== "off") {
-			const anim = chupaiAnimations[decadeUI.config.chupaizhishi];
-			if (anim) {
-				player.ChupaizhishiXid = decadeUI.animation.playSpine({ name: anim.name, loop: true }, { parent: player, scale: anim.scale });
-			}
-		}
-	});
+	decadeUI.animation?.targetIndicators?.refresh();
 }

@@ -31,7 +31,7 @@ const priorityMap = {
 	SF_xuanzhong_eff_cheqijiangjun: Priority.HIGH,
 	SF_xuanzhong_eff_biaoqijiangjun: Priority.HIGH,
 	SF_xuanzhong_eff_dajiangjun: Priority.HIGH,
-	SF_xuanzhong_eff_dasima: Priority.HIGH,
+	"ol-selected-swords/FX_paiju_guoduhu": Priority.HIGH,
 	"globaltexiao/huifushuzi/shuzi2": Priority.HIGH,
 	"globaltexiao/shanghaishuzi/shuzi": Priority.HIGH,
 	"globaltexiao/shanghaishuzi/SZN_shuzi": Priority.HIGH,

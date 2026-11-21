@@ -19,7 +19,7 @@ export const assetList = [
 	{ name: "SF_xuanzhong_eff_cheqijiangjun" },
 	{ name: "SF_xuanzhong_eff_biaoqijiangjun" },
 	{ name: "SF_xuanzhong_eff_dajiangjun" },
-	{ name: "SF_xuanzhong_eff_dasima" },
+	{ name: "ol-selected-swords/FX_paiju_guoduhu", fileType: "json" },
 
 	// 游戏开始特效
 	{ name: "effect_youxikaishi" },
