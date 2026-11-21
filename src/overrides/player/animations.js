@@ -5,22 +5,13 @@
  */
 
 import { lib, game, ui, get, ai, _status } from "noname";
-import { getDui } from "./base.js";
+import { getDui, getBasePlayerMethods } from "./base.js";
 import { createSourceSkillPopup } from "../../effects/sourceSkillPopup.js";
-
-/**
- * 伤害动画动作映射
- * @constant {Object}
- */
-const DAMAGE_ACTIONS = {
-	thunder: ["play5", "play6"],
-	fire: ["play3", "play4"],
-	__default: ["play1", "play2"],
-};
+import { setupSourceDamageEffects } from "../../effects/sourceDamageEffects.js";
 
 /**
  * 伤害弹出覆写
- * @description 播放Spine伤害动画，字符串时显示原版墨迹技能名称
+ * @description 播放原版受伤及数字动画，字符串时显示原版墨迹技能名称
  * @param {number|string} num - 伤害数值或技能名称
  * @param {string} [nature] - 伤害属性（fire/thunder/water等）
  * @param {boolean} [font] - 是否使用普通字体
@@ -65,15 +56,14 @@ export function playerDamagepop(num, nature = "soil", font, nobroadcast) {
 		return;
 	}
 
-	const animation = getDui()?.animation;
-	if (!animation) return;
-
-	if (num < 0 && nature !== "water") {
-		const pair = DAMAGE_ACTIONS[nature] || DAMAGE_ACTIONS.__default;
-		const action = num <= -2 ? pair[1] : pair[0];
-		animation.playSpine({ name: "effect_shoujidonghua", action }, { scale: 0.8, parent: player });
+	game.addVideo("damagepop", player, [num, nature, font]);
+	if (nobroadcast !== false) {
+		game.broadcast((p, n, na, f) => p.$damagepop(n, na, f), player, num, nature, font);
+	}
+	if (num < 0 && nature !== "water" && !_status.event?.unreal) {
+		setupSourceDamageEffects({ lib, game, ui }).play(player, -num, nature);
 	} else if (num > 0 && nature === "wood") {
-		animation.playSpine("effect_zhiliao", { scale: 0.7, parent: player });
+		getDui()?.animation?.playSpine("effect_zhiliao", { scale: 0.7, parent: player });
 	}
 }
 
@@ -93,7 +83,15 @@ export function playerDamage(source) {
 
 	game.broadcast((player, source) => player.$damage(source), this, source);
 
-	this.queueCssAnimation("player-hurt 0.3s");
+	// The imported hit timeline owns the 80 ms out / 80 ms back movement.
+}
+
+export function playerDamageFire(...args) {
+	if (_status.event?.name !== "damage") return getBasePlayerMethods()?.$fire?.apply(this, args);
+}
+
+export function playerDamageThunder(...args) {
+	if (_status.event?.name !== "damage") return getBasePlayerMethods()?.$thunder?.apply(this, args);
 }
 
 /**

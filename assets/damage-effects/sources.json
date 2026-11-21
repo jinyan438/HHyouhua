@@ -1,0 +1,353 @@
+{
+  "source_root": "E:\\AI\\sanguosha",
+  "apk": "sanguosha2/yoka.game_g_android_4.0.2.apk",
+  "files": [
+    {
+      "file": "EF_Basic_Sha_03_WD/EF_Basic_Sha_03_WD.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_WD.skel",
+      "cache_key": "bfb63953",
+      "bytes": 2059,
+      "sha256": "00de3135d34dac7685f6dc5a3fc01ea55b2c784619e60e0ef0a844fe9c3f8005"
+    },
+    {
+      "file": "EF_Basic_Sha_03_WD/EF_Basic_Sha_03_WD.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_WD.atlas.txt",
+      "cache_key": "857e1ec0",
+      "bytes": 1884,
+      "sha256": "dbccaf1c70b184fecedab124ecb23b36345aa57c4cc732a2a3312a3a5d9bf2fd"
+    },
+    {
+      "file": "EF_Basic_Sha_03_WD/EF_Basic_Sha_03_WD.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_WD.png",
+      "cache_key": "f80d1e49",
+      "bytes": 452035,
+      "sha256": "647fe60a08cff0c3219edc4bc7d02a2c3019151dd3885b3bbb5f49d522290af5"
+    },
+    {
+      "file": "EF_Basic_Sha_03_2_WD/EF_Basic_Sha_03_2_WD.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_2_WD.skel",
+      "cache_key": "64401bc3",
+      "bytes": 2885,
+      "sha256": "9c815cc7e62fb40a50161118fc13e5492737d0ec2a5ba6a854f9b26391e58046"
+    },
+    {
+      "file": "EF_Basic_Sha_03_2_WD/EF_Basic_Sha_03_2_WD.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_2_WD.atlas.txt",
+      "cache_key": "8dc64dd3",
+      "bytes": 2980,
+      "sha256": "b1973461a2b8e4c09e963dac50fcfb943511dbbac1be2ae51233449fb9b0c98b"
+    },
+    {
+      "file": "EF_Basic_Sha_03_2_WD/EF_Basic_Sha_03_2_WD.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_2_WD.png",
+      "cache_key": "b5e65863",
+      "bytes": 490625,
+      "sha256": "8a77ec2c5305bebc723953b7379a8aeccab19bb51963ab031e1454bd791dd0d7"
+    },
+    {
+      "file": "EF_Basic_Sha_03_3_WD/EF_Basic_Sha_03_3_WD.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_3_WD.skel",
+      "cache_key": "733b0f80",
+      "bytes": 2885,
+      "sha256": "d8a34dcb6123ca3021f80a62a3864b1231b469507eef7a1556e04f9e84496893"
+    },
+    {
+      "file": "EF_Basic_Sha_03_3_WD/EF_Basic_Sha_03_3_WD.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_3_WD.atlas.txt",
+      "cache_key": "10c9aca5",
+      "bytes": 3158,
+      "sha256": "0f03a05239b99d7fd30f7494713c883af72df14db47c42a61df3cda8e63f12d9"
+    },
+    {
+      "file": "EF_Basic_Sha_03_3_WD/EF_Basic_Sha_03_3_WD.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_3_WD.png",
+      "cache_key": "794c58fd",
+      "bytes": 1471235,
+      "sha256": "45fd8fa0e032b55eb87c067c1a172716dc9e737ac3b52c16d848b3a54a7fda9a"
+    },
+    {
+      "file": "EF_Basic_Sha_03_huo/EF_Basic_Sha_03_huo.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_huo.skel",
+      "cache_key": "7c54a03e",
+      "bytes": 3535,
+      "sha256": "34a38e0ac5093bb568105d3788aa7c01291401d3e4b49fd7f61dcdd195b70021"
+    },
+    {
+      "file": "EF_Basic_Sha_03_huo/EF_Basic_Sha_03_huo.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_huo.atlas.txt",
+      "cache_key": "6e258351",
+      "bytes": 3973,
+      "sha256": "dfd697fe108b092c4461f4f6457eabd318a937efaf400f328d6749aa44e4027b"
+    },
+    {
+      "file": "EF_Basic_Sha_03_huo/EF_Basic_Sha_03_huo.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_huo.png",
+      "cache_key": "161ad2b4",
+      "bytes": 482108,
+      "sha256": "1ddbdc1b16074d36fbdc5a026243e2a7448480fbd1f23dcc8d78df49e2477b92"
+    },
+    {
+      "file": "EF_Basic_Sha_03_lei/EF_Basic_Sha_03_lei.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_lei.skel",
+      "cache_key": "4999d117",
+      "bytes": 4778,
+      "sha256": "52076da8d5e567beedeba14b5174ca53dd744cb4496457fed8344eef6a4ff751"
+    },
+    {
+      "file": "EF_Basic_Sha_03_lei/EF_Basic_Sha_03_lei.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_lei.atlas.txt",
+      "cache_key": "4a31ce78",
+      "bytes": 4998,
+      "sha256": "80702a5027b4bcc7e30a61c5f1b13af35840de11c34ddc61d1105d5877cf2810"
+    },
+    {
+      "file": "EF_Basic_Sha_03_lei/EF_Basic_Sha_03_lei.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_lei.png",
+      "cache_key": "6ec3019c",
+      "bytes": 1766595,
+      "sha256": "a9467dd9a63b17cbbfd819e86dd357522146cc05728b999020c817c98a3fcdbc"
+    },
+    {
+      "file": "EF_Basic_Sha_03_bing/EF_Basic_Sha_03_bing.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_bing.skel",
+      "cache_key": "e9739756",
+      "bytes": 3585,
+      "sha256": "a658b457ff0415ee9ab99189aa0cfaa2d12c2584c10a2f261410260b554c7ad8"
+    },
+    {
+      "file": "EF_Basic_Sha_03_bing/EF_Basic_Sha_03_bing.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_bing.atlas.txt",
+      "cache_key": "9baf51ff",
+      "bytes": 3815,
+      "sha256": "bb200fa0e1e3078f7d213b00de7e2d25cae7f111d97f58ac14c86da6c2caa57c"
+    },
+    {
+      "file": "EF_Basic_Sha_03_bing/EF_Basic_Sha_03_bing.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Basic_Sha_03_bing.png",
+      "cache_key": "8e67387c",
+      "bytes": 1838620,
+      "sha256": "de8c7567c2831a3fbec7a176cfbf091b4f8d844a6e905a5d8b4535f1f045454f"
+    },
+    {
+      "file": "baojishuzhi/baojishuzhi.skel",
+      "original_path": "/res/assets/animate/game/fight/baojishuzhi.skel",
+      "cache_key": "083ebfc1",
+      "bytes": 5380,
+      "sha256": "a1c7eb51e6c3cec72823dda1509bff5d5f84203c0215c51a4e59f9151ae74c26"
+    },
+    {
+      "file": "baojishuzhi/baojishuzhi.atlas.txt",
+      "original_path": "/res/assets/animate/game/fight/baojishuzhi.atlas.txt",
+      "cache_key": "a228f110",
+      "bytes": 243,
+      "sha256": "731e6e0b38406b243a61004fd0c021cacf2db54fccaba89fe24f6c7ad2e9e7cf"
+    },
+    {
+      "file": "baojishuzhi/baojishuzhi.png",
+      "original_path": "/res/assets/animate/game/fight/baojishuzhi.png",
+      "cache_key": "cdd7b737",
+      "bytes": 10765,
+      "sha256": "16717e0e9748d727e9fac32b026e486a4b098c3f7826622c2ccc9773e894a1f4"
+    },
+    {
+      "file": "digits.png",
+      "bytes": 50081,
+      "sha256": "561fada50ec7ec77b9eb84d742bccfb8b30e7a3f42953c706cb09a47c95fc7e4",
+      "derived_from": "/res/assets/game/seat.atlas + seat.png"
+    },
+    {
+      "file": "digits.atlas.txt",
+      "bytes": 1090,
+      "sha256": "cda9f4566d8945bb5cb9837739d9179a0c682bfecdedef2bbfc67db9394bb97e",
+      "derived_from": "/res/assets/game/seat.atlas + seat.png"
+    }
+  ],
+  "digit_source": [
+    {
+      "file": "digits/seat.atlas",
+      "original_path": "/res/assets/game/seat.atlas",
+      "cache_key": "61c5aa54",
+      "bytes": 131916,
+      "sha256": "13216107810332015fe8b7875765d05e646cac00e0ebc85c04cbc1c3e1b056b1"
+    },
+    {
+      "file": "digits/seat.png",
+      "original_path": "/res/assets/game/seat.png",
+      "cache_key": "db156ff2",
+      "bytes": 1220634,
+      "sha256": "b083b66f6a922defd964c71416d5c0c108d8610ec109d69a75afb05640cb87b8"
+    }
+  ],
+  "digit_frames": {
+    "baoji_0.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 750,
+        "y": 622
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_1.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 780,
+        "y": 533
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_2.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 786,
+        "y": 879
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_3.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 356,
+        "y": 855
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_4.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 832,
+        "y": 426
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_5.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 838,
+        "y": 893
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_6.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 838,
+        "y": 821
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_7.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 802,
+        "y": 677
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_8.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 808,
+        "y": 749
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "baoji_9.png": {
+      "frame": {
+        "h": 70,
+        "idx": 0,
+        "w": 50,
+        "x": 802,
+        "y": 605
+      },
+      "sourceSize": {
+        "h": 70,
+        "w": 50
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  }
+}

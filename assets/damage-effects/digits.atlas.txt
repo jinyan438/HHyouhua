@@ -1,0 +1,75 @@
+digits.png
+size: 500, 70
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+baoji_0
+  rotate: false
+  xy: 0, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_1
+  rotate: false
+  xy: 50, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_2
+  rotate: false
+  xy: 100, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_3
+  rotate: false
+  xy: 150, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_4
+  rotate: false
+  xy: 200, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_5
+  rotate: false
+  xy: 250, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_6
+  rotate: false
+  xy: 300, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_7
+  rotate: false
+  xy: 350, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_8
+  rotate: false
+  xy: 400, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1
+baoji_9
+  rotate: false
+  xy: 450, 0
+  size: 50, 70
+  orig: 50, 70
+  offset: 0, 0
+  index: -1

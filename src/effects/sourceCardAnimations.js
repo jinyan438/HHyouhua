@@ -258,7 +258,7 @@ export function setupSourceCardAnimations(context) {
 	}
 	lib.skill._hh_source_card_hit = {
 		trigger: { global: 'damageEnd' }, silent: true, charlotte: true, forced: true,
-		filter(event) { return event.card?.name === 'sha' && player.handles({ name: 'sha', nature: event.nature || event.card.nature }); },
+		filter(event) { return !game.hhDamageEffects && event.card?.name === 'sha' && player.handles({ name: 'sha', nature: event.nature || event.card.nature }); },
 		content(event, trigger) {
 			const nature = trigger.nature || trigger.card.nature;
 			game.broadcastAll((target, nature) => { game.hhCardEffects?.playHit(target, nature); }, trigger.player, nature);

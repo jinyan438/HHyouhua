@@ -66,22 +66,6 @@ export const baseSkill = {
 	},
 
 	/**
-	 * 伤害数字显示
-	 * @description 在受到多点伤害时显示数字动画
-	 */
-	_wjmh_shanghaishuzi_: {
-		priority: 10,
-		forced: true,
-		trigger: { player: "damage" },
-		filter(event) {
-			return event.num > 1 && event.num <= 9 && !event.unreal && lib.config.extension_HH优化_newDecadeStyle;
-		},
-		async content(event, trigger, player) {
-			decadeUI.animation?.playDamageNumber?.(player, trigger.num);
-		},
-	},
-
-	/**
 	 * 用牌后清理
 	 * @description 在用牌结束后清理UI元素
 	 */

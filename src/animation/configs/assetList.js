@@ -37,7 +37,6 @@ export const assetList = [
 	{ name: "effect_qinggangjian" },
 	{ name: "effect_qinglongyanyuedao" },
 	{ name: "effect_renwangdun" },
-	{ name: "effect_shoujidonghua" },
 	{ name: "effect_tengjiafangyu" },
 	{ name: "effect_tengjiaranshao" },
 	{ name: "effect_zhangbashemao" },
@@ -47,8 +46,6 @@ export const assetList = [
 	// 数字特效
 	{ name: "globaltexiao/huifushuzi/shuzi2" },
 	{ name: "globaltexiao/xunishuzi/SS_PaiJu_xunishanghai" },
-	{ name: "globaltexiao/shanghaishuzi/shuzi" },
-	{ name: "globaltexiao/shanghaishuzi/SZN_shuzi" },
 
 	// 更多装备特效
 	{ name: "effect_zhugeliannu" },

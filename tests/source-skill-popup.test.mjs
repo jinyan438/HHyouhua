@@ -115,7 +115,8 @@ function integration(h) {
 	function visit(node) { if (ts.isMethodDeclaration(node) && ['trySkillAnimate', 'popup'].includes(node.name?.getText(core))) methods.set(node.name.getText(core), node.getText(core)); ts.forEachChild(node, visit); }
 	visit(core);
 	const override = fs.readFileSync(new URL('../src/overrides/player/animations.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
-	const context = vm.createContext({ lib: h.lib, game: h.game, ui: {}, get: { translation: value => h.lib.translate[value] || value, skillTranslation: value => h.lib.translate[value] }, getDui: () => ({ animation: { playSpine: (...args) => h.calls.spine.push(args) } }), createSourceSkillPopup: context => createSourceSkillPopup(context, h.environment) });
+	h.calls.damage = [];
+	const context = vm.createContext({ lib: h.lib, game: h.game, ui: {}, _status: {}, setupSourceDamageEffects: () => ({ play: (...args) => h.calls.damage.push(args) }), get: { translation: value => h.lib.translate[value] || value, skillTranslation: value => h.lib.translate[value] }, getDui: () => ({ animation: { playSpine: (...args) => h.calls.spine.push(args) } }), createSourceSkillPopup: context => createSourceSkillPopup(context, h.environment) });
 	vm.runInContext(override + '\nglobalThis.methods = ({' + [...methods.values()].join(',') + '});', context);
 	Object.assign(h.player, context.methods, { $damagepop: context.playerDamagepop, $skill: (...args) => h.calls.fullscreen.push(args) });
 }
@@ -133,10 +134,10 @@ test('native trySkillAnimate → popup reaches the replacement once, preserving 
 	h.game.hhSourceSkillPopup.clear();
 });
 
-test('damage, healing, full-screen skills and skill-specific effects retain their original routes', () => {
+test('damage reaches the imported player while healing and skill effects retain their routes', () => {
 	const h = fixture(); integration(h);
 	h.player.$damagepop(-2, 'thunder'); h.player.$damagepop(1, 'wood');
-	assert.equal(h.calls.spine[0][0].action, 'play6'); assert.equal(h.calls.spine[1][0], 'effect_zhiliao');
+	assert.deepEqual(h.calls.damage[0], [h.player, 2, 'thunder']); assert.equal(h.calls.spine[0][0], 'effect_zhiliao');
 	h.player.trySkillAnimate('awakening', 'awakening');
 	assert.equal(h.calls.fullscreen.length, 1); assert.equal(h.calls.fullscreen[0][0], '觉醒');
 	let custom = 0; h.lib.animate.skill.sanyao = () => custom++;

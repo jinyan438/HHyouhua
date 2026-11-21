@@ -55,6 +55,8 @@ export { playerPlayDynamic, playerStopDynamic, playerApplyDynamicSkin } from "./
 export {
 	playerDamagepop,
 	playerDamage,
+	playerDamageFire,
+	playerDamageThunder,
 	playerCompare,
 	playerCompareMultiple,
 	playerLine,

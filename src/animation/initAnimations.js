@@ -9,12 +9,14 @@ import { skillDefines, cardDefines } from "./configs/skillAnimations.js";
 import { cardTriggers } from "./configs/cardTriggers.js";
 import { setupSourceCardAnimations } from "../effects/sourceCardAnimations.js";
 import { setupTargetIndicators } from "./targetIndicator.js";
+import { setupSourceDamageEffects } from "../effects/sourceDamageEffects.js";
 
 /**
  * 初始化技能动画定义和绑定
  * @param {AnimationPlayer} animation - 动画播放器实例
  */
 export function initSkillAnimations(animation) {
+	const damageEffects = setupSourceDamageEffects({ lib, game, ui });
 	// 数字特效播放函数
 	animation.playLoseHp = player => {
 		if (!player) return;
@@ -35,12 +37,7 @@ export function initSkillAnimations(animation) {
 	};
 
 	animation.playDamageNumber = (player, num) => {
-		if (!player || !num || num <= 1 || num > 9 || !lib.config.extension_HH优化_newDecadeStyle) return;
-		const isNewStyle = lib.config.extension_HH优化_newDecadeStyle !== "off";
-		const animName = isNewStyle ? "globaltexiao/shanghaishuzi/SZN_shuzi" : "globaltexiao/shanghaishuzi/shuzi";
-		const options = { speed: 0.6, scale: 0.4, parent: player };
-		if (isNewStyle) options.y = 20;
-		animation.playSpine({ name: animName, action: String(num) }, options);
+		if (player) return damageEffects.number(player, num);
 	};
 
 	setupTargetIndicators({ lib, game, ui, animation, getConfig: () => decadeUI.config.chupaizhishi });

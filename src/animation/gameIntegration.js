@@ -33,8 +33,6 @@ const priorityMap = {
 	SF_xuanzhong_eff_dajiangjun: Priority.HIGH,
 	"ol-selected-swords/FX_paiju_guoduhu": Priority.HIGH,
 	"globaltexiao/huifushuzi/shuzi2": Priority.HIGH,
-	"globaltexiao/shanghaishuzi/shuzi": Priority.HIGH,
-	"globaltexiao/shanghaishuzi/SZN_shuzi": Priority.HIGH,
 };
 
 /** @type {Map<string, string|Function[]>} 资源加载状态映射 */

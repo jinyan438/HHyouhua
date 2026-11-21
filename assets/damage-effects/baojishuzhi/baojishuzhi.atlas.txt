@@ -1,0 +1,13 @@
+baojishuzhi.png
+size:512,64
+filter:Linear,Linear
+1shuzi/1shuzi_00000
+bounds:328,8,46,26
+offsets:2,24,52,72
+rotate:90
+1shuzi/1shuzi_00010
+bounds:254,2,52,72
+rotate:90
+baojiqidi/baojiqidi_00
+bounds:2,18,250,36
+offsets:25,65,320,170
