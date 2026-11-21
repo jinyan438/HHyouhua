@@ -6,6 +6,7 @@
 import { lib, game, ui, get, _status } from "noname";
 import { refreshCardSkin } from "../../overrides/card.js";
 import { parseInputValue } from "../utils.js";
+import { originalHandScale, originalDiscardScale } from "../../ui/originalCards.js";
 
 /**
  * 幻影出牌点击处理
@@ -63,7 +64,7 @@ export function onHandTipHeightUpdate() {
  * @this {HTMLElement} 输入框元素
  */
 export function onCardScaleBlur() {
-	const value = parseInputValue(this, 0.18, 0.1, 1, 2);
+	const value = parseInputValue(this, originalHandScale, 0.1, 1, 5);
 	game.saveConfig("extension_HH优化_cardScale", value);
 	if (window.decadeUI) {
 		decadeUI.zooms.card = decadeUI.getCardBestScale();
@@ -76,7 +77,7 @@ export function onCardScaleBlur() {
  * @this {HTMLElement} 输入框元素
  */
 export function onDiscardScaleBlur() {
-	const value = parseInputValue(this, 0.18, 0.1, 1, 2);
+	const value = parseInputValue(this, originalDiscardScale, 0.1, 1, 5);
 	game.saveConfig("extension_HH优化_discardScale", value);
 	if (window.decadeUI) {
 		decadeUI.layout.updateDiscard();

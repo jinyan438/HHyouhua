@@ -2,6 +2,7 @@
  * @fileoverview 卡牌工具函数，提供卡牌临时花色点数显示、特效播放等功能
  */
 import { lib, game, ui, get, ai, _status } from "noname";
+import { applyOriginalGlyphs } from "./originalCards.js";
 
 /**
  * 卡牌临时花色点数显示
@@ -38,6 +39,7 @@ export function cardTempSuitNum(card, suit, number, elementUtil) {
 	snnode.$num.innerHTML = number ? get.strNumber(number) : "▣";
 	snnode.$suit.innerHTML = suit ? get.translation(suit) : "◈";
 	card.dataset.tempsn = suit;
+	if (card.classList.contains("hh-original-card")) applyOriginalGlyphs(snnode, suit, number, lib.assetURL);
 }
 
 /**

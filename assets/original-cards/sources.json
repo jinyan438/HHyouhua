@@ -1,0 +1,481 @@
+{
+  "sourceClient": "E:/AI/sanguosha/sanguosha2/work/main.js",
+  "clientSha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+  "cardSize": [
+    126,
+    174
+  ],
+  "designHeight": 750,
+  "handGap": 0,
+  "centralScale": 0.87,
+  "centralGap": 5,
+  "numberRect": [
+    5,
+    7,
+    18,
+    22
+  ],
+  "suitRect": [
+    2,
+    30,
+    24,
+    20
+  ],
+  "files": [
+    {
+      "file": "sha.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\sha_png.png",
+      "sha256": "03da234ec3bc67704aa531cbdad0c628dd4e04ff6a9ba2f02dfeb7db0d8d82c0",
+      "bytes": 28420
+    },
+    {
+      "file": "shan.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\shan_png.png",
+      "sha256": "89b269ea4e312bac3bca99a481f9edfe7f1b0db6c9063f4df5d0725077640672",
+      "bytes": 27306
+    },
+    {
+      "file": "tao.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\tao_png.png",
+      "sha256": "150c16dd5c0ac3471ea47cde2b3b118f019e269823e82073db70494f2ce8140c",
+      "bytes": 25328
+    },
+    {
+      "file": "bagua.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\baguazhen_png.png",
+      "sha256": "85143aaf70249f7cc93b3571158c9b4c3188761ae157e32686628523598cb03d",
+      "bytes": 19837
+    },
+    {
+      "file": "jueying.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\jueying_png.png",
+      "sha256": "d5320d85c9be8401f36ab9be0d68e0384cc23af1985d4d7127a8b92fb00158b1",
+      "bytes": 21602
+    },
+    {
+      "file": "dilu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\dilu_png.png",
+      "sha256": "016b12ce6f303f4fce2ce2061d1df98c7b34247ef060ec654f1a01df565436b8",
+      "bytes": 19982
+    },
+    {
+      "file": "zhuahuang.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhuahuangfeidian_png.png",
+      "sha256": "1a6d94492dc697e61b1826e0be5c2bee34f1fc3467ba97fc6b13b926b08622df",
+      "bytes": 23755
+    },
+    {
+      "file": "chitu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\chitu_png.png",
+      "sha256": "b1786c4d1a48762de9c3fb7ea03a5a008c7991c251fab04b570ec6aad1fb68b2",
+      "bytes": 21986
+    },
+    {
+      "file": "dawan.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\dawan_png.png",
+      "sha256": "7b740ad2cc25371a9dfec415eefe1c286149e1357f21d098af5108becff97860",
+      "bytes": 22469
+    },
+    {
+      "file": "zixin.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zixing_png.png",
+      "sha256": "17663efa530e6fda65eaf7b9fe67e1323afed779fff76c7c29bb24d268768a66",
+      "bytes": 21687
+    },
+    {
+      "file": "zhuge.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhugeliannu_png.png",
+      "sha256": "e3b87e9cc3ee8e6200b41813f95815ab48ee36015d335662931d58d343d7248f",
+      "bytes": 22662
+    },
+    {
+      "file": "cixiong.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\cixiongshuanggujian_png.png",
+      "sha256": "3519b10d4357f4877dfb11867bbaff5eb1f3730745305f5d73bcdbdff5e3cd24",
+      "bytes": 22414
+    },
+    {
+      "file": "qinggang.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\qinggangjian_png.png",
+      "sha256": "b70ddd0684e3a42e146662a38c6b92af8f9979d992b113d06d30ef8d779b041b",
+      "bytes": 19920
+    },
+    {
+      "file": "qinglong.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\qinglongyanyuedao_png.png",
+      "sha256": "613c5e9cc3b326ebd4e6bd2deaed084856ba5a541402283b1689c96f3b7b36f1",
+      "bytes": 21638
+    },
+    {
+      "file": "zhangba.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhangbashemao_png.png",
+      "sha256": "7be0eb2fdf00c129f4d99bba83f175aa627a660fc7a9ebf6a54362db8e0a3bc8",
+      "bytes": 21036
+    },
+    {
+      "file": "guanshi.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\guanshifu_png.png",
+      "sha256": "3fcec10f5a5ec32ae37c9a35895053fc254e935b66d561a969e2e6e10d3ec687",
+      "bytes": 20315
+    },
+    {
+      "file": "fangtian.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\fangtianhuaji_png.png",
+      "sha256": "8ab4554c369ff93ccba507c6e29c584b11986ce31103f3e4aafed0e25c8b8d17",
+      "bytes": 21305
+    },
+    {
+      "file": "qilin.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\qilingong_png.png",
+      "sha256": "2df62e6e74c8bf18e555cee2b3c2a4658f5fbe6aff1ff1c4af1de7b70d1f63e3",
+      "bytes": 20590
+    },
+    {
+      "file": "wugu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wugufengdeng_png.png",
+      "sha256": "7c34b3d71cf3c7783cce4a493b8c38ab6452e6aad9c3e3ae1b601fbf1a5912e2",
+      "bytes": 23534
+    },
+    {
+      "file": "taoyuan.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\taoyuanjieyi_png.png",
+      "sha256": "23ea5c5d6692140939d499c168d4819de2eac73b2b656cc26b26a3d361abeec1",
+      "bytes": 26129
+    },
+    {
+      "file": "nanman.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\nanmanruqin_png.png",
+      "sha256": "ac5bcdc81421d931f40b2c0e5c60aed9c984752e5cc934d289ac609ab45ecb78",
+      "bytes": 25549
+    },
+    {
+      "file": "wanjian.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wanjianqifa_png.png",
+      "sha256": "ae963d7c8ed206693a82418cf72c8896e4b85d4c843e1431cc78c6c94d678ba4",
+      "bytes": 26671
+    },
+    {
+      "file": "wuzhong.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wuzhongshengyou_png.png",
+      "sha256": "48b951e7dda9a77b5512ecfe4658b97d6fdb62eb11ec648f850dbfa102c2d13f",
+      "bytes": 25032
+    },
+    {
+      "file": "juedou.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\juedou_png.png",
+      "sha256": "38535a72d7d05e2b2667791fd99525d647257c5fcf0e862273f13eb9914f1840",
+      "bytes": 24787
+    },
+    {
+      "file": "shunshou.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\shunshouqianyang_png.png",
+      "sha256": "84ebec4df7dad343146b54d2bd6b0fb87fbdac3e3b3463fa3bdd03970df91841",
+      "bytes": 26893
+    },
+    {
+      "file": "guohe.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\guohechaiqiao_png.png",
+      "sha256": "1c51c50525c3d284fd74423efc1574808fbf6698e3e388af8601073b839737dd",
+      "bytes": 24086
+    },
+    {
+      "file": "jiedao.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\jiedaosharen_png.png",
+      "sha256": "b8a211b4d913912d976d2b3d035c64e558ab1920094ff407f977aff06381dee3",
+      "bytes": 21891
+    },
+    {
+      "file": "wuxie.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wuxiekeji_png.png",
+      "sha256": "515053a46704ab1f31787edcac1db1e1da232965e0866bee9d1868de6b3b6e25",
+      "bytes": 26215
+    },
+    {
+      "file": "lebu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\lebusishu_png.png",
+      "sha256": "70a484e35afcf3d28133465ad78e5a6e5b21684aa61d8eb4d3ec2b3c3ffc4568",
+      "bytes": 24064
+    },
+    {
+      "file": "shandian.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\shandian_png.png",
+      "sha256": "d6a19b3e37ef885e7426cd57c08a3e2557d259a9d41d99be6e70b38d62881fc1",
+      "bytes": 16009
+    },
+    {
+      "file": "hanbing.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\hanbingjian_png.png",
+      "sha256": "889cfc3a9dcf52db90ecd65d3b8c6ebf297720913dc1960b47964eae048a7a21",
+      "bytes": 21038
+    },
+    {
+      "file": "renwang.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\renwangdun_png.png",
+      "sha256": "71b607d6a8c9292cf130ca014c4dce72796abbe791f77cc59904e8ea6f3d9120",
+      "bytes": 22500
+    },
+    {
+      "file": "jiu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\jiu_png.png",
+      "sha256": "5bde79835d00e813afca9ae37e39d11a7040a72a698eee0e2979bee03c21ba9b",
+      "bytes": 25872
+    },
+    {
+      "file": "hualiu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\hualiu_png.png",
+      "sha256": "2b0d853796d440206aeba19ce7ce262bcad69c46b6d6ab3dd251f5eb25712315",
+      "bytes": 21528
+    },
+    {
+      "file": "baiyin.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\baiyinshizi_png.png",
+      "sha256": "0511b7c442cfd712fa52e807f7f0a9a94f4faf453f7dab44b82a473e9ba45cbf",
+      "bytes": 23111
+    },
+    {
+      "file": "tengjia.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\tengjia_png.png",
+      "sha256": "951541b7fc6a8aa8b4de721ec978ad03e20840dd80722639ec0a92bb00093056",
+      "bytes": 20971
+    },
+    {
+      "file": "guding.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\gudingdao_png.png",
+      "sha256": "3742de021e81441288a025802861458dd54aa1499c988024c8d3a2932b9a6449",
+      "bytes": 19989
+    },
+    {
+      "file": "zhuque.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhuqueyushan_png.png",
+      "sha256": "931f5f8b7e43c3c55858b98ea195cdca0d405a77793adffaa3bbca36bb2a7ae4",
+      "bytes": 22945
+    },
+    {
+      "file": "huogong.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\huogong_png.png",
+      "sha256": "9470edb60aecfb6888b5ebc167561abba485c123f3cb390da88d2e2d9d68c8ff",
+      "bytes": 23354
+    },
+    {
+      "file": "tiesuo.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\tiesuolianhuan_png.png",
+      "sha256": "25b3915add6f5fd67cd13e239d2f4977359977948fb5f2a7233d9713f25e5c8e",
+      "bytes": 28522
+    },
+    {
+      "file": "bingliang.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\bingliangcunduan_png.png",
+      "sha256": "3a830c16d3d1935df90aceca74c543d553cbad6be07ab3eb87f61ca662ef5b89",
+      "bytes": 23596
+    },
+    {
+      "file": "muniu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\muniuliuma_png.png",
+      "sha256": "ae210488fb8fb6c18f42a28af87bbf69db1f0604488c8579dac08d46a51c690e",
+      "bytes": 23098
+    },
+    {
+      "file": "sha_fire.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\huosha_png.png",
+      "sha256": "e614ff5086113ae9be770b6992520c211be086294555a926596b8dc139fc0569",
+      "bytes": 28766
+    },
+    {
+      "file": "sha_thunder.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\leisha_png.png",
+      "sha256": "b4c3e666c10e611b6467ebeddec696c8446d1f1c34fb069ea665c2a8d7a0cb62",
+      "bytes": 28606
+    },
+    {
+      "file": "sha_ice.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\bingsha_png.png",
+      "sha256": "224575d8ded73b68c893a4c3c64c0c31ae6150a1b2174d33b4f8e1fe790088f6",
+      "bytes": 28403
+    },
+    {
+      "file": "black_10.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_10.png",
+      "sha256": "fa709290469961f89021cd57894f4ce4f51a1a7a06e700d607823b603e2b3042",
+      "bytes": 430
+    },
+    {
+      "file": "black_2.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_2.png",
+      "sha256": "de3aa6b212dd20859419e75037e1b1cf565f170ca12a5fc6feacf15364239fbd",
+      "bytes": 398
+    },
+    {
+      "file": "black_3.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_3.png",
+      "sha256": "b853d58b1b731088068ea4c65cbd243480511e3bd4f5e41a3205ebddca29cf04",
+      "bytes": 478
+    },
+    {
+      "file": "black_4.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_4.png",
+      "sha256": "173c48128d3bf0cc0b9b467dae4ed956f67ae1e77c98a5b27f96b60cdbfe1545",
+      "bytes": 398
+    },
+    {
+      "file": "black_5.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_5.png",
+      "sha256": "de22e8f804d8e5d2f719052df3fb3c58cfd52c80767941975930e128e1ba406c",
+      "bytes": 438
+    },
+    {
+      "file": "black_6.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_6.png",
+      "sha256": "5e9a2cc8f41dd806d4e38aabd04e794ffcb756384b54f57ec3f57f7fc2e7324b",
+      "bytes": 508
+    },
+    {
+      "file": "black_7.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_7.png",
+      "sha256": "fe36c34cf8e2df287875764534611daee9a3a1ee8812006a99e3dc3400341169",
+      "bytes": 390
+    },
+    {
+      "file": "black_8.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_8.png",
+      "sha256": "843ee32112638e1aeaa1bda7088f820ee505cbee6a726597cd67b9ee8b9b6440",
+      "bytes": 513
+    },
+    {
+      "file": "black_9.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_9.png",
+      "sha256": "0f226b10bc27f84415b94677c43e36fdd032455859c26a6633e10ac044d62d85",
+      "bytes": 503
+    },
+    {
+      "file": "black_a.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_a.png",
+      "sha256": "0b12d69aaf576526055657b476fa90ba2429fdc7fca7028d1164b8db8abd45b4",
+      "bytes": 496
+    },
+    {
+      "file": "black_j.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_j.png",
+      "sha256": "a017012e76de0452be79fe9edb4586b260a1c1c928f5b1252067b271eabed943",
+      "bytes": 340
+    },
+    {
+      "file": "black_k.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_k.png",
+      "sha256": "7c79306882232532d5c8ed0b4585aa83a60e47e05868874c5e7747a437656393",
+      "bytes": 443
+    },
+    {
+      "file": "black_q.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_q.png",
+      "sha256": "5e6a8abfc3dbe3f82f3ae30f96df4c12398c45c2cf21f8b3474e4a6b78586fb3",
+      "bytes": 503
+    },
+    {
+      "file": "club.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\club.png",
+      "sha256": "554e43681c987bbeb4ef197d842d3f596adf1ee01c9cab6b8631e437e3d63bf4",
+      "bytes": 563
+    },
+    {
+      "file": "diamond.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\diamond.png",
+      "sha256": "14413c634686fbdc1ce13506e2064416f2911123113003fb26a00f01bd33bc43",
+      "bytes": 445
+    },
+    {
+      "file": "heart.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\heart.png",
+      "sha256": "706429744098e716c4bfb1c3e2e22591db3d28bc2fcab24eb5c5971b5595c44a",
+      "bytes": 554
+    },
+    {
+      "file": "red_10.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_10.png",
+      "sha256": "7d9f17ac0aabbd8dada229329ac12d46181f409786c72c84498f4763c2d0d744",
+      "bytes": 640
+    },
+    {
+      "file": "red_2.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_2.png",
+      "sha256": "d2e008f99bf404dbb9541d91e92b4f460f05c5b4f24ae3d810d07d9c27c817e7",
+      "bytes": 589
+    },
+    {
+      "file": "red_3.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_3.png",
+      "sha256": "7f5d4b9cdab8e0c673cf9c046a3a521494b07e0186dc89d75adbf5c8d40ce812",
+      "bytes": 705
+    },
+    {
+      "file": "red_4.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_4.png",
+      "sha256": "4d1f67fc50a3645eab152260e9ff577571d7d9e5a82856b264b7baaba1f3d79a",
+      "bytes": 566
+    },
+    {
+      "file": "red_5.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_5.png",
+      "sha256": "2959dfe5e60a88efed4377d64b4e357c35a1f0180075adc522f9e85ac530feb0",
+      "bytes": 682
+    },
+    {
+      "file": "red_6.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_6.png",
+      "sha256": "4ab87bb8d2b21378a78a918516292969eaac192d215462a9ce82167014d7860c",
+      "bytes": 723
+    },
+    {
+      "file": "red_7.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_7.png",
+      "sha256": "331fa8724cdebcb801698e00e5f1be8f616a7a5c9f6d95d8aa8cf000e4e433eb",
+      "bytes": 628
+    },
+    {
+      "file": "red_8.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_8.png",
+      "sha256": "7a8351cd3d57e2759bd4e5bbf97adcfd7409a4f48a1e07aaed88ac0ee9fec064",
+      "bytes": 700
+    },
+    {
+      "file": "red_9.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_9.png",
+      "sha256": "0b6cc28b8e741601e124a874877080848c6d52e97195098514b908e2cbceac99",
+      "bytes": 714
+    },
+    {
+      "file": "red_a.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_a.png",
+      "sha256": "23196f37f0a2d3825564a204d6263d7132022b3d4af5980fcfb99d31670e4566",
+      "bytes": 695
+    },
+    {
+      "file": "red_j.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_j.png",
+      "sha256": "624f500b8f954bfbf9020a233f19aa2ceef0f7d4dddd9ac324b13a5dc8885e88",
+      "bytes": 482
+    },
+    {
+      "file": "red_k.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_k.png",
+      "sha256": "6f4510382535c9863b2b972151a8509cb96c568fe9cb208370271ff1cc454ece",
+      "bytes": 628
+    },
+    {
+      "file": "red_q.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_q.png",
+      "sha256": "6063851add84a5d2620dd803848b41a60bf5ea28a64a199c3cb02e7c17f439fb",
+      "bytes": 733
+    },
+    {
+      "file": "spade.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\spade.png",
+      "sha256": "e312763d61d2f4ba7c14c004ecae40ea06a7417518912349cd75362d96326548",
+      "bytes": 452
+    }
+  ],
+  "methods": {
+    "xvi.computeHandCard": "a097c22e0377922e6beb5088ca7ce88ad148a8fbc25a39c9f864c471e319d324",
+    "GMt.layoutStackCardUis": "2dade58d42ee9a1b934e780bc646889c2bb4483a2158b8c2c3fbf6cc5ec19bf9",
+    "Rns.layout": "91250fa333d6f87d67b1098b369394f8be2fffbf6001e370ed132dbbb5f56584"
+  }
+}

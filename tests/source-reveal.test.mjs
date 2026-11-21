@@ -82,3 +82,12 @@ test('ownership stops at unrelated card/phase boundaries and tolerates cyclic pa
 	const cycle = { name: 'helper' }; cycle.parent = cycle;
 	assert.equal(getSourceRevealOwner({ parent: cycle }, lib), null);
 });
+
+test('public central reveals ignore the disabled discard size setting', async () => {
+	const h = fixture();
+	h.context.lib.config.extension_HH优化_discardScale = .9;
+	const shown = h.reveal(4);
+	const scale = Number(shown.node.style.transform.match(/scale\(([^)]+)\)/)[1]);
+	assert.ok(Math.abs(scale - 650 / 750 * .87) < 1e-12);
+	await h.after[0]();
+});

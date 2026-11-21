@@ -9,6 +9,7 @@ import { element } from "../utils/element.js";
 import { layoutHandDraws, layoutDrawCards } from "../ui/layout-utils.js";
 import { cardTempSuitNum, tryAddPlayerCardUseTag } from "../ui/card-utils.js";
 import { showHandTip } from "../ui/handtip.js";
+import { originalHandScale, originalCardLayout } from "../ui/originalCards.js";
 
 /**
  * 注册工具模块到decadeUI
@@ -75,32 +76,20 @@ export const registerDecadeUIUtilityModule = decadeUI => {
 	decadeUI.tryAddPlayerCardUseTag = (card, player, event) => tryAddPlayerCardUseTag(card, player, event, decadeUI);
 
 	/**
-	 * 获取卡牌缩放配置
-	 * @returns {number} 缩放比例
-	 */
-	const getCardScale = () => lib.config?.extension_HH优化_cardScale ?? 0.18;
-
-	/**
 	 * 获取卡牌最佳缩放比例
 	 * @param {Object} size - 尺寸对象
 	 * @returns {number} 缩放比例
 	 */
 	decadeUI.getCardBestScale = size => {
 		size = size?.height ? size : decadeUI.getHandCardSize();
-		return Math.min((decadeUI.get.bodySize().height * getCardScale()) / size.height, 1);
+		return (decadeUI.get.bodySize().height * originalHandScale) / size.height;
 	};
 
 	/**
 	 * 获取手牌尺寸
-	 * @param {boolean} useDefault - 是否使用默认值
 	 * @returns {Object} 包含width和height的尺寸对象
 	 */
-	decadeUI.getHandCardSize = (useDefault = false) => {
-		const defaultSize = { width: 108, height: 150 };
-		const style = decadeUI.sheet.getStyle(".media_defined > .card") || decadeUI.sheet.getStyle(".hand-cards > .handcards > .card");
-		if (!style) return useDefault ? defaultSize : { width: 0, height: 0 };
-		return { width: parseFloat(style.width), height: parseFloat(style.height) };
-	};
+	decadeUI.getHandCardSize = () => ({ width: originalCardLayout.width, height: originalCardLayout.height });
 };
 
 /**

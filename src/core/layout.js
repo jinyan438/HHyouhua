@@ -2,18 +2,7 @@
  * @fileoverview 布局模块，负责手牌和弃牌区的布局计算与更新
  */
 import { lib, game, ui, get, ai, _status } from "noname";
-
-/**
- * 获取当前样式配置
- * @returns {string} 样式名称
- */
-const getStyle = () => decadeUI?.config?.newDecadeStyle ?? lib.config.extension_HH优化_newDecadeStyle;
-
-/**
- * 获取弃牌缩放比例
- * @returns {number} 缩放比例
- */
-const getDiscardScale = () => lib.config?.extension_HH优化_discardScale ?? 0.14;
+import { originalHandRow, originalCentralRow, originalDiscardScale } from "../ui/originalCards.js";
 
 /**
  * 弃牌区最大宽度占屏幕宽度的比例
@@ -54,32 +43,13 @@ export function createLayoutModule() {
 
 			const bounds = decadeUI.boundsCaches.hand;
 			bounds.check();
-			const { width: pw, cardWidth: cw, cardHeight: ch, cardScale: cs, x: boundsX } = bounds;
+			const { width: pw, cardWidth: cw, cardHeight: ch, cardScale: cs } = bounds;
 			const csw = cw * cs;
 			const y = Math.round((ch * cs - ch) / 2);
-			let xMargin = csw + 2;
-			let xStart = (csw - cw) / 2;
-			const totalW = cards.length * csw + (cards.length - 1) * 2;
+			const xMargin = originalHandRow(cards.length, pw, csw).step;
+			const xStart = (csw - cw) / 2;
+			const totalW = cards.length * csw;
 			const limitW = pw;
-			let expand = false;
-
-			if (totalW > limitW) {
-				xMargin = csw - Math.abs(limitW - csw * cards.length) / (cards.length - 1);
-				if (lib.config.fold_card) {
-					const foldMin = parseFloat(lib.config.extension_HH优化_handFoldMin) || 9;
-					const min = cs * foldMin;
-					if (xMargin < min) {
-						expand = true;
-						xMargin = min;
-					}
-				}
-			} else {
-				const style = getStyle();
-				const shouldCenter = style === "codename" || ((style === "on" || style === "othersOff") && !lib.config.phonelayout);
-				if (shouldCenter) {
-					xStart = (ui.arena.offsetWidth - totalW) / 2 - boundsX;
-				}
-			}
 
 			let selectedIndex = -1,
 				spreadOffsetLeft = 0,
@@ -87,7 +57,7 @@ export function createLayoutModule() {
 				baseShift = 0;
 			const folded = totalW > limitW && xMargin < csw - 0.5;
 
-			if (folded && !expand && typeof ui.getSpreadOffset === "function") {
+			if (folded && typeof ui.getSpreadOffset === "function") {
 				const spread = ui.getSpreadOffset(cards, { cardWidth: csw, currentMargin: xMargin });
 				({ spreadIndex: selectedIndex, spreadLeft: spreadOffsetLeft, spreadRight: spreadOffsetRight } = spread);
 				if (selectedIndex !== -1) {
@@ -114,16 +84,9 @@ export function createLayoutModule() {
 			});
 
 			const container = ui.handcards1Container;
-			if (expand) {
-				container.classList.add("scrollh");
-				container.style.overflowX = "scroll";
-				container.style.overflowY = "hidden";
-				handNode.style.width = `${Math.round(cards.length * xMargin + (csw - xMargin))}px`;
-			} else {
-				container.classList.remove("scrollh");
-				container.style.overflowX = container.style.overflowY = "";
-				handNode.style.width = "100%";
-			}
+			container.classList.remove("scrollh");
+			container.style.overflowX = container.style.overflowY = "";
+			handNode.style.width = "100%";
 			game.hhCardDistribution?.updateHandWidth(handNode.style.width);
 		},
 
@@ -146,24 +109,18 @@ export function createLayoutModule() {
 			const bounds = decadeUI.boundsCaches.arena;
 			bounds.check();
 			const { width: pw, height: ph, cardWidth: cw, cardHeight: ch } = bounds;
-			const cs = Math.min((decadeUI.get.bodySize().height * getDiscardScale()) / ch, 1);
+			const cs = (decadeUI.get.bodySize().height * originalDiscardScale) / ch;
 			const csw = cw * cs;
 			const y = Math.round((ph - ch) / 2);
 
 			// 弃牌区最大宽度限制为屏幕宽度的70%
 			const maxWidth = pw * DISCARD_MAX_WIDTH_RATIO;
-			const totalW = cards.length * csw + (cards.length - 1) * 2;
 			// 实际可用宽度取最大宽度限制和屏幕宽度的较小值
 			const limitW = Math.min(maxWidth, pw);
 
-			let xMargin = csw + 2;
-			// 起始位置：居中显示
-			let xStart = (pw - Math.min(totalW, limitW)) / 2 + (csw - cw) / 2;
-
-			// 超出限制宽度时，压缩卡牌间距实现折叠效果
-			if (totalW > limitW) {
-				xMargin = (limitW - csw) / (cards.length - 1);
-			}
+			const row = originalCentralRow(cards.length, limitW, csw, cs / 0.87);
+			const xMargin = row.step;
+			const xStart = (pw - limitW) / 2 + row.start + (csw - cw) / 2;
 
 			cards.forEach((card, i) => {
 				const x = Math.round(xStart + i * xMargin);
@@ -185,7 +142,7 @@ export function createLayoutModule() {
 				return;
 			}
 			if (!ui.thrown.includes(card)) {
-				ui.thrown.unshift(card);
+				ui.thrown.push(card);
 				decadeUI.queueNextFrameTick(decadeUI.layoutDiscard, decadeUI);
 			}
 			card.classList.add("invalided");

@@ -1,0 +1,85 @@
+/* Original PNGs retain the client's 126 × 174 coordinate system. */
+.card.hh-original-card {
+	width: 126px;
+	height: 174px;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	box-sizing: content-box;
+	/* The PNG already contains the rounded edge and its shadow. */
+	box-shadow: none !important;
+	background-size: 100% 100%;
+	background-position: 0 0;
+	background-repeat: no-repeat;
+}
+#window .card.hh-original-card {
+	border-radius: 0;
+}
+
+body[data-style] .hand-cards > .handcards > .card {
+	left: 0;
+}
+
+.card.hh-original-card.infohidden {
+	background-image: var(--cardback-url) !important;
+}
+
+.card.hh-original-card > .suit-num,
+.card.hh-original-card > .tempsuitnum {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 28px;
+	height: 50px;
+	padding: 0;
+	margin: 0;
+	background: none;
+	text-shadow: none;
+	transform: none;
+	pointer-events: none;
+}
+
+.card.hh-original-card > .suit-num > br,
+.card.hh-original-card > .tempsuitnum > br {
+	display: none;
+}
+
+.card.hh-original-card > .suit-num > span,
+.card.hh-original-card > .tempsuitnum > span {
+	position: absolute;
+	display: block;
+	left: 5px;
+	top: 7px;
+	width: 18px;
+	height: 22px;
+	margin: 0;
+	padding: 0;
+	line-height: 22px;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-position: 0 0;
+}
+
+.card.hh-original-card > .suit-num > .suit,
+.card.hh-original-card > .tempsuitnum > .suit {
+	left: 2px;
+	top: 30px;
+	width: 24px;
+	height: 20px;
+}
+
+.card.hh-original-card [data-source-glyph="true"] {
+	font-size: 0 !important;
+	color: transparent !important;
+	text-shadow: none !important;
+	filter: none;
+}
+
+.card.hh-original-card:has(> .tempsuitnum) > .suit-num {
+	visibility: hidden;
+}
+
+.card.hh-original-card.infohidden > .suit-num,
+.card.hh-original-card.infohidden > .tempsuitnum {
+	visibility: hidden;
+}

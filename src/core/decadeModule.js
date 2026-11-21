@@ -134,6 +134,9 @@ export function initDecadeModule() {
 			this.css(`${decadeUIPath}src/styles/source-active-skill-glow.css`);
 		}
 
+		// Original card geometry follows every theme stylesheet.
+		this.css(`${decadeUIPath}src/styles/original-cards.css`);
+
 		// 初始化亮将钩子
 		this.prefixMark.setupShowCharacterHook();
 

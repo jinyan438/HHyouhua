@@ -236,8 +236,8 @@ body > .background {
 
 .hand-cards > .handcards > .card {
 	position: absolute;
-	width: 108px;
-	height: 150px;
+	width: 126px;
+	height: 174px;
 	margin: 0;
 	transition-property: transform, opacity, left, top;
 	z-index: 1;
@@ -333,13 +333,13 @@ body > .background {
 #arena > .card,
 #arena.oblongcard:not(.chess) > .card,
 #arena.oblongcard:not(.chess) .handcards > .card {
-	width: 108px;
-	height: 150px;
+	width: 126px;
+	height: 174px;
 }
 
 .button.card {
-	width: 108px;
-	height: 150px;
+	width: 126px;
+	height: 174px;
 	background-size: 100% 100%;
 	z-index: 1;
 }
@@ -354,8 +354,8 @@ body > .background {
 }
 
 .card {
-	width: 108px;
-	height: 150px;
+	width: 126px;
+	height: 174px;
 	border-radius: 2px;
 	box-shadow: 0 1px 4px black;
 	background-repeat: no-repeat !important;

@@ -1,6 +1,7 @@
 import { lib, game, ui, get, ai, _status } from 'noname';
 import { createRecoveryExtension, recoverPendingUpdate, updateConfig } from './updater.js';
 import { setupBackgrounds, refreshExtensionBackground } from './src/ui/backgrounds.js';
+import { migrateOriginalCardLayout, prioritizeOriginalCardMenu } from './src/ui/originalCards.js';
 
 export const type = 'extension';
 
@@ -20,6 +21,7 @@ export default async function () {
 	const legacyAlreadyLoaded = !!window.decadeModule && window.decadeUIName === '十周年UI';
 	if (!_status.importingExtension && lib.config.extension_HH优化_enable) {
 		await migratePreferences(lib, game);
+		await migrateOriginalCardLayout(lib, game);
 		delete lib.extensionMenu.extension_十周年UI;
 		const url = new URL(location.href);
 		if (url.searchParams.get('importExtensionName') === '十周年UI') {
@@ -31,7 +33,7 @@ export default async function () {
 	return {
 		name: 'HH优化',
 		editable: false,
-		config: applyMenuDefaults({ ...updateConfig(lib, game, ui, _status, info), ...hh.config, ...config }),
+		config: prioritizeOriginalCardMenu(applyMenuDefaults({ ...updateConfig(lib, game, ui, _status, info), ...hh.config, ...config })),
 		help: hh.help,
 		package: pack,
 		mainpackage: pack,

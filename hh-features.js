@@ -1,3 +1,4 @@
+import { originalCardStylePriority } from "./src/ui/originalCards.js";
 import { createKillComboPlayer } from './src/effects/killCombo.js';
 import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 import { setupRescueFlow } from './src/features/rescueFlow.js';
@@ -705,7 +706,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				`;
 
 				// 卡牌花色颜色加深样式
-				if (lib.config.extension_HH优化_enable_card_suit_color) {
+				if (!originalCardStylePriority && lib.config.extension_HH优化_enable_card_suit_color) {
 					const suitNumTop = getConfigValue('suit_num_top', 0);
 					const suitNumLeft = getConfigValue('suit_num_left', 0);
 					const redSuitColor = '#cb1d14';
@@ -964,7 +965,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				}
 
 				// 卡牌左上角扑克数字和花色柔化，优先覆盖HH优化的锐利阴影
-				if (lib.config.extension_HH优化_enable_card_suit_blur !== false) {
+				if (!originalCardStylePriority && lib.config.extension_HH优化_enable_card_suit_blur !== false) {
 					const suitBlurValue = Math.max(0, Math.min(2, getConfigFloat('card_suit_blur', 0.35)));
 					const suitShadowBlur = Math.max(0.2, suitBlurValue * 1.8).toFixed(2);
 					const suitImageEnabled = lib.config.extension_HH优化_enable_card_suit_image !== false;
@@ -1026,7 +1027,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				}
 
 				// 用图片替换卡牌左上角花色字体
-				if (lib.config.extension_HH优化_enable_card_suit_image !== false) {
+				if (!originalCardStylePriority && lib.config.extension_HH优化_enable_card_suit_image !== false) {
 					const suitImageSize = Math.max(8, Math.min(40, getConfigFloat('card_suit_image_size', 16)));
 					const suitImageBase = lib.assetURL + 'extension/HH优化/card suit/';
 					const suitImageVersion = '?hh_suit_image=1';
@@ -1132,7 +1133,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				}
 
 				// 用图片替换卡牌左上角点数字母
-				if (lib.config.extension_HH优化_enable_card_rank_image !== false) {
+				if (!originalCardStylePriority && lib.config.extension_HH优化_enable_card_rank_image !== false) {
 					const rankImageHeight = Math.max(12, Math.min(60, getConfigFloat('card_rank_image_height', 24)));
 					const rankImageWidth = Math.round(rankImageHeight * 45 / 60);
 					const rankImageBase = lib.assetURL + 'extension/HH优化/card shuzi/';
@@ -1276,7 +1277,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			window._speedControlUpdateStyle = updateCustomStyle;
 
 			const updateCardRankImages = function(root) {
-				const enabled = lib.config.extension_HH优化_enable_card_rank_image !== false;
+				const enabled = !originalCardStylePriority && lib.config.extension_HH优化_enable_card_rank_image !== false;
 				const scope = root && root.querySelectorAll ? root : document;
 				const rankSelector = '.card > .suit-num > span:first-child, .card > .suit-num > .num, .card > .tempsuitnum > .num, .card > .info:not(.gaintag) > span:last-child';
 				const cleanupSelector = '[data-hh-rank-image], [data-hh-rank-image-info]';
@@ -1381,7 +1382,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			if (window._HH_cardRankImageObserver && window._HH_cardRankImageObserver.disconnect) {
 				window._HH_cardRankImageObserver.disconnect();
 			}
-			if (document.body && typeof MutationObserver == 'function') {
+			if (!originalCardStylePriority && document.body && typeof MutationObserver == 'function') {
 				window._HH_cardRankImageObserver = new MutationObserver(function(mutations) {
 					for (let i = 0; i < mutations.length; i++) {
 						const mutation = mutations[i];
@@ -1446,7 +1447,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			});
 
 			// ========== 覆盖HH优化 online卡牌皮肤 ==========
-			if (HH_getConfig(config, 'enable_online_card_replace', true)) {
+			if (!originalCardStylePriority && HH_getConfig(config, 'enable_online_card_replace', true)) {
 				const hhOnlineCardSkinNames = [
 					'bagua', 'baiyin', 'bingliang', 'sha_ice', 'chitu', 'cixiong', 'dawan', 'dilu',
 					'fangtian', 'guanshi', 'guding', 'guohe', 'hanbing', 'hualiu', 'huogong', 'sha_fire',
@@ -1755,7 +1756,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			// 不在这里设置默认值，避免覆盖用户保存的配置
 			
 			// 强制禁用HH优化的卡背设置，让它不添加卡背样式
-			lib.config.extension_HH优化_cardbj = "kb1";
+			if (!originalCardStylePriority) lib.config.extension_HH优化_cardbj = "kb1";
 			
 			// ========== 手杀MVP结算画面 ==========
 			if (lib.config.extension_HH优化_enable_mvp) {
@@ -2374,16 +2375,6 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				'<li>• 将自定义音频文件放入该目录，文件名需与原音效文件名相同' +
 				'<li>• 如果扩展目录下没有对应音频，会自动使用游戏原音效' +
 				'<li>• 支持的音频格式：mp3, ogg, wav 等' +
-				'<li><hr>' +
-				'<li><strong>OL卡牌皮肤替换：</strong>' +
-				'<li>• 开启"替换OL卡牌皮肤"后，会在HH优化卡牌美化选择OL卡牌样式时优先使用HH优化的卡牌图' +
-				'<li>• 替换图位于 extension/HH优化/image/card-skins/online/，尺寸为133x186，已铺满边界且不含透明区域' +
-				'<li><hr>' +
-				'<li><strong>扑克字母花色柔化：</strong>' +
-				'<li>• 开启"柔化扑克字母花色"后，会轻微模糊卡牌左上角的字母、数字和花色，优先覆盖HH优化的锐利阴影' +
-				'<li>• 模糊强度默认0.35px，建议在0.25~0.6之间调整' +
-				'<li>• 开启"花色使用图片"后，花色会使用 extension/HH优化/card suit/ 中的四张图片，并可调整显示大小' +
-				'<li>• 开启"点数字母使用图片"后，会用 extension/HH优化/card shuzi/ 中的 red-A 到 red-K、black-A 到 black-K 图片替换点数字母' +
 				'<li><hr>' +
 				'<li><strong>HH优化样式覆盖：</strong>' +
 				'<li>• 武将宽度：设置武将卡牌宽度（80-200像素），只改宽度不改高度，图片用cover填充不变形' +

@@ -77,7 +77,7 @@ export const handTipHeight = {
 export const cardScale = {
 	name: "手牌大小",
 	intro: "输入0.10~1.00的小数，回车保存并生效",
-	init: "0.18",
+	init: "0.232",
 	input: true,
 	onblur: onCardScaleBlur,
 };
@@ -89,7 +89,7 @@ export const cardScale = {
 export const discardScale = {
 	name: "弃牌堆卡牌大小",
 	intro: "输入0.10~1.00的小数，回车保存并生效",
-	init: "0.14",
+	init: "0.20184",
 	input: true,
 	onblur: onDiscardScaleBlur,
 };
@@ -176,7 +176,6 @@ export const cardConfigs = {
 	handTipHeight,
 	cardScale,
 	discardScale,
-	handFoldMin,
 	cardPrettify,
 	cardkmh,
 	chupaizhishi,

@@ -5,6 +5,7 @@
  */
 import { lib, get } from "noname";
 import { cardSkinMeta } from "../../config/utils.js";
+import { applyOriginalCardFace } from "../../ui/originalCards.js";
 import {
 	getCardResources,
 	getSkinCache,
@@ -167,6 +168,7 @@ function applyDynamicSkin(cardElement, skinKey, filename) {
  * @param {Array|Object} card - 卡牌信息
  */
 export function applyCardSkin(cardElement, card) {
+	if (applyOriginalCardFace(cardElement, card, lib.assetURL)) return;
 	const cardName = Array.isArray(card) ? card[2] : card.name;
 	const cardNature = Array.isArray(card) ? card[3] : card.nature;
 

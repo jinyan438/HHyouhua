@@ -2,6 +2,7 @@
  * @fileoverview 卡牌样式模块，包含卡牌边框和卡牌背景样式管理
  */
 import { lib, game, ui, get, ai, _status } from "noname";
+import { originalCardStylePriority } from "./originalCards.js";
 
 // ==================== 动态样式元素引用 ====================
 
@@ -36,7 +37,7 @@ const updateStyle = (styleEl, css) => {
 const getBorderCSS = (borderName, selector, imageWidth) => {
 	if (!borderName || borderName === "off") return "";
 	const url = `${lib.assetURL}extension/HH优化/image/ui/card/${borderName}.png`;
-	return `${selector} { width: 108px; height: 150px; border: 1px solid; border-radius: 10px; border-image-source: url('${url}'); border-image-slice: 17; border-image-width: ${imageWidth}px; }`;
+	return `${selector} { width: 126px; height: 174px; border: 1px solid; border-radius: 10px; border-image-source: url('${url}'); border-image-slice: 17; border-image-width: ${imageWidth}px; }`;
 };
 
 /**
@@ -67,6 +68,7 @@ function isFeatureEnabled() {
  * @returns {string|null} 边框名称
  */
 function getBorderByPlayer(player, isMe) {
+	if (originalCardStylePriority) return null;
 	if (!player) return null;
 	if (isMe) {
 		const config = lib.config.extension_HH优化_cardkmh;
@@ -84,6 +86,7 @@ function getBorderByPlayer(player, isMe) {
  * @returns {string|null} 卡背名称
  */
 function getBgByPlayer(player, isMe) {
+	if (originalCardStylePriority) return null;
 	if (!player) return null;
 	if (isMe) {
 		return lib.config.extension_HH优化_cardbj || null;
@@ -106,8 +109,8 @@ export function applyCardBorder(card, player, isMe = false) {
 	if (border) {
 		const borderUrl = `${lib.assetURL}extension/HH优化/image/ui/card/${border}.png`;
 		Object.assign(card.style, {
-			width: "108px",
-			height: "150px",
+			width: "126px",
+			height: "174px",
 			border: "1px solid",
 			borderRadius: "10px",
 			borderImageSource: `url('${borderUrl}')`,
@@ -129,8 +132,8 @@ export function applyCardBorder(card, player, isMe = false) {
  * @returns {void}
  */
 export function updateCardStyles() {
-	const borderConfig = lib.config.extension_HH优化_cardkmh;
-	const cardBg = lib.config.extension_HH优化_cardbj;
+	const borderConfig = originalCardStylePriority ? "off" : lib.config.extension_HH优化_cardkmh;
+	const cardBg = originalCardStylePriority ? null : lib.config.extension_HH优化_cardbj;
 	const selector = ".hand-cards > .handcards > .card";
 
 	// 更新边框样式（关闭时清空）
@@ -152,7 +155,7 @@ export function setupCardStyles() {
 	const baseStyle = document.createElement("style");
 	baseStyle.innerHTML = `
 		.hand-cards > .handcards > .card {
-			margin: 0; width: 108px; height: 150px; position: absolute;
+			margin: 0; width: 126px; height: 174px; position: absolute;
 			transition-property: transform, opacity, left, top;
 			z-index: 51;
 		}

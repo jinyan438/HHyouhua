@@ -1,10 +1,11 @@
 // JiZhan uses the client's persistent central card stack (GMt), not a skill window.
+import { originalDiscardScale } from './originalCards.js';
 export const nativeRevealMotion = { cardWidth: 126, cardHeight: 174, scale: .87, gap: 5, duration: 250 };
 
-export function getSourceRevealLayout(width, height, count, cardWidth = 108, cardHeight = 150, scale = .87) {
+export function getSourceRevealLayout(width, height, count, cardWidth = 126, cardHeight = 174, scale = .87, unit = 1) {
 	const w = cardWidth * scale, h = cardHeight * scale;
 	const total = count * w;
-	const gap = total > width && count > 1 ? (width - total) / (count - 1) : nativeRevealMotion.gap;
+	const gap = total > width && count > 1 ? (width - total) / (count - 1) : nativeRevealMotion.gap * unit;
 	const left = total > width ? 0 : (width - total) >> 1;
 	const top = (height - h) >> 1;
 	let x = left;
@@ -35,11 +36,15 @@ function getBoard({ ui, lib, game }) {
 	function layout(session, animate = true) {
 		const bounds = globalThis.decadeUI?.boundsCaches?.arena;
 		bounds?.check?.();
-		const width = bounds?.cardWidth || 108, height = bounds?.cardHeight || 150;
-		const scale = nativeRevealMotion.scale * Math.min(1, (ui.arena.clientHeight * .3) / height);
-		const points = getSourceRevealLayout(ui.arena.clientWidth, ui.arena.clientHeight, session.items.length, width, height, scale);
+		const width = bounds?.cardWidth || 126, height = bounds?.cardHeight || 174;
+		const bodyHeight = globalThis.decadeUI?.get?.bodySize?.().height || ui.arena.clientHeight;
+		const scale = bodyHeight * originalDiscardScale / height;
+		const areaWidth = ui.arena.clientWidth * .7;
+		const points = getSourceRevealLayout(areaWidth, ui.arena.clientHeight, session.items.length, width, height, scale, scale / nativeRevealMotion.scale);
 		session.items.forEach((item, index) => {
 			const node = item.node, point = points[index];
+			point.x += (ui.arena.clientWidth - areaWidth) / 2 + (width * scale - width) / 2;
+			point.y += (height * scale - height) / 2;
 			const start = item.motion ? view.getComputedStyle(node).transform : node.style.transform || transform({ x: (ui.arena.clientWidth - width * scale) / 2, y: point.y, scale });
 			item.motion?.cancel();
 			node.style.width = width + 'px'; node.style.height = height + 'px';

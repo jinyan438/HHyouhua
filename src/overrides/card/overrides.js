@@ -42,6 +42,7 @@ export function applyCardOverrides() {
 export function cardCopy() {
 	const clone = baseCardCopy.apply(this, arguments);
 	clone.nature = this.nature;
+	if (clone.classList.contains("hh-original-card")) return clone;
 
 	const skinKey = lib.config.extension_HH优化_cardPrettify;
 	if (!skinKey || skinKey === "off") return clone;
