@@ -590,8 +590,8 @@
 }
 
 .player:not(.fullskin2):not(.double-character):not(.double):not([data-double="1"]):not([data-mode="guozhan"]) > .primary-avatar {
-	clip-path: inset(0 1px 0 0);
-	-webkit-clip-path: inset(0 1px 0 0);
+	clip-path: inset(0 2px 0 0);
+	-webkit-clip-path: inset(0 2px 0 0);
 }
 
 .player.fullskin2 > .primary-avatar {
