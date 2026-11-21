@@ -420,14 +420,12 @@ function createFlipCard(card, owner, x, y, scale, cardsetions, delay) {
 
 			if (card.classList.contains("decade-card")) {
 				node.classList.add("decade-card");
-				node.style.background = card.style.background;
-			} else if (card.classList.contains("fullimage")) {
-				node.classList.add("fullimage");
-				if (card.style.backgroundImage) {
-					node.style.backgroundImage = card.style.backgroundImage;
-					node.style.backgroundSize = card.style.backgroundSize;
-				} else {
-					node.style.background = card.style.background;
+			}
+			// A face set through backgroundImage may have an empty background shorthand.
+			node.style.background = card.style.background;
+			for (const property of card.style) {
+				if (property.startsWith("background-")) {
+					node.style.setProperty(property, card.style.getPropertyValue(property), card.style.getPropertyPriority(property));
 				}
 			}
 

@@ -2963,7 +2963,7 @@
 		"src/overrides/index.js": "49cf6a5ad88c717e3e5d91621425cd2be58f4ce7",
 		"src/overrides/lib.js": "32b33b6bf41d69fd1c65abfbdee3c183b7d450b8",
 		"src/overrides/moveAnimFix.js": "a91258df88bbb7aa0e8175587d72af052d32a092",
-		"src/overrides/player/animations.js": "9cd1eb178b075ec068d5e96db5dba62591106572",
+		"src/overrides/player/animations.js": "7f559098b23ce4415c08b3afa9e0f0a9c9420c26",
 		"src/overrides/player/base.js": "195347917923f6f91aad40a7b76f4da0aa97ee71",
 		"src/overrides/player/card-actions.js": "9ac2fb18f30b72aefeffdb1ac054a7123aa19965",
 		"src/overrides/player/card-movement.js": "fcb86eae337db11054ca4515bf246e3e94e84b10",
