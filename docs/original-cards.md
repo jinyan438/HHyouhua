@@ -1,6 +1,6 @@
 # 原版卡牌
 
-标准包 32 种、军争包 10 种实体牌，以及火杀、雷杀、冰杀使用本机 `E:/AI/sanguosha/extract/unity/sprite/assets/res/picture/cards/` 的原始 PNG。卡图、4 种花色、红黑各 13 种点数共 75 个文件逐字节复制到 `assets/original-cards/`，来源和 SHA-256 记录在 `sources.json`。实体牌仍使用引擎自身的花色与点数，不改牌堆构成；其它扩展牌继续使用原有皮肤。
+标准包 32 种、军争包 10 种实体牌，以及火杀、雷杀、冰杀使用本机 `E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk` 内 Laya 客户端 `res/assets/cards/cards.png` 图集的 PNG 版本。卡图、4 种花色、红黑各 13 种点数共 75 个文件按图集坐标无损切片到 `assets/original-cards/`，保留原始像素、透明通道与尺寸。来源 APK、图集及输出文件的 SHA-256、切片名称和坐标记录在 `sources.json`；使用 `python tools/import-original-cards.py <APK路径>` 可重新导入。实体牌仍使用引擎自身的花色与点数，不改牌堆构成；其它扩展牌继续使用原有皮肤。
 
 按原客户端 `Rns.layout`，数字位于 (5,7)，尺寸 18×22；花色位于 (2,30)，尺寸 24×20。图片保留透明通道，A/J/Q/K 使用原字形。复制牌、出牌、响应和判定沿用相同显示；临时花色点数也使用这组素材，未知数值保留文字回退，暗牌隐藏花色点数。
 

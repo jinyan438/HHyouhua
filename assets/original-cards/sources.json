@@ -24,458 +24,1592 @@
   "files": [
     {
       "file": "sha.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\sha_png.png",
-      "sha256": "03da234ec3bc67704aa531cbdad0c628dd4e04ff6a9ba2f02dfeb7db0d8d82c0",
-      "bytes": 28420
+      "source": "res/assets/cards/cards.png",
+      "sha256": "9a73380c45f8eb1f2771f877678e7e4f156f6c4d338e3226811013d3d3eb80b4",
+      "bytes": 39987,
+      "sourceFrame": "Sha_png.png",
+      "sourceRect": [
+        904,
+        1056,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "shan.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\shan_png.png",
-      "sha256": "89b269ea4e312bac3bca99a481f9edfe7f1b0db6c9063f4df5d0725077640672",
-      "bytes": 27306
+      "source": "res/assets/cards/cards.png",
+      "sha256": "5e90d791e5352613bf0e1f54c43decd441f0c6f47178dc719e625cd29af5086b",
+      "bytes": 39479,
+      "sourceFrame": "Shan_png.png",
+      "sourceRect": [
+        1032,
+        1408,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "tao.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\tao_png.png",
-      "sha256": "150c16dd5c0ac3471ea47cde2b3b118f019e269823e82073db70494f2ce8140c",
-      "bytes": 25328
+      "source": "res/assets/cards/cards.png",
+      "sha256": "8c01112e743adb45fdf2d09ec1970719981aeac6525b0ba7a2c42b254d99b7af",
+      "bytes": 37051,
+      "sourceFrame": "Tao_png.png",
+      "sourceRect": [
+        776,
+        1056,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "bagua.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\baguazhen_png.png",
-      "sha256": "85143aaf70249f7cc93b3571158c9b4c3188761ae157e32686628523598cb03d",
-      "bytes": 19837
+      "source": "res/assets/cards/cards.png",
+      "sha256": "3179b04dcaf90c6642934ecfb75ba1aaab516d549506356bf5bfd77a27701387",
+      "bytes": 28365,
+      "sourceFrame": "BaGuaZhen_png.png",
+      "sourceRect": [
+        1296,
+        176,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "jueying.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\jueying_png.png",
-      "sha256": "d5320d85c9be8401f36ab9be0d68e0384cc23af1985d4d7127a8b92fb00158b1",
-      "bytes": 21602
+      "source": "res/assets/cards/cards.png",
+      "sha256": "a5b1bb7616ec262e95f7531b0b42f64e257b232f17e535ccbaec95b62fb47dc9",
+      "bytes": 29925,
+      "sourceFrame": "JueYing_png.png",
+      "sourceRect": [
+        264,
+        1784,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "dilu.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\dilu_png.png",
-      "sha256": "016b12ce6f303f4fce2ce2061d1df98c7b34247ef060ec654f1a01df565436b8",
-      "bytes": 19982
+      "source": "res/assets/cards/cards.png",
+      "sha256": "40ca7177426b9422656dfc584cb68dc24c6e1b4a5b56789117bbdb9def2ff9b6",
+      "bytes": 27155,
+      "sourceFrame": "DiLu_png.png",
+      "sourceRect": [
+        392,
+        1784,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "zhuahuang.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhuahuangfeidian_png.png",
-      "sha256": "1a6d94492dc697e61b1826e0be5c2bee34f1fc3467ba97fc6b13b926b08622df",
-      "bytes": 23755
+      "source": "res/assets/cards/cards.png",
+      "sha256": "b3bd37cfa68e7855458ce9d6c9c877d0d73387de917e4a088fb73597423ea17f",
+      "bytes": 33161,
+      "sourceFrame": "ZhuaHuangFeiDian_png.png",
+      "sourceRect": [
+        908,
+        528,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "chitu.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\chitu_png.png",
-      "sha256": "b1786c4d1a48762de9c3fb7ea03a5a008c7991c251fab04b570ec6aad1fb68b2",
-      "bytes": 21986
+      "source": "res/assets/cards/cards.png",
+      "sha256": "cb8ac3acc4a979b5dff9731100e29c58eb80c89774c365b48421ffcea6da4eb5",
+      "bytes": 30540,
+      "sourceFrame": "ChiTu_png.png",
+      "sourceRect": [
+        420,
+        0,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "dawan.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\dawan_png.png",
-      "sha256": "7b740ad2cc25371a9dfec415eefe1c286149e1357f21d098af5108becff97860",
-      "bytes": 22469
+      "source": "res/assets/cards/cards.png",
+      "sha256": "aad1674a96121d3adc47a5a0f3cb65df269c7da43f7e89f6c061a83196ab0941",
+      "bytes": 31533,
+      "sourceFrame": "DaWan_png.png",
+      "sourceRect": [
+        392,
+        1608,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "zixin.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zixing_png.png",
-      "sha256": "17663efa530e6fda65eaf7b9fe67e1323afed779fff76c7c29bb24d268768a66",
-      "bytes": 21687
+      "source": "res/assets/cards/cards.png",
+      "sha256": "ada35168a4e2a0f5d173a734c184b6be321fd7f3b84aa704701c164e76b6d3f6",
+      "bytes": 30374,
+      "sourceFrame": "ZiXing_png.png",
+      "sourceRect": [
+        904,
+        880,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "zhuge.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhugeliannu_png.png",
-      "sha256": "e3b87e9cc3ee8e6200b41813f95815ab48ee36015d335662931d58d343d7248f",
-      "bytes": 22662
+      "source": "res/assets/cards/cards.png",
+      "sha256": "d9e35b3f0a6f9ed81430d81322e17bd6d296d1956d2bfe12b1f960f917e5a811",
+      "bytes": 31392,
+      "sourceFrame": "ZhuGeLianNu_png.png",
+      "sourceRect": [
+        932,
+        0,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "cixiong.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\cixiongshuanggujian_png.png",
-      "sha256": "3519b10d4357f4877dfb11867bbaff5eb1f3730745305f5d73bcdbdff5e3cd24",
-      "bytes": 22414
+      "source": "res/assets/cards/cards.png",
+      "sha256": "f9140bc7bdbd2dec7f976df1b27021621843e6c75ece87e481dcbdd084ba314e",
+      "bytes": 31780,
+      "sourceFrame": "CiXiongShuangGuJian_png.png",
+      "sourceRect": [
+        392,
+        1256,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "qinggang.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\qinggangjian_png.png",
-      "sha256": "b70ddd0684e3a42e146662a38c6b92af8f9979d992b113d06d30ef8d779b041b",
-      "bytes": 19920
+      "source": "res/assets/cards/cards.png",
+      "sha256": "a8326c3664f432efca0acdcb3f6bfa0d9604522030b9b0b07e45417f9a80d020",
+      "bytes": 28958,
+      "sourceFrame": "QingGangJian_png.png",
+      "sourceRect": [
+        1040,
+        176,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "qinglong.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\qinglongyanyuedao_png.png",
-      "sha256": "613c5e9cc3b326ebd4e6bd2deaed084856ba5a541402283b1689c96f3b7b36f1",
-      "bytes": 21638
+      "source": "res/assets/cards/cards.png",
+      "sha256": "1ed60c6097b0045e2104047b788057ad37126ca20911afe58893abebf08dcc4c",
+      "bytes": 30523,
+      "sourceFrame": "QingLongYanYueDao_png.png",
+      "sourceRect": [
+        1060,
+        0,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "zhangba.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhangbashemao_png.png",
-      "sha256": "7be0eb2fdf00c129f4d99bba83f175aa627a660fc7a9ebf6a54362db8e0a3bc8",
-      "bytes": 21036
+      "source": "res/assets/cards/cards.png",
+      "sha256": "581df42588734d6522b57256a0113126d1b01003ded6e71a99ff63ef6936d9e5",
+      "bytes": 30434,
+      "sourceFrame": "ZhangBaSheMao_png.png",
+      "sourceRect": [
+        776,
+        1760,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "guanshi.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\guanshifu_png.png",
-      "sha256": "3fcec10f5a5ec32ae37c9a35895053fc254e935b66d561a969e2e6e10d3ec687",
-      "bytes": 20315
+      "source": "res/assets/cards/cards.png",
+      "sha256": "5a46fbe85fb60c029e446f7f1acddf39353f77e956cfd3e88e330d83a7fa8ef6",
+      "bytes": 29109,
+      "sourceFrame": "GuanShiFu_png.png",
+      "sourceRect": [
+        520,
+        1590,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "fangtian.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\fangtianhuaji_png.png",
-      "sha256": "8ab4554c369ff93ccba507c6e29c584b11986ce31103f3e4aafed0e25c8b8d17",
-      "bytes": 21305
+      "source": "res/assets/cards/cards.png",
+      "sha256": "3fde597cbf973fd852450982ef7ae9abe1faaf0cd8765196600f48ff231ef4fa",
+      "bytes": 30600,
+      "sourceFrame": "FangTianHuaJi_png.png",
+      "sourceRect": [
+        520,
+        1062,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "qilin.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\qilingong_png.png",
-      "sha256": "2df62e6e74c8bf18e555cee2b3c2a4658f5fbe6aff1ff1c4af1de7b70d1f63e3",
-      "bytes": 20590
+      "source": "res/assets/cards/cards.png",
+      "sha256": "e073d92b9c394d7034fbd718fb4cdc672daa7ca9520a9ef148c3363c946771e6",
+      "bytes": 28850,
+      "sourceFrame": "QiLinGong_png.png",
+      "sourceRect": [
+        1036,
+        528,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "wugu.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wugufengdeng_png.png",
-      "sha256": "7c34b3d71cf3c7783cce4a493b8c38ab6452e6aad9c3e3ae1b601fbf1a5912e2",
-      "bytes": 23534
+      "source": "res/assets/cards/cards.png",
+      "sha256": "3400654a49e2e55cc3d5358390f5fab64c1dc9af1d2d95db754ab96ec405b369",
+      "bytes": 31293,
+      "sourceFrame": "WuGuFengDeng_png.png",
+      "sourceRect": [
+        784,
+        176,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "taoyuan.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\taoyuanjieyi_png.png",
-      "sha256": "23ea5c5d6692140939d499c168d4819de2eac73b2b656cc26b26a3d361abeec1",
-      "bytes": 26129
+      "source": "res/assets/cards/cards.png",
+      "sha256": "95c1144ec342c74ab34b0aae0607da1b09df220f60d8d1ac8481c9782b9b75a5",
+      "bytes": 38186,
+      "sourceFrame": "TaoYuanJieYi_png.png",
+      "sourceRect": [
+        648,
+        1056,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "nanman.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\nanmanruqin_png.png",
-      "sha256": "ac5bcdc81421d931f40b2c0e5c60aed9c984752e5cc934d289ac609ab45ecb78",
-      "bytes": 25549
+      "source": "res/assets/cards/cards.png",
+      "sha256": "5d76a8a4b0680262ff5b7d07359537715d929c7c3aa581eb81b2943b03d8917b",
+      "bytes": 34508,
+      "sourceFrame": "NanManRuQin_png.png",
+      "sourceRect": [
+        904,
+        1584,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "wanjian.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wanjianqifa_png.png",
-      "sha256": "ae963d7c8ed206693a82418cf72c8896e4b85d4c843e1431cc78c6c94d678ba4",
-      "bytes": 26671
+      "source": "res/assets/cards/cards.png",
+      "sha256": "18aa48773685c7491fb529929b5c36671d0e75aa6e0348a0af5ba4b584495544",
+      "bytes": 36959,
+      "sourceFrame": "WanJianQiFa_png.png",
+      "sourceRect": [
+        780,
+        528,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "wuzhong.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wuzhongshengyou_png.png",
-      "sha256": "48b951e7dda9a77b5512ecfe4658b97d6fdb62eb11ec648f850dbfa102c2d13f",
-      "bytes": 25032
+      "source": "res/assets/cards/cards.png",
+      "sha256": "3727c30811c89609734923b31557e8cccd55204b9be974ab6cbd85fde222edc5",
+      "bytes": 33093,
+      "sourceFrame": "WuZhongShengYou_png.png",
+      "sourceRect": [
+        648,
+        880,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "juedou.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\juedou_png.png",
-      "sha256": "38535a72d7d05e2b2667791fd99525d647257c5fcf0e862273f13eb9914f1840",
-      "bytes": 24787
+      "source": "res/assets/cards/cards.png",
+      "sha256": "f5af53ae0b5bf0c5ed6d3664f0864fb593e8da5111d7d7fb4ec37c4a110216e3",
+      "bytes": 34998,
+      "sourceFrame": "JueDou_png.png",
+      "sourceRect": [
+        136,
+        904,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "shunshou.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\shunshouqianyang_png.png",
-      "sha256": "84ebec4df7dad343146b54d2bd6b0fb87fbdac3e3b3463fa3bdd03970df91841",
-      "bytes": 26893
+      "source": "res/assets/cards/cards.png",
+      "sha256": "0beb9a58456ca903940b76e7fb43c1129704e7dee4c1988edcd4f7c252c1a925",
+      "bytes": 38118,
+      "sourceFrame": "ShunShouQianYang_png.png",
+      "sourceRect": [
+        1168,
+        176,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "guohe.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\guohechaiqiao_png.png",
-      "sha256": "1c51c50525c3d284fd74423efc1574808fbf6698e3e388af8601073b839737dd",
-      "bytes": 24086
+      "source": "res/assets/cards/cards.png",
+      "sha256": "9f4e0e263f1ebb1d0838375629d9761a76d31b12213f29dff0fbeb49e4864d3d",
+      "bytes": 32947,
+      "sourceFrame": "GuoHeChaiQiao_png.png",
+      "sourceRect": [
+        652,
+        528,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "jiedao.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\jiedaosharen_png.png",
-      "sha256": "b8a211b4d913912d976d2b3d035c64e558ab1920094ff407f977aff06381dee3",
-      "bytes": 21891
+      "source": "res/assets/cards/cards.png",
+      "sha256": "5ff36729d9553aca27b8db39614e5c7c6627327bec2bf4e96916f59f0c033f59",
+      "bytes": 30171,
+      "sourceFrame": "JieDaoShaRen_png.png",
+      "sourceRect": [
+        272,
+        182,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "wuxie.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\wuxiekeji_png.png",
-      "sha256": "515053a46704ab1f31787edcac1db1e1da232965e0866bee9d1868de6b3b6e25",
-      "bytes": 26215
+      "source": "res/assets/cards/cards.png",
+      "sha256": "27da57a995174c6f6cf1773ec76142eff83e2a5300530216fbabb5bd7fe01f48",
+      "bytes": 36791,
+      "sourceFrame": "WuXieKeJi_png.png",
+      "sourceRect": [
+        784,
+        352,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "lebu.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\lebusishu_png.png",
-      "sha256": "70a484e35afcf3d28133465ad78e5a6e5b21684aa61d8eb4d3ec2b3c3ffc4568",
-      "bytes": 24064
+      "source": "res/assets/cards/cards.png",
+      "sha256": "de40a8d4de56ffe2b4a08aa70973badc8bd657991202a7e96aa94156ecea7702",
+      "bytes": 33916,
+      "sourceFrame": "LeBuSiShu_png.png",
+      "sourceRect": [
+        264,
+        1432,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "shandian.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\shandian_png.png",
-      "sha256": "d6a19b3e37ef885e7426cd57c08a3e2557d259a9d41d99be6e70b38d62881fc1",
-      "bytes": 16009
+      "source": "res/assets/cards/cards.png",
+      "sha256": "684c44af1246dac18bdea0cb78f55e9cb2dcad50a568f8a16058856248719136",
+      "bytes": 22224,
+      "sourceFrame": "ShanDian_png.png",
+      "sourceRect": [
+        1032,
+        1584,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "hanbing.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\hanbingjian_png.png",
-      "sha256": "889cfc3a9dcf52db90ecd65d3b8c6ebf297720913dc1960b47964eae048a7a21",
-      "bytes": 21038
+      "source": "res/assets/cards/cards.png",
+      "sha256": "ee0168726c4a062684d39216e3b27f19dbcd9ca8fed69b659d9e0b09a4ec4ce5",
+      "bytes": 29508,
+      "sourceFrame": "HanBingJian_png.png",
+      "sourceRect": [
+        136,
+        728,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "renwang.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\renwangdun_png.png",
-      "sha256": "71b607d6a8c9292cf130ca014c4dce72796abbe791f77cc59904e8ea6f3d9120",
-      "bytes": 22500
+      "source": "res/assets/cards/cards.png",
+      "sha256": "c795dc43cf0fc3217de1c62ab417bffbb80b90be346ceb732327a0538da72e15",
+      "bytes": 31498,
+      "sourceFrame": "RenWangDun_png.png",
+      "sourceRect": [
+        1040,
+        352,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "jiu.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\jiu_png.png",
-      "sha256": "5bde79835d00e813afca9ae37e39d11a7040a72a698eee0e2979bee03c21ba9b",
-      "bytes": 25872
+      "source": "res/assets/cards/cards.png",
+      "sha256": "1fec8367e1acb71ed66917688f0391a511d97345b06530c2ba9217f4dae52eef",
+      "bytes": 37683,
+      "sourceFrame": "Jiu_png.png",
+      "sourceRect": [
+        264,
+        1080,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "hualiu.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\hualiu_png.png",
-      "sha256": "2b0d853796d440206aeba19ce7ce262bcad69c46b6d6ab3dd251f5eb25712315",
-      "bytes": 21528
+      "source": "res/assets/cards/cards.png",
+      "sha256": "d67797e1373e21fc992e0cd2eafc0dfc4d303dd4c09bad17dc02f04e35d31786",
+      "bytes": 31529,
+      "sourceFrame": "HuaLiu_png.png",
+      "sourceRect": [
+        136,
+        1080,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "baiyin.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\baiyinshizi_png.png",
-      "sha256": "0511b7c442cfd712fa52e807f7f0a9a94f4faf453f7dab44b82a473e9ba45cbf",
-      "bytes": 23111
+      "source": "res/assets/cards/cards.png",
+      "sha256": "d915579370a26b488f3f74a4ef268c4aebbecfd751e1cb34fed3b7eb53719163",
+      "bytes": 33444,
+      "sourceFrame": "BaiYinShiZi_png.png",
+      "sourceRect": [
+        1296,
+        352,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "tengjia.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\tengjia_png.png",
-      "sha256": "951541b7fc6a8aa8b4de721ec978ad03e20840dd80722639ec0a92bb00093056",
-      "bytes": 20971
+      "source": "res/assets/cards/cards.png",
+      "sha256": "85ef61937d43341584eeccf370d428a6ddf6d50bd69ce8ee462246317e9aa451",
+      "bytes": 29977,
+      "sourceFrame": "TengJia_png.png",
+      "sourceRect": [
+        648,
+        1408,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "guding.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\gudingdao_png.png",
-      "sha256": "3742de021e81441288a025802861458dd54aa1499c988024c8d3a2932b9a6449",
-      "bytes": 19989
+      "source": "res/assets/cards/cards.png",
+      "sha256": "f90a2da10886ffc88d98f5fc2f51a37e70496d0fc2a454b5ca6d53e4c4a08bd9",
+      "bytes": 29163,
+      "sourceFrame": "GuDingDao_png.png",
+      "sourceRect": [
+        520,
+        1766,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "zhuque.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\zhuqueyushan_png.png",
-      "sha256": "931f5f8b7e43c3c55858b98ea195cdca0d405a77793adffaa3bbca36bb2a7ae4",
-      "bytes": 22945
+      "source": "res/assets/cards/cards.png",
+      "sha256": "396b1fbd5bc28099cd9539b8f4c7a582226213be5d3a180bb76d25f652bbec03",
+      "bytes": 31967,
+      "sourceFrame": "ZhuQueYuShan_png.png",
+      "sourceRect": [
+        912,
+        352,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "huogong.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\huogong_png.png",
-      "sha256": "9470edb60aecfb6888b5ebc167561abba485c123f3cb390da88d2e2d9d68c8ff",
-      "bytes": 23354
+      "source": "res/assets/cards/cards.png",
+      "sha256": "ce41f282fa1df304bcf27f42e87c5def5641adb365340c703aa498c9622a4da5",
+      "bytes": 33749,
+      "sourceFrame": "HuoGong_png.png",
+      "sourceRect": [
+        136,
+        1432,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "tiesuo.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\tiesuolianhuan_png.png",
-      "sha256": "25b3915add6f5fd67cd13e239d2f4977359977948fb5f2a7233d9713f25e5c8e",
-      "bytes": 28522
+      "source": "res/assets/cards/cards.png",
+      "sha256": "b140184b808f20fac67ea0ad592a4eea4e8d9a623f4e619d587335df965c28ac",
+      "bytes": 42263,
+      "sourceFrame": "TieSuoLianHuan_png.png",
+      "sourceRect": [
+        648,
+        1760,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "bingliang.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\bingliangcunduan_png.png",
-      "sha256": "3a830c16d3d1935df90aceca74c543d553cbad6be07ab3eb87f61ca662ef5b89",
-      "bytes": 23596
+      "source": "res/assets/cards/cards.png",
+      "sha256": "d8c5b9dd092a14d40cc345cd3674623697dce1b328fcf8764a01eeee07c7c45e",
+      "bytes": 32188,
+      "sourceFrame": "BingLiangCunDuan_png.png",
+      "sourceRect": [
+        1424,
+        176,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "muniu.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\muniuliuma_png.png",
-      "sha256": "ae210488fb8fb6c18f42a28af87bbf69db1f0604488c8579dac08d46a51c690e",
-      "bytes": 23098
+      "source": "res/assets/cards/cards.png",
+      "sha256": "6ffb895046f5088f64a5ad9a72fae49bd1f52d8276e75c49cbb5a71589d962d3",
+      "bytes": 32669,
+      "sourceFrame": "MuNiuLiuMa_png.png",
+      "sourceRect": [
+        904,
+        1408,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "sha_fire.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\huosha_png.png",
-      "sha256": "e614ff5086113ae9be770b6992520c211be086294555a926596b8dc139fc0569",
-      "bytes": 28766
+      "source": "res/assets/cards/cards.png",
+      "sha256": "f799fc9560816fc15998f5c9b41c94a9badc1b5003afebde96379937bdcf616a",
+      "bytes": 40778,
+      "sourceFrame": "HuoSha_png.png",
+      "sourceRect": [
+        136,
+        1784,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "sha_thunder.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\leisha_png.png",
-      "sha256": "b4c3e666c10e611b6467ebeddec696c8446d1f1c34fb069ea665c2a8d7a0cb62",
-      "bytes": 28606
+      "source": "res/assets/cards/cards.png",
+      "sha256": "460dc485547c1cac8b12aba9a8d6120ddabd9a53de7019c8467be8ec4d73a4a2",
+      "bytes": 41647,
+      "sourceFrame": "LeiSha_png.png",
+      "sourceRect": [
+        292,
+        0,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "sha_ice.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\bingsha_png.png",
-      "sha256": "224575d8ded73b68c893a4c3c64c0c31ae6150a1b2174d33b4f8e1fe790088f6",
-      "bytes": 28403
+      "source": "res/assets/cards/cards.png",
+      "sha256": "16430e94df9180429862f90728d69fdff24306b210be86c6c3d0fa0d10e49baa",
+      "bytes": 44643,
+      "sourceFrame": "BingSha_png.png",
+      "sourceRect": [
+        1444,
+        0,
+        126,
+        174
+      ],
+      "sourceSize": [
+        126,
+        174
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_10.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_10.png",
-      "sha256": "fa709290469961f89021cd57894f4ce4f51a1a7a06e700d607823b603e2b3042",
-      "bytes": 430
+      "source": "res/assets/cards/cards.png",
+      "sha256": "128e8dcda078dd9e0288f6b91883b72af61bdef879a93b1654ab181344e74293",
+      "bytes": 534,
+      "sourceFrame": "black_10.png",
+      "sourceRect": [
+        2024,
+        634,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_2.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_2.png",
-      "sha256": "de3aa6b212dd20859419e75037e1b1cf565f170ca12a5fc6feacf15364239fbd",
-      "bytes": 398
+      "source": "res/assets/cards/cards.png",
+      "sha256": "9b12ede06fb3480e56a0cf50483e77ee223029be92a4aa3ecc63eefa9205c607",
+      "bytes": 462,
+      "sourceFrame": "black_2.png",
+      "sourceRect": [
+        2021,
+        610,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_3.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_3.png",
-      "sha256": "b853d58b1b731088068ea4c65cbd243480511e3bd4f5e41a3205ebddca29cf04",
-      "bytes": 478
+      "source": "res/assets/cards/cards.png",
+      "sha256": "2338df20cf973f855a86c7c1d7388d1f8a573e108e4ad4cfa1c6681e7167039c",
+      "bytes": 516,
+      "sourceFrame": "black_3.png",
+      "sourceRect": [
+        2021,
+        586,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_4.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_4.png",
-      "sha256": "173c48128d3bf0cc0b9b467dae4ed956f67ae1e77c98a5b27f96b60cdbfe1545",
-      "bytes": 398
+      "source": "res/assets/cards/cards.png",
+      "sha256": "b0f48424331cee705f028bc9c17860286a1a97b5dd3a5b831eab9db71b221d7a",
+      "bytes": 379,
+      "sourceFrame": "black_4.png",
+      "sourceRect": [
+        2023,
+        521,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_5.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_5.png",
-      "sha256": "de22e8f804d8e5d2f719052df3fb3c58cfd52c80767941975930e128e1ba406c",
-      "bytes": 438
+      "source": "res/assets/cards/cards.png",
+      "sha256": "e6f53f9173704be508e83d707378efd6595bf3c1700df41e38ee47b86623295d",
+      "bytes": 481,
+      "sourceFrame": "black_5.png",
+      "sourceRect": [
+        2014,
+        562,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_6.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_6.png",
-      "sha256": "5e9a2cc8f41dd806d4e38aabd04e794ffcb756384b54f57ec3f57f7fc2e7324b",
-      "bytes": 508
+      "source": "res/assets/cards/cards.png",
+      "sha256": "dc54a7eca9216e87d583b67d445162e464a930474456032d9be9f4ed59e81754",
+      "bytes": 555,
+      "sourceFrame": "black_6.png",
+      "sourceRect": [
+        2001,
+        630,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_7.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_7.png",
-      "sha256": "fe36c34cf8e2df287875764534611daee9a3a1ee8812006a99e3dc3400341169",
-      "bytes": 390
+      "source": "res/assets/cards/cards.png",
+      "sha256": "ba43ceea97ac5546e349c9dcca10ba3cb273997e5e6ff92fa5307b3c52526454",
+      "bytes": 362,
+      "sourceFrame": "black_7.png",
+      "sourceRect": [
+        2001,
+        606,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_8.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_8.png",
-      "sha256": "843ee32112638e1aeaa1bda7088f820ee505cbee6a726597cd67b9ee8b9b6440",
-      "bytes": 513
+      "source": "res/assets/cards/cards.png",
+      "sha256": "057e5d95ff60b2200b749fc813a177937d65c38dc1b1421853a3f035330bba81",
+      "bytes": 529,
+      "sourceFrame": "black_8.png",
+      "sourceRect": [
+        2003,
+        538,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_9.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_9.png",
-      "sha256": "0f226b10bc27f84415b94677c43e36fdd032455859c26a6633e10ac044d62d85",
-      "bytes": 503
+      "source": "res/assets/cards/cards.png",
+      "sha256": "da1f9eb40da292a221d8c81508c3ae9ac86fbefa03389b17b9f9046d82e4d5fe",
+      "bytes": 529,
+      "sourceFrame": "black_9.png",
+      "sourceRect": [
+        1983,
+        558,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_a.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_a.png",
-      "sha256": "0b12d69aaf576526055657b476fa90ba2429fdc7fca7028d1164b8db8abd45b4",
-      "bytes": 496
+      "source": "res/assets/cards/cards.png",
+      "sha256": "9742a55814d9ce4d2af387901770700648e6b54029193e259031d82c1bf518f3",
+      "bytes": 474,
+      "sourceFrame": "black_A.png",
+      "sourceRect": [
+        1994,
+        582,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_j.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_j.png",
-      "sha256": "a017012e76de0452be79fe9edb4586b260a1c1c928f5b1252067b271eabed943",
-      "bytes": 340
+      "source": "res/assets/cards/cards.png",
+      "sha256": "47134cef2bc9a80f15df8ef737f9b863e9b2faa38b453ff443946da2cbe3bf49",
+      "bytes": 295,
+      "sourceFrame": "black_J.png",
+      "sourceRect": [
+        1963,
+        264,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_k.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_k.png",
-      "sha256": "7c79306882232532d5c8ed0b4585aa83a60e47e05868874c5e7747a437656393",
-      "bytes": 443
+      "source": "res/assets/cards/cards.png",
+      "sha256": "5ac779592298def3d97e8663b7c6cf05dc72344a9467e630a3d818adb8cc1015",
+      "bytes": 442,
+      "sourceFrame": "black_K.png",
+      "sourceRect": [
+        1943,
+        264,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "black_q.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\black_q.png",
-      "sha256": "5e6a8abfc3dbe3f82f3ae30f96df4c12398c45c2cf21f8b3474e4a6b78586fb3",
-      "bytes": 503
+      "source": "res/assets/cards/cards.png",
+      "sha256": "f8c06362c451e7aaf8244b2272dda906c552235bdea0681521939625a1aa2e5b",
+      "bytes": 607,
+      "sourceFrame": "black_Q.png",
+      "sourceRect": [
+        1923,
+        264,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "club.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\club.png",
-      "sha256": "554e43681c987bbeb4ef197d842d3f596adf1ee01c9cab6b8631e437e3d63bf4",
-      "bytes": 563
+      "source": "res/assets/cards/cards.png",
+      "sha256": "a6e1ce1977f080c47d3f2147efc405d4765a17ac6dce0c733559fe5abd3bbaea",
+      "bytes": 535,
+      "sourceFrame": "club.png",
+      "sourceRect": [
+        1926,
+        449,
+        24,
+        20
+      ],
+      "sourceSize": [
+        24,
+        20
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "diamond.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\diamond.png",
-      "sha256": "14413c634686fbdc1ce13506e2064416f2911123113003fb26a00f01bd33bc43",
-      "bytes": 445
+      "source": "res/assets/cards/cards.png",
+      "sha256": "a44bf4c2c533760cb556329cc6dbf564f04d03cb0d18ba267b87cbaed9d8d7ab",
+      "bytes": 411,
+      "sourceFrame": "diamond.png",
+      "sourceRect": [
+        1963,
+        514,
+        24,
+        20
+      ],
+      "sourceSize": [
+        24,
+        20
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "heart.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\heart.png",
-      "sha256": "706429744098e716c4bfb1c3e2e22591db3d28bc2fcab24eb5c5971b5595c44a",
-      "bytes": 554
+      "source": "res/assets/cards/cards.png",
+      "sha256": "4659b16e5520317a1828d9eb0e81000322710804fc78ff1d749be98183c2c390",
+      "bytes": 652,
+      "sourceFrame": "heart.png",
+      "sourceRect": [
+        1963,
+        536,
+        24,
+        20
+      ],
+      "sourceSize": [
+        24,
+        20
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_10.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_10.png",
-      "sha256": "7d9f17ac0aabbd8dada229329ac12d46181f409786c72c84498f4763c2d0d744",
-      "bytes": 640
+      "source": "res/assets/cards/cards.png",
+      "sha256": "2382eb1d71d3951ff4e321ee36ea717a7e8493d350960f26b6809b47b694210a",
+      "bytes": 648,
+      "sourceFrame": "red_10.png",
+      "sourceRect": [
+        2024,
+        658,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_2.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_2.png",
-      "sha256": "d2e008f99bf404dbb9541d91e92b4f460f05c5b4f24ae3d810d07d9c27c817e7",
-      "bytes": 589
+      "source": "res/assets/cards/cards.png",
+      "sha256": "a165c3ec4dfc5f4dfea98eaab64b3a962e0e5ba79bca26bda55405a9fb48d5a1",
+      "bytes": 515,
+      "sourceFrame": "red_2.png",
+      "sourceRect": [
+        1903,
+        264,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_3.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_3.png",
-      "sha256": "7f5d4b9cdab8e0c673cf9c046a3a521494b07e0186dc89d75adbf5c8d40ce812",
-      "bytes": 705
+      "source": "res/assets/cards/cards.png",
+      "sha256": "5ca43abb3b38dcd1e5fe7d3ab31105f49c5a7670ddc14ca02d942f557b039413",
+      "bytes": 592,
+      "sourceFrame": "red_3.png",
+      "sourceRect": [
+        2026,
+        120,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_4.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_4.png",
-      "sha256": "4d1f67fc50a3645eab152260e9ff577571d7d9e5a82856b264b7baaba1f3d79a",
-      "bytes": 566
+      "source": "res/assets/cards/cards.png",
+      "sha256": "f5c6e459ffb14f15576a0c7888eab0898218e68607fea88c804d15c858cd3d84",
+      "bytes": 433,
+      "sourceFrame": "red_4.png",
+      "sourceRect": [
+        2026,
+        144,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_5.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_5.png",
-      "sha256": "2959dfe5e60a88efed4377d64b4e357c35a1f0180075adc522f9e85ac530feb0",
-      "bytes": 682
+      "source": "res/assets/cards/cards.png",
+      "sha256": "8b85da768810cba1067a311bcce86b46e65f27bd51cec432129900dfb1f937cd",
+      "bytes": 547,
+      "sourceFrame": "red_5.png",
+      "sourceRect": [
+        2026,
+        168,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_6.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_6.png",
-      "sha256": "4ab87bb8d2b21378a78a918516292969eaac192d215462a9ce82167014d7860c",
-      "bytes": 723
+      "source": "res/assets/cards/cards.png",
+      "sha256": "01791d00b00cbd2102292cdf8d556547d00ef339827e9963593e914d7fdc2f59",
+      "bytes": 623,
+      "sourceFrame": "red_6.png",
+      "sourceRect": [
+        2026,
+        192,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_7.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_7.png",
-      "sha256": "331fa8724cdebcb801698e00e5f1be8f616a7a5c9f6d95d8aa8cf000e4e433eb",
-      "bytes": 628
+      "source": "res/assets/cards/cards.png",
+      "sha256": "7d15a038399fc49bc94b69ed3c89a9d360dbb28ec6caa0bd7d95d730b69f6543",
+      "bytes": 401,
+      "sourceFrame": "red_7.png",
+      "sourceRect": [
+        2026,
+        216,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_8.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_8.png",
-      "sha256": "7a8351cd3d57e2759bd4e5bbf97adcfd7409a4f48a1e07aaed88ac0ee9fec064",
-      "bytes": 700
+      "source": "res/assets/cards/cards.png",
+      "sha256": "e4cdfe69e81981dbd9695c278c53aded92c6d9c94857388370f754162e2865c1",
+      "bytes": 621,
+      "sourceFrame": "red_8.png",
+      "sourceRect": [
+        2026,
+        240,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_9.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_9.png",
-      "sha256": "0b6cc28b8e741601e124a874877080848c6d52e97195098514b908e2cbceac99",
-      "bytes": 714
+      "source": "res/assets/cards/cards.png",
+      "sha256": "52f4640f8b57bbc47cd6e158a74bcdd34f348099067bed0c55f5c537b8a1b3fc",
+      "bytes": 623,
+      "sourceFrame": "red_9.png",
+      "sourceRect": [
+        2026,
+        0,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_a.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_a.png",
-      "sha256": "23196f37f0a2d3825564a204d6263d7132022b3d4af5980fcfb99d31670e4566",
-      "bytes": 695
+      "source": "res/assets/cards/cards.png",
+      "sha256": "496ab02efec2e147daceef018c18a97c192c506f58c9ccf0d6d73e87bd43c9d2",
+      "bytes": 536,
+      "sourceFrame": "red_A.png",
+      "sourceRect": [
+        2026,
+        24,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_j.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_j.png",
-      "sha256": "624f500b8f954bfbf9020a233f19aa2ceef0f7d4dddd9ac324b13a5dc8885e88",
-      "bytes": 482
+      "source": "res/assets/cards/cards.png",
+      "sha256": "6a8ceb98c496d5c503db09379562a05221bce22ff4378e1e17b682ff1c19743f",
+      "bytes": 328,
+      "sourceFrame": "red_J.png",
+      "sourceRect": [
+        2026,
+        48,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_k.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_k.png",
-      "sha256": "6f4510382535c9863b2b972151a8509cb96c568fe9cb208370271ff1cc454ece",
-      "bytes": 628
+      "source": "res/assets/cards/cards.png",
+      "sha256": "b0843cbafc8c801002d54ab442fdef5a929c78117c8788e8d8aaf284f3c1bdbd",
+      "bytes": 512,
+      "sourceFrame": "red_K.png",
+      "sourceRect": [
+        2026,
+        72,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "red_q.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\red_q.png",
-      "sha256": "6063851add84a5d2620dd803848b41a60bf5ea28a64a199c3cb02e7c17f439fb",
-      "bytes": 733
+      "source": "res/assets/cards/cards.png",
+      "sha256": "38fffd76355cdb9bb5de7e347c07f6558ba56beb3360b5d371e042d57ef5ad35",
+      "bytes": 734,
+      "sourceFrame": "red_Q.png",
+      "sourceRect": [
+        2026,
+        96,
+        18,
+        22
+      ],
+      "sourceSize": [
+        18,
+        22
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     },
     {
       "file": "spade.png",
-      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\cards\\spade.png",
-      "sha256": "e312763d61d2f4ba7c14c004ecae40ea06a7417518912349cd75362d96326548",
-      "bytes": 452
+      "source": "res/assets/cards/cards.png",
+      "sha256": "ce9cd7394f301ec477138446015451222faca7f1337e64af64ac33bcaea7736f",
+      "bytes": 504,
+      "sourceFrame": "spade.png",
+      "sourceRect": [
+        1900,
+        449,
+        24,
+        20
+      ],
+      "sourceSize": [
+        24,
+        20
+      ],
+      "sourceOffset": [
+        0,
+        0
+      ]
     }
   ],
   "methods": {
     "xvi.computeHandCard": "a097c22e0377922e6beb5088ca7ce88ad148a8fbc25a39c9f864c471e319d324",
     "GMt.layoutStackCardUis": "2dade58d42ee9a1b934e780bc646889c2bb4483a2158b8c2c3fbf6cc5ec19bf9",
     "Rns.layout": "91250fa333d6f87d67b1098b369394f8be2fffbf6001e370ed132dbbb5f56584"
+  },
+  "sourcePackage": {
+    "file": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+    "sha256": "38d46c46f91796e6006776354a9b3da4cf19832d9a89a0668510e7906ba2011d",
+    "client": "Laya",
+    "imageEntry": "assets/cache/https.__web.sanguosha.com_220_sgsolApp/ba0005aa",
+    "imageSha256": "671ccd3a0205ea89e1c0567e0ba6a1d1a5bafae4c62c3e6da7888ba59a3a031a",
+    "atlasEntry": "assets/cache/https.__web.sanguosha.com_220_sgsolApp/bec0945b",
+    "atlasSha256": "41edd6600d5753efefd1054978728fcc8cd394b829c3105a2e1522c2c66923c7"
   }
 }
