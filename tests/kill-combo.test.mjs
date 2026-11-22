@@ -165,10 +165,10 @@ test('missing graphics or resources preserves the new voice and never blocks the
 	assert.equal(console.warn.mock.calls.length, 2);
 });
 
-test('actual HH kill hook awaits playback, guards duplicate deaths and keeps the existing turn reset', async () => {
+test('actual HH kill hook still awaits playback with native kill effects disabled, guards duplicate deaths and keeps the existing turn reset', async () => {
 	const source = readFileSync(new URL('../hh-features.js', import.meta.url), 'utf8');
 	const code = source.slice(source.indexOf('// ========== 连斩特效功能'), source.indexOf('// 音频替换功能'));
-	const plays = [], popups = [], lib = { config: {}, skill: {}, onover: [] };
+	const plays = [], popups = [], lib = { config: { extension_HH优化_disable_native_kill_effect: true }, skill: {}, onover: [] };
 	const player = { storage: {}, popup: text => popups.push(text) };
 	const game = { players: [player], dead: [] };
 	let release;

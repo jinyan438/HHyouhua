@@ -16,6 +16,8 @@ import { create, isPlayer, getAvatar, randomPosition } from "./utils.js";
  * @throws {Error} 当source或target不是有效玩家对象时
  */
 export function playKillEffect(source, target) {
+	if (lib.config.extension_HH优化_disable_native_kill_effect) return;
+
 	if (!isPlayer(source) || !isPlayer(target)) {
 		throw new Error("source和target必须是有效的玩家对象");
 	}

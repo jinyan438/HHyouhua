@@ -2018,6 +2018,11 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				init: true,
 				intro: "身份及斗地主共用全屏选将界面；点击武将查看技能，再点同一张牌确认。换将遵守各玩法的候选范围，固定候选玩法保留原限制。适用于本地标准身份、明忠及斗地主，重启生效。"
 			},
+			disable_native_kill_effect: {
+				name: "关闭原生破敌特效",
+				init: false,
+				intro: "跳过原生破敌画面、音效及等待时间，不影响连斩特效和死亡结算，即时生效"
+			},
 			enable_kill_combo: {
 				name: "启用连斩特效",
 				init: false,

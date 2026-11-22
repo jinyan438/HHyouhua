@@ -92,7 +92,7 @@ export const animateSkill = {
 		lastDo: true,
 		silent: true,
 		filter() {
-			return lib.config.extension_HH优化_killEffect;
+			return lib.config.extension_HH优化_killEffect && !lib.config.extension_HH优化_disable_native_kill_effect;
 		},
 		async content(event, trigger) {
 			if (!trigger.source || !trigger.player) return;

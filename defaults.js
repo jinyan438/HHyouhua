@@ -51,6 +51,7 @@ export const defaultSettings = Object.freeze({
 	"decadeLayout": "on",
 	"dhkmh": "guanxinghepindian",
 	"discardScale": 0.20184,
+	"disable_native_kill_effect": false,
 	"dynamicAdaptiveHD": true,
 	"dynamicBackground": "skin_daqiaoxiaoqiao_战场绝版",
 	"dynamicSkin": true,
