@@ -38,6 +38,7 @@ import { setupCardStyles, updateCardStyles } from "./ui/cardStyles.js";
 import { setupCharacterNamePrefix } from "./ui/characterNamePrefix.js";
 import { setupSkillDisplay } from "./ui/skillDisplay.js";
 import { setupOutcropAvatar } from "./ui/outcropAvatar.js";
+import { setupDoudizhuLayout } from "./ui/doudizhuLayout.js";
 import { setupEquipmentEntry } from "./ui/equipmentEntry.js";
 import { setupDrawMotion } from "./features/drawMotion.js";
 import { setupTargetHighlight } from "./features/targetHighlight.js";
@@ -70,6 +71,7 @@ export const finalizeDecadeUICore = (decadeUI, config) => {
 	};
 
 	decadeUI.init();
+	setupDoudizhuLayout({ lib, game, ui, get });
 	setupEquipmentEntry({ lib, game });
 	setupDrawMotion({ lib, game, ui, get, _status });
 	setupTargetHighlight({ lib, game, get, _status });

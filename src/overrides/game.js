@@ -29,6 +29,7 @@ export function gameSwapSeat(player1, player2, prompt, behind, noanimate) {
 	if (player1.node.seat) player1.node.seat.innerHTML = get.cnNumber(player1.seat, true);
 	player2.seat = player2.getSeatNum();
 	if (player2.node.seat) player2.node.seat.innerHTML = get.cnNumber(player2.seat, true);
+	game.hhDoudizhuLayout?.refresh();
 }
 
 /**
@@ -40,6 +41,7 @@ export function gameSwapSeat(player1, player2, prompt, behind, noanimate) {
 export function gameSwapPlayer(player, player2) {
 	const list = [game.me, player];
 	const result = baseGameMethods.swapPlayer.call(this, player, player2);
+	game.hhDoudizhuLayout?.refresh();
 
 	// 单独装备栏
 	if (lib.config.extension_HH优化_aloneEquip && game.me && game.me !== ui.equipSolts?.me) {
@@ -69,6 +71,7 @@ export function gameSwapPlayer(player, player2) {
  */
 export function gameSwapControl(player) {
 	const result = baseGameMethods.swapControl.call(this, player);
+	game.hhDoudizhuLayout?.refresh();
 
 	// 单独装备栏
 	if (lib.config.extension_HH优化_aloneEquip && game.me && game.me !== ui.equipSolts?.me) {

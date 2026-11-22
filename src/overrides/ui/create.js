@@ -276,6 +276,7 @@ export function uiCreateArena() {
 	}
 
 	decadeUI.config.update();
+	game.hhDoudizhuLayout?.observe();
 
 	return result;
 }

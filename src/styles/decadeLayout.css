@@ -2,6 +2,42 @@
  * HH优化 - 布局样式
  */
 
+/* OL bMt.layoutSeatUi: 174-wide seats, 15 top, 169 side, 14–100 top gap.
+ * nextSeat supplies the real order; data-position and the turn ring stay untouched. */
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view] > .player[data-hh-doudizhu-slot] {
+	--hh-ddz-unit: calc(var(--hh-configured-player-width, 136px) / 174);
+	--hh-ddz-gap: clamp(calc(var(--hh-ddz-unit) * 14), calc((100% - var(--w) * 4 - var(--hh-ddz-unit) * 60) / 3), calc(var(--hh-ddz-unit) * 100));
+	left: auto !important;
+	right: auto !important;
+	top: calc(var(--hh-ddz-unit) * 15) !important;
+	bottom: auto !important;
+}
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view] > .player[data-hh-doudizhu-slot="self"] {
+	right: 20px !important;
+	top: auto !important;
+	bottom: 1% !important;
+}
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view] > .player[data-hh-doudizhu-slot="top-left"] {
+	left: calc(50% - var(--w) - var(--hh-ddz-gap) / 2) !important;
+}
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view] > .player[data-hh-doudizhu-slot="top-right"] {
+	left: calc(50% + var(--hh-ddz-gap) / 2) !important;
+}
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view] > .player[data-hh-doudizhu-slot="top"] {
+	left: calc(50% - var(--w) / 2) !important;
+}
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view="3"] > .player[data-hh-doudizhu-slot="top"] {
+	left: calc(50% - var(--w) / 2 + var(--hh-ddz-unit) * 23.5) !important;
+}
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view] > .player[data-hh-doudizhu-slot="left"] {
+	left: calc(var(--hh-ddz-unit) * 59) !important;
+	top: calc(var(--hh-ddz-unit) * 169) !important;
+}
+#arena.decadeUI[data-number="3"][data-hh-doudizhu-view] > .player[data-hh-doudizhu-slot="right"] {
+	right: calc(var(--hh-ddz-unit) * 20) !important;
+	top: calc(var(--hh-ddz-unit) * 169) !important;
+}
+
 /** 角色选择按钮 */
 
 .menu > .button.character {
