@@ -193,7 +193,8 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 		const id = sourceCardSkills[name];
 		if (!id || !enabled() || failed.has(id)) return false;
 		const token = generation;
-		playAsset(id, actor, { token }).then(success => { if (!success && token === generation) onFallback?.(); }).catch(error => { console.warn('[HH优化] 装备动画播放失败', error); if (token === generation) onFallback?.(); });
+		const size = name === 'lebu' ? .8 : 1;
+		playAsset(id, actor, { token, size }).then(success => { if (!success && token === generation) onFallback?.(); }).catch(error => { console.warn('[HH优化] 装备动画播放失败', error); if (token === generation) onFallback?.(); });
 		return true;
 	}
 	env.document?.addEventListener?.('visibilitychange', () => { if (env.document.hidden) stop(); });

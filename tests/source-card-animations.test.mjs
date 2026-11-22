@@ -410,7 +410,10 @@ test('delay tricks do not animate on use/respond and play only after the actual 
 		h.advance(30);
 		const draw = h.drawn.at(-1);
 		assert.equal(draw.model.metadata.id, sourceCardSkills[name]);
-		assert.equal(draw.placement.x, sourceCardPlacement(draw.model.metadata, h.parent.rect, h.victim.rect).x);
+		const expected = sourceCardPlacement(draw.model.metadata, h.parent.rect, h.victim.rect, false, { size: name === 'lebu' ? .8 : 1 });
+		assert.equal(draw.placement.x, expected.x);
+		assert.equal(draw.placement.y, expected.y);
+		assert.equal(draw.placement.scale, expected.scale);
 		assert.deepEqual(judgment.actions, name === 'lebu' ? [['skip', 'phaseUse']] : name === 'bingliang' ? [['skip', 'phaseDraw']] : [['damage', 3, 'thunder', 'nosource']]);
 		h.player.stop();
 	}
