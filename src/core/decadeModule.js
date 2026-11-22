@@ -100,6 +100,7 @@ export function initDecadeModule() {
 		this.css(`${decadeUIPath}src/styles/player${styleIndex !== -1 ? styleIndex + 1 : 2}.css`);
 		this.css(`${decadeUIPath}src/styles/source-player-glow.css`);
 		this.css(`${decadeUIPath}src/styles/source-general-font.css`);
+		this.css(`${decadeUIPath}src/styles/target-distance.css`);
 		this.css(`${decadeUIPath}src/styles/source-skill-marks.css`);
 		this.css(`${decadeUIPath}src/styles/equip.css`);
 		this.css(`${decadeUIPath}src/styles/layout.css`);

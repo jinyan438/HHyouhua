@@ -1,0 +1,35 @@
+/* Native FZLBGBK, 22px text, 1px spacing and 2px outline at 224px card height. */
+#arena > .player > .hh-target-distance {
+	--hh-distance-unit: calc(var(--hh-configured-player-height, 180px) / 224);
+	position: absolute;
+	left: 50%;
+	top: calc(100% + 20 * var(--hh-distance-unit));
+	width: max-content;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	transform: translateX(-50%);
+	font-family: "hh-source-general", "FZLBJW", serif;
+	font-size: calc(22 * var(--hh-distance-unit));
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: var(--hh-distance-unit);
+	color: #d1b594;
+	-webkit-text-stroke: calc(2 * var(--hh-distance-unit)) #402e12;
+	paint-order: stroke fill;
+	text-shadow: none;
+	white-space: nowrap;
+	pointer-events: none;
+	transition: none;
+	z-index: 90;
+}
+
+#arena > .player > .hh-target-distance.hh-distance-out-of-range {
+	color: #ff5252;
+	-webkit-text-stroke-color: #410404;
+}
+
+#arena:not(.selecting) > .player > .hh-target-distance,
+#arena > .player:is(.dead, .out, .removed) > .hh-target-distance {
+	display: none;
+}
