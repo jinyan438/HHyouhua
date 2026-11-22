@@ -16,6 +16,11 @@
 	border-radius: 0;
 }
 
+/* Blur in card coordinates so it follows hand, table and dialog scaling. */
+.card.hh-original-card:not(.infohidden) {
+	filter: blur(0.4px);
+}
+
 /* State overlays follow the PNG alpha, including its four antialiased corners. */
 .card.hh-original-card > .card-mask,
 .card.hh-original-card > .used-info {
