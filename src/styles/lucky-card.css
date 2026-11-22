@@ -1,0 +1,133 @@
+.hh-lucky-card {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 714px;
+	height: 213px;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	z-index: 90;
+	border: 0;
+	outline: none;
+	transform: translate(-50%, -50%) scale(var(--hh-lucky-scale, 1));
+	transform-origin: center;
+	font: 30px/42px "hh-source-general", "FZLBJW", serif;
+	font-weight: 400;
+	color: #deba89;
+	text-shadow: none;
+	overflow: visible;
+	isolation: isolate;
+}
+
+.hh-lucky-card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	box-sizing: border-box;
+	border: solid transparent;
+	border-width: 19px 15px 12px 13px;
+	border-image: url("../../assets/lucky-card/shouqi_tips_bg_new.png") 19 15 12 13 fill stretch;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.hh-lucky-card > * {
+	position: absolute;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	color: inherit;
+	text-shadow: none;
+	letter-spacing: 1px;
+	transition: none;
+}
+
+.hh-lucky-card > .hh-lucky-score-glow {
+	left: 64px;
+	top: 31px;
+	width: 152px;
+	height: 153px;
+	background: url("../../assets/lucky-card/shouqika_get_bg_new.png") center / 100% 100% no-repeat;
+	pointer-events: none;
+}
+.hh-lucky-card > .hh-lucky-score {
+	display: flex;
+	justify-content: center;
+	left: 91px;
+	top: 58px;
+	width: 100px;
+	height: 75px;
+	pointer-events: none;
+}
+.hh-lucky-score > .hh-lucky-digit {
+	position: relative;
+	flex: 0 0 66px;
+	height: 75px;
+	margin: 0 -16px;
+	background: center / 66px 75px no-repeat;
+}
+.hh-lucky-digit-0 { background-image: url("../../assets/lucky-card/sqk_0.png") !important; }
+.hh-lucky-digit-1 { background-image: url("../../assets/lucky-card/sqk_1.png") !important; }
+.hh-lucky-digit-2 { background-image: url("../../assets/lucky-card/sqk_2.png") !important; }
+.hh-lucky-digit-3 { background-image: url("../../assets/lucky-card/sqk_3.png") !important; }
+.hh-lucky-digit-4 { background-image: url("../../assets/lucky-card/sqk_4.png") !important; }
+.hh-lucky-digit-5 { background-image: url("../../assets/lucky-card/sqk_5.png") !important; }
+.hh-lucky-digit-6 { background-image: url("../../assets/lucky-card/sqk_6.png") !important; }
+.hh-lucky-digit-7 { background-image: url("../../assets/lucky-card/sqk_7.png") !important; }
+.hh-lucky-digit-8 { background-image: url("../../assets/lucky-card/sqk_8.png") !important; }
+.hh-lucky-digit-9 { background-image: url("../../assets/lucky-card/sqk_9.png") !important; }
+.hh-lucky-card > .hh-lucky-score-title { left: 77px; top: 130px; width: 128px; height: 42px; text-align: center; white-space: nowrap; }
+.hh-lucky-card > .hh-lucky-question,
+.hh-lucky-card > .hh-lucky-cost {
+	left: 224px;
+	width: 444px;
+	height: 42px;
+	text-align: center;
+	white-space: nowrap;
+	font-size: 26px;
+}
+.hh-lucky-card > .hh-lucky-question { top: 38px; }
+.hh-lucky-card > .hh-lucky-cost { top: 76px; }
+.hh-lucky-card > button {
+	top: 125px;
+	width: 182px;
+	height: 70px;
+	display: block;
+	border-radius: 0;
+	box-shadow: none;
+	background: transparent center / 100% 100% no-repeat;
+	font-size: 34px;
+	line-height: 70px;
+	text-align: center;
+	cursor: pointer;
+	touch-action: manipulation;
+	-webkit-tap-highlight-color: transparent;
+}
+.hh-lucky-card > .hh-lucky-change { left: 236px; background-image: url("../../assets/lucky-card/sqk_confirm.png"); }
+.hh-lucky-card > .hh-lucky-cancel { left: 432px; background-image: url("../../assets/lucky-card/sqk_cancel.png"); }
+.hh-lucky-card > button:hover { filter: brightness(1.12); }
+.hh-lucky-card > button:active { filter: brightness(.9); }
+.hh-lucky-card > button:focus-visible { outline: 1px solid #ffe4a2; outline-offset: -7px; }
+.hh-lucky-card > button:disabled { cursor: default; filter: saturate(.5); }
+.hh-lucky-card > .hh-lucky-progress {
+	left: -15px;
+	top: 267px;
+	width: 744px;
+	height: 10px;
+	border: 1px solid #625135;
+	background: #3b3427cc;
+	box-shadow: 0 0 2px #30261a;
+	pointer-events: none;
+}
+.hh-lucky-progress > div {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(#efcb46, #dbaf24);
+	border-right: 2px solid #fff1a3;
+	box-shadow: 1px 0 5px #ffe18a;
+	transform-origin: left;
+}
+.hh-lucky-card > [hidden] { display: none; }
