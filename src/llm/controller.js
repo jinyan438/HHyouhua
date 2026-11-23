@@ -3,6 +3,7 @@ import { createPerspective } from './perspective.js';
 import { createActions, actionTool } from './actions.js';
 import { bindDialogButton, isolateDialogInput } from './dialog.js';
 import { summarizeHistory, readHistory } from './history.js';
+import { createLLMJournal } from './journal.js';
 
 const SELECTIONS = new Set(['chooseToUse', 'chooseToRespond', 'chooseCard', 'chooseTarget', 'chooseButton', 'choosePlayerCard', 'discardPlayerCard', 'gainPlayerCard', 'chooseToDiscard', 'chooseToGive', 'chooseCardTarget', 'chooseButtonTarget']);
 const DIRECT = { chooseBool: 'bool', chooseToMove: 'move', chooseToMove_new: 'move', chooseNumbers: 'numbers', chooseSkill: 'skill', chooseToPlayBeatmap: 'beatmap' };
@@ -14,6 +15,7 @@ export function setupLLMTakeover(context, environment = {}) {
 	const { lib, game, ui, get, _status } = context;
 	if (game.hhLLM) { game.hhLLM.refreshHooks(); return game.hhLLM; }
 	const view = createPerspective(context);
+	const journal = createLLMJournal(view);
 	let sessions = new Map(), generation = 0, human, active = new Set(), ended = false;
 	let usage = { ...emptyUsage(), seats: {}, last: null };
 	const fetchEnvironment = { ...environment };
@@ -26,8 +28,8 @@ export function setupLLMTakeover(context, environment = {}) {
 		if (!sessions.has(player)) sessions.set(player, { record: [], memory: [] });
 		return sessions.get(player);
 	}
-	function cancelPending() { generation++; for (const controller of active) controller.abort(); }
-	function reset() { cancelPending(); sessions = new Map(); usage = { ...emptyUsage(), seats: {}, last: null }; human = game.me; ended = false; }
+	function cancelPending() { generation++; for (const controller of active) controller.abort(); ui.hhLLMRecordsRefresh?.(); }
+	function reset() { cancelPending(); sessions = new Map(); journal.reset(); usage = { ...emptyUsage(), seats: {}, last: null }; human = game.me; ended = false; }
 	function addRecord(makeRecord, audience) {
 		if (!offline() || !_status.gameStarted || _status.over) return;
 		for (const player of view.players()) {
@@ -65,6 +67,7 @@ export function setupLLMTakeover(context, environment = {}) {
 		let lastState, unchanged = 0, strategy = '';
 		const learned = new Set();
 		const queriedRules = new Set();
+		let requestLog;
 		try {
 			thinking = progress?.begin(player, connection.timeout, true, event, { llm: true });
 			for (let step = 0; step < 96 && !bridge.done; step++) {
@@ -88,7 +91,9 @@ export function setupLLMTakeover(context, environment = {}) {
 					...transcript, { role: 'user', content: JSON.stringify({ ...snapshot, state }) }];
 				const seatUsage = usage.seats[seat] ||= emptyUsage();
 				usage.requests++; seatUsage.requests++;
-				const message = await complete(connection, messages, [actionTool], { ...fetchEnvironment, signal: controller.signal, onUsage(value) {
+				requestLog = journal.begin(player, event, game.roundNumber || 0, connection.model, connection.key);
+				const message = await complete(connection, messages, [actionTool], { ...fetchEnvironment, signal: controller.signal,
+					onOutput(value) { if (generation === runGeneration) requestLog.output(value); }, onUsage(value) {
 					if (generation !== runGeneration) return;
 					for (const entry of [usage, seatUsage]) { entry.reported++; for (const key of ['input', 'output', 'cached', 'total']) entry[key] += value[key]; }
 					usage.last = { seat, event: event.name, ...value };
@@ -120,12 +125,19 @@ export function setupLLMTakeover(context, environment = {}) {
 							if (call.function.name !== 'game_action') throw new Error('未知工具');
 							outcome = execute(JSON.parse(call.function.arguments));
 						} catch (error) { outcome = { ok: false, error: error.message }; }
+						let input;
+						try { input = JSON.parse(call.function.arguments); } catch { input = { action: call.function.name, arguments: call.function.arguments }; }
+						requestLog.operation(input, outcome, state);
 						transcript.push({ role: 'tool', tool_call_id: call.id, content: JSON.stringify(outcome) });
 					}
 				} else {
-					try { const outcome = execute(JSON.parse(message.content.replace(/^\s*```(?:json)?\s*|\s*```\s*$/g, ''))); if (!bridge.done) transcript.push({ role: 'user', content: '操作结果：' + JSON.stringify(outcome) }); }
-					catch (error) { transcript.push({ role: 'user', content: '操作未提交：' + error.message + '。请调用 game_action，或返回该工具参数的纯 JSON。' }); }
+					let input;
+					try { input = JSON.parse(message.content.replace(/^\s*```(?:json)?\s*|\s*```\s*$/g, '')); const outcome = execute(input);
+						requestLog.operation(input, outcome, state); if (!bridge.done) transcript.push({ role: 'user', content: '操作结果：' + JSON.stringify(outcome) }); }
+					catch (error) { requestLog.operation(input || { action: 'output' }, { ok: false, error: error.message }, state);
+						transcript.push({ role: 'user', content: '操作未提交：' + error.message + '。请调用 game_action，或返回该工具参数的纯 JSON。' }); }
 				}
+				requestLog.finish(bridge.done ? 'submitted' : 'complete');
 			}
 			if (!bridge.done) throw new Error('模型连续操作未能完成当前选择');
 			if (strategy && saved.memory.at(-1)?.content !== strategy) saved.memory.push({ role: 'assistant', content: strategy });
@@ -133,6 +145,7 @@ export function setupLLMTakeover(context, environment = {}) {
 			api.lastError = '';
 			return bridge.result;
 		} catch (error) {
+			requestLog?.finish(controller.signal.aborted || generation !== runGeneration ? 'cancelled' : 'error', error.message);
 			if (_status.event === event && !_status.over && !ended) bridge.reset();
 			throw error;
 		} finally {
@@ -175,6 +188,7 @@ export function setupLLMTakeover(context, environment = {}) {
 				const choice = await failureChoice(event, error);
 				if (_status.over || ended || _status.event !== event) return { abandoned: true };
 				if (generation !== runGeneration || !controls(event.player)) return { handled: false };
+				journal.resolve(event.player, choice);
 				if (choice === 'retry') continue;
 				if (choice === 'disable') { lib.config[LLM_PREFIX + 'enabled'] = false; game.saveConfig(LLM_PREFIX + 'enabled', false); cancelPending(); }
 				return { handled: false };
@@ -238,7 +252,7 @@ export function setupLLMTakeover(context, environment = {}) {
 			return original.apply(this, arguments);
 		};
 	}
-	const api = { controls, refreshHooks, reset, cancelPending, lastError: '',
+	const api = { controls, refreshHooks, reset, cancelPending, journal, lastError: '',
 		get enabled() { return enabled(); }, get pending() { return active.size; },
 		get usage() { return usage; },
 	};

@@ -828,3 +828,19 @@ test('ordinary optional triggers, direct choices and costs require reasons witho
 		assert.equal(bridge.state().activation, undefined); bridge.act({ action: 'bool', value: true }); assert.equal(bridge.result.bool, true);
 	}
 });
+
+test('local output journal keeps action repair and provider output by seat without injecting them into later choices', async () => {
+	const h = harness((request, index) => index === 1 ? { action: 'bool', value: 'invalid', reason: 'JOURNAL_ONLY_REASON' } :
+		{ action: 'bool', value: true, reason: 'JOURNAL_ACCEPTED_REASON', strategy: 'STRATEGY_MEMORY' });
+	h.install(); await h.run(h.event('chooseBool')); await h.run(h.event('chooseBool', { player: h.opponent })); await h.run(h.event('chooseBool'));
+	const records = h.game.hhLLM.journal.read(2);
+	assert.equal(records.length, 3); assert.equal(h.game.hhLLM.journal.read(3).length, 1);
+	assert.equal(records[0].status, 'repair'); assert.equal(records[0].operations[0].outcome.ok, false);
+	assert.match(records[0].operations[0].outcome.error, /布尔/); assert.equal(records[1].status, 'submitted');
+	assert.equal(records[1].operations[0].input.reason, 'JOURNAL_ACCEPTED_REASON');
+	const last = JSON.stringify(h.requests.at(-1).body);
+	assert.equal(last.includes('JOURNAL_ONLY_REASON'), false); assert.equal(last.includes('JOURNAL_ACCEPTED_REASON'), false); assert.ok(last.includes('STRATEGY_MEMORY'));
+	assert.equal(JSON.stringify(records).includes('TEST_SECRET_KEY'), false);
+	h.lib.onover.forEach(callback => callback()); assert.equal(h.game.hhLLM.journal.read(2).length, 3);
+	h.game.hhLLM.reset(); assert.deepEqual(h.game.hhLLM.journal.read(), []);
+});

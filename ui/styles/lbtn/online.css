@@ -311,6 +311,183 @@
 }
 
 /* 背景选择器 */
+.jiluButton.hh-llm-record-button {
+	left: 104px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-image: url("../../assets/lbtn/OL_line/uibutton/llmShow.png");
+	font-family: "shousha";
+	font-size: 18px;
+	color: #d9c299;
+	text-shadow: 0 1px 2px #482b1d;
+	cursor: pointer;
+}
+
+.hh-llm-records > .bigbgjilu {
+	background-image: url("../../assets/lbtn/OL_line/jilu/llmbigdialog.png");
+}
+
+.hh-llm-record-title {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 52%;
+	height: 6.7%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font: 24px "shousha";
+	color: #d9c299;
+}
+
+.hh-llm-records > .bigbgjilu > .content {
+	touch-action: pan-y;
+	overscroll-behavior: contain;
+}
+
+.hh-llm-records .content > .namebg {
+	left: 0;
+	width: 100%;
+	min-height: 50px;
+	box-sizing: border-box;
+	padding-left: 32%;
+	cursor: pointer;
+}
+
+.hh-llm-records .content > .namebg > .jiluanniu {
+	left: 0;
+	position: relative;
+	order: -1;
+}
+
+.hh-llm-records .content > .namebg > .namebgbg {
+	position: relative;
+	left: 0;
+	width: auto;
+	flex: 1;
+	padding: 0 6px;
+	box-sizing: border-box;
+}
+
+.hh-llm-records .content > .namebg > .namebgbg > .name {
+	position: relative;
+	top: 0;
+	font-size: 17px;
+	line-height: 1.45;
+	text-align: center;
+	overflow-wrap: anywhere;
+}
+
+.hh-llm-records .content > .namebg > .namebgbg::before {
+	left: 0;
+	width: 100%;
+	bottom: -12px;
+}
+
+.pausedbg.hh-llm-records > .historybg {
+	width: 32.3%;
+}
+
+.hh-llm-record-list {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 0 12px 24px;
+	overflow-y: auto;
+	touch-action: pan-y;
+	overscroll-behavior: contain;
+	color: #d9c299;
+	font: 17px/1.55 "shousha", sans-serif;
+	text-align: left;
+	user-select: text;
+	-webkit-user-select: text;
+}
+
+.hh-llm-record-list div,
+.hh-llm-record-list details,
+.hh-llm-record-list summary,
+.hh-llm-record-list pre {
+	position: relative;
+}
+
+.hh-llm-record-entry {
+	padding: 10px 0 16px;
+	border-bottom: 1px solid #725c443d;
+}
+
+.hh-llm-record-heading,
+.hh-llm-record-label {
+	color: #dcaa32;
+}
+
+.hh-llm-record-heading {
+	margin-bottom: 10px;
+}
+
+.hh-llm-record-text {
+	margin: 6px 0;
+}
+
+.hh-llm-record-value {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.hh-llm-record-error {
+	color: #dba186;
+}
+
+.hh-llm-record-status,
+.hh-llm-record-raw {
+	font-size: 14px;
+	color: #b5a18a;
+	margin-top: 8px;
+}
+
+.hh-llm-record-raw summary {
+	cursor: pointer;
+}
+
+.hh-llm-record-raw pre {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	font: 12px/1.5 monospace;
+	margin: 6px 0;
+}
+
+.hh-llm-record-more {
+	position: relative;
+	font: inherit;
+	color: #dcaa32;
+	background: transparent;
+	border: 0;
+	padding: 8px 0;
+	cursor: pointer;
+}
+
+.hh-llm-records .namebg:focus-visible,
+.hh-llm-record-button:focus-visible {
+	outline: 1px solid #dcaa32;
+}
+
+@media (max-width: 1000px) {
+	.hh-llm-records .content > .namebg {
+		padding-left: 12%;
+		min-height: 60px;
+	}
+	.hh-llm-records .content > .namebg > .namebgbg > .name {
+		font-size: 14px;
+	}
+	.hh-llm-record-list {
+		font-size: 15px;
+		padding-right: 8px;
+		padding-left: 8px;
+	}
+}
+
 .bgdialog {
 	position: absolute;
 	background: url("../../assets/lbtn/OL_line/bg/bgdialog.png");

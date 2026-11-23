@@ -5,6 +5,8 @@
 import { lib, game, ui, get, ai, _status } from "noname";
 import { createBaseLbtnPlugin } from "./base.js";
 import { getBackgroundImage } from "../../../src/ui/backgrounds.js";
+import { renderLLMRecords } from "../../../src/llm/records.js";
+import { bindDialogButton } from "../../../src/llm/dialog.js";
 
 export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 	const base = createBaseLbtnPlugin(lib, game, ui, get, ai, _status, app);
@@ -160,6 +162,7 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 					if (event.cancelable) event.preventDefault();
 					if (closed) return;
 					closed = true;
+					node._hhLLMCleanup?.();
 					node.remove();
 					_status.pausing = false;
 					_status.clicked = false;
@@ -224,7 +227,7 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 		},
 
 		// 显示历史记录面板
-		showHistoryPanel() {
+		showHistoryPanel(type = "game") {
 			const node = ui.create.pause();
 			if (!node) return;
 			node.addTempClass("start");
@@ -232,6 +235,14 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 			const bigbg = ui.create.div(".bigbgjilu", node);
 			const historybg = ui.create.div(".historybg", node);
 			const columnbox = ui.create.div(".content", bigbg);
+			if (type === "llm") {
+				renderLLMRecords({ lib, game, ui, get }, { node, bigbg, historybg, columnbox });
+				ui.historybar.classList.add("paused");
+				ui.arena.classList.add("paused");
+				ui.window.classList.add("touchinfohidden");
+				ui.time.hide(); game.onpause?.();
+				return;
+			}
 
 			// 克隆侧边栏
 			const clonedSidebar = ui.sidebar.cloneNode(false);
@@ -401,6 +412,24 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 			ui.identityShow.innerHTML = `<span style="font-family:shousha;font-size:16px;font-weight:500;text-align:right;line-height:20px;color:#C1AD92;text-shadow:none;">${str}</span>`;
 			if (!ui.identityShow.querySelector(".jiluButton")) {
 				ui.create.div(".jiluButton", ui.identityShow, ui.click.pause);
+			}
+			ui.hhLLMRecordsRefresh = () => this.updateLLMRecordButton();
+			this.updateLLMRecordButton();
+		},
+
+		updateLLMRecordButton() {
+			if (!ui.identityShow) return;
+			const existing = ui.identityShow.querySelector(".hh-llm-record-button");
+			if (!game.hhLLM?.enabled) { existing?.remove(); return; }
+			if (!existing) {
+				const button = ui.create.div(".jiluButton.hh-llm-record-button", ui.identityShow);
+				button.textContent = "LLM记录"; button.setAttribute("role", "button"); button.tabIndex = 0;
+				const open = () => {
+					if (!game.hhLLM?.enabled || _status.paused2 || _status.pausing || _status.nopause || !_status.gameStarted) return;
+					ui.system.hide(); game.pause2(); this.showHistoryPanel("llm");
+				};
+				bindDialogButton(button, open);
+				button.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } });
 			}
 		},
 

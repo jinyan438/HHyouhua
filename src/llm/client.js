@@ -79,6 +79,8 @@ export async function complete(connection, messages, tools, environment) {
 			cached: value(result.usage.prompt_cache_hit_tokens ?? result.usage.prompt_tokens_details?.cached_tokens ?? result.usage.cache_read_input_tokens) });
 	}
 	const message = result.choices?.[0]?.message;
+	if (message) environment?.onOutput?.({ reasoning: typeof message.reasoning_content === 'string' ? message.reasoning_content : typeof message.reasoning === 'string' ? message.reasoning : '',
+		content: typeof message.content === 'string' ? message.content : '', tool_calls: message.tool_calls?.map(call => ({ id: call.id, type: 'function', function: { name: call.function?.name, arguments: call.function?.arguments } })) });
 	if (!message || (typeof message.content !== 'string' && !message.tool_calls?.length)) throw new Error('模型未返回可用的操作');
 	return { role: 'assistant', content: message.content || null,
 		...(message.tool_calls?.length ? { tool_calls: message.tool_calls.map(call => ({ id: call.id, type: 'function', function: { name: call.function?.name, arguments: call.function?.arguments } })) } : {}) };
