@@ -84,7 +84,7 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 			skillSources.set(name, info);
 			result[name] = { text: text(name), info: plain(lib.translate?.[name + '_info'] || ''),
 				...(includeCode ? { code: definitionCode({ ...info, subSkill: undefined }) } : {}) };
-			for (const child of [...(typeof info.group === 'string' ? [info.group] : info.group || []), ...(typeof info.global === 'string' ? [info.global] : info.global || [])]) add(child);
+			for (const child of [...(typeof info.group === 'string' ? [info.group] : info.group || []), ...(typeof info.global === 'string' ? [info.global] : info.global || []), info.sourceSkill]) add(child);
 			for (const [key, child] of Object.entries(info.subSkill || {})) add(name + '_' + key, child);
 		}
 		skills.forEach(name => add(name));
@@ -133,7 +133,7 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 		const card = trigger?.card && (triggerName && /^(?:useCard|respond|damage)/.test(triggerName)
 			? cardInfo(trigger.card) : cardView(trigger.card, viewer));
 		return { ...(source ? { skill: { id: source, owner: owner(origin.owner), text: text(source), info },
-			stage: frames.some(frame => frame.name === source + '_cost') ? 'cost' : 'effect' } : {}),
+			stage: frames.some(frame => frame.name === source + '_cost') ? 'cost' : frames[1]?.name === 'trigger' ? 'activation' : 'effect' } : {}),
 			phase: phase?.name, target: owner(event.target), targets: targets(event.targets),
 			...(triggerName || timing ? { trigger: { event: triggerName, timing, player: owner(trigger?.player),
 				source: owner(trigger?.source), target: owner(trigger?.target), targets: targets(trigger?.targets), card,

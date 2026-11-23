@@ -63,7 +63,7 @@ function harness(policy = () => ({ action: 'bool', value: true }), responseUsage
 		addGlobalSkill(name) { lib.skill.global.add(name); },
 		addCardKnower(cards, viewer) { cards.forEach(card => (card.knowers ||= []).push(viewer)); },
 	};
-	const get = { mode: () => 'identity', owner: card => card.owner, position: card => card.position,
+	const get = { mode: () => 'identity', owner: card => card.owner, position: card => card.position, suit: card => card.suit, number: card => card.number,
 		itemtype: value => value?.playerid ? 'player' : value?.cardid ? 'card' : Array.isArray(value) && value[0]?.cardid ? 'cards' : undefined,
 		info: value => typeof value === 'string' ? lib.skill[value] : lib.card[value?.name], event: () => _status.event, player: () => _status.event.player,
 		select: value => { if (typeof value === 'function') value = value(); return Array.isArray(value) ? value : [value ?? 1, value ?? 1]; },
@@ -101,7 +101,8 @@ function harness(policy = () => ({ action: 'bool', value: true }), responseUsage
 		const request = { ...rules, ...JSON.parse(body.messages.findLast(message => message.role === 'user' && message.content.startsWith('{')).content) };
 		const answer = await policy(request, requests.length, body);
 		if (answer instanceof Error) throw answer;
-		return { ok: true, json: async () => ({ ...(responseUsage ? { usage: responseUsage } : {}), choices: [{ message: { role: 'assistant', content: null, tool_calls: [{ id: 'call-' + requests.length, type: 'function', function: { name: 'game_action', arguments: JSON.stringify(answer) } }] } }] }) };
+		const calls = Array.isArray(answer) ? answer : [answer];
+		return { ok: true, json: async () => ({ ...(responseUsage ? { usage: responseUsage } : {}), choices: [{ message: { role: 'assistant', content: null, tool_calls: calls.map((input, index) => ({ id: 'call-' + requests.length + '-' + index, type: 'function', function: { name: 'game_action', arguments: JSON.stringify(input) } })) } }] }) };
 	};
 	function install() { return setupLLMTakeover(context, { fetch: fetcher }); }
 	async function run(evt, { until = Infinity } = {}) {
@@ -269,7 +270,7 @@ test('native view-as skills use backup, select the cost, and restore the event',
 		const state = request.state;
 		if (!state.currentSkill) return { action: 'skill', id: 'skill_own' };
 		if (!state.cards.some(card => card.selected)) return { action: 'card', id: state.cards[0].id };
-		return { action: 'confirm' };
+		return { action: 'confirm', reason: '将一张手牌转为闪，抵消敌方杀以避免伤害，收益高于保留此牌' };
 	});
 	h.lib.skill.skill_own = { enable: 'chooseToRespond', viewAs: { name: 'shan' }, filterCard: () => true, selectCard: 1 };
 	h.lib.filter.filterEnable = (event, player, skill) => skill === 'skill_own';
@@ -277,6 +278,7 @@ test('native view-as skills use backup, select the cost, and restore the event',
 	const event = h.event('chooseToRespond', { nouse: true, filterCard: card => card.name === 'shan', selectCard: 1 });
 	await h.run(event, { until: 2 });
 	assert.equal(event.result.bool, true); assert.equal(event.result.card.name, 'shan'); assert.equal(event.result.skill, 'skill_own'); assert.equal(event.skill, undefined);
+	assert.equal(h.game.hhLLM.lastError, '');
 });
 
 test('native control cleanup and optional skill activation use model decisions', async () => {
@@ -670,7 +672,7 @@ test('optional skill costs include their source, timing, dynamic description and
 		assert.equal(context.skill.id, 'area_cleanse'); assert.equal(context.stage, 'cost'); assert.equal(context.phase, 'phaseJudge');
 		assert.equal(context.trigger.timing, 'phaseJudgeBegin'); assert.equal(context.skill.info, '本次可以支付两张牌移除延迟效果');
 		assert.equal(request.cards.delayed_lock.info, '判定失败则跳过一个阶段'); assert.deepEqual(selection.cards.min, 2); assert.deepEqual(selection.cards.max, 2);
-		return { action: 'batch', actions: [...cards.map(card => ({ action: 'card', id: card.id })), { action: 'confirm' }] };
+		return { action: 'batch', reason: '支付两张牌移除妨碍行动的延迟效果，后续由自己执行，保住出牌机会更有利', actions: [...cards.map(card => ({ action: 'card', id: card.id })), { action: 'confirm' }] };
 	});
 	h.lib.skill.area_cleanse = {}; h.actor.skills.push('area_cleanse'); h.lib.dynamicTranslate = { area_cleanse: () => '本次可以支付两张牌移除延迟效果' };
 	h.lib.card.delayed_lock = {}; h.lib.translate.delayed_lock_info = '判定失败则跳过一个阶段';
@@ -720,4 +722,109 @@ test('choice context includes equipped skills but hides concealed enemy skills a
 	for (const secret of ['concealed_skill', 'CONCEALED_SKILL_TEXT', 'PRIVATE_TRIGGER_CARD', 'PRIVATE_DYNAMIC_INFO']) assert.equal(json.includes(secret), false, secret);
 	h.opponent.skills = ['skill_other']; h.opponent.hiddenSkills = ['skill_other'];
 	assert.equal(view.choiceContext(h.event('chooseBool', { parent: enemy })).skill, undefined, 'A skill known from another general does not reveal a concealed source');
+});
+
+test('ordinary active skills require a benefit assessment and retain dynamic effects without a code round trip', async () => {
+	const h = harness(request => {
+		assert.equal(request.state.skills[0].info, '转交一件装备，由接收方决定后续效果');
+		assert.deepEqual(request.state.skills[0].activation.requiresRuleReview, []);
+		return { action: 'batch', reason: '给友方一件装备，其可选择打击敌方，资源留在己方且收益高于保留装备', actions: [
+			{ action: 'skill', id: 'skill_own' }, { action: 'target', id: 'seat:3' }, { action: 'confirm' },
+		] };
+	});
+	h.lib.skill.skill_own = { enable: 'phaseUse', filterTarget: () => true, selectTarget: 1, content() {} };
+	h.lib.dynamicTranslate = { skill_own: () => '转交一件装备，由接收方决定后续效果' };
+	h.install();
+	const result = await h.run(h.event('chooseToUse', { type: 'phase', filterCard: () => false }));
+	assert.equal(result.bool, true, h.game.hhLLM.lastError); assert.equal(result.skill, 'skill_own'); assert.equal(h.requests.length, 1); assert.equal(h.used.length, 1);
+	const event = h.event('chooseToUse', { type: 'phase', filterCard: () => false }), bridge = createActions(h, createPerspective(h), event);
+	bridge.state(); bridge.act({ action: 'skill', id: 'skill_own' }); bridge.act({ action: 'target', id: 'seat:3' });
+	assert.equal(bridge.state().currentSkillInfo.info, '转交一件装备，由接收方决定后续效果');
+	assert.throws(() => bridge.act({ action: 'confirm' }), /净收益/); assert.equal(bridge.done, false); assert.equal(event.result, undefined);
+});
+
+test('limited skills cannot query and spend in one response before the model has received the implementation', async () => {
+	const h = harness((request, index, body) => {
+		if (index === 1) return [
+			{ action: 'rules', id: 'skill_own' },
+			{ action: 'batch', reason: '先看回血就发动', actions: [{ action: 'skill', id: 'skill_own' }, { action: 'target', id: 'seat:3' }, { action: 'confirm' }] },
+		];
+		if (index === 2) {
+			assert.equal(h.used.length, 0);
+			assert.deepEqual(request.state.activation.requiresRuleReview, []);
+			assert.ok(body.messages.some(message => message.role === 'tool' && message.content.includes('下一次请求')));
+			assert.ok(body.messages.some(message => message.role === 'tool' && message.content.includes('RECIPIENT_DECIDES_NEXT_EFFECT')));
+			return { action: 'batch', actions: [{ action: 'reset' }, { action: 'cancel' }], strategy: '避免把后续伤害选择权交给敌方' };
+		}
+		assert.deepEqual(body.messages.filter(message => message.role === 'assistant'), [{ role: 'assistant', content: '避免把后续伤害选择权交给敌方' }]);
+		assert.equal(JSON.stringify(body).includes('RECIPIENT_DECIDES_NEXT_EFFECT'), false);
+		assert.equal(JSON.stringify(body).includes('先看回血就发动'), false);
+		return { action: 'bool', value: true };
+	});
+	h.lib.skill.skill_own = { enable: 'phaseUse', limited: true, filterTarget: () => true, selectTarget: 1,
+		content: function RECIPIENT_DECIDES_NEXT_EFFECT(event) { return event.target.chooseTarget(); } };
+	h.install();
+	const result = await h.run(h.event('chooseToUse', { type: 'phase', filterCard: () => false }));
+	assert.equal(result.bool, false); assert.equal(h.used.length, 0);
+	assert.equal(h.game.hhLLM.lastError, '');
+	await h.run(h.event('chooseBool')); assert.equal(h.requests.length, 3);
+});
+
+test('missing skill text requires current code, while reviewed implementations and a reason allow native submission', async () => {
+	const h = harness((request, index) => {
+		if (index === 1) {
+			assert.deepEqual(request.state.skills[0].activation.requiresRuleReview, ['skill_own']);
+			return { action: 'rules', id: 'skill_own' };
+		}
+		return { action: 'batch', reason: '已核对实现，付出一张牌换取即时防御，由自己完成响应，比承受伤害有利', actions: [
+			{ action: 'skill', id: 'skill_own' }, { action: 'card', id: request.state.cards[0].id }, { action: 'confirm' },
+		] };
+	});
+	delete h.lib.translate.skill_own_info;
+	h.lib.skill.skill_own = { enable: 'chooseToRespond', viewAs: { name: 'shan' }, filterCard: () => true, selectCard: 1 };
+	h.lib.filter.filterEnable = (event, player, skill) => skill === 'skill_own';
+	h.card('sha', h.actor); h.install();
+	const result = await h.run(h.event('chooseToRespond', { nouse: true, filterCard: card => card.name === 'shan', selectCard: 1 }), { until: 2 });
+	assert.equal(result.bool, true, h.game.hhLLM.lastError); assert.equal(result.card.name, 'shan'); assert.equal(h.game.hhLLM.lastError, '');
+	assert.equal(h.requests.length, 2, JSON.stringify(h.requests.at(-1).body.messages.filter(message => message.role === 'tool')));
+});
+
+test('backup skills must review their limited source and cannot reuse another choice code review', () => {
+	const h = harness();
+	h.lib.skill.limited_source = { limited: true, content: function COMPLETE_EFFECT_SEQUENCE() {} };
+	h.lib.skill.skill_own = { sourceSkill: 'limited_source', enable: 'phaseUse', filterTarget: () => true, selectTarget: 1 };
+	const view = createPerspective(h), event = h.event('chooseToUse', { type: 'phase', filterCard: () => false }), bridge = createActions(h, view, event);
+	bridge.state(); bridge.act({ action: 'skill', id: 'skill_own' }); bridge.act({ action: 'target', id: 'seat:3' });
+	assert.deepEqual(bridge.state().activation.requiresRuleReview, ['skill_own', 'limited_source']);
+	bridge.reviewRules(['skill_own']); assert.throws(() => bridge.act({ action: 'confirm', reason: '已权衡' }), /limited_source/);
+	assert.ok(view.skillDefinitions(['skill_own'], true).limited_source.code.content.includes('COMPLETE_EFFECT_SEQUENCE'));
+	bridge.reviewRules(['limited_source']); assert.throws(() => bridge.act({ action: 'confirm' }), /净收益/);
+	bridge.act({ action: 'confirm', reason: '已核对来源实现及全部结算，成本和次数的价值低于当前获胜收益' }); assert.equal(bridge.result.bool, true);
+	const next = createActions(h, view, h.event('chooseToUse', { type: 'phase', filterCard: () => false }));
+	next.state(); next.act({ action: 'skill', id: 'skill_own' }); next.act({ action: 'target', id: 'seat:3' });
+	assert.throws(() => next.act({ action: 'confirm', reason: '沿用之前判断' }), /rules/);
+});
+
+test('ordinary optional triggers, direct choices and costs require reasons without restricting opponents or forced effects', () => {
+	const h = harness(), view = createPerspective(h);
+	for (const parent of [
+		{ name: 'trigger', skill: 'skill_own', player: h.actor },
+		{ name: 'skill_own_cost', skill: 'skill_own', player: h.actor },
+	]) {
+		const bridge = createActions(h, view, h.event('chooseBool', { parent }), 'bool');
+		assert.equal(bridge.state().activation.requiresReason, true); assert.deepEqual(bridge.state().activation.requiresRuleReview, []);
+		assert.throws(() => bridge.act({ action: 'bool', value: true }), /净收益/);
+		bridge.act({ action: 'bool', value: true, reason: '后续由自己决定目标，可获得正收益，无额外资源代价' }); assert.equal(bridge.result.bool, true);
+	}
+	h.lib.skill.skill_own.direct = true;
+	const direct = createActions(h, view, h.event('chooseBool', { parent: { name: 'skill_own', player: h.actor } }), 'bool');
+	assert.throws(() => direct.act({ action: 'bool', value: true }), /净收益/);
+	direct.act({ action: 'bool', value: false, reason: '对手可反制，完整结算后不如保留资源' }); assert.equal(direct.result.bool, false);
+	for (const fields of [
+		{ parent: { name: 'skill_own_cost', skill: 'skill_own', player: h.actor }, forced: true },
+		{ parent: { name: 'skill_other_cost', skill: 'skill_other', player: h.opponent } },
+	]) {
+		const bridge = createActions(h, view, h.event('chooseBool', fields), 'bool');
+		assert.equal(bridge.state().activation, undefined); bridge.act({ action: 'bool', value: true }); assert.equal(bridge.result.bool, true);
+	}
 });
