@@ -1,3 +1,5 @@
+import { requestNative, NativeAPIError } from './native.js';
+
 export const LLM_PREFIX = 'extension_HH优化_llm_';
 
 export function apiRoot(address) {
@@ -14,7 +16,7 @@ export function readConnection(lib) {
 		timeout: Math.max(5, Math.min(600, Number(value('timeout')) || 120)) * 1000 };
 }
 
-export async function requestAPI(connection, path, body, { fetch: fetcher = globalThis.fetch, signal } = {}) {
+export async function requestAPI(connection, path, body, { fetch: fetcher = globalThis.fetch, signal, runtime = globalThis } = {}) {
 	const controller = new AbortController();
 	const abort = () => controller.abort();
 	if (signal?.aborted) controller.abort();
@@ -29,10 +31,15 @@ export async function requestAPI(connection, path, body, { fetch: fetcher = glob
 			timer = setTimeout(() => { controller.abort(); reject(new Error('API 请求超时')); }, connection.timeout || 120000);
 		});
 		const request = async () => {
-			const response = await fetcher(apiRoot(connection.address) + '/' + path, {
-				method: body ? 'POST' : 'GET', signal: controller.signal, redirect: 'error',
-				headers: { ...(connection.key ? { Authorization: 'Bearer ' + connection.key } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) },
-				...(body ? { body: JSON.stringify(body) } : {}),
+			if (controller.signal.aborted) throw new Error('请求已取消');
+			const url = apiRoot(connection.address) + '/' + path, method = body ? 'POST' : 'GET';
+			const headers = { ...(connection.key ? { Authorization: 'Bearer ' + connection.key } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) };
+			const data = body ? JSON.stringify(body) : undefined;
+			const native = typeof runtime.cordova?.exec === 'function'
+				? await requestNative(runtime, { url, method, headers, ...(data ? { data } : {}), timeout: Math.ceil(connection.timeout || 120000) }, controller.signal) : null;
+			const response = native || await fetcher(url, {
+				method, signal: controller.signal, redirect: 'error', headers,
+				...(data ? { body: data } : {}),
 			});
 			if (!response.ok) throw new Error('API 返回 HTTP ' + response.status);
 			return response.json();
@@ -40,8 +47,10 @@ export async function requestAPI(connection, path, body, { fetch: fetcher = glob
 		return await Promise.race([request(), timeout, aborted]);
 	} catch (error) {
 		if (controller.signal.aborted) throw new Error(signal?.aborted ? '请求已取消' : 'API 请求超时');
+		if (error instanceof NativeAPIError) throw error;
 		// Do not repeat response bodies, request headers or provider messages containing credentials.
 		if (/^API 返回 HTTP \d+$/.test(error.message)) throw error;
+		if (typeof runtime.cordova?.exec === 'function') throw new Error('当前客户端无法通过网页连接 API，请安装包含大模型原生网络接口的新版客户端');
 		throw new Error('无法连接 API，请检查地址、网络及服务的跨域设置');
 	} finally {
 		clearTimeout(timer);
