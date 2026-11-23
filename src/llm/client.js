@@ -71,6 +71,13 @@ export async function complete(connection, messages, tools, environment) {
 	const result = await requestAPI(connection, 'chat/completions', {
 		model: connection.model, messages, tools, tool_choice: 'auto', stream: false,
 	}, environment);
+	if (result.usage && environment?.onUsage) {
+		const value = number => Number.isFinite(number) && number >= 0 ? number : 0;
+		const input = value(result.usage.prompt_tokens ?? result.usage.input_tokens);
+		const output = value(result.usage.completion_tokens ?? result.usage.output_tokens);
+		environment.onUsage({ input, output, total: value(result.usage.total_tokens ?? input + output),
+			cached: value(result.usage.prompt_cache_hit_tokens ?? result.usage.prompt_tokens_details?.cached_tokens ?? result.usage.cache_read_input_tokens) });
+	}
 	const message = result.choices?.[0]?.message;
 	if (!message || (typeof message.content !== 'string' && !message.tool_calls?.length)) throw new Error('模型未返回可用的操作');
 	return { role: 'assistant', content: message.content || null,

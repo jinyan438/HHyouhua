@@ -1,11 +1,18 @@
 import { plain } from './perspective.js';
 
+const stepProperties = {
+	action: { type: 'string', enum: ['inspect', 'card', 'target', 'button', 'skill', 'control', 'bool', 'skill_choice', 'numbers', 'move', 'swap', 'tap', 'confirm', 'cancel', 'reset'] },
+	id: { type: 'string' }, other: { type: 'string' }, index: { type: 'integer' }, to: { type: 'integer' },
+	value: { type: 'boolean' }, values: { type: 'array', items: { type: 'number' } },
+};
 export const actionTool = { type: 'function', function: {
-	name: 'game_action', description: '操作当前玩家的原生选择界面。每次返回最新合法选项。选牌/目标/按钮为切换选择；依次选择技能、牌、目标后 confirm。control/bool/skill_choice 直接提交；排序使用 move/swap 后 confirm。cancel 放弃响应或结束出牌；reset 退回技能选择。只使用 state 中的 id。',
+	name: 'game_action', description: '操作当前原生选择。优先 batch 一次提交有序步骤（选技能/牌、目标、confirm），逐步原生校验，出错停在该步；技能生成新按钮时再查看 state。目标也可用场面中的 seat:N。rules+id 按需查询可见技能代码；history 按 from（记录编号）、limit（1至8）、player、type 查询本座位完整历史。不要重复查询已在对话中的资料。',
 	parameters: { type: 'object', properties: {
-		action: { type: 'string', enum: ['inspect', 'card', 'target', 'button', 'skill', 'control', 'bool', 'skill_choice', 'numbers', 'move', 'swap', 'tap', 'confirm', 'cancel', 'reset'] },
-		id: { type: 'string' }, other: { type: 'string' }, index: { type: 'integer' }, to: { type: 'integer' },
-		value: { type: 'boolean' }, values: { type: 'array', items: { type: 'number' } },
+		...stepProperties,
+		action: { type: 'string', enum: [...stepProperties.action.enum, 'batch', 'rules', 'history'] },
+		actions: { type: 'array', minItems: 1, maxItems: 24, items: { type: 'object', properties: stepProperties, required: ['action'], additionalProperties: false } },
+		from: { type: 'integer', minimum: 1 }, limit: { type: 'integer', minimum: 1, maximum: 8 }, player: { type: 'string' }, type: { type: 'string' },
+		strategy: { type: 'string', maxLength: 400, description: '可选的本座位后续策略摘要。仅记录目标、倾向和计划，不复述操作、代码或场面；策略未变可省略。' },
 	}, required: ['action'], additionalProperties: false },
 } };
 
@@ -71,7 +78,8 @@ export function createActions(context, perspective, event, kind = 'selection') {
 		if (kind === 'move') return { ...base, groups: moved.map((row, index) => ({ index, title: plain(groups[index][0]), items: row.map(link => ({ id: ref(link, 'item'), ...itemView(link, true) })) })),
 			filterMove: event.filterMove?.toString(), filterOk: event.filterOk?.toString(), canConfirm: !event.filterOk || !!event.filterOk(moved) };
 		const ok = game.check();
-		return { ...base, currentSkill: event.skill, canConfirm: !!ok,
+		const currentCard = get.card?.();
+		return { ...base, currentSkill: event.skill, currentCard: currentCard ? perspective.cardInfo(currentCard) : undefined, canConfirm: !!ok,
 			selectCard: event.filterCard ? range(event.selectCard) : undefined,
 			selectTarget: event.filterTarget ? range(event.selectTarget) : undefined,
 			selectButton: event.filterButton ? range(event.selectButton) : undefined,
@@ -95,6 +103,16 @@ export function createActions(context, perspective, event, kind = 'selection') {
 		if (done) throw new Error('此操作已经提交');
 		if (!input || typeof input.action !== 'string') throw new Error('缺少 action');
 		const { action } = input;
+		if (action === 'batch') {
+			if (!Array.isArray(input.actions) || !input.actions.length || input.actions.length > 24 || input.actions.some(step => !step || !stepProperties.action.enum.includes(step.action))) throw new Error('batch 需要 1 至 24 个普通操作步骤');
+			let applied = 0;
+			for (const step of input.actions) {
+				if (done) break;
+				try { act(step); applied++; }
+				catch (error) { throw new Error(`第 ${applied + 1} 步失败，前 ${applied} 步已执行：${error.message}。请依据最新 state 继续`); }
+			}
+			return { applied, submitted: done };
+		}
 		if (action === 'inspect') return;
 		if (action === 'reset') { reset(); actions.push({ action }); return; }
 		if (action === 'cancel') {
@@ -153,7 +171,8 @@ export function createActions(context, perspective, event, kind = 'selection') {
 				if (!skills().includes(input.id)) throw new Error('此技能当前不可发动');
 				ui.click.skill(input.id);
 			} else if (['card', 'target', 'button'].includes(action)) {
-				const entry = refs.get(input.id);
+				const target = action === 'target' && targets().find(target => perspective.id(target) === input.id);
+				const entry = refs.get(input.id) || (target ? { type: 'target', object: target } : null);
 				if (!entry || entry.type !== action || !selectable(entry.object)) throw new Error('此选项当前不可选');
 				const object = entry.object, list = selected(action), index = list.indexOf(object);
 				if (typeof event.custom?.replace?.[action] === 'function') event.custom.replace[action](object);

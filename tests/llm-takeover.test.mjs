@@ -37,7 +37,7 @@ const clickMethods = methods('../../../noname/ui/click/index.js', ['ok', 'cancel
 const eventMethods = methods('../../../noname/library/element/gameEvent.ts', ['backup', 'restore']);
 const checkSource = fs.readFileSync(new URL('../../../noname/game/check.js', import.meta.url), 'utf8').replace(/^import .*$/m, '').replace('export class Check', 'globalThis.NativeCheck = class Check');
 
-function harness(policy = () => ({ action: 'bool', value: true })) {
+function harness(policy = () => ({ action: 'bool', value: true }), responseUsage) {
 	const requests = [], popups = [], used = [];
 	const lib = { config: { mode: 'identity', [P + 'enabled']: true, [P + 'address']: 'https://model.example/v1', [P + 'key']: 'TEST_SECRET_KEY', [P + 'model']: 'mock', skip_shan: false },
 		character: { own: ['male', 'wei', 4, ['skill_own']], other: ['female', 'wu', 3, ['skill_other']], concealed_general: ['male', 'qun', 4, ['concealed_skill']] },
@@ -97,10 +97,11 @@ function harness(policy = () => ({ action: 'bool', value: true })) {
 	}
 	const fetcher = async (url, options) => {
 		const body = JSON.parse(options.body); requests.push({ url, options, body });
-		const request = JSON.parse(body.messages.findLast(message => message.role === 'user' && message.content.startsWith('{')).content);
+		const rules = JSON.parse(body.messages.find(message => message.role === 'system' && message.content.startsWith('{"generals"')).content);
+		const request = { ...rules, ...JSON.parse(body.messages.findLast(message => message.role === 'user' && message.content.startsWith('{')).content) };
 		const answer = await policy(request, requests.length, body);
 		if (answer instanceof Error) throw answer;
-		return { ok: true, json: async () => ({ choices: [{ message: { role: 'assistant', content: null, tool_calls: [{ id: 'call-' + requests.length, type: 'function', function: { name: 'game_action', arguments: JSON.stringify(answer) } }] } }] }) };
+		return { ok: true, json: async () => ({ ...(responseUsage ? { usage: responseUsage } : {}), choices: [{ message: { role: 'assistant', content: null, tool_calls: [{ id: 'call-' + requests.length, type: 'function', function: { name: 'game_action', arguments: JSON.stringify(answer) } }] } }] }) };
 	};
 	function install() { return setupLLMTakeover(context, { fetch: fetcher }); }
 	async function run(evt, { until = Infinity } = {}) {
@@ -140,7 +141,7 @@ test('perspectives exclude unknown hands, generals, identities, expansions and o
 	const hiddenExpansion = h.card('HIDDEN_EXPANSION', h.opponent, { position: 'x' }); hiddenExpansion.classList.add('infohidden'); h.opponent.getExpansions = () => [hiddenExpansion];
 	const json = JSON.stringify(view.snapshot(h.actor));
 	for (const hidden of ['HIDDEN_HAND', 'concealed_general', 'CONCEALED_GENERAL_TEXT', 'CONCEALED_SKILL_TEXT', 'OPPONENT_STORAGE_SECRET', 'HIDDEN_EXPANSION']) assert.equal(json.includes(hidden), false, hidden);
-	assert.ok(json.includes('OWN_HAND')); assert.ok(json.includes('REVEALED_HAND')); assert.ok(json.includes('ownSkillCode'));
+	assert.ok(json.includes('OWN_HAND')); assert.ok(json.includes('REVEALED_HAND')); assert.ok(json.includes('本将技能文本')); assert.equal(json.includes('ownSkillCode'), false);
 	assert.equal(view.snapshot(h.actor).players[2].identity, 'unknown');
 	h.opponent.identityShown = true; assert.equal(view.snapshot(h.actor).players[2].identity, 'fan');
 });
@@ -183,7 +184,11 @@ test('native chooseToUse selects a card and target, then executes useResult', as
 	const result = await h.run(h.event('chooseToUse', { type: 'phase', filterCard: card => card.name === 'sha', selectCard: 1, filterTarget: (card, player, target) => target !== player, selectTarget: 1 }));
 	assert.equal(result.bool, true); assert.equal(result.cards[0], card); assert.equal(result.targets[0], h.opponent); assert.equal(h.used.length, 1);
 	assert.equal(h.requests.length, 3); assert.equal(h.requests[0].options.headers.Authorization, 'Bearer TEST_SECRET_KEY');
-	for (const { body } of h.requests) { const input = JSON.parse(body.messages.findLast(message => message.role === 'user').content); assert.ok(input.generals.length); assert.ok(input.skills.skill_own.code.content.includes('ownSkillCode')); assert.ok(Array.isArray(input.record)); }
+	for (const { body } of h.requests) {
+		const rules = JSON.parse(body.messages[1].content), input = JSON.parse(body.messages.findLast(message => message.role === 'user').content);
+		assert.ok(rules.generals.length); assert.equal(rules.skills.skill_own.info, '本将技能文本'); assert.equal(rules.skills.skill_own.code, undefined);
+		assert.ok(Array.isArray(input.record.recent));
+	}
 });
 
 test('LLM choices keep native legality and selections without showing human masks or target swords while awaiting requests', async () => {
@@ -295,17 +300,19 @@ test('native card, target and combined selection preserve follow-up callbacks', 
 	}
 });
 
-test('per-seat conversations and prompts stay independent and reset between games', async () => {
-	const h = harness(request => ({ action: 'bool', value: true }));
+test('per-seat strategy memories and prompts stay independent and reset between games', async () => {
+	const h = harness(request => ({ action: 'bool', value: true, strategy: request.you === 'seat:2' ? 'ONLY_TWO_STRATEGY' : 'ONLY_THREE_STRATEGY' }));
 	h.lib.config[P + 'seat_prompts'] = { 2: 'ONLY_SEAT_TWO', 3: 'ONLY_SEAT_THREE' }; h.install();
 	await h.run(h.event('chooseBool', { prompt: 'PRIVATE_TWO_DECISION' }));
 	await h.run(h.event('chooseBool', { player: h.opponent, prompt: 'PRIVATE_THREE_DECISION' }));
 	assert.equal(JSON.stringify(h.requests[1].body).includes('ONLY_SEAT_TWO'), false);
 	assert.equal(JSON.stringify(h.requests[1].body).includes('PRIVATE_TWO_DECISION'), false);
 	await h.run(h.event('chooseBool'));
-	assert.ok(JSON.stringify(h.requests[2].body).includes('PRIVATE_TWO_DECISION'));
+	assert.ok(JSON.stringify(h.requests[2].body).includes('ONLY_TWO_STRATEGY'));
+	assert.equal(JSON.stringify(h.requests[2].body).includes('PRIVATE_TWO_DECISION'), false);
+	assert.equal(JSON.stringify(h.requests[2].body).includes('ONLY_THREE_STRATEGY'), false);
 	h.game.hhLLM.reset(); await h.run(h.event('chooseBool'));
-	assert.equal(JSON.stringify(h.requests[3].body).includes('PRIVATE_TWO_DECISION'), false);
+	assert.equal(JSON.stringify(h.requests[3].body).includes('ONLY_TWO_STRATEGY'), false);
 });
 
 test('private views reach only their viewer; public logs freeze visibility at the time of the log', async () => {
@@ -489,10 +496,116 @@ test('beatmap actions are scored from legal input timestamps using native window
 	assert.throws(() => scoreBeatmap(map, [5000, 1]), /递增/);
 });
 
-test('zero memory keeps full current records while omitting prior private conversation', async () => {
-	const h = harness(); h.lib.config[P + 'memory'] = 0; h.install();
+test('zero memory omits past strategies while keeping the injected archive summary', async () => {
+	const h = harness(() => ({ action: 'bool', value: true, strategy: 'OLD_PRIVATE_STRATEGY' })); h.lib.config[P + 'memory'] = 0; h.install();
 	await h.run(h.event('chooseBool', { prompt: 'OLD_PRIVATE_PROMPT' })); h.game.log('PUBLIC_HISTORY');
 	await h.run(h.event('chooseBool'));
 	assert.equal(JSON.stringify(h.requests[1].body).includes('OLD_PRIVATE_PROMPT'), false);
+	assert.equal(JSON.stringify(h.requests[1].body).includes('OLD_PRIVATE_STRATEGY'), false);
 	assert.ok(JSON.stringify(h.requests[1].body).includes('PUBLIC_HISTORY'));
+});
+
+test('one batched model request selects a card and seat target and submits through native useResult', async () => {
+	const h = harness(request => ({ action: 'batch', actions: [
+		{ action: 'card', id: request.state.cards[0].id }, { action: 'target', id: 'seat:3' }, { action: 'confirm' },
+	], strategy: '保留防御资源，集中压制已确认的敌方。' }));
+	const card = h.card('sha', h.actor); h.install();
+	const result = await h.run(h.event('chooseToUse', { type: 'phase', filterCard: () => true, selectCard: 1,
+		filterTarget: (card, player, target) => target === h.opponent, selectTarget: 1 }));
+	assert.equal(result.cards[0], card); assert.equal(result.targets[0], h.opponent);
+	assert.equal(h.used.length, 1); assert.equal(h.requests.length, 1);
+});
+
+test('a partial batch stops at an illegal target and resumes from actual native selections', async () => {
+	const h = harness((request, index) => ({ action: 'batch', actions: index === 1 ? [
+		{ action: 'card', id: request.state.cards[0].id }, { action: 'target', id: 'seat:1' }, { action: 'confirm' },
+	] : [{ action: 'target', id: 'seat:3' }, { action: 'confirm' }] }));
+	const card = h.card('sha', h.actor); h.install();
+	const result = await h.run(h.event('chooseToUse', { type: 'phase', filterCard: () => true, selectCard: 1,
+		filterTarget: (card, player, target) => target === h.opponent, selectTarget: 1 }));
+	assert.equal(result.cards[0], card); assert.equal(result.targets[0], h.opponent); assert.equal(h.requests.length, 2);
+	const repair = h.requests[1].body;
+	assert.ok(repair.messages.some(message => message.role === 'tool' && message.content.includes('前 1 步已执行')));
+	assert.equal(JSON.parse(repair.messages.at(-1).content).state.cards[0].selected, true);
+	assert.equal(h.used.length, 1);
+});
+
+test('injection contains effects of visible and current-choice cards but no full deck or card code', () => {
+	const h = harness(), view = createPerspective(h);
+	h.lib.translate.sha_info = '对一个目标造成伤害'; h.lib.translate.shan_info = '抵消杀';
+	h.lib.card.sha.content = function NEVER_SEND_CARD_CODE() {};
+	h.lib.card.UNSEEN_DECK_CARD = { content: 'UNSEEN_DECK_CODE'.repeat(10000) };
+	h.lib.inpile.push('UNSEEN_DECK_CARD');
+	h.card('sha', h.actor); h.card('UNSEEN_DECK_CARD', h.opponent);
+	const snapshot = view.snapshot(h.actor, [], [], { currentCard: { name: 'shan' } });
+	assert.deepEqual(Object.keys(snapshot.cards), ['sha', 'shan']);
+	assert.equal(snapshot.cards.sha.info, '对一个目标造成伤害');
+	const json = JSON.stringify(snapshot);
+	for (const excluded of ['NEVER_SEND_CARD_CODE', 'UNSEEN_DECK', 'ownSkillCode', '"definition"', '"code"']) assert.equal(json.includes(excluded), false, excluded);
+	assert.ok(json.length < 5000);
+});
+
+test('on-demand subskill code is available even before native registration and appears only once', () => {
+	const h = harness(), view = createPerspective(h);
+	h.lib.skill.skill_own.subSkill = { detail: { content: function UNIQUE_CHILD_CODE() {} } };
+	assert.ok(view.snapshot(h.actor).skills.skill_own_detail);
+	const child = view.skillDefinitions(['skill_own_detail'], true);
+	assert.ok(child.skill_own_detail.code.content.includes('UNIQUE_CHILD_CODE'));
+	const parent = JSON.stringify(view.skillDefinitions(['skill_own'], true));
+	assert.equal(parent.match(/UNIQUE_CHILD_CODE/g).length, 1);
+});
+
+test('skill code is queried on demand within the visible rules, and injected/tool data never enters strategy history', async () => {
+	let stage = 0;
+	const h = harness((request, index, body) => {
+		if (stage++ === 0) return { action: 'rules', id: 'concealed_skill' };
+		if (stage === 2) {
+			assert.ok(body.messages.some(message => message.role === 'tool' && message.content.includes('只能查询当前可见')));
+			return { action: 'rules', id: 'skill_own' };
+		}
+		if (stage === 3) {
+			assert.ok(body.messages.some(message => message.role === 'tool' && message.content.includes('ownSkillCode')));
+			return { action: 'bool', value: true, strategy: 'NEXT_TURN_STRATEGY' };
+		}
+		assert.deepEqual(body.messages.filter(message => message.role === 'assistant'), [{ role: 'assistant', content: 'NEXT_TURN_STRATEGY' }]);
+		const json = JSON.stringify(body);
+		for (const excluded of ['ownSkillCode', 'PRIVATE_DECISION_SCENE', '"tool_calls"', '"submitted"']) assert.equal(json.includes(excluded), false, excluded);
+		return { action: 'bool', value: true };
+	});
+	h.opponent.name1 = 'concealed_general'; h.opponent.isUnseen = () => true; h.opponent.skills = []; h.opponent.hiddenSkills = ['concealed_skill'];
+	h.install(); await h.run(h.event('chooseBool', { prompt: 'PRIVATE_DECISION_SCENE' }));
+	await h.run(h.event('chooseBool'));
+	assert.equal(h.requests.length, 4);
+	assert.equal(h.requests[0].body.messages[1].content, h.requests[3].body.messages[1].content, 'Static rules keep their prefix position and content');
+});
+
+test('old private archive entries are queried only by their viewer and remain temporary injection', async () => {
+	let query = true;
+	const h = harness((request, index, body) => {
+		if (query) { query = false; return { action: 'history', from: 1, limit: 1 }; }
+		if (index === 2) assert.ok(body.messages.some(message => message.role === 'tool' && message.content.includes('PRIVATE_ARCHIVE_CARD')));
+		return { action: 'bool', value: true };
+	});
+	const card = h.card('PRIVATE_ARCHIVE_CARD', h.human); h.install();
+	await h.run(h.event('viewCards', { cards: [card] }));
+	for (let index = 0; index < 50; index++) h.game.log('public ' + index);
+	await h.run(h.event('chooseBool'));
+	query = true; await h.run(h.event('chooseBool', { player: h.opponent }));
+	assert.equal(JSON.stringify(h.requests.slice(2).map(request => request.body)).includes('PRIVATE_ARCHIVE_CARD'), false);
+});
+
+test('repeated requests that make no progress stop before the old 96-request limit', async () => {
+	const h = harness(() => ({ action: 'inspect' })); h.install();
+	await h.run(h.event('chooseBool', { choice: false }));
+	assert.equal(h.requests.length, 3); assert.match(h.game.hhLLM.lastError, /未推进/); assert.equal(h.game.hhLLM.pending, 0);
+});
+
+test('reported API usage is counted by seat and game without confusing cached input with extra tokens', async () => {
+	const h = harness(undefined, { prompt_tokens: 1200, completion_tokens: 80, prompt_cache_hit_tokens: 900, total_tokens: 1280 });
+	h.install(); await h.run(h.event('chooseBool')); await h.run(h.event('chooseBool', { player: h.opponent }));
+	const usage = h.game.hhLLM.usage;
+	assert.equal(usage.requests, 2); assert.equal(usage.reported, 2); assert.equal(usage.input, 2400); assert.equal(usage.output, 160);
+	assert.equal(usage.cached, 1800); assert.equal(usage.total, 2560);
+	assert.equal(usage.seats[2].total, 1280); assert.equal(usage.seats[3].total, 1280); assert.equal(usage.last.seat, 3);
+	h.game.hhLLM.reset(); assert.equal(h.game.hhLLM.usage.requests, 0); assert.equal(h.game.hhLLM.usage.total, 0);
 });

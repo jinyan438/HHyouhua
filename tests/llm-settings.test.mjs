@@ -4,7 +4,7 @@ import { createLLMConfig } from '../src/llm/settings.js';
 import { LLM_PREFIX as P } from '../src/llm/client.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
 
-function fixture(t, fetcher) {
+function fixture(t, fetcher, llm = { cancelPending() {} }) {
 	const dom = domFixture(), writes = [], requests = [];
 	const previousDocument = globalThis.document, previousFetch = globalThis.fetch;
 	t.after(() => { globalThis.fetch = previousFetch; if (previousDocument === undefined) delete globalThis.document; else globalThis.document = previousDocument; });
@@ -18,7 +18,7 @@ function fixture(t, fetcher) {
 		return fetcher ? fetcher(url, options) : { ok: true, json: async () => ({ data: [{ id: 'model-a' }, { id: 'model-b' }] }) };
 	};
 	const lib = { config: { touchscreen: true, [P + 'address']: 'https://api.deepseek.com', [P + 'key']: 'TEST_KEY', [P + 'model']: 'model-a' } };
-	const game = { players: [], hhLLM: { cancelPending() {} }, saveConfig(key, value) { writes.push([key, value]); } };
+	const game = { players: [], hhLLM: llm, saveConfig(key, value) { writes.push([key, value]); } };
 	createLLMConfig({ lib, game, ui: {} }).llm_settings.onclick();
 	const dialog = dom.document.getElementById('HH-llm-settings');
 	const button = label => dialog.querySelectorAll('button').find(element => element.textContent === label);
@@ -95,4 +95,12 @@ test('a rejected model request restores the button and displays a useful error',
 	assert.ok(status.textContent.includes('401')); assert.ok(!status.textContent.includes('TEST_KEY'));
 	assert.equal(h.button('拉取模型').disabled, false);
 	assert.equal(h.dialog.isConnected, true);
+});
+
+test('settings show actual game usage and label memory as strategy retention', t => {
+	const h = fixture(t, undefined, { usage: { requests: 2, reported: 1, input: 1200, output: 80, cached: 900 } });
+	const usage = h.document.getElementById('HH-llm-usage').textContent;
+	assert.ok(usage.includes('2 次请求')); assert.ok(usage.includes('输入 1200')); assert.ok(usage.includes('输出 80')); assert.ok(usage.includes('缓存命中 900'));
+	assert.ok(usage.includes('部分请求未返回用量'));
+	assert.ok(h.dialog.querySelectorAll('label').some(label => label.textContent === '保留最近策略'));
 });

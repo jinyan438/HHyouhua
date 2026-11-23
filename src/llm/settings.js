@@ -11,6 +11,12 @@ export function createLLMConfig({ lib, game, ui }) {
 		style.textContent = '#HH-llm-settings::backdrop{background:#0009}#HH-llm-settings *{box-sizing:border-box}#HH-llm-settings [hidden]{display:none!important}#HH-llm-settings div{position:static;display:block;transition:none}#HH-llm-settings label{display:block;margin:14px 0 5px;text-align:left}#HH-llm-settings input,#HH-llm-settings select,#HH-llm-settings textarea{width:100%;padding:9px;color:#eee;background:#302923;border:1px solid #71604b;border-radius:5px;font:inherit;user-select:text}#HH-llm-settings textarea{min-height:80px;resize:vertical}#HH-llm-settings button{padding:8px 14px;cursor:pointer;color:#eee;background:#514233;border:1px solid #927446;border-radius:5px;font:inherit;touch-action:manipulation}#HH-llm-settings .hh-row{display:flex;gap:10px;align-items:end}#HH-llm-settings .hh-row>div{flex:1;min-width:0}#HH-llm-settings p{font-size:14px;text-align:left;color:#e1c894}';
 		dialog.append(style);
 		const title = document.createElement('div'); title.textContent = '大模型接管'; title.style.cssText = 'font-size:22px;text-align:left;'; dialog.append(title);
+		const usage = game.hhLLM?.usage;
+		if (usage) {
+			const meter = document.createElement('p'); meter.id = 'HH-llm-usage';
+			meter.textContent = `本局 ${usage.requests} 次请求 · 输入 ${usage.input} · 输出 ${usage.output} · 缓存命中 ${usage.cached} tokens` + (usage.reported < usage.requests ? '（部分请求未返回用量）' : '');
+			dialog.append(meter);
+		}
 		const fields = {};
 		const saved = name => lib.config[LLM_PREFIX + name];
 		function field(label, name, tag = 'input', type = 'text', parent = dialog) {
@@ -42,7 +48,7 @@ export function createLLMConfig({ lib, game, ui }) {
 		const status = document.createElement('p'); status.setAttribute('role', 'status'); status.textContent = game.hhLLM?.lastError || ''; dialog.append(status);
 		const row = document.createElement('div'); row.className = 'hh-row'; dialog.append(row);
 		const timeout = field('请求超时（秒）', 'timeout', 'input', 'number', row); timeout.value = saved('timeout') || 120; timeout.min = '5'; timeout.max = '600';
-		const memory = field('保留最近操作', 'memory', 'input', 'number', row); memory.value = saved('memory') ?? 12; memory.min = '0'; memory.max = '100';
+		const memory = field('保留最近策略', 'memory', 'input', 'number', row); memory.value = saved('memory') ?? 12; memory.min = '0'; memory.max = '100';
 		const failure = field('请求失败时', 'failure', 'select');
 		for (const [value, label] of [['ai', '本次使用原生AI'], ['ask', '暂停并询问']]) { const option = document.createElement('option'); option.value = value; option.textContent = label; failure.append(option); }
 		failure.value = saved('failure') || 'ai';

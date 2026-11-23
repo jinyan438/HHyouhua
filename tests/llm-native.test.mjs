@@ -46,6 +46,19 @@ test('Android sends the full conversation and tool schema as JSON and returns to
 	assert.deepEqual(await complete(connection, messages, tools, env), { role: 'assistant', content: null, tool_calls });
 });
 
+test('DeepSeek and compatible usage reports normalize cached tokens without retaining provider messages', async () => {
+	for (const usage of [
+		{ prompt_tokens: 120, completion_tokens: 8, prompt_cache_hit_tokens: 90, total_tokens: 128 },
+		{ prompt_tokens: 120, completion_tokens: 8, prompt_tokens_details: { cached_tokens: 90 } },
+		{ input_tokens: 120, output_tokens: 8, cache_read_input_tokens: 90 },
+	]) {
+		let reported;
+		const env = mockBridge(success => success({ status: 200, data: JSON.stringify({ usage, choices: [{ message: { content: '{"action":"confirm"}' } }] }) }));
+		await complete(connection, [], [], { ...env, onUsage: value => { reported = value; } });
+		assert.deepEqual(reported, { input: 120, output: 8, total: 128, cached: 90 });
+	}
+});
+
 test('native HTTP errors report the status without provider bodies or credentials', async () => {
 	const env = mockBridge(success => success({ status: 401, data: 'TEST_SECRET provider error' }));
 	await assert.rejects(fetchModels(connection, env), error => error.message === 'API 返回 HTTP 401');

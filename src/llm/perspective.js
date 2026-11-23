@@ -14,6 +14,7 @@ export function definitionCode(value, seen = new WeakSet()) {
 }
 
 export function createPerspective({ lib, game, ui, get, _status }) {
+	const skillSources = new Map();
 	const players = () => [...new Set([...(game.players || []), ...(game.dead || [])])];
 	const seat = player => Number(player?.getSeatNum?.()) || players().indexOf(player) + 1;
 	const id = player => player ? 'seat:' + seat(player) : null;
@@ -38,7 +39,7 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 		if (!card) return null;
 		return { name: card.name, text: text(card.name), suit: card.suit, number: card.number,
 			nature: card.nature, viewAs: typeof card.viewAs === 'string' ? card.viewAs : undefined,
-			info: plain(lib.translate?.[card.name + '_info'] || ''), tags: [...(card.gaintag || [])] };
+			tags: [...(card.gaintag || [])] };
 	}
 	function cardView(card, viewer, granted = false) {
 		return granted || cardKnown(card, viewer) ? cardInfo(card) : { hidden: true };
@@ -74,35 +75,46 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 		seen.delete(value);
 		return result;
 	}
-	function skillDefinitions(skills) {
+	function skillDefinitions(skills, includeCode = false) {
 		const result = {}, visited = new Set();
-		function add(name) {
-			if (!name || visited.has(name) || !lib.skill?.[name]) return;
+		function add(name, supplied) {
+			if (!name || visited.has(name) || !(supplied || lib.skill?.[name] || skillSources.get(name))) return;
 			visited.add(name);
-			const info = lib.skill[name];
-			result[name] = { text: text(name), info: plain(lib.translate?.[name + '_info'] || ''), code: definitionCode(info) };
-			for (const child of [...(typeof info.group === 'string' ? [info.group] : info.group || []), ...(typeof info.global === 'string' ? [info.global] : info.global || []), ...Object.keys(info.subSkill || {}).map(key => name + '_' + key)]) add(child);
+			const info = supplied || lib.skill[name] || skillSources.get(name);
+			skillSources.set(name, info);
+			result[name] = { text: text(name), info: plain(lib.translate?.[name + '_info'] || ''),
+				...(includeCode ? { code: definitionCode({ ...info, subSkill: undefined }) } : {}) };
+			for (const child of [...(typeof info.group === 'string' ? [info.group] : info.group || []), ...(typeof info.global === 'string' ? [info.global] : info.global || [])]) add(child);
+			for (const [key, child] of Object.entries(info.subSkill || {})) add(name + '_' + key, child);
 		}
-		skills.forEach(add);
-		return result;
+		skills.forEach(name => add(name));
+		return Object.fromEntries(Object.entries(result).sort(([a], [b]) => a.localeCompare(b)));
 	}
-	function snapshot(viewer, records = [], extraSkills = []) {
+	function snapshot(viewer, records = [], extraSkills = [], choice = {}) {
 		const visible = players().map(player => playerView(player, viewer));
-		const generals = [...new Set(players().flatMap(player => names(player, viewer)))];
+		const generals = [...new Set(players().flatMap(player => names(player, viewer)))].sort();
 		const skillNames = [...new Set([...generals.flatMap(name => {
 			const character = lib.character[name];
 			return character.skills || character[3] || [];
 		}), ...visible.flatMap(player => player.skills.map(skill => skill.name)), ...extraSkills])];
-		const cardNames = [...new Set([...(lib.inpile || []), ...visible.flatMap(player => [...player.hand, ...player.equipment, ...player.judges].filter(card => card.name).map(card => card.name))])];
+		const discardPile = Array.from(ui.discardPile?.childNodes || []).map(card => cardView(card, viewer));
+		const cardNames = new Set();
+		function addCards(value) {
+			if (!value || typeof value !== 'object' || value.hidden) return;
+			if (value.name && lib.card?.[value.name]) cardNames.add(value.name);
+			if (typeof value.viewAs === 'string' && lib.card?.[value.viewAs]) cardNames.add(value.viewAs);
+			for (const item of Object.values(value)) if (item && typeof item === 'object') addCards(item);
+		}
+		for (const player of visible) addCards([player.hand, player.equipment, player.judges, player.expansions]);
+		addCards(discardPile); addCards([choice.cards, choice.buttons?.map(button => button.item), choice.groups?.map(group => group.items), choice.respondTo?.card, choice.sourceCard, choice.currentCard]);
 		return { you: id(viewer), mode: get.mode?.() || lib.config.mode, round: game.roundNumber || 0,
-			currentPhase: id(_status.currentPhase), players: visible, record: records,
+			currentPhase: id(_status.currentPhase), players: visible.map(player => ({ ...player, skills: player.skills.map(skill => skill.name) })), record: records,
 			pileCount: ui.cardPile?.childNodes?.length || 0,
-			discardPile: Array.from(ui.discardPile?.childNodes || []).map(card => cardView(card, viewer)),
+			discardPile,
 			generals: generals.map(name => { const character = lib.character[name]; return { name, text: text(name),
-				intro: plain(lib.characterIntro?.[name] || ''), definition: definitionCode(character),
 				skills: character.skills || character[3] || [] }; }),
 			skills: skillDefinitions(skillNames),
-			cards: Object.fromEntries(cardNames.map(name => [name, { text: text(name), info: plain(lib.translate?.[name + '_info'] || ''), code: definitionCode(lib.card?.[name]) }])),
+			cards: Object.fromEntries([...cardNames].sort().map(name => [name, { text: text(name), info: plain(lib.translate?.[name + '_info'] || '') }])),
 		};
 	}
 	function logValue(value, viewer, reveal = false) {
