@@ -51,7 +51,7 @@ function harness(policy = () => ({ action: 'bool', value: true }), responseUsage
 		const result = { ...node(), playerid: String(seat), name, name1: name, hp: 4, maxHp: 4, identity: seat === 1 ? 'zhu' : 'fan', identityShown: false,
 			skills: seat === 2 ? ['skill_own'] : ['skill_other'], hiddenSkills: [], invisibleSkills: [], marks: {}, storage: {}, hand: [],
 			getSeatNum: () => seat, getCards(position = 'h') { return array(position.includes('h') ? this.hand : []); }, countCards(position) { return this.getCards(position).length; },
-			getSkills() { return array(this.skills); }, getExpansions: () => [], getStat: () => ({}),
+			getSkills() { return array(this.skills); }, getExpansions: () => [], getStat: () => ({}), hasSkillTag: () => false,
 			isMine: () => seat === 1, isOnline: () => false, isUnderControl: () => false, isDead: () => false, isOut: () => false, isUnseen: () => false,
 			node: { equips: node() }, useResult(result) { used.push(result); }, popup: value => popups.push(value), addTempClass() {},
 		}; return result;
@@ -78,7 +78,7 @@ function harness(policy = () => ({ action: 'bool', value: true }), responseUsage
 	ui.create.dialog = (...values) => ({ ...node(), buttons: array(values.flat().filter(value => value?.cardid).map(link => ({ ...node(), link }))),
 		add() { return { style: {} }; }, addText() {}, content: node(), });
 	const context = { lib, game, ui, get, _status, ai: { basic: { chooseCard: () => false, chooseTarget: () => false, chooseButton: () => false } } };
-	const realm = vm.createContext({ ...context, console });
+	const realm = vm.createContext({ ...context, console, delay: async () => {} });
 	vm.runInContext('Array.prototype.add=function(x){if(!this.includes(x))this.push(x);return this};Array.prototype.addArray=function(a){a.forEach(x=>this.add(x));return this};Array.prototype.remove=function(x){const i=this.indexOf(x);if(i>=0)this.splice(i,1);return this};', realm);
 	vm.runInContext(nativeContent, realm); lib.element.content = realm.nativeContent;
 	vm.runInContext(checkSource, realm); game.Check = new realm.NativeCheck();
@@ -608,4 +608,116 @@ test('reported API usage is counted by seat and game without confusing cached in
 	assert.equal(usage.cached, 1800); assert.equal(usage.total, 2560);
 	assert.equal(usage.seats[2].total, 1280); assert.equal(usage.seats[3].total, 1280); assert.equal(usage.last.seat, 3);
 	h.game.hhLLM.reset(); assert.equal(h.game.hhLLM.usage.requests, 0); assert.equal(h.game.hhLLM.usage.total, 0);
+});
+
+function cardDialog(buttons) {
+	return { ...node(), buttons: array(buttons), content: node(), add: () => ({ style: {} }), addText() {} };
+}
+
+test('variable multi-card choices expose remaining quantity and stop an unexplained early confirmation', async () => {
+	const h = harness((request, index, body) => {
+		const state = request.state;
+		assert.equal(state.context.skill.id, 'temporary_remove'); assert.equal(state.context.target, 'seat:3');
+		assert.equal(state.selection.buttons.max, 2);
+		assert.ok(state.buttons.every(button => button.hidden && button.zone === 'h' && button.owner === 'seat:3'));
+		assert.equal(JSON.stringify(body).includes('UNREVEALED_ONE'), false);
+		assert.equal(JSON.stringify(body).includes('UNREVEALED_TWO'), false);
+		if (index === 1) {
+			assert.equal(state.selection.buttons.selected, 0); assert.equal(state.selection.buttons.additionalAvailable, 2);
+			return { action: 'batch', actions: [{ action: 'button', id: state.buttons[0].id }, { action: 'confirm' }] };
+		}
+		assert.equal(state.selection.buttons.selected, 1); assert.equal(state.selection.buttons.remainingCapacity, 1);
+		assert.equal(state.partialConfirmRequiresReason, true);
+		assert.ok(body.messages.some(message => message.role === 'tool' && message.content.includes('上限 2')));
+		return { action: 'batch', actions: [{ action: 'button', id: state.buttons[1].id }, { action: 'confirm' }] };
+	});
+	h.lib.skill.temporary_remove = {}; h.lib.translate.temporary_remove_info = '可以将一名角色至多两张牌暂时移出其可用区域。'; h.actor.skills.push('temporary_remove');
+	const cards = [h.card('UNREVEALED_ONE', h.opponent), h.card('UNREVEALED_TWO', h.opponent)];
+	const parent = { name: 'temporary_remove', skill: 'temporary_remove', player: h.actor,
+		_trigger: { name: 'useCardToPlayered', player: h.actor, target: h.opponent, card: { name: 'sha' } },
+		parent: { name: 'phaseUse', player: h.actor } };
+	h.install();
+	const result = await h.run(h.event('choosePlayerCard', { parent, target: h.opponent, filterButton: () => true, selectButton: [1, 2], position: 'h',
+		dialog: cardDialog(cards.map(link => ({ ...node(['blank']), link }))) }));
+	assert.equal(result.bool, true); assert.equal(result.cards.length, 2); assert.equal(h.requests.length, 2);
+});
+
+test('intentional partial selections remain legal with a batch-level reason', () => {
+	const h = harness(), cards = [h.card('sha', h.actor), h.card('shan', h.actor)];
+	const event = h.event('chooseButton', { filterButton: () => true, selectButton: [1, 2], dialog: cardDialog(cards.map(link => ({ ...node(), link }))) });
+	const bridge = createActions(h, createPerspective(h), event), state = bridge.state();
+	bridge.act({ action: 'batch', reason: '保留另一张牌以便后续使用', actions: [{ action: 'button', id: state.buttons[0].id }, { action: 'confirm' }] });
+	assert.equal(bridge.done, true); assert.equal(bridge.result.links.length, 1);
+});
+
+test('selection summaries follow dynamic ranges and native automatic-all choices', () => {
+	const h = harness(), cards = [h.card('sha', h.actor), h.card('shan', h.actor)];
+	const event = h.event('chooseButton', { filterButton: () => true, selectButton: () => [1, h.ui.selected.buttons.length ? 1 : 2],
+		dialog: cardDialog(cards.map(link => ({ ...node(), link }))) });
+	const bridge = createActions(h, createPerspective(h), event), state = bridge.state();
+	assert.equal(state.selection.buttons.max, 2);
+	bridge.act({ action: 'button', id: state.buttons[0].id });
+	assert.equal(bridge.state().selection.buttons.max, 1); assert.equal(bridge.state().partialConfirmRequiresReason, false);
+	bridge.act({ action: 'confirm' }); assert.equal(bridge.result.links.length, 1);
+	const all = createActions(h, createPerspective(h), h.event('chooseTarget', { forced: true, filterTarget: (card, player, target) => target !== player, selectTarget: -1 }));
+	assert.equal(all.state().selection.targets.max, 'all'); assert.equal(all.state().partialConfirmRequiresReason, false);
+	all.act({ action: 'confirm' }); assert.equal(all.result.targets.length, 2);
+});
+
+test('optional skill costs include their source, timing, dynamic description and current judgment effects', async () => {
+	const h = harness(request => {
+		const { context, selection, cards } = request.state;
+		assert.equal(context.skill.id, 'area_cleanse'); assert.equal(context.stage, 'cost'); assert.equal(context.phase, 'phaseJudge');
+		assert.equal(context.trigger.timing, 'phaseJudgeBegin'); assert.equal(context.skill.info, '本次可以支付两张牌移除延迟效果');
+		assert.equal(request.cards.delayed_lock.info, '判定失败则跳过一个阶段'); assert.deepEqual(selection.cards.min, 2); assert.deepEqual(selection.cards.max, 2);
+		return { action: 'batch', actions: [...cards.map(card => ({ action: 'card', id: card.id })), { action: 'confirm' }] };
+	});
+	h.lib.skill.area_cleanse = {}; h.actor.skills.push('area_cleanse'); h.lib.dynamicTranslate = { area_cleanse: () => '本次可以支付两张牌移除延迟效果' };
+	h.lib.card.delayed_lock = {}; h.lib.translate.delayed_lock_info = '判定失败则跳过一个阶段';
+	const hand = [h.card('sha', h.actor), h.card('shan', h.actor)], delayed = h.card('delayed_lock', h.actor, { position: 'j' });
+	h.actor.getCards = position => array([...(position.includes('h') ? hand : []), ...(position.includes('j') ? [delayed] : [])]);
+	const parent = { name: 'area_cleanse_cost', skill: 'area_cleanse', player: h.actor, triggername: 'phaseJudgeBegin',
+		_trigger: { name: 'phaseJudge', player: h.actor }, parent: { name: 'phaseJudge', player: h.actor } };
+	h.install();
+	const result = await h.run(h.event('chooseToDiscard', { parent, filterCard: () => true, selectCard: 2, chooseonly: true }));
+	assert.equal(result.bool, true); assert.equal(result.cards.length, 2); assert.equal(h.requests.length, 1);
+});
+
+test('declining an optional skill requires a decision reason, accepts deliberate refusal, and never stores that reason as strategy', async () => {
+	const h = harness((request, index) => index === 1 ? { action: 'bool', value: false, reason: 'COST_OUTWEIGHS_BENEFIT', strategy: 'PERSISTED_STRATEGY' } : { action: 'bool', value: true });
+	h.lib.skill.optional_offer = {}; h.actor.skills.push('optional_offer');
+	const parent = { name: 'optional_offer', skill: 'optional_offer', player: h.actor };
+	const bridge = createActions(h, createPerspective(h), h.event('chooseBool', { parent }), 'bool');
+	assert.equal(bridge.state().declineRequiresReason, true);
+	assert.throws(() => bridge.act({ action: 'bool', value: false }), /reason/); assert.equal(bridge.done, false);
+	bridge.act({ action: 'bool', value: false, reason: '付出大于收益' }); assert.equal(bridge.result.bool, false);
+	const control = createActions(h, createPerspective(h), h.event('chooseControl', { parent, controls: ['ok', 'cancel2'] }), 'control');
+	assert.throws(() => control.act({ action: 'control', index: 1 }), /reason/); assert.equal(control.done, false);
+	control.act({ action: 'control', index: 1, reason: '保留资源用于下一次机会' }); assert.equal(control.result.control, 'cancel2');
+	const cancel = createActions(h, createPerspective(h), h.event('chooseBool', { parent }), 'bool');
+	assert.throws(() => cancel.act({ action: 'cancel' }), /reason/); assert.equal(cancel.done, false);
+	cancel.act({ action: 'cancel', reason: '当前收益不足' }); assert.equal(cancel.result.bool, false);
+	h.install(); await h.run(h.event('chooseBool', { parent })); await h.run(h.event('chooseBool'));
+	const body = h.requests[1].body;
+	assert.deepEqual(body.messages.filter(message => message.role === 'assistant'), [{ role: 'assistant', content: 'PERSISTED_STRATEGY' }]);
+	assert.equal(JSON.stringify(body).includes('COST_OUTWEIGHS_BENEFIT'), false);
+});
+
+test('choice context includes equipped skills but hides concealed enemy skills and private trigger cards', () => {
+	const h = harness(), view = createPerspective(h);
+	h.lib.skill.equipment_offer = {}; h.lib.translate.equipment_offer_info = '装备提供的选择';
+	h.actor.getSkills = (mode, includeEquips) => array(includeEquips === false ? ['skill_own'] : ['skill_own', 'equipment_offer']);
+	assert.equal(view.snapshot(h.actor).skills.equipment_offer.info, '装备提供的选择');
+	let enemyDynamicCalls = 0;
+	h.lib.dynamicTranslate = { skill_other: () => { enemyDynamicCalls++; return 'PRIVATE_DYNAMIC_INFO'; } };
+	const enemy = { name: 'skill_other', skill: 'skill_other', player: h.opponent };
+	assert.equal(view.choiceContext(h.event('chooseBool', { parent: enemy })).skill.id, 'skill_other'); assert.equal(enemyDynamicCalls, 0);
+	h.opponent.name1 = 'concealed_general'; h.opponent.isUnseen = () => true; h.opponent.skills = ['concealed_skill']; h.opponent.hiddenSkills = ['concealed_skill'];
+	const card = h.card('PRIVATE_TRIGGER_CARD', h.opponent);
+	const hidden = { name: 'concealed_skill_cost', skill: 'concealed_skill', player: h.opponent, triggername: 'phaseJudgeBegin',
+		_trigger: { name: 'judge', player: h.opponent, card } };
+	const json = JSON.stringify(view.choiceContext(h.event('chooseBool', { parent: hidden })));
+	for (const secret of ['concealed_skill', 'CONCEALED_SKILL_TEXT', 'PRIVATE_TRIGGER_CARD', 'PRIVATE_DYNAMIC_INFO']) assert.equal(json.includes(secret), false, secret);
+	h.opponent.skills = ['skill_other']; h.opponent.hiddenSkills = ['skill_other'];
+	assert.equal(view.choiceContext(h.event('chooseBool', { parent: enemy })).skill, undefined, 'A skill known from another general does not reveal a concealed source');
 });

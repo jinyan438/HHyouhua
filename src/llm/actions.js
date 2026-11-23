@@ -4,6 +4,7 @@ const stepProperties = {
 	action: { type: 'string', enum: ['inspect', 'card', 'target', 'button', 'skill', 'control', 'bool', 'skill_choice', 'numbers', 'move', 'swap', 'tap', 'confirm', 'cancel', 'reset'] },
 	id: { type: 'string' }, other: { type: 'string' }, index: { type: 'integer' }, to: { type: 'integer' },
 	value: { type: 'boolean' }, values: { type: 'array', items: { type: 'number' } },
+	reason: { type: 'string', maxLength: 160, description: '有意少选或放弃技能机会的简短权衡。可在 batch 顶层填写，由步骤继承；不保存进策略历史。' },
 };
 export const actionTool = { type: 'function', function: {
 	name: 'game_action', description: '操作当前原生选择。优先 batch 一次提交有序步骤（选技能/牌、目标、confirm），逐步原生校验，出错停在该步；技能生成新按钮时再查看 state。目标也可用场面中的 seat:N。rules+id 按需查询可见技能代码；history 按 from（记录编号）、limit（1至8）、player、type 查询本座位完整历史。不要重复查询已在对话中的资料。',
@@ -19,6 +20,7 @@ export const actionTool = { type: 'function', function: {
 export function createActions(context, perspective, event, kind = 'selection') {
 	const { lib, game, ui, get } = context;
 	const player = event.player;
+	const decisionContext = perspective.choiceContext(event);
 	const refs = new Map(), ids = new Map();
 	let serial = 0, done = false, finalResult;
 	const actions = [];
@@ -32,6 +34,21 @@ export function createActions(context, perspective, event, kind = 'selection') {
 	const cards = () => event.filterCard ? player.getCards(event.position || 'h') : [];
 	const buttons = () => event.filterButton ? event.dialog?.buttons || [] : [];
 	const targets = () => event.filterTarget ? perspective.players() : [];
+	function selectionDetails(type, items) {
+		const raw = get.select(event['select' + type[0].toUpperCase() + type.slice(1)]);
+		const count = selected(type).length, maximum = raw[1];
+		return { min: raw[0], max: maximum < 0 ? 'all' : Number.isFinite(maximum) ? maximum : 'unlimited', selected: count,
+			additionalAvailable: items.filter(item => selectable(item) && !selected(type).includes(item)).length,
+			remainingCapacity: maximum < 0 ? 0 : Number.isFinite(maximum) ? Math.max(0, maximum - count) : 'unlimited' };
+	}
+	function partialSelection() {
+		return [['card', cards()], ['target', targets()], ['button', buttons()]].filter(([type]) => event['filter' + type[0].toUpperCase() + type.slice(1)])
+			.map(([type, items]) => ({ type, ...selectionDetails(type, items) }))
+			.filter(item => item.additionalAvailable > 0 && (item.remainingCapacity === 'unlimited' || item.remainingCapacity > 0));
+	}
+	function requireReason(input, message) {
+		if (typeof input.reason !== 'string' || !input.reason.trim()) throw new Error(message + '；如已权衡并有意这样选择，请在 reason 写明简短原因');
+	}
 	const skills = () => !event.skill && !['cards', 'targets', 'buttons'].some(key => ui.selected[key]?.length) ?
 		[...new Set([...(ui.skills?.skills || []), ...(ui.skills2?.skills || []), ...(ui.skills3?.skills || [])])] : [];
 	const groups = kind === 'move' ? (event.name === 'chooseToMove_new' ? (event.list || []).flatMap(row => Array.isArray(row[0]) ? row : [row]) : event.list || []) : [];
@@ -65,6 +82,7 @@ export function createActions(context, perspective, event, kind = 'selection') {
 	function state() {
 		const base = { kind, event: event.name, type: event.type, prompt: plain(typeof event.prompt === 'function' ? event.prompt(event) : event.prompt || ''),
 			prompt2: plain(event.prompt2 || ''), forced: !!event.forced,
+			context: decisionContext, declineRequiresReason: !!decisionContext.skill && !event.forced,
 			respondTo: event.respondTo ? { player: perspective.id(event.respondTo[0]), card: perspective.cardInfo(event.respondTo[1]) } : undefined,
 			sourceCard: event._get_card ? perspective.cardInfo(event._get_card) : undefined };
 		if (kind === 'control') return { ...base, controls: (event.controls || []).map((name, index) => ({ index, name, text: perspective.text(name), info: plain(event.choiceList?.[index] || lib.translate?.[name + '_info'] || '') })) };
@@ -80,12 +98,17 @@ export function createActions(context, perspective, event, kind = 'selection') {
 		const ok = game.check();
 		const currentCard = get.card?.();
 		return { ...base, currentSkill: event.skill, currentCard: currentCard ? perspective.cardInfo(currentCard) : undefined, canConfirm: !!ok,
+			partialConfirmRequiresReason: !!ok && partialSelection().length > 0,
+			selection: Object.fromEntries([['card', cards()], ['target', targets()], ['button', buttons()]]
+				.filter(([type]) => event['filter' + type[0].toUpperCase() + type.slice(1)])
+				.map(([type, items]) => [type + 's', selectionDetails(type, items)])),
 			selectCard: event.filterCard ? range(event.selectCard) : undefined,
 			selectTarget: event.filterTarget ? range(event.selectTarget) : undefined,
 			selectButton: event.filterButton ? range(event.selectButton) : undefined,
 			cards: cards().map(card => ({ id: ref(card, 'card'), ...perspective.cardView(card, player), selected: selected('card').includes(card), available: selectable(card) })),
 			targets: targets().map(target => ({ id: ref(target, 'target'), player: perspective.id(target), selected: selected('target').includes(target), available: selectable(target) })),
 			buttons: buttons().map(button => ({ id: ref(button, 'button'),
+				...(get.itemtype?.(button.link) === 'card' || button.link?.cardid ? { owner: perspective.id(get.owner?.(button.link)), zone: get.position?.(button.link, true) } : {}),
 				...(button.classList?.contains('blank') || button.classList?.contains('infohidden') ? { hidden: true } : { item: itemView(button.link, true) }),
 				selected: selected('button').includes(button), available: selectable(button) })),
 			skills: skills().map(name => ({ id: name, text: perspective.text(name), info: plain(lib.translate?.[name + '_info'] || '') })),
@@ -102,13 +125,14 @@ export function createActions(context, perspective, event, kind = 'selection') {
 	function act(input) {
 		if (done) throw new Error('此操作已经提交');
 		if (!input || typeof input.action !== 'string') throw new Error('缺少 action');
+		if (input.reason !== undefined && (typeof input.reason !== 'string' || input.reason.length > 160)) throw new Error('reason 应为不超过 160 字的简短原因');
 		const { action } = input;
 		if (action === 'batch') {
 			if (!Array.isArray(input.actions) || !input.actions.length || input.actions.length > 24 || input.actions.some(step => !step || !stepProperties.action.enum.includes(step.action))) throw new Error('batch 需要 1 至 24 个普通操作步骤');
 			let applied = 0;
 			for (const step of input.actions) {
 				if (done) break;
-				try { act(step); applied++; }
+				try { act({ ...step, reason: step.reason ?? input.reason }); applied++; }
 				catch (error) { throw new Error(`第 ${applied + 1} 步失败，前 ${applied} 步已执行：${error.message}。请依据最新 state 继续`); }
 			}
 			return { applied, submitted: done };
@@ -117,14 +141,17 @@ export function createActions(context, perspective, event, kind = 'selection') {
 		if (action === 'reset') { reset(); actions.push({ action }); return; }
 		if (action === 'cancel') {
 			if (event.forced) throw new Error('此处必须完成选择');
+			if (decisionContext.skill) requireReason(input, '当前是技能相关选择，取消会放弃这次机会');
 			if (kind === 'control' && !event.controls.includes('cancel2')) throw new Error('此处没有取消选项');
 			if (kind === 'selection') { if (event.skill && !event.norestore) ui.click.cancel(); ui.click.cancel(); finish(event.result); }
 			else finish({ bool: false, ...(kind === 'control' ? { control: 'cancel2', index: event.controls.indexOf('cancel2') } : {}) });
 		} else if (kind === 'control' && action === 'control') {
 			if (!Number.isInteger(input.index) || !event.controls?.[input.index]) throw new Error('无效选项');
+			if (decisionContext.skill && !event.forced && /^cancel/.test(event.controls[input.index])) requireReason(input, '此选项将放弃当前技能机会');
 			finish({ bool: event.controls[input.index] !== 'cancel2', control: event.controls[input.index], index: input.index });
 		} else if (kind === 'bool' && action === 'bool') {
 			if (typeof input.value !== 'boolean') throw new Error('value 应为布尔值');
+			if (decisionContext.skill && input.value === false && !event.forced) requireReason(input, '此选择将放弃当前技能机会');
 			finish({ bool: input.value });
 		} else if (kind === 'beatmap' && action === 'tap') {
 			finish(scoreBeatmap(event.beatmap, input.values));
@@ -185,6 +212,8 @@ export function createActions(context, perspective, event, kind = 'selection') {
 				game.check();
 			} else if (action === 'confirm') {
 				if (!game.check()) throw new Error('尚未满足选牌或目标条件');
+				const remaining = partialSelection();
+				if (remaining.length) requireReason(input, '已满足最低数量，但仍可继续选择：' + remaining.map(item => `${item.type} 已选 ${item.selected}，上限 ${item.max}，另有 ${item.additionalAvailable} 个可选项`).join('；'));
 				ui.click.ok(); finish(event.result);
 			} else throw new Error('当前不支持该操作');
 		} else throw new Error('当前不支持该操作');

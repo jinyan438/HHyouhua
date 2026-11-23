@@ -47,7 +47,7 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 	function playerView(player, viewer) {
 		const knownNames = names(player, viewer);
 		const own = player === viewer;
-		const skills = own ? player.getSkills?.('invisible', false) || [] : player.getSkills?.(null, false) || [];
+		const skills = own ? player.getSkills?.('invisible') || [] : player.getSkills?.() || [];
 		const hiddenSkills = new Set(player.hiddenSkills || []);
 		const identityVisible = own || player.identityShown === true || player.isZhu === true;
 		const marks = Object.keys(player.marks || {}).map(name => ({ name, text: text(name),
@@ -90,13 +90,59 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 		skills.forEach(name => add(name));
 		return Object.fromEntries(Object.entries(result).sort(([a], [b]) => a.localeCompare(b)));
 	}
+	function visibleSkillNames(viewer, visible = players().map(player => playerView(player, viewer))) {
+		return [...new Set([...players().flatMap(player => names(player, viewer)).flatMap(name => {
+			const character = lib.character[name];
+			return character.skills || character[3] || [];
+		}), ...visible.flatMap(player => player.skills.map(skill => skill.name))])];
+	}
+	function choiceContext(event) {
+		const viewer = event.player, globals = new Set(Object.keys(skillDefinitions(lib.skill.global || [])));
+		const known = new Set([...Object.keys(skillDefinitions(visibleSkillNames(viewer))), ...globals]);
+		const frames = [], seen = new Set();
+		for (let frame = event; frame && !seen.has(frame) && frames.length < 12; frame = frame.parent || frame.getParent?.()) {
+			if (!frame.name) break;
+			seen.add(frame); frames.push(frame);
+		}
+		const candidates = frames.flatMap(frame => [Array.isArray(frame.logSkill) ? frame.logSkill[0] : frame.logSkill,
+			frame.sourceSkill, frame.hsskill, frame.frequentSkill, frame.skill, frame.name].map(name => ({ name, owner: frame.player })));
+		const publicSkills = new Map();
+		const origin = candidates.find(({ name, owner }) => {
+			if (typeof name !== 'string' || !known.has(name)) return false;
+			if (owner === viewer || globals.has(name)) return true;
+			if (!players().includes(owner)) return false;
+			if (!publicSkills.has(owner)) publicSkills.set(owner, new Set(Object.keys(skillDefinitions([
+				...names(owner, viewer).flatMap(name => lib.character[name].skills || lib.character[name][3] || []),
+				...playerView(owner, viewer).skills.map(skill => skill.name),
+			]))));
+			return publicSkills.get(owner).has(name);
+		});
+		const source = origin?.name;
+		let info = source ? plain(lib.translate?.[source + '_info'] || '') : '';
+		if (source && origin.owner === viewer && typeof lib.dynamicTranslate?.[source] === 'function') {
+			try { info = plain(lib.dynamicTranslate[source](viewer, source)); } catch {}
+		}
+		const publicTiming = name => typeof name === 'string' && /^(?:phase(?:Zhunbei|Judge|Draw|Use|Discard|Jieshu)?|useCard(?:ToPlayer|ToTarget)?|respond|damage|recover|loseHp|dying|die|judge)(?:Before|Begin\d*|End|After|ed)?$/.test(name) ? name : undefined;
+		const phase = frames.find(frame => /^phase(?:Zhunbei|Judge|Draw|Use|Discard|Jieshu)?$/.test(frame.name));
+		const owner = value => players().includes(value) ? id(value) : undefined;
+		const targets = values => Array.isArray(values) ? values.map(owner).filter(Boolean) : undefined;
+		let trigger = frames.find(frame => frame._trigger)?._trigger;
+		if (!trigger) { try { trigger = event.getTrigger?.(); } catch {} }
+		const triggerName = publicTiming(trigger?.name);
+		const timing = frames.map(frame => publicTiming(frame.triggername)).find(Boolean);
+		const card = trigger?.card && (triggerName && /^(?:useCard|respond|damage)/.test(triggerName)
+			? cardInfo(trigger.card) : cardView(trigger.card, viewer));
+		return { ...(source ? { skill: { id: source, owner: owner(origin.owner), text: text(source), info },
+			stage: frames.some(frame => frame.name === source + '_cost') ? 'cost' : 'effect' } : {}),
+			phase: phase?.name, target: owner(event.target), targets: targets(event.targets),
+			...(triggerName || timing ? { trigger: { event: triggerName, timing, player: owner(trigger?.player),
+				source: owner(trigger?.source), target: owner(trigger?.target), targets: targets(trigger?.targets), card,
+				num: typeof trigger?.num === 'number' ? trigger.num : undefined } } : {}) };
+	}
 	function snapshot(viewer, records = [], extraSkills = [], choice = {}) {
 		const visible = players().map(player => playerView(player, viewer));
 		const generals = [...new Set(players().flatMap(player => names(player, viewer)))].sort();
-		const skillNames = [...new Set([...generals.flatMap(name => {
-			const character = lib.character[name];
-			return character.skills || character[3] || [];
-		}), ...visible.flatMap(player => player.skills.map(skill => skill.name)), ...extraSkills])];
+		const skillNames = [...new Set([...visibleSkillNames(viewer, visible), ...extraSkills])];
 		const discardPile = Array.from(ui.discardPile?.childNodes || []).map(card => cardView(card, viewer));
 		const cardNames = new Set();
 		function addCards(value) {
@@ -106,7 +152,7 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 			for (const item of Object.values(value)) if (item && typeof item === 'object') addCards(item);
 		}
 		for (const player of visible) addCards([player.hand, player.equipment, player.judges, player.expansions]);
-		addCards(discardPile); addCards([choice.cards, choice.buttons?.map(button => button.item), choice.groups?.map(group => group.items), choice.respondTo?.card, choice.sourceCard, choice.currentCard]);
+		addCards(discardPile); addCards([choice.cards, choice.buttons?.map(button => button.item), choice.groups?.map(group => group.items), choice.respondTo?.card, choice.sourceCard, choice.currentCard, choice.context?.trigger?.card]);
 		return { you: id(viewer), mode: get.mode?.() || lib.config.mode, round: game.roundNumber || 0,
 			currentPhase: id(_status.currentPhase), players: visible.map(player => ({ ...player, skills: player.skills.map(skill => skill.name) })), record: records,
 			pileCount: ui.cardPile?.childNodes?.length || 0,
@@ -124,5 +170,5 @@ export function createPerspective({ lib, game, ui, get, _status }) {
 		if (typeof value === 'object') return value?.name && lib.card?.[value.name] ? { name: value.name, text: text(value.name), nature: value.nature } : undefined;
 		return typeof value === 'string' ? plain(value) : value;
 	}
-	return { players, seat, id, names, text, cardKnown, cardInfo, cardView, playerView, snapshot, skillDefinitions, logValue };
+	return { players, seat, id, names, text, cardKnown, cardInfo, cardView, playerView, snapshot, skillDefinitions, choiceContext, logValue };
 }
