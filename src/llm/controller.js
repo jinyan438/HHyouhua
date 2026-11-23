@@ -1,6 +1,7 @@
 import { LLM_PREFIX, readConnection, complete } from './client.js';
 import { createPerspective } from './perspective.js';
 import { createActions, actionTool } from './actions.js';
+import { bindDialogButton, isolateDialogInput } from './dialog.js';
 
 const SELECTIONS = new Set(['chooseToUse', 'chooseToRespond', 'chooseCard', 'chooseTarget', 'chooseButton', 'choosePlayerCard', 'discardPlayerCard', 'gainPlayerCard', 'chooseToDiscard', 'chooseToGive', 'chooseCardTarget', 'chooseButtonTarget']);
 const DIRECT = { chooseBool: 'bool', chooseToMove: 'move', chooseToMove_new: 'move', chooseNumbers: 'numbers', chooseSkill: 'skill', chooseToPlayBeatmap: 'beatmap' };
@@ -120,8 +121,9 @@ export function setupLLMTakeover(context, environment = {}) {
 			const text = document.createElement('p'); text.textContent = view.seat(event.player) + '号位：' + error.message; dialog.append(text);
 			for (const [label, value] of [['重试', 'retry'], ['本次原生AI', 'ai'], ['关闭接管', 'disable']]) {
 				const button = document.createElement('button'); button.textContent = label; button.style.margin = '6px';
-				button.onclick = () => finish(value); dialog.append(button);
+				bindDialogButton(button, () => finish(value)); dialog.append(button);
 			}
+			isolateDialogInput(dialog);
 			dialog.oncancel = e => e.preventDefault(); document.body.append(dialog); dialog.showModal();
 		});
 	}

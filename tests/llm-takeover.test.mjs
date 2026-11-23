@@ -7,6 +7,7 @@ import { apiRoot, fetchModels, complete, requestAPI, LLM_PREFIX as P } from '../
 import { createPerspective, definitionCode } from '../src/llm/perspective.js';
 import { createActions, scoreBeatmap } from '../src/llm/actions.js';
 import { setupLLMTakeover } from '../src/llm/controller.js';
+import { domFixture } from './helpers/catalog-dom.mjs';
 
 function array(items = []) {
 	const list = [...items];
@@ -278,7 +279,7 @@ test('settings changes and game end dismiss a pending failure question and relea
 		globalThis.document = {
 			body: { append() {} },
 			createElement(tag) {
-				const element = { style: {}, append() {}, close() {}, remove() { this.removed = true; }, showModal() { opened(); } };
+				const element = { style: {}, addEventListener() {}, append() {}, close() {}, remove() { this.removed = true; }, showModal() { opened(); } };
 				if (tag === 'dialog') dialog = element;
 				return element;
 			},
@@ -292,6 +293,31 @@ test('settings changes and game end dismiss a pending failure question and relea
 		const result = await pending;
 		assert.equal(api.pending, 0); assert.equal(dialog.removed, true);
 		if (mode === 'settings') assert.equal(result.bool, false); else assert.equal(event.finished, true);
+	}
+});
+
+test('Android taps can retry, use native AI, or disable takeover from the failure dialog', async t => {
+	const previousDocument = globalThis.document;
+	t.after(() => { if (previousDocument === undefined) delete globalThis.document; else globalThis.document = previousDocument; });
+	for (const [label, decision] of [['重试', 'retry'], ['本次原生AI', 'ai'], ['关闭接管', 'disable']]) {
+		const dom = domFixture();
+		let opened;
+		const shown = new Promise(resolve => { opened = resolve; });
+		dom.Element.prototype.showModal = function() { opened(); };
+		dom.Element.prototype.close = function() {};
+		globalThis.document = dom.document;
+		const h = harness((_, count) => count === 1 ? new Error('provider failed') : { action: 'bool', value: true });
+		h.install(); h.lib.config[P + 'failure'] = 'ask';
+		const pending = h.run(h.event('chooseBool', { choice: false }));
+		await shown;
+		const button = dom.document.body.querySelectorAll('button').find(button => button.textContent === label);
+		const point = { identifier: 1, clientX: 20, clientY: 20 };
+		button.emit('touchstart', { touches: [point] });
+		button.emit('touchend', { touches: [], changedTouches: [point] });
+		const result = await pending;
+		assert.equal(result.bool, decision === 'retry');
+		assert.equal(h.game.hhLLM.pending, 0); assert.equal(dom.document.body.children.length, 0);
+		if (decision === 'disable') assert.equal(h.game.hhLLM.enabled, false);
 	}
 });
 
