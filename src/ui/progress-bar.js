@@ -250,8 +250,8 @@ const createAIProgressBar = isPhase => {
  * @param {string} imgName - 图片名称
  * @returns {HTMLImageElement}
  */
-const createTipImg = (className, imgName) => {
-	return createPlayerTip(lib, className, imgName);
+const createTipImg = (className, imgName, suffix = '') => {
+	return createPlayerTip(lib, className, imgName, document, suffix);
 };
 
 // ==================== 预加载UI初始化 ====================
@@ -463,9 +463,10 @@ const setupWatcher = config => {
 		aiPlayers.set(player, entry);
 		if (thought?.showTip) {
 			removeFirst(player, "tipskill");
-			entry.tip = createTipImg("hh-ai-thinking", "tip.png");
-			entry.tip.alt = "出牌 思考中…";
+			entry.tip = createTipImg("hh-ai-thinking", "tip.png", thought.llm ? '（LLM）' : '');
+			entry.tip.alt = "出牌 思考中…" + (thought.llm ? '（LLM）' : '');
 			entry.tip.setAttribute("role", "status");
+			entry.tip.setAttribute("aria-label", entry.tip.alt);
 			Object.assign(entry.tip.style, {
 				left: "0", top: "calc(100% + 4px)", bottom: "auto",
 				width: "100%", height: "auto", transform: "none", pointerEvents: "none",
@@ -478,7 +479,8 @@ const setupWatcher = config => {
 		boxTime.style.transition = "none";
 		const update = () => {
 			const elapsed = thought?.elapsed?.() ?? performance.now() - startedAt;
-			const remaining = Math.max(0, 1 - elapsed / AI_PROGRESS_DURATION);
+			// Model latency is unknown. Repeat the normal AI animation until submission.
+			const remaining = Math.max(0, 1 - (thought?.llm ? elapsed % AI_PROGRESS_DURATION : elapsed) / AI_PROGRESS_DURATION);
 			boxTime.style.transform = `scaleX(${remaining})`;
 			head.style.left = `calc(1px + (100% - 2px) * ${remaining})`;
 			head.style.visibility = remaining > 0 ? "visible" : "hidden";
@@ -536,7 +538,8 @@ const setupWatcher = config => {
 		if (_status.over) { hideAllAI(); return; }
 		if (game.hhRescueFlow?.active) {
 			const turn = game.hhRescueFlow.current;
-			if (turn?.progress) showOneAI(turn.player, turn.progress);
+			if (thinking?.llm && turn?.player === thinking.player) showOneAI(turn.player, thinking);
+			else if (turn?.progress) showOneAI(turn.player, turn.progress);
 			else hideAllAI();
 			return;
 		}
@@ -578,9 +581,10 @@ const setupWatcher = config => {
 
 	game.hhAIThinkProgress = {
 		refresh: check,
-		begin(player, duration, showTip, event = _status.event) {
+		begin(player, duration, showTip, event = _status.event, { llm = false } = {}) {
 			if (stopped || _status.over || !player || !(duration > 0)) return null;
-			thinking = { player, duration, showTip, startedAt: performance.now(), wuxie: isWuxieChoice(event) };
+			const rescue = llm && game.hhRescueFlow?.active && game.hhRescueFlow.current?.player === player;
+			thinking = { player, duration, showTip: showTip && !rescue, llm, rescue, startedAt: performance.now(), wuxie: isWuxieChoice(event) };
 			check();
 			return thinking;
 		},

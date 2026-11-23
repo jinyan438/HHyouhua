@@ -53,6 +53,10 @@ export function setupLLMTakeover(context, environment = {}) {
 		active.add(controller);
 		event.noAutoSelect = true;
 		event._HH_llmDecision = true;
+		const progress = game.hhAIThinkProgress;
+		const thinking = progress?.begin(player, connection.timeout, true, event, { llm: true });
+		const stopThinking = () => progress?.end(thinking);
+		controller.signal.addEventListener('abort', stopThinking, { once: true });
 		const transcript = [];
 		let initialState;
 		try {
@@ -100,6 +104,8 @@ export function setupLLMTakeover(context, environment = {}) {
 			if (_status.event === event && !_status.over && !ended) bridge.reset();
 			throw error;
 		} finally {
+			controller.signal.removeEventListener('abort', stopThinking);
+			stopThinking();
 			active.delete(controller);
 			event.noAutoSelect = savedNoAuto;
 			delete event._HH_llmDecision;

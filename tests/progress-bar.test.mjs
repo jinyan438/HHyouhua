@@ -28,7 +28,7 @@ function fixture(style = 'off') {
 	const status = { gameStarted: true, currentPhase: players[1] };
 	let clockOffset = 0;
 	const context = vm.createContext({ document, window: {}, lib, game, ui: {}, get: {}, _status: status,
-		createPlayerTip: (lib, className, imageName) => createPlayerTip(lib, className, imageName, document),
+		createPlayerTip: (lib, className, imageName, doc, suffix) => createPlayerTip(lib, className, imageName, document, suffix),
 		setupPlayerActionTimer: context => setupPlayerActionTimer(context, { now: environment.now, setInterval, clearInterval }),
 		performance: { now: () => environment.now() + clockOffset }, setInterval, clearInterval });
 	vm.runInContext(source + '\nsetupWatcher({}); setupTipWatcher();', context);
@@ -107,6 +107,54 @@ test('the bar reaches zero at 15 seconds and never becomes negative', () => {
 	h.advance(32); assert.equal(fraction(node), 0);
 	h.advance(2000); assert.equal(fraction(node), 0);
 	h.progress.end(token); h.stop(); assert.equal(h.intervals.size, 0);
+});
+
+test('LLM thinking keeps the AI artwork and visible suffix through long requests, then cleans up', () => {
+	for (const style of ['off', 'on']) {
+		const h = fixture(style), player = h.players[1];
+		const token = h.progress.begin(player, 120000, true, { name: 'chooseToUse', player }, { llm: true });
+		const node = bar(player), tip = player.querySelector('.hh-ai-thinking');
+		assert.equal(tip.getAttribute('aria-label'), '出牌 思考中…（LLM）');
+		assert.match(tip.querySelector('img').src, /\/tip\.png$/);
+		assert.equal(tip.querySelector('span').textContent, '（LLM）');
+		h.advance(16000);
+		assert.equal(bar(player), node); assert.equal(player.querySelector('.hh-ai-thinking'), tip);
+		assert.ok(fraction(node) > .9 && fraction(node) < 1, 'AI animation repeats while waiting for the model');
+		h.progress.end(token);
+		assert.equal(bar(player), null); assert.equal(player.querySelector('.hh-ai-thinking'), null);
+		const normal = h.progress.begin(player, 1000, true);
+		assert.equal(player.querySelector('.hh-ai-thinking').alt, '出牌 思考中…');
+		assert.equal(player.querySelector('.hh-ai-thinking').querySelector('span'), null);
+		h.progress.end(normal); h.stop(); assert.equal(h.intervals.size, 0);
+	}
+});
+
+test('LLM Wuxie waits keep the same animation on all AI seats without exposing the responder', () => {
+	const h = fixture(), player = h.players[2];
+	const token = h.progress.begin(player, 120000, true, { name: 'chooseToUse', type: 'wuxie', player }, { llm: true });
+	assert.equal(bar(h.game.me), null);
+	for (const actor of h.players.slice(1)) {
+		assert.ok(bar(actor));
+		assert.equal(actor.querySelector('.hh-ai-thinking').querySelector('span').textContent, '（LLM）');
+	}
+	h.progress.end(token); h.stop(); assert.equal(h.intervals.size, 0);
+});
+
+test('LLM rescue waits reuse the Peach prompt with a suffix and keep its progress visible', () => {
+	const h = fixture(), player = h.players[1];
+	h.game.hhLLM = { controls: actor => actor === player };
+	const prompt = h.game.hhRescueFlow = createRescuePrompt({ lib: h.lib, game: h.game }, h.environment);
+	const turn = prompt.begin(player, h.players[0]);
+	assert.equal(player.querySelector('.hh-rescue-thinking').getAttribute('aria-label'), '桃 思考中…（LLM）');
+	assert.equal(player.querySelector('.hh-rescue-thinking').querySelector('span').textContent, '（LLM）');
+	const token = h.progress.begin(player, 120000, true, { name: 'chooseToUse', type: 'dying', player }, { llm: true });
+	const node = bar(player);
+	assert.ok(node.classList.contains('hh-rescue-progress'));
+	assert.equal(player.querySelectorAll('.tipshow').length, 1, 'Do not stack a second label over the Peach prompt');
+	h.advance(16000); assert.equal(bar(player), node); assert.ok(fraction(node) > .9);
+	h.progress.end(token); assert.equal(bar(player), null);
+	prompt.end(turn); assert.equal(player.querySelector('.tipshow'), null);
+	h.stop(); assert.equal(h.intervals.size, 0);
 });
 
 test('a delayed animation frame consumes elapsed time against the fixed 15-second scale', () => {

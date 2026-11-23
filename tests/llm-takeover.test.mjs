@@ -186,6 +186,79 @@ test('native chooseToUse selects a card and target, then executes useResult', as
 	for (const { body } of h.requests) { const input = JSON.parse(body.messages.findLast(message => message.role === 'user').content); assert.ok(input.generals.length); assert.ok(input.skills.skill_own.code.content.includes('ownSkillCode')); assert.ok(Array.isArray(input.record)); }
 });
 
+test('LLM choices keep native legality and selections without showing human masks or target swords while awaiting requests', async () => {
+	let thought, starts = 0, stops = 0, nextRequest = 0;
+	const h = harness(request => {
+		assert.ok(thought, 'AI thinking animation remains active across every tool request');
+		for (const item of [...h.game.players, ...h.actor.hand]) {
+			for (const marker of ['selected', 'selectable', 'un-selectable']) assert.equal(item.classList.contains(marker), false, marker);
+		}
+		assert.equal(h.opponent.classList.contains('hh-target-resolving'), true, 'Real resolution effects remain intact');
+		const state = request.state;
+		switch (nextRequest++) {
+			case 0: return { action: 'card', id: state.cards[0].id };
+			case 1: assert.equal(state.cards[0].selected, true); return { action: 'target', id: state.targets.find(target => target.player === 'seat:3').id };
+			case 2: assert.equal(state.targets.find(target => target.player === 'seat:3').selected, true); return { action: 'confirm' };
+		}
+		throw new Error('unexpected extra request');
+	});
+	const hooks = fs.readFileSync(new URL('../src/core/hooks.js', import.meta.url), 'utf8').replace(/^import .*$/m, '').replace('export function ', 'function ');
+	h.lib.hooks = Object.fromEntries(['checkTarget', 'checkCard', 'checkEnd', 'uncheckCard', 'uncheckTarget', 'checkOverflow'].map(key => [key, []]));
+	vm.runInContext(hooks + '\ninitHooks();', h.realm);
+	h.game.callHook = (name, args) => { if (['checkTarget', 'uncheckTarget'].includes(name)) h.lib.hooks[name].forEach(callback => callback(...args)); };
+	h.game.hhAIThinkProgress = {
+		begin(player, duration, showTip, event, options) {
+			starts++; assert.equal(player, h.actor); assert.equal(showTip, true); assert.equal(options.llm, true);
+			assert.equal(event._HH_llmDecision, true); assert.equal(duration, 120000);
+			return thought = {};
+		},
+		end(token) { if (token === thought) { thought = null; stops++; } },
+	};
+	h.opponent.classList.add('hh-target-resolving');
+	const card = h.card('sha', h.actor); h.install();
+	const result = await h.run(h.event('chooseToUse', { type: 'phase', filterCard: () => true, selectCard: 1,
+		filterTarget: (card, player, target) => target === h.opponent, selectTarget: 1,
+		filterOk: () => h.ui.selected.cards[0]?.classList.contains('selected') && h.ui.selected.targets[0]?.classList.contains('selected') }));
+	assert.equal(result.cards[0], card); assert.equal(result.targets[0], h.opponent); assert.equal(h.used.length, 1);
+	assert.equal(starts, 1); assert.equal(stops, 1); assert.equal(thought, null);
+	for (const player of h.game.players) assert.equal(player.classList.contains('un-selectable'), false);
+});
+
+test('LLM selection cleanup also runs after invalid operations and reset without changing logical toggle semantics', () => {
+	const h = harness(), card = h.card('sha', h.actor);
+	const event = h.event('chooseCard', { filterCard: () => true, selectCard: 1 });
+	const bridge = createActions(h, createPerspective(h), event);
+	const state = bridge.state(), id = state.cards[0].id;
+	bridge.act({ action: 'card', id });
+	assert.deepEqual([...h.ui.selected.cards], [card]); assert.equal(card.classList.contains('selected'), false);
+	assert.equal(bridge.state().cards[0].selected, true);
+	assert.throws(() => bridge.act({ action: 'target', id: 'bad' }), /不可选/);
+	assert.equal(card.classList.contains('selected'), false); assert.equal(card.classList.contains('selectable'), false);
+	bridge.act({ action: 'card', id }); assert.equal(h.ui.selected.cards.length, 0);
+	bridge.act({ action: 'card', id }); bridge.reset();
+	assert.equal(h.ui.selected.cards.length, 0); assert.equal(card.classList.contains('selectable'), false);
+});
+
+test('failed or cancelled LLM decisions stop the AI thinking animation before falling back', async () => {
+	for (const mode of ['error', 'cancel', 'end']) {
+		let started, ended = 0, token;
+		const ready = new Promise(resolve => { started = resolve; });
+		const h = harness(() => {
+			started(); return mode === 'error' ? new Error('provider failed') : new Promise(() => {});
+		});
+		h.game.hhAIThinkProgress = {
+			begin() { return token = {}; },
+			end(value) { if (value === token) { token = null; ended++; } },
+		};
+		const api = h.install(), pending = h.run(h.event('chooseBool', { choice: false }));
+		await ready;
+		if (mode === 'cancel') api.cancelPending();
+		if (mode === 'end') h.lib.onover.forEach(callback => callback());
+		await pending;
+		assert.equal(token, null); assert.equal(ended, 1); assert.equal(api.pending, 0);
+	}
+});
+
 test('native view-as skills use backup, select the cost, and restore the event', async () => {
 	const h = harness(request => {
 		const state = request.state;

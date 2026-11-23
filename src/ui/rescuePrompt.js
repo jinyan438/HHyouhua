@@ -64,8 +64,9 @@ export function createRescuePrompt({ lib, game }, environment = {}) {
 			const doc = env.document;
 			if (doc?.createElement && player?.appendChild) {
 				ensureStyle();
-				const node = token.node = createPlayerTip(lib, 'hh-rescue-thinking', 'tiptao.png', doc);
-				node.alt = '桃 思考中…'; node.setAttribute('role', 'status'); node.setAttribute('aria-label', node.alt);
+				const suffix = game?.hhLLM?.controls(player) ? '（LLM）' : '';
+				const node = token.node = createPlayerTip(lib, 'hh-rescue-thinking', 'tiptao.png', doc, suffix);
+				node.alt = '桃 思考中…' + suffix; node.setAttribute('role', 'status'); node.setAttribute('aria-label', node.alt);
 				node.dataset.timed = String(duration > 0); player.appendChild(node);
 			}
 		} catch (error) { token.node?.remove(); token.node = null; console.warn('[HH优化] 求桃提示显示失败', error); }

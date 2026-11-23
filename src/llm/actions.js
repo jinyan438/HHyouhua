@@ -33,6 +33,22 @@ export function createActions(context, perspective, event, kind = 'selection') {
 	const initial = moved.map(row => [...row]);
 	const moveButtons = new Map(moved.flat().map(link => [link, { link }]));
 	const skillChoices = kind === 'skill' ? typeof event.target === 'string' ? get.gainableSkillsName(event.target, event.func) : event.target.getGainableSkills(event.func) : [];
+	// Native AI checks and submits within one tick. Keep the same presentation
+	// across model requests: selection arrays retain the decision, DOM classes do not.
+	const selectionNodes = () => new Set([
+		...perspective.players(), ...player.getCards('hejsx'), ...(event.dialog?.buttons || []),
+		...Object.values(ui.selected).flat(), ...ids.keys(),
+	]);
+	function withoutSelectionUI(callback) {
+		if (kind !== 'selection') return callback();
+		const nodes = selectionNodes();
+		for (const list of Object.values(ui.selected)) for (const item of list) item.classList?.add('selected');
+		try { return callback(); }
+		finally {
+			for (const item of selectionNodes()) nodes.add(item);
+			for (const item of nodes) item.classList?.remove('selected', 'selectable', 'un-selectable');
+		}
+	}
 	function itemView(link, granted = false) {
 		if (get.itemtype?.(link) === 'card' || link?.cardid) return perspective.cardView(link, player, granted);
 		if (perspective.players().includes(link)) return { player: perspective.id(link) };
@@ -145,7 +161,6 @@ export function createActions(context, perspective, event, kind = 'selection') {
 					if (index >= 0) { list.splice(index, 1); object.classList.remove('selected'); }
 					else { list.push(object); object.classList.add('selected'); }
 					if (index >= 0 && (event.complexSelect || event.complexTarget || context._status.multitarget)) game.uncheck();
-					object.updateTransform?.(index < 0);
 					if (typeof event.custom?.add?.[action] === 'function') event.custom.add[action]();
 				}
 				game.check();
@@ -156,7 +171,8 @@ export function createActions(context, perspective, event, kind = 'selection') {
 		} else throw new Error('当前不支持该操作');
 		actions.push({ ...input });
 	}
-	return { state, act, reset, actions, get done() { return done; }, get result() { return finalResult; } };
+	return { state: () => withoutSelectionUI(state), act: input => withoutSelectionUI(() => act(input)),
+		reset: () => withoutSelectionUI(reset), actions, get done() { return done; }, get result() { return finalResult; } };
 }
 
 // The same windows and weights as native chooseToPlayBeatmap. The model supplies
