@@ -57,7 +57,6 @@ export function renderLLMRecords({ lib, game, ui, get }, { node, bigbg, historyb
 		const item = ui.create.div('.hh-llm-record-entry', content); item.dataset.recordId = String(entry.id);
 		const heading = ui.create.div('.hh-llm-record-heading', item);
 		heading.textContent = `第${entry.round}轮 · #${entry.request} · ${seatLabel(entry.seat)} · ${EVENT_NAMES[entry.event] || '选择'}`;
-		textBlock(item, '思考', entry.reasoning);
 		let jsonOutput = false;
 		try { jsonOutput = typeof JSON.parse(entry.content).action === 'string'; } catch {}
 		if (!jsonOutput) textBlock(item, '输出', entry.content);

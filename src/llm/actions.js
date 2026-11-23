@@ -4,7 +4,7 @@ const stepProperties = {
 	action: { type: 'string', enum: ['inspect', 'card', 'target', 'button', 'skill', 'control', 'bool', 'skill_choice', 'numbers', 'move', 'swap', 'tap', 'confirm', 'cancel', 'reset'] },
 	id: { type: 'string' }, other: { type: 'string' }, index: { type: 'integer' }, to: { type: 'integer' },
 	value: { type: 'boolean' }, values: { type: 'array', items: { type: 'number' } },
-	reason: { type: 'string', maxLength: 160, description: '少选、放弃或发动技能的简短权衡。发动须说明成本、后续由谁选择及净收益。可在 batch 顶层填写，由步骤继承；不保存进策略历史。' },
+	reason: { type: 'string', maxLength: 160, description: '必须使用简体中文。少选、放弃或发动技能的简短权衡。发动须说明成本、后续由谁选择及净收益。可在 batch 顶层填写，由步骤继承；不保存进策略历史。' },
 };
 export const actionTool = { type: 'function', function: {
 	name: 'game_action', description: '操作当前原生选择。优先 batch 一次提交有序步骤（选技能/牌、目标、confirm），逐步原生校验，出错停在该步；技能生成新按钮时再查看 state。目标也可用场面中的 seat:N。rules+id 按需查询可见技能代码；history 按 from（记录编号）、limit（1至8）、player、type 查询本座位完整历史。不要重复查询已在对话中的资料。',
@@ -13,7 +13,7 @@ export const actionTool = { type: 'function', function: {
 		action: { type: 'string', enum: [...stepProperties.action.enum, 'batch', 'rules', 'history'] },
 		actions: { type: 'array', minItems: 1, maxItems: 24, items: { type: 'object', properties: stepProperties, required: ['action'], additionalProperties: false } },
 		from: { type: 'integer', minimum: 1 }, limit: { type: 'integer', minimum: 1, maximum: 8 }, player: { type: 'string' }, type: { type: 'string' },
-		strategy: { type: 'string', maxLength: 400, description: '可选的本座位后续策略摘要。仅记录目标、倾向和计划，不复述操作、代码或场面；策略未变可省略。' },
+		strategy: { type: 'string', maxLength: 400, description: '必须使用简体中文。可选的本座位后续策略摘要。仅记录目标、倾向和计划，不复述操作、代码或场面；策略未变可省略。' },
 	}, required: ['action'], additionalProperties: false },
 } };
 

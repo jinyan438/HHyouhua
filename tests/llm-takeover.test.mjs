@@ -304,6 +304,7 @@ test('native card, target and combined selection preserve follow-up callbacks', 
 
 test('per-seat strategy memories and prompts stay independent and reset between games', async () => {
 	const h = harness(request => ({ action: 'bool', value: true, strategy: request.you === 'seat:2' ? 'ONLY_TWO_STRATEGY' : 'ONLY_THREE_STRATEGY' }));
+	h.lib.config[P + 'prompt'] = 'Please answer in English.';
 	h.lib.config[P + 'seat_prompts'] = { 2: 'ONLY_SEAT_TWO', 3: 'ONLY_SEAT_THREE' }; h.install();
 	await h.run(h.event('chooseBool', { prompt: 'PRIVATE_TWO_DECISION' }));
 	await h.run(h.event('chooseBool', { player: h.opponent, prompt: 'PRIVATE_THREE_DECISION' }));
@@ -315,6 +316,14 @@ test('per-seat strategy memories and prompts stay independent and reset between 
 	assert.equal(JSON.stringify(h.requests[2].body).includes('ONLY_THREE_STRATEGY'), false);
 	h.game.hhLLM.reset(); await h.run(h.event('chooseBool'));
 	assert.equal(JSON.stringify(h.requests[3].body).includes('ONLY_TWO_STRATEGY'), false);
+	for (const { body } of h.requests) {
+		const instructions = body.messages.findLast(message => message.role === 'system').content;
+		assert.ok(instructions.indexOf('输出语言要求：') > instructions.indexOf('Please answer in English.'));
+		assert.ok(instructions.includes('自然语言必须使用简体中文'));
+		assert.ok(instructions.includes('接口ID保持原样'));
+		const fields = body.tools[0].function.parameters.properties;
+		for (const field of [fields.reason, fields.strategy, fields.actions.items.properties.reason]) assert.ok(field.description.includes('必须使用简体中文'));
+	}
 });
 
 test('private views reach only their viewer; public logs freeze visibility at the time of the log', async () => {

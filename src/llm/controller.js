@@ -86,7 +86,7 @@ export function setupLLMTakeover(context, environment = {}) {
 				// Stable rule text precedes private prompts and changing state for prefix caching.
 				// Injected data is rebuilt here and never appended to saved.memory/transcript.
 				const messages = [{ role: 'system', content: RULES }, { role: 'system', content: JSON.stringify({ generals, skills }) },
-					{ role: 'system', content: '通用指令：\n' + common + '\n本座位专属指令：\n' + personal },
+					{ role: 'system', content: '通用指令：\n' + common + '\n本座位专属指令：\n' + personal + '\n输出语言要求：正文、reason、strategy等自然语言必须使用简体中文，不得使用英文句子或繁体中文；工具名、JSON键名、枚举值和各类接口ID保持原样。此要求优先于通用及座位预设中的语言要求。' },
 					...(historyLimit ? saved.memory.slice(-historyLimit).flat() : []),
 					...transcript, { role: 'user', content: JSON.stringify({ ...snapshot, state }) }];
 				const seatUsage = usage.seats[seat] ||= emptyUsage();

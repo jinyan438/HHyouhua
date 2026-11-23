@@ -57,13 +57,16 @@ function panel(t, journal) {
 	return { ...dom, node, columnbox, list: node.querySelector('.hh-llm-record-list') };
 }
 
-test('record panel filters seats, preserves live history and displays provider text safely', t => {
+test('record panel hides reasoning, preserves other output and filters live history safely', t => {
 	const journal = createLLMJournal(perspective), a = player(2, '甲将'), b = player(3, '乙将');
 	const record = logged(journal, a); logged(journal, b, 2);
-	record.output({ reasoning: '<img src=x onerror="bad">', content: '模型说明', tool_calls: [] });
+	record.output({ reasoning: 'HIDDEN_ENGLISH_REASONING', content: '模型说明<img src=x onerror="bad">', tool_calls: [] });
 	const h = panel(t, journal);
 	assert.equal(h.list.querySelectorAll('.hh-llm-record-entry').length, 2);
-	assert.equal(h.list.querySelector('img'), null); assert.ok(h.list.textContent.includes('<img src=x'));
+	assert.equal(h.list.querySelector('img'), null); assert.ok(h.list.textContent.includes('模型说明<img src=x'));
+	assert.equal(h.list.textContent.includes('HIDDEN_ENGLISH_REASONING'), false);
+	assert.equal(h.list.textContent.includes('RETURNED_REASONING_'), false);
+	assert.ok(h.list.textContent.includes('评估对手选择后的净收益')); assert.ok(h.list.textContent.includes('game_action'));
 	assert.ok(h.list.textContent.includes('目标：玩家（一号位）')); assert.ok(h.list.textContent.includes('保留防御资源'));
 	const choose = name => h.columnbox.children.find(row => row.textContent === name);
 	choose('甲将（二号位）').emit('click', { detail: 0 });
