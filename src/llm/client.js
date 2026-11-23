@@ -1,0 +1,69 @@
+export const LLM_PREFIX = 'extension_HH优化_llm_';
+
+export function apiRoot(address) {
+	const url = new URL(String(address || '').trim());
+	if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash) {
+		throw new Error('API 地址须为不带账号、查询参数的 HTTP(S) 地址');
+	}
+	return url.href.replace(/\/+$/, '').replace(/\/(?:chat\/completions|models)$/, '');
+}
+
+export function readConnection(lib) {
+	const value = key => lib.config[LLM_PREFIX + key];
+	return { address: value('address') || '', key: value('key') || '', model: value('model') || '',
+		timeout: Math.max(5, Math.min(600, Number(value('timeout')) || 120)) * 1000 };
+}
+
+export async function requestAPI(connection, path, body, { fetch: fetcher = globalThis.fetch, signal } = {}) {
+	const controller = new AbortController();
+	const abort = () => controller.abort();
+	if (signal?.aborted) controller.abort();
+	signal?.addEventListener('abort', abort, { once: true });
+	let timer;
+	try {
+		const aborted = new Promise((_, reject) => {
+			if (controller.signal.aborted) reject(new Error('请求已取消'));
+			else controller.signal.addEventListener('abort', () => reject(new Error('请求已取消')), { once: true });
+		});
+		const timeout = new Promise((_, reject) => {
+			timer = setTimeout(() => { controller.abort(); reject(new Error('API 请求超时')); }, connection.timeout || 120000);
+		});
+		const request = async () => {
+			const response = await fetcher(apiRoot(connection.address) + '/' + path, {
+				method: body ? 'POST' : 'GET', signal: controller.signal, redirect: 'error',
+				headers: { ...(connection.key ? { Authorization: 'Bearer ' + connection.key } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) },
+				...(body ? { body: JSON.stringify(body) } : {}),
+			});
+			if (!response.ok) throw new Error('API 返回 HTTP ' + response.status);
+			return response.json();
+		};
+		return await Promise.race([request(), timeout, aborted]);
+	} catch (error) {
+		if (controller.signal.aborted) throw new Error(signal?.aborted ? '请求已取消' : 'API 请求超时');
+		// Do not repeat response bodies, request headers or provider messages containing credentials.
+		if (/^API 返回 HTTP \d+$/.test(error.message)) throw error;
+		throw new Error('无法连接 API，请检查地址、网络及服务的跨域设置');
+	} finally {
+		clearTimeout(timer);
+		signal?.removeEventListener('abort', abort);
+	}
+}
+
+export async function fetchModels(connection, environment) {
+	const result = await requestAPI(connection, 'models', undefined, environment);
+	const models = [...new Set((Array.isArray(result.data) ? result.data : Array.isArray(result.models) ? result.models : [])
+		.map(model => typeof model === 'string' ? model : model.id || model.name).filter(id => typeof id === 'string' && id.length))].sort();
+	if (!models.length) throw new Error('接口未返回模型列表，可手动填写模型名称');
+	return models;
+}
+
+export async function complete(connection, messages, tools, environment) {
+	if (!connection.model) throw new Error('请先选择或填写模型');
+	const result = await requestAPI(connection, 'chat/completions', {
+		model: connection.model, messages, tools, tool_choice: 'auto', stream: false,
+	}, environment);
+	const message = result.choices?.[0]?.message;
+	if (!message || (typeof message.content !== 'string' && !message.tool_calls?.length)) throw new Error('模型未返回可用的操作');
+	return { role: 'assistant', content: message.content || null,
+		...(message.tool_calls?.length ? { tool_calls: message.tool_calls.map(call => ({ id: call.id, type: 'function', function: { name: call.function?.name, arguments: call.function?.arguments } })) } : {}) };
+}

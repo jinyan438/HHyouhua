@@ -2,6 +2,8 @@ import { lib, game, ui, get, ai, _status } from 'noname';
 import { createRecoveryExtension, recoverPendingUpdate, updateConfig } from './updater.js';
 import { setupBackgrounds, refreshExtensionBackground } from './src/ui/backgrounds.js';
 import { migrateOriginalCardLayout, prioritizeOriginalCardMenu } from './src/ui/originalCards.js';
+import { createLLMConfig } from './src/llm/settings.js';
+import { setupLLMTakeover } from './src/llm/controller.js';
 
 export const type = 'extension';
 
@@ -33,7 +35,7 @@ export default async function () {
 	return {
 		name: 'HH优化',
 		editable: false,
-		config: prioritizeOriginalCardMenu(applyMenuDefaults({ ...updateConfig(lib, game, ui, _status, info), ...hh.config, ...config })),
+		config: prioritizeOriginalCardMenu(applyMenuDefaults({ ...updateConfig(lib, game, ui, _status, info), ...hh.config, ...createLLMConfig({ lib, game, ui }), ...config })),
 		help: hh.help,
 		package: pack,
 		mainpackage: pack,
@@ -51,6 +53,7 @@ export default async function () {
 			refreshExtensionBackground(lib, game);
 			await content.call(this, options, packageData);
 			await hh.content.call(this, options, packageData);
+			setupLLMTakeover({ lib, game, ui, get, ai, _status });
 		},
 	};
 }

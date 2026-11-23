@@ -388,6 +388,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				return delay;
 			};
 			const HH_shouldDelayAI = function(event, player) {
+				if (event?._HH_llmDecision || game.hhLLM?.controls(player)) return false;
 				if (!lib.config.extension_HH优化_enable_ai_think_delay) return false;
 				if (_status.connectMode || game.online || _status.video || _status.over) return false;
 				// 只处理交互选择，摸牌/伤害/获得牌等系统结算不增加思考。
