@@ -90,3 +90,16 @@
 	text-shadow: none;
 	animation: none;
 }
+
+#arena[data-player-mark-style="decade"] > .player > .tipContainer > .tip.hh-source-mark-merged {
+	display: none;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark[data-hh-source-mark].hh-source-mark-with-tip {
+	height: auto;
+	min-height: 20px;
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark.hh-source-mark-with-tip > .hh-source-mark-content {
+	white-space: normal;
+}

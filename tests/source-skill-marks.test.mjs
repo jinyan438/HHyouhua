@@ -39,11 +39,12 @@ class Element {
 	get innerHTML() { return this.textContent; }
 	setBackground() { return this; }
 	setBackgroundImage(value) { this.style.backgroundImage = value; }
+	css(value) { Object.assign(this.style, value); }
 }
 
 const core = ts.createSourceFile('player.js', fs.readFileSync(new URL('../../../noname/library/element/player.js', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 const methods = new Map();
-function visit(node) { if (ts.isMethodDeclaration(node) && ['markSkill', 'unmarkSkill', 'updateMarks'].includes(node.name?.getText(core))) methods.set(node.name.getText(core), node.getText(core)); ts.forEachChild(node, visit); }
+function visit(node) { if (ts.isMethodDeclaration(node) && ['markSkill', 'unmarkSkill', 'updateMarks', 'addTip', 'removeTip'].includes(node.name?.getText(core))) methods.set(node.name.getText(core), node.getText(core)); ts.forEachChild(node, visit); }
 visit(core);
 const override = fs.readFileSync(new URL('../src/overrides/player/marks.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
 
@@ -58,11 +59,12 @@ function fixture({ touchscreen = false } = {}) {
 	const ui = { create: { div: createNode }, click: { card() { log.clicks.push(this); }, hoverplayer() {}, rightplayer() {} }, updatem() {} };
 	const get = { info: name => lib.skill[name], itemtype: value => value?.card ? 'card' : Array.isArray(value) ? 'cards' : typeof value, translation: name => lib.translate[name] || name, character: () => ({}), skillintro: () => '武将说明', cardInfo: card => [card.name] };
 	const window = { decadeUI: { config: { newDecadeStyle: 'on', playerMarkStyle: 'decade' }, element: { create: createNode } } };
-	const game = { addVideo: (...args) => log.videos.push(args), broadcast: (...args) => log.broadcasts.push(args), broadcastAll(fn, ...args) { log.all.push(args); vm.runInNewContext('(' + fn.toString() + ')')(...args); } };
+	const game = { callHook() {}, addVideo: (...args) => log.videos.push(args), broadcast: (...args) => log.broadcasts.push(args), broadcastAll(fn, ...args) { log.all.push(args); vm.runInNewContext('(' + fn.toString() + ')')(...args); } };
 	let base;
 	const realm = vm.createContext({ lib, ui, get, game, window, _status: {}, console, decorateSourceSkillMark, refreshSourceSkillMarks, getBasePlayerMethods: () => base });
 	vm.runInContext('globalThis.native = ({' + [...methods.values()].join(',') + '});\n' + override, realm); base = realm.native;
 	const player = Object.assign(new Element('player'), { marks: {}, storage: {}, hujia: 0, node: { marks: new Element('dui-marks') }, updateMarks: base.updateMarks, markSkill: realm.playerMarkSkill, unmarkSkill: realm.playerUnmarkSkill, mark: realm.playerMark, markCharacter: realm.playerMarkCharacter, markSkillCharacter: realm.playerMarkSkillCharacter, updateMark: realm.playerUpdateMark, syncStorage(name) { log.sync.push(name); }, countCards: () => 3 });
+	Object.assign(player, { addTip: base.addTip, removeTip: base.removeTip, getHiddenSkills: () => [] }); player.node.avatar = { clientWidth: 120 };
 	player.appendChild(player.node.marks);
 	return { player, lib, log, ui, get, realm, base };
 }
@@ -143,6 +145,53 @@ function nativeSkill(pack, name, realm) {
 	find(source); assert.ok(definition, name + ' exists in the installed game');
 	return realm ? vm.runInContext('(' + definition.getText(source) + ')', realm) : vm.runInNewContext('(' + definition.getText(source) + ')');
 }
+
+test('Fengshang merges actual suit messages into one mark while retaining its native counter and removal', () => {
+	const h = fixture(), p = h.player, skill = 'olfengshang_clear';
+	h.lib.skill[skill] = nativeSkill('onlyOL', 'olfengshang').subSkill.clear; h.lib.translate[skill] = '封赏';
+	p.storage[skill] = ['diamond']; p.markSkill(skill);
+	p.addTip(skill, '封赏♦︎'); refreshSourceSkillMarks(p.node.marks);
+	const mark = p.marks[skill], tip = p.tips.get(skill);
+	assert.equal(mark.dataset.hhSourceMark, 'gray'); assert.equal(mark.markcount.textContent, 1);
+	assert.equal(mark.hhSourceMarkContent.innerHTML, '封赏<span style="color: red; ">♦︎</span>');
+	assert.equal(tip.classList.contains('hh-source-mark-merged'), true);
+	p.storage[skill].push('spade'); p.addTip(skill, '封赏♦︎♠︎'); p.updateMark(skill);
+	assert.equal(mark.markcount.textContent, 2); assert.equal(mark.hhSourceMarkContent.innerHTML, tip.innerHTML);
+	h.lib.skill[skill].onremove(p, skill); refreshSourceSkillMarks(p.node.marks); p.unmarkSkill(skill);
+	assert.equal(p.tips.size, 0); assert.equal(p.node.tipContainer, undefined); assert.equal(p.storage[skill], undefined);
+});
+
+test('rich status tips work before or after marks, restore counters on removal, and leave unmatched tips visible', () => {
+	const h = fixture(), p = h.player;
+	p.addTip('custom', '状态 <b>红色</b>\n目标：曹操'); p.addTip('unrelated', '其他提示'); p.markSkill('custom');
+	const tip = p.tips.get('custom'), mark = p.marks.custom;
+	assert.equal(mark.hhSourceMarkContent.innerHTML, tip.innerHTML);
+	assert.equal(tip.classList.contains('hh-source-mark-merged'), true); assert.equal(p.tips.get('unrelated').classList.contains('hh-source-mark-merged'), false);
+	p.storage.custom = 3; p.removeTip('custom'); p.updateMark('custom');
+	assert.equal(mark.hhSourceMarkContent.textContent, '完整技能名称[3]'); assert.equal(mark.classList.contains('hh-source-mark-with-tip'), false);
+	p.addTip('custom', '状态 已发动'); refreshSourceSkillMarks(p.node.marks); p.unmarkSkill('custom');
+	assert.equal(p.tips.get('custom').classList.contains('hh-source-mark-merged'), false);
+	p.addTip('image', '图片提示'); p.markSkill('image');
+	assert.equal(p.tips.get('image').classList.contains('hh-source-mark-merged'), false);
+	p.removeTip(); refreshSourceSkillMarks(p.node.marks); assert.equal(p.tips.size, 0);
+});
+
+test('serialized native tip broadcasts merge on a separately loaded client and expire through the native trigger', async () => {
+	const host = fixture(), remote = fixture();
+	for (const h of [host, remote]) h.player.markSkill('custom');
+	const triggers = [];
+	host.player.when = expiry => { const trigger = { expiry, assign() { return this; }, step(fn) { this.fn = fn; return this; }, finish() {} }; triggers.push(trigger); return trigger; };
+	host.player.addTip('custom', '封赏♥︎♣︎', 'roundStart');
+	const [fn, , index, message, css] = host.log.broadcasts.at(-1);
+	vm.runInContext('(' + fn.toString() + ')', remote.realm)(remote.player, index, message, css);
+	refreshSourceSkillMarks(remote.player.node.marks);
+	assert.equal(remote.player.marks.custom.hhSourceMarkContent.innerHTML, remote.player.tips.get('custom').innerHTML);
+	assert.equal(remote.player.tips.get('custom').classList.contains('hh-source-mark-merged'), true);
+	await triggers[0].fn(null, null, host.player); refreshSourceSkillMarks(host.player.node.marks);
+	assert.equal(host.player.storage.temp_tip_custom, undefined); assert.equal(host.player.tips.size, 0);
+	const [player, removed] = host.log.all.at(-1); assert.equal(player, host.player); assert.equal(removed, 'custom');
+	assert.equal(host.player.marks.custom.hhSourceMarkContent.textContent, '完整技能名称');
+});
 
 test('actual Xu Sheng variants, Deng Ai and Zhong Hui definitions create gold expansion marks', () => {
 	for (const [pack, key, label] of [['refresh', 'repojun2', '破军'], ['refresh', 'decadepojun2', '破军'], ['yijiang', 'xinpojun2', '破军'], ['shenhua', 'tuntian', '屯田'], ['yijiang', 'quanji', '权计']]) {
