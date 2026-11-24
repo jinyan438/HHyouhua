@@ -189,6 +189,8 @@ test('selection visuals preserve the live template and use its faction renderer 
 	const avatar = h.document.createElement('div'); avatar.className = 'primary-avatar hidden'; avatar.setBackground('old');
 	const camp = h.document.createElement('div'); camp.className = 'camp-wrap'; camp.dataset.camp = 'old';
 	for (const cls of ['camp-back','camp-border','camp-name','avatar-name','custom-camp-decoration']) { const part = h.document.createElement('div'); part.className = cls; part.textContent = '原武将'; camp.appendChild(part); }
+	// Country-war templates are still unrevealed when the selection screen opens.
+	camp.querySelector('.avatar-name').classList.add('hidden');
 	const hpWrap = h.document.createElement('div'); hpWrap.className = 'hp-wrap'; hpWrap.appendChild(h.document.createElement('div'));
 	template.node = { avatar, campWrap: camp, hpWrap }; template.append(avatar,camp,hpWrap); template.init = () => assert.fail('visual must not initialize players');
 	h.game.players = [template]; h.lib.config.extension_HH优化_borderLevel = 'random'; h.lib.character.liubei.hp = 3;
@@ -198,9 +200,11 @@ test('selection visuals preserve the live template and use its faction renderer 
 	const visual = createSelectionPlayerVisual(h.context,'liubei',h.environment);
 	assert.equal(visual.dataset.borderLevel,'four'); assert.equal(visual.querySelector('.primary-avatar').portraitId,'liubei');
 	assert.equal(visual.querySelector('.avatar-name').innerHTML,'<b>界</b>刘备'); assert.equal(visual.querySelector('.camp-name').textContent,'渲染：shu');
+	assert.equal(visual.querySelector('.avatar-name').classList.contains('hidden'),false);
 	assert.ok(visual.querySelector('.custom-camp-decoration')); assert.equal(visual.querySelector('.hp').children.length,4); assert.equal(visual.querySelectorAll('.lost').length,1);
 	assert.equal(visual.querySelectorAll('.hh-general-swap').length,0); assert.equal(groupCalls,1);
 	assert.equal(avatar.portraitId,'old'); assert.equal(avatar.classList.contains('hidden'),true); assert.equal(camp.dataset.camp,'old'); assert.equal(hpWrap.children.length,1);
+	assert.equal(camp.querySelector('.avatar-name').classList.contains('hidden'),true);
 });
 
 test('selection visuals handle large and string health values with the same compact counter', () => {

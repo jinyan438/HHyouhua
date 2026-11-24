@@ -45,6 +45,8 @@ export function createSelectionPlayerVisual({ lib, game, ui, get }, id, environm
 	if (!camp.querySelector('.avatar-name')) camp.appendChild(make('avatar-name'));
 	camp.dataset.camp = info.groupBorder || info.group;
 	const name = camp.querySelector('.avatar-name');
+	// Unrevealed country-war seats hide their names; preview cards are public.
+	name.classList.remove('hidden');
 	name.innerHTML = get.slimName?.(id) || get.translation(id);
 	const campName = camp.querySelector('.camp-name');
 	campName.style.backgroundImage = '';
