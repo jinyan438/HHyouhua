@@ -8,8 +8,9 @@
 .hh-identity-selection[data-identity='zhong'],.hh-identity-selection[data-identity='mingzhong'] { --hh-role:#d49e34; --hh-seat-background:linear-gradient(90deg,#8e6c16bb,#b88e25dd,#7d5d12bb); }
 .hh-identity-selection[data-identity='nei'] { --hh-role:#168fd0; --hh-seat-background:linear-gradient(90deg,#205780bb,#2a81b0dd,#1c4a78bb); }
 .hh-identity-selection * { box-sizing:border-box; }
-.hh-selection-title,.hh-selection-side::after { display:none!important; }
+.hh-selection-title { position:absolute; left:200px; top:42px; width:2360px; height:98px; display:flex; align-items:center; justify-content:center; font-size:54px; letter-spacing:8px; padding-bottom:3px; color:#e8dfbb; text-shadow:2px 3px 1px #2f2416; background:linear-gradient(90deg,transparent,#69512b25 20%,#69512b25 80%,transparent); }
 .hh-selection-side { position:absolute; inset:0; pointer-events:none; }
+.hh-selection-side::after { content:''; position:absolute; left:637px; top:232px; width:16px; height:853px; background:url('assets/selection/reference.jpg') -637px -232px/2760px 1256px; }
 .hh-seat-map { position:absolute!important; left:201px; top:234px; width:380px; height:270px; background:#61573738; border-radius:7px; box-shadow:inset 0 0 9px #6b542321; }
 .hh-seat { position:absolute; display:flex!important; justify-content:center; align-items:center; width:51px; height:73px; padding:3px 8px; line-height:34px; color:#e5d6a7; font-size:31px; writing-mode:vertical-rl; letter-spacing:6px; background:linear-gradient(90deg,#86764799,#9c8958aa,#77663a99); border:2px solid #b39b6338; box-shadow:1px 3px 7px #4f412b55; }
 .hh-seat.hh-seat-lord { background:linear-gradient(90deg,#722b23bb,#954a36dd,#6c2923bb); }
@@ -86,6 +87,7 @@
 .hh-revealing .hh-my-identity { opacity:0; }
 @media(prefers-reduced-motion:reduce) { .hh-identity-selection * { transition:none!important; } }
 .hh-seat { writing-mode:horizontal-tb; white-space:pre; letter-spacing:0; text-align:center; line-height:33px; }
+.hh-selection-title { left:0; width:2760px; background:url('assets/selection/reference.jpg') 0 -42px/2760px 1256px; font-size:0; }
 .hh-identity-selection .hh-general::before { opacity:1!important; transform:none!important; border-radius:0!important; }
 
 /* Decade UI cards inherit the in-game player styles, not a second card design. */
