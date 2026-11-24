@@ -62,7 +62,9 @@ export function applyOriginalCardFace(element, card, assetURL = "") {
 	const [suit, number, name, nature] = Array.isArray(card) ? card : [card.suit, card.number, card.name, card.nature];
 	const filename = originalCardFilename(name, nature);
 	element.classList.toggle("hh-original-card", !!filename);
+	const face = element.querySelector(".hh-original-card-face");
 	if (!filename) {
+		face?.remove();
 		element.style.removeProperty("--hh-original-card-face");
 		applyOriginalGlyphs(element.$suitnum || element.querySelector(".suit-num"), null, null, assetURL);
 		return false;
@@ -72,6 +74,11 @@ export function applyOriginalCardFace(element, card, assetURL = "") {
 	const faceURL = new URL(`${assetURL}extension/HH优化/assets/original-cards/${filename}.png`, element.ownerDocument.baseURI).href;
 	element.style.backgroundImage = `url("${faceURL}")`;
 	element.style.setProperty("--hh-original-card-face", element.style.backgroundImage);
+	if (!face) {
+		const layer = element.ownerDocument.createElement("div");
+		layer.className = "hh-original-card-face";
+		element.appendChild(layer);
+	}
 	applyOriginalGlyphs(element.$suitnum || element.querySelector(".suit-num"), suit, number, assetURL);
 	return true;
 }

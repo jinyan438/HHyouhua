@@ -16,9 +16,28 @@
 	border-radius: 0;
 }
 
+/* Keep the face separate from equipment labels, selection frames and prompts. */
+.card > .hh-original-card-face {
+	display: none;
+}
+
+.card.hh-original-card:not(.infohidden):not(.equips > .card, .judges > .card) {
+	background-image: none !important;
+	isolation: isolate;
+}
+
 /* Blur in card coordinates so it follows hand, table and dialog scaling. */
-.card.hh-original-card:not(.infohidden) {
+.card.hh-original-card:not(.infohidden):not(.equips > .card, .judges > .card) > .hh-original-card-face {
+	display: block;
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--hh-original-card-face) center / 100% 100% no-repeat;
 	filter: blur(0.4px);
+	pointer-events: none;
+	transition: none;
+	z-index: -1;
 }
 
 /* State overlays follow the PNG alpha, including its four antialiased corners. */
@@ -92,11 +111,14 @@ body[data-style] .hand-cards > .handcards > .card {
 	height: 20px;
 }
 
-.card.hh-original-card [data-source-glyph="true"] {
+.card.hh-original-card > :is(.suit-num, .tempsuitnum) > [data-source-glyph="true"] {
 	font-size: 0 !important;
 	color: transparent !important;
 	text-shadow: none !important;
-	filter: none;
+}
+
+.card.hh-original-card:not(.infohidden):not(.equips > .card, .judges > .card) > :is(.suit-num, .tempsuitnum) > [data-source-glyph="true"] {
+	filter: blur(0.4px);
 }
 
 .card.hh-original-card:has(> .tempsuitnum) > .suit-num {
