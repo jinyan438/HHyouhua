@@ -22,6 +22,7 @@ export function setBaseDialogMethods(base) {
  */
 export function dialogOpen() {
 	if (this.noopen) return;
+	game.hhDialogVisibility?.attach(this, true);
 	decorateSourceRevealDialog(this, _status.event, { ui, get, lib, game, _status });
 
 	for (let i = 0; i < ui.dialogs.length; i++) {
@@ -61,6 +62,7 @@ export function dialogOpen() {
  * @returns {*} 关闭结果
  */
 export function dialogClose() {
+	game.hhDialogVisibility?.close(this);
 	closeSourceMoveDialog(this);
 	if (this.intersection) {
 		this.intersection.disconnect();

@@ -33,6 +33,7 @@ export function createDecadeUICreateModule() {
 						if (this.parentNode !== ui.arena) ui.arena.appendChild(this);
 					}
 					this.style.animation = "open-dialog 0.4s";
+					game.hhDialogVisibility?.attach(this, true);
 					return this;
 				},
 				/**
@@ -51,6 +52,7 @@ export function createDecadeUICreateModule() {
 				 * 关闭对话框
 				 */
 				close() {
+					game.hhDialogVisibility?.close(this);
 					const func = function (e) {
 						if (e.animationName !== "close-dialog") return;
 						this.remove();

@@ -44,6 +44,7 @@ import { setupDrawMotion } from "./features/drawMotion.js";
 import { setupTargetHighlight } from "./features/targetHighlight.js";
 import { setupCardDistribution } from "./features/cardDistribution.js";
 import { setupTargetDistance } from "./ui/targetDistance.js";
+import { setupDialogVisibility } from "./ui/dialogVisibility.js";
 
 // 技能模块
 import { initSkills } from "./skills/index.js";
@@ -72,6 +73,7 @@ export const finalizeDecadeUICore = (decadeUI, config) => {
 	};
 
 	decadeUI.init();
+	setupDialogVisibility({ game, ui, _status });
 	setupDoudizhuLayout({ lib, game, ui, get });
 	setupEquipmentEntry({ lib, game });
 	setupDrawMotion({ lib, game, ui, get, _status });

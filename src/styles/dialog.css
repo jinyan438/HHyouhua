@@ -721,3 +721,85 @@ body:has(> #jindutiaopl.hh-ol-progress > .hh-ol-progress-prompt:not(:empty)) #ar
 	display: block !important;
 	opacity: 1;
 }
+
+/* A shared control stays visible while its popup is temporarily transparent. */
+.hh-dialog-toggle-host > .hh-dialog-toggle,
+#window .hh-dialog-toggle-host > .hh-dialog-toggle {
+	position: absolute;
+	top: 7px;
+	right: 9px;
+	width: 52px;
+	height: 28px;
+	min-height: 28px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #a98a58;
+	border-radius: 4px;
+	background: rgba(43, 29, 16, 0.9);
+	color: #e1c58c;
+	font: 15px/26px "FZLBGBK", "shousha", serif;
+	text-align: center;
+	text-shadow: 0 1px 1px #21170d;
+	box-shadow: 0 1px 3px #21170d;
+	cursor: pointer;
+	z-index: 100;
+	pointer-events: auto;
+	touch-action: manipulation;
+}
+
+.skill-dialog.hh-dialog-toggle-host > .hh-dialog-toggle,
+#window .skill-dialog.hh-dialog-toggle-host > .hh-dialog-toggle {
+	top: -38px;
+	right: -48px;
+}
+
+.hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle,
+#window .hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle {
+	right: 64px;
+}
+
+.skill-dialog.hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle,
+#window .skill-dialog.hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle {
+	right: 7px;
+}
+
+.hh-dialog-toggle:focus-visible {
+	outline: 2px solid #f4d17d;
+	outline-offset: 2px;
+}
+
+.hh-dialog-toggle-host.hidden > .hh-dialog-toggle,
+.hh-dialog-toggle-host.removing > .hh-dialog-toggle {
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+.hh-dialog-collapsed,
+#window .hh-dialog-collapsed,
+#window #arena .hh-dialog-collapsed {
+	background: none !important;
+	border-color: transparent !important;
+	border-image: none !important;
+	box-shadow: none !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	outline: none !important;
+	color: transparent !important;
+	text-shadow: none !important;
+	pointer-events: none !important;
+	transition: none !important;
+}
+
+.hh-dialog-collapsed::before,
+.hh-dialog-collapsed::after,
+#window .hh-dialog-collapsed::before,
+#window .hh-dialog-collapsed::after,
+#window #arena .hh-dialog-collapsed::before,
+#window #arena .hh-dialog-collapsed::after {
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+#window .hh-dialog-legacy-toggle {
+	display: none !important;
+}
