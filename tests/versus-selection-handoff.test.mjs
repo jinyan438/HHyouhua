@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { selectionFixture } from './helpers/selection-dom.mjs';
 
-function fixture({ opening = false } = {}) {
+function fixture() {
 	const h = selectionFixture({ mode: 'versus', count: 12 });
 	h._status.mode = 'two';
 	h.game.players.forEach((player, index) => { player.side = index < 2; });
@@ -22,22 +22,8 @@ function fixture({ opening = false } = {}) {
 	h.images = [];
 	h.context.Image = class { constructor() { h.images.push(this); } decode() { return Promise.resolve(); } };
 	h.waits = [];
-	h._status.pauseManager = { setDelay(promise) { const wait = { done: false }; h.waits.push(wait); return promise.then(() => { wait.done = true; }); } };
+	h._status.pauseManager = { setDelay(promise) { const wait = { done: false, promise }; h.waits.push(wait); return promise.then(() => { wait.done = true; }); } };
 	h.flush = async () => { for (let i = 0; i < 8; i++) await Promise.resolve(); };
-	if (opening) {
-		h.openingHandlers = [];
-		h.game.globalEventHandlers = {
-			pushHandler(name, handler) { assert.equal(name, 'phaseLoop'); h.openingHandlers.push(handler); },
-			removeHandler(name, type, handler) { const index = h.openingHandlers.indexOf(handler); if (index >= 0) h.openingHandlers.splice(index, 1); },
-		};
-		h.startOpening = () => {
-			const handlers = [...h.openingHandlers];
-			const event = { name: 'phaseLoop', getHandler: () => handlers };
-			h._status.event = event;
-			handlers.forEach(handler => handler(event, { state: 'begin' }));
-			return event;
-		};
-	}
 	h.frame = () => { const pending = [...frames]; frames.clear(); pending.forEach(([, callback]) => callback()); };
 	h.frames = frames;
 	h.covers = () => h.ui.window.querySelectorAll('.hh-identity-viewport');
@@ -81,8 +67,11 @@ test('confirmed Happy selection stays covered through slow native initialization
 	h.advance(1); h.frame();
 	assert.equal(cover.querySelector('.hh-selection-progress').firstChild.style.width, '0%');
 	assert.equal(h.waits[0].done, false);
-	h.frame(); assert.equal(cover.isConnected, true);
 	h.frame(); assert.equal(cover.isConnected, false);
+	await h.flush(); assert.equal(h.waits[0].done, false);
+	h.observers.at(-1).callback(); await h.flush(); assert.equal(h.waits[0].done, false);
+	h.frame(); await h.flush(); assert.equal(h.waits[0].done, false);
+	h.frame();
 	await h.flush(); assert.equal(h.waits[0].done, true);
 	assert.equal(h.parent.handlers.length, 1); assert.equal(h.event.handlers.length, 0);
 	assert.equal(h.timers.size, 0); assert.equal(h.frames.size, 0);
@@ -93,7 +82,7 @@ test('native presentation completion also releases the cover when the parent end
 	const h = fixture(); h.open(); h.event.result = h.result; h.dialog.close();
 	h.initialize(); h.ui.arena.classList.remove('choose-character');
 	h.observers.at(-1).callback(); await h.flush();
-	h.advance(2000); h.frame(); h.frame(); h.frame(); await h.flush();
+	h.advance(2000); h.frame(); h.frame(); h.frame(); h.frame(); await h.flush();
 	assert.equal(h.covers().length, 0); assert.equal(h.parent.handlers.length, 0);
 	assert.equal(h.timers.size, 0);
 });
@@ -128,7 +117,7 @@ test('the empty two-second bar keeps covering native setup until every seat is i
 	h.advance(3500); h.frame();
 	assert.equal(h.covers().length, 1);
 	assert.equal(h.covers()[0].querySelector('.hh-selection-progress').firstChild.style.width, '0%');
-	h.initialize(); h.end(); await h.flush(); h.frame(); h.frame(); await h.flush();
+	h.initialize(); h.end(); await h.flush(); h.frame(); h.frame(); h.frame(); await h.flush();
 	assert.equal(h.covers().length, 0); assert.equal(h.waits[0].done, true);
 });
 
@@ -146,7 +135,7 @@ test('portrait and background decoding must complete even after the two-second b
 	h.images[0].decode = () => new Promise(resolve => { decoded = resolve; });
 	h.images[0].onload(); h.images[1].onerror(); h.images[2].onload();
 	await h.flush(); h.frame(); assert.equal(h.covers().length, 1);
-	decoded(); await h.flush(); h.frame(); h.frame(); await h.flush();
+	decoded(); await h.flush(); h.frame(); h.frame(); h.frame(); await h.flush();
 	assert.equal(h.covers().length, 0); assert.equal(h.waits[0].done, true);
 	assert.ok(h.images.every(image => image.onload === null && image.onerror === null));
 	assert.equal(h.frames.size, 0);
@@ -163,31 +152,32 @@ test('leaving during portrait loading releases the independent delay without wai
 	assert.equal(h.frames.size, 0); assert.equal(h.parent.handlers.length, 0);
 });
 
-test('native startup and the initial deal finish before the cover can reveal or block the first turn', async () => {
-	const h = fixture({ opening: true });
+test('gameStart can resume only after the arena is uncovered and has had a visible paint', async () => {
+	const h = fixture();
+	h.game.globalEventHandlers = { pushHandler() { assert.fail('must not wait for opening triggers or phaseLoop'); } };
 	h.open(); h.event.result = h.result; h.dialog.close(); h.initialize(); h.end(); await h.flush();
-	assert.equal(h.waits.length, 0, 'character setup must not block gameStart or gameDraw');
-	h.ui.arena.classList.remove('choose-character'); h.observers.at(-1).callback();
-	h.advance(2500); h.frame();
-	assert.equal(h.covers().length, 1, 'a finished countdown must still cover the initial deal');
-	const card = h.document.createElement('div'); card.className = 'card';
-	card.style.backgroundImage = 'url("first-hand.png")'; h.ui.arena.appendChild(card);
-	h.game.me.getCards = () => [card];
-	const phase = h.startOpening(); await h.flush();
-	assert.equal(h.waits.length, 1); assert.equal(h.waits[0].done, false);
-	assert.equal(h.images[0].src, 'first-hand.png');
-	h.frame(); assert.equal(h.covers().length, 1, 'the dealt hand must finish decoding');
-	h.images[0].onload(); await h.flush(); h.frame(); h.frame(); await h.flush();
-	assert.equal(h.covers().length, 0); assert.equal(h.waits[0].done, true);
-	assert.equal(h.openingHandlers.length, 0); assert.equal(phase.getHandler().length, 0);
+	let gameStarted = false;
+	h.waits[0].promise.then(() => { assert.equal(h.covers().length, 0); gameStarted = true; });
+	h.advance(2000); h.frame(); await h.flush();
+	assert.equal(h.covers().length, 1); assert.equal(gameStarted, false);
+	h.frame(); h.observers.at(-1).callback(); await h.flush();
+	assert.equal(h.covers().length, 0); assert.equal(gameStarted, false);
+	h.frame(); await h.flush(); assert.equal(gameStarted, false);
+	h.frame(); await h.flush(); assert.equal(gameStarted, true);
+	assert.equal(h.frames.size, 0); assert.equal(h.parent.handlers.length, 0);
 });
 
-test('a human opening-skill prompt can reveal before the first turn without resuming its native pause', async () => {
-	const h = fixture({ opening: true });
+test('selection preloads deduplicated card-pile artwork without drawing or reordering cards', async () => {
+	const h = fixture(); h.ui.cardPile = h.document.createElement('div');
+	const cards = [h.document.createElement('div'), h.document.createElement('div')];
+	for (const card of cards) { card.style.backgroundImage = 'url("sha.png")'; h.ui.cardPile.appendChild(card); }
+	const suit = h.document.createElement('div'); suit.style.backgroundImage = 'url("suit.png")'; cards[0].appendChild(suit);
+	h.game.gameDraw = () => assert.fail('must not deal cards while selecting');
 	h.open(); h.event.result = h.result; h.dialog.close(); h.initialize(); h.end();
-	h._status.event = { name: 'chooseBool', player: h.game.me, result: { skill: 'opening-choice' }, getParent: () => ({ name: 'game' }) };
-	h._status.paused = true; h.observers.at(-1).callback(); await h.flush();
-	h.advance(2000); h.frame(); h.frame(); h.frame(); await h.flush();
+	assert.deepEqual(h.images.map(image => image.src).sort(), ['sha.png', 'suit.png']);
+	h.advance(2500); h.frame(); assert.equal(h.covers().length, 1);
+	h.images.forEach(image => image.onload()); await h.flush();
+	h.frame(); h.frame(); h.frame(); await h.flush();
 	assert.equal(h.covers().length, 0); assert.equal(h.waits[0].done, true);
-	assert.equal(h._status.paused, true); assert.equal(h.openingHandlers.length, 0);
+	assert.deepEqual(h.ui.cardPile.children, cards);
 });
