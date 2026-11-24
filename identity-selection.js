@@ -2,6 +2,7 @@ import { createSelectionPlayerVisual, findSelectionPlayerTemplate, captureSelect
 import { createSelectionFreePick } from './src/ui/selectionFreePick.js';
 import { bindSelectionCardInput } from './src/ui/selectionCardInput.js';
 import { createVersusSelection } from './src/ui/versusSelection.js';
+import { preserveVersusSelection } from './src/ui/versusSelectionHandoff.js';
 import { installHappySelectionCandidates } from './src/ui/happySelectionCandidates.js';
 
 // Keep the engine's real buttons, links and chooseButton event throughout selection.
@@ -652,6 +653,9 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		if (versus) event.pushHandler?.(onChoiceEnd);
 		function cleanup() {
 			if (disposed) return;
+			if (versus && event.result?.bool !== false && event.result?.links?.length) {
+				preserveVersusSelection({ game, ui }, { viewport, parent });
+			}
 			disposed = true;
 			if (versus) {
 				const handlers = event.getHandler?.();

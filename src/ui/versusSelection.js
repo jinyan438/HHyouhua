@@ -47,7 +47,15 @@ export function createVersusSelection({ lib, game, ui, get, _status }, { root, d
 	progress.hidden = !(Number(event.timeout) > 0);
 	let remaining = Number(event.timeout) * 1000, lastTime = Date.now(), disposed = false;
 	let animationFrame = null, effectGeneration = 0, renderer = null, model = null, effects = null;
-	const selected = () => ui.selected.buttons.filter(button => dialog.buttons.includes(button));
+	const selected = () => {
+		const buttons = ui.selected.buttons.filter(button => dialog.buttons.includes(button));
+		// Native uncheck clears selected buttons before the selection screen closes.
+		// Keep the confirmed portraits in the frame handed off to the arena.
+		if (!buttons.length && event.result?.bool !== false && Array.isArray(event.result?.links)) {
+			return event.result.links.map(id => dialog.buttons.find(button => button.link === id)).filter(Boolean);
+		}
+		return buttons;
+	};
 	const ally = player => player === game.me || (game.me.side !== undefined && player.side === game.me.side);
 	const mate = () => game.players.find(player => player !== game.me && ally(player));
 	const assign = () => !!parent.two_assign;

@@ -87,7 +87,8 @@ export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role
 	const versus = fs.readFileSync(new URL('../../src/ui/versusSelection.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export function ', 'function ');
 	const recommendation = fs.readFileSync(new URL('../../src/ui/versusRecommendation.js', import.meta.url), 'utf8').replace('export function ', 'function ');
 	const candidates = fs.readFileSync(new URL('../../src/ui/happySelectionCandidates.js', import.meta.url), 'utf8').replace('export function ', 'function ');
-	vm.runInContext(input + '\n' + picker + '\n' + recommendation + '\n' + versus + '\n' + candidates + '\n' + source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
+	const handoff = fs.readFileSync(new URL('../../src/ui/versusSelectionHandoff.js', import.meta.url), 'utf8').replace('export function ', 'function ');
+	vm.runInContext(input + '\n' + picker + '\n' + recommendation + '\n' + versus + '\n' + candidates + '\n' + handoff + '\n' + source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
 	lib.arenaReady.forEach(fn => fn());
 	return { ...dom, context, lib, game, get, ui, _status, parent, event, dialog, calls, observers, own, open() { dialog.open(); game.check(); return dialog._hhSelection; } };
 }
