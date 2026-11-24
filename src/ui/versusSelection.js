@@ -206,6 +206,6 @@ export function createVersusSelection({ lib, game, ui, get, _status }, { root, d
 		selfChoice: button => recommendation?.selfChoice(button.link),
 		dispose() {
 		disposed = true; stopEffect();
-		if (renderer) { renderer.release(model); renderer.gl.deleteBuffer(renderer.buffer); renderer.gl.deleteProgram(renderer.program); renderer.canvas.remove(); }
+		renderer?.dispose(model);
 	} };
 }

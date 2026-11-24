@@ -98,6 +98,15 @@ export class KillComboRenderer {
 		model.textures = {};
 	}
 
+	dispose(model) {
+		this.release(model);
+		this.gl.deleteBuffer(this.buffer);
+		this.gl.deleteProgram(this.program);
+		this.canvas.remove();
+		// Removing a canvas does not immediately release its browser context slot.
+		this.gl.getExtension('WEBGL_lose_context')?.loseContext();
+	}
+
 	draw(model, time, placement = {}) {
 		const gl = this.gl, canvas = this.canvas, spine = model.spine;
 		const rect = canvas.getBoundingClientRect(), dpr = Math.min(globalThis.devicePixelRatio || 1, 2);

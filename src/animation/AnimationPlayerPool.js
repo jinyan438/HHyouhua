@@ -21,7 +21,12 @@ export class AnimationPlayerPool {
 			return;
 		}
 		this.name = thisName;
-		this.animations = Array.from({ length: size || 1 }, () => new AnimationPlayer(pathPrefix));
+		this.capacity = size || 1;
+		this.pathPrefix = pathPrefix;
+		this.fileTypes = new Map();
+		// Each player owns a WebGL context. Reserve capacity without occupying
+		// all four contexts before they are needed by a simultaneous effect.
+		this.animations = [new AnimationPlayer(pathPrefix)];
 	}
 
 	/**
@@ -32,21 +37,11 @@ export class AnimationPlayerPool {
 	 * @param {Function} [onerror] - 加载失败回调
 	 */
 	loadSpine(filename, skelType, onload, onerror) {
+		this.fileTypes.set(filename, skelType || 'skel');
 		this.animations[0].loadSpine(
 			filename,
 			skelType,
-			() => {
-				// 预加载到其他播放器
-				for (let i = 1; i < this.animations.length; i++) {
-					const ap = this.animations[i];
-					if (window.requestIdleCallback) {
-						requestIdleCallback(() => ap.prepSpine(filename, true), { timeout: 200 });
-					} else {
-						setTimeout(() => ap.prepSpine(filename, true), 50);
-					}
-				}
-				if (onload) onload();
-			},
+			onload,
 			onerror
 		);
 	}
@@ -64,21 +59,38 @@ export class AnimationPlayerPool {
 
 		// 复用已绑定的播放器
 		if (element._ap?.canvas.parentNode === element) {
-			element._ap.playSpine(animation, position);
+			this.playReady(element._ap, element, animation, position);
 			return;
 		}
 
-		// 查找空闲播放器
-		for (const ap of this.animations) {
-			if (!ap.running) {
-				if (ap.canvas.parentNode !== element) {
-					element._ap = ap;
-					element.appendChild(ap.canvas);
-				}
-				ap.playSpine(animation, position);
-				return;
-			}
+		// A loading player is reserved for its target until its own textures arrive.
+		let ap = this.animations.find(player => !player.running && !player._poolPending?.size);
+		if (!ap && this.animations.length < this.capacity) {
+			ap = new AnimationPlayer(this.pathPrefix);
+			this.animations.push(ap);
+		}
+		if (ap) {
+			element._ap = ap;
+			element.appendChild(ap.canvas);
+			this.playReady(ap, element, animation, position);
+			return;
 		}
 		console.error(`spine: ${this.name || ""} 可用动画播放组件不足`);
+	}
+
+	playReady(player, element, animation, position) {
+		const name = typeof animation === 'string' ? animation : animation.name;
+		const play = () => { if (player.canvas.parentNode === element) player.playSpine(animation, position); };
+		if (player.hasSpine(name)) { play(); return; }
+		const pending = player._poolPending ||= new Map();
+		if (pending.has(name)) { pending.get(name).push(play); return; }
+		pending.set(name, [play]);
+		const finish = loaded => {
+			const callbacks = pending.get(name) || [];
+			pending.delete(name);
+			if (loaded) callbacks.forEach(callback => callback());
+		};
+		// Textures belong to one GL context; do not reuse another player's uploads.
+		player.loadSpine(name, this.fileTypes.get(name) || 'skel', () => finish(true), () => finish(false));
 	}
 }
