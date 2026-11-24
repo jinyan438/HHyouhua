@@ -62,7 +62,7 @@ export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role
 	game.zhu = game.players[0]; game.me = game.players[role === 'zhu' ? 0 : 2];
 	const get = { mode: () => mode, sourceCharacter: id => id, character: id => lib.character[id], translation: id => ({ rende: '仁德', shu: '蜀' })[id] || id, slimName: id => id, skillInfoTranslation: () => '出牌阶段，可以将手牌交给其他角色。', cnNumber: n => ['零','一','二','三','四','五','六','七','八'][n], distance: (a, b) => (game.players.indexOf(b) - game.players.indexOf(a) + 3) % 3, select: value => typeof value === 'function' ? get.select(value()) : Array.isArray(value) ? value : [value ?? 1, value ?? 1] };
 	const selected = []; selected.add = item => { if (!selected.includes(item)) selected.push(item); }; selected.remove = item => { const i = selected.indexOf(item); if (i >= 0) selected.splice(i, 1); };
-	const ui = { window: document.body, control: new Element(), selected: { buttons: selected }, click: { ok() { calls.ok++; event.result = { confirm: 'ok' }; } }, create: {} };
+	const ui = { window: document.body, control: new Element(), updates: [], selected: { buttons: selected }, click: { ok() { calls.ok++; event.result = { confirm: 'ok' }; } }, create: {} };
 	document.body.append(ui.control);
 	const makeButton = (id, type, parent, noclick) => { const button = new Element(); button.className = 'button character'; button.link = id; button.refresh = (_, next) => { button.link = next; }; if (!noclick) button.addEventListener('click', () => calls.nativeClicks++); parent?.appendChild(button); return button; };
 	ui.create.button = makeButton;

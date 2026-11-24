@@ -12,22 +12,30 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 	lib._hhIdentitySelectionInstalled = true;
 	lib.arenaReady.push(() => {
 		installHappySelectionCandidates({ lib, game, ui, get, _status });
-		const prototype = lib.element.Dialog.prototype;
-		const open = prototype.open;
-		prototype.open = function (...args) {
-			const result = open.apply(this, args);
+		const attach = dialog => {
+			if (!dialog?.isConnected || dialog.classList.contains('hidden') || dialog.classList.contains('removing')) return;
 			const event = _status.event;
 			const parent = event?.name === 'chooseCharacter' ? event : event?.getParent?.('chooseCharacter');
 			const mode = get.mode();
-			if (!this._hhSelection && !this.noopen && ['identity', 'doudizhu', 'versus', 'guozhan'].includes(mode) &&
+			if (!dialog._hhSelection && !dialog.noopen && ['identity', 'doudizhu', 'versus', 'guozhan'].includes(mode) &&
 				!_status.connectMode && !game.online && !_status.brawl &&
 				(mode !== 'versus' || _status.mode === 'two') &&
 				(mode !== 'guozhan' || _status.mode === 'free') &&
 				(mode !== 'identity' || !['purple', 'stratagem'].includes(_status.mode)) &&
-				event?.name === 'chooseButton' && event.player === game.me && parent?.name === 'chooseCharacter' && (mode !== 'identity' || parent.list) &&
-				this !== parent.dialogxx && this.buttons?.some(button => button.classList.contains('character'))) {
-				mount(this, event, parent, mode);
+				event?.name === 'chooseButton' && event.player === game.me && event.dialog === dialog &&
+				parent?.name === 'chooseCharacter' && (mode !== 'identity' || parent.list) &&
+				dialog !== parent.dialogxx && dialog.buttons?.some(button => button.classList.contains('character'))) {
+				mount(dialog, event, parent, mode);
 			}
+		};
+		// UI skins may replace Dialog.open after arenaReady. Keep the active
+		// opening choice decorated through the engine's normal update lifecycle.
+		ui.updates.push(() => attach(_status.event?.dialog));
+		const prototype = lib.element.Dialog.prototype;
+		const open = prototype.open;
+		prototype.open = function (...args) {
+			const result = open.apply(this, args);
+			attach(this);
 			return result;
 		};
 	});

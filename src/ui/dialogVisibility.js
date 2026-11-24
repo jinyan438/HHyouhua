@@ -58,6 +58,10 @@ export function setupDialogVisibility({ game, ui, _status }, doc = document) {
 	};
 	const hasContent = dialog => {
 		if (!dialog) return false;
+		if (dialog._hhSelection || dialog.closest(".hh-identity-viewport, .hh-point-picker, .hh-character-browser, .menu")) return false;
+		const event = _status.event;
+		const opening = event?.name === "chooseCharacter" ? event : event?.getParent?.("chooseCharacter");
+		if (opening?.name === "chooseCharacter" && hostFor(event?.dialog) === dialog && dialog.querySelector(".button.character")) return false;
 		if (dialog.matches(".hh-source-move-dialog, .confirm-box.guan-xing")) return true;
 		// A dialog shell, prompt or confirmation button is not a choice area.
 		return Array.from(dialog.querySelectorAll(".card, .button, .textbutton")).some(node =>

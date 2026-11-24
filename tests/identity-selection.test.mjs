@@ -104,6 +104,36 @@ test('identity still uses the same hook with its identity sidebar and single sub
 	const first = h.dialog.buttons[0]; first.emit('click'); first.emit('click'); assert.equal(h.calls.ok, 1); h.dialog.close();
 });
 
+test('normal UI updates restore opening selection when a skin replaces Dialog.open after arenaReady', () => {
+	const h = selectionFixture({ mode: 'identity' });
+	h.lib.element.Dialog.prototype.open = function () { h.document.body.append(this); return this; };
+	assert.equal(h.open(), undefined);
+	for (const update of h.ui.updates) update();
+	const root = h.dialog._hhSelection;
+	assert.ok(root);
+	for (const update of h.ui.updates) update();
+	assert.equal(h.document.body.querySelectorAll('.hh-identity-viewport').length, 1);
+	assert.equal(h.dialog._hhSelection, root);
+	h.dialog.buttons[0].emit('click'); h.dialog.buttons[0].emit('click');
+	assert.equal(h.calls.ok, 1); h.dialog.close();
+	// Native close animations can keep the old dialog in the DOM briefly.
+	h.document.body.append(h.dialog); h.dialog.classList.add('removing');
+	for (const update of h.ui.updates) update();
+	assert.equal(h.dialog._hhSelection, undefined); h.dialog.remove();
+});
+
+test('another character dialog cannot take over the active opening selection', () => {
+	const h = selectionFixture({ mode: 'identity' }), root = h.open();
+	const other = h.ui.create.dialog(), button = h.document.createElement('div');
+	button.className = 'button character'; button.link = 'general20'; other.buttons.push(button); other.content.append(button);
+	other.open();
+	for (const update of h.ui.updates) update();
+	assert.equal(other._hhSelection, undefined);
+	assert.equal(h.dialog._hhSelection, root);
+	assert.equal(h.document.body.querySelectorAll('.hh-identity-viewport').length, 1);
+	other.close(); h.dialog.close();
+});
+
 function pointPick(root, id, previewOnly = false) {
 	root.querySelector('.hh-point-entry').emit('click');
 	const picker = root.querySelector('.hh-point-picker'), search = picker.querySelector('.hh-point-search');
