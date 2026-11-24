@@ -1,0 +1,46 @@
+{
+  "client": "E:\\AI\\sanguosha",
+  "logic": "sanguosha2/work/main.js: Sws (SelectCountryWarGeneralWindow), dRs (layout)",
+  "methods": [
+    "onClickGeneralCard",
+    "clearSelectGeneral",
+    "checkGeneralCountry",
+    "confirmBtnEvent"
+  ],
+  "animation": {
+    "kind": "Laya.Tween",
+    "duration": 300,
+    "easing": "Laya.Ease.sineOut"
+  },
+  "files": [
+    {
+      "file": "xuan_jiang_da_di.png",
+      "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\29c23dcc.png",
+      "descriptor": "E:\\AI\\sanguosha\\extract\\laya\\other\\a5657326.json",
+      "frame": [
+        1013,
+        234,
+        98,
+        304
+      ],
+      "sha256": "23bbfe10224e794b4fd8669a104cf454811906d89045d3c3ddbf3fd8c64fe421"
+    },
+    {
+      "file": "secbtn_nrm.png",
+      "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\8723e84d.png",
+      "descriptor": "E:\\AI\\sanguosha\\extract\\laya\\other\\71445296.json",
+      "frame": [
+        1186,
+        490,
+        204,
+        68
+      ],
+      "sha256": "f3202c77e3b62a8c15ceeba3991459a29620aabc6bd0469253a1ce60e9a1f0b6"
+    },
+    {
+      "file": "countryGeneralBg.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\countryGeneralBg.png",
+      "sha256": "0db0cdcd4c23c5fd47cbcadd729c0d7ab3ef83d6f39a156ebd39e41071bbb9ab"
+    }
+  ]
+}

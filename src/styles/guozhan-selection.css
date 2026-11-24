@@ -1,0 +1,35 @@
+/* Sws/dRs, scaled from the original 1650 × 750 country-war window. */
+.hh-identity-selection.hh-guozhan-selection .hh-selection-title,
+.hh-identity-selection.hh-guozhan-selection .hh-selection-side,
+.hh-identity-selection.hh-guozhan-selection .hh-selection-side::after { display:none!important; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-main { left:209px; top:573px; width:2342px; height:496px; border:solid transparent; border-width:24px 28px; border-image:url('../../assets/guozhan-selection/xuan_jiang_da_di.png') 76 26 76 24 fill stretch; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-dialog .content { width:max-content!important; min-width:100%!important; padding:32px 32px!important; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-dialog>.content-container { overflow-x:auto!important; overflow-y:hidden!important; touch-action:pan-x; }
+.hh-identity-selection.hh-guozhan-selection .hh-general-grid { display:flex!important; flex-wrap:nowrap; align-items:center; justify-content:center; gap:30px; width:max-content!important; min-width:100%; }
+.hh-identity-selection.hh-guozhan-selection .hh-general-grid>.button.hh-general { flex:0 0 auto; touch-action:pan-x; }
+.hh-identity-selection.hh-guozhan-selection .hh-point-slot,
+.hh-identity-selection.hh-guozhan-selection .hh-general-swap,
+.hh-identity-selection.hh-guozhan-selection .hh-variant-hint,
+.hh-identity-selection.hh-guozhan-selection .hh-card-confirm,
+.hh-identity-selection.hh-guozhan-selection .hh-selection-dialog .glow2::after,
+.hh-identity-selection.hh-guozhan-selection .hh-selection-dialog .caption { display:none!important; }
+.hh-identity-selection.hh-guozhan-selection .hh-general-grid>.hh-general:not(.selectable):not(.selected) { filter:brightness(.45); }
+.hh-identity-selection.hh-guozhan-selection .hh-general-grid>.hh-general.hh-guozhan-picked { background:url('../../assets/guozhan-selection/countryGeneralBg.png') center/100% 100%!important; box-shadow:none!important; filter:none!important; }
+.hh-identity-selection.hh-guozhan-selection .hh-general-grid>.hh-guozhan-picked>* { opacity:0!important; visibility:hidden!important; }
+.hh-identity-selection.hh-guozhan-selection .hh-general-grid>.hh-guozhan-picked::before { display:none!important; }
+.hh-guozhan-previews { position:absolute!important; left:1010px; top:90px; width:750px; height:380px; pointer-events:none; }
+.hh-guozhan-slot { position:absolute!important; left:0; top:0; width:var(--hh-card-width,294px); height:380px; background:url('../../assets/guozhan-selection/countryGeneralBg.png') center/100% 100%; }
+.hh-guozhan-slot+.hh-guozhan-slot { left:460px; }
+.hh-guozhan-slot-label { position:absolute!important; left:0; top:130px; width:100%; color:#cab583; font:42px/1.55 KaiTi,STKaiti,shousha,serif; text-align:center; writing-mode:vertical-rl; letter-spacing:18px; display:flex; align-items:center; pointer-events:none; }
+.hh-guozhan-filled>.hh-guozhan-slot-label { visibility:hidden; }
+.hh-identity-selection.hh-guozhan-selection .hh-guozhan-preview { pointer-events:auto; touch-action:none; }
+.hh-identity-selection.hh-guozhan-selection .hh-guozhan-preview:focus-visible { outline:3px solid #ffe5a1; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-prompt { top:1144px; }
+.hh-guozhan-confirm { position:absolute!important; left:2064px; top:1132px; width:262px; height:84px; padding:0 0 4px 24px; border:0; border-radius:5px; background:url('../../assets/guozhan-selection/secbtn_nrm.png') center/100% 100%; box-shadow:0 3px 7px #5a421d70; color:#77570b; font:48px/80px KaiTi,STKaiti,shousha,serif; letter-spacing:24px; cursor:pointer; }
+.hh-guozhan-confirm:disabled { cursor:default; filter:saturate(.7); }
+.hh-guozhan-confirm:not(:disabled):hover,.hh-guozhan-confirm:focus-visible { filter:brightness(1.1); outline:2px solid #ffe5a1; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-footer { display:block!important; left:209px; top:1136px; width:520px; height:78px; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-footer #control,
+.hh-identity-selection.hh-guozhan-selection .hh-selection-footer #dui-controls { position:relative!important; inset:auto!important; display:flex!important; justify-content:flex-start; gap:18px; width:auto!important; height:auto!important; margin:0!important; transform:none!important; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-footer .combo-control { display:none!important; }
+.hh-identity-selection.hh-guozhan-selection .hh-selection-footer .hh-selection-extra-control { position:relative!important; inset:auto!important; display:block!important; width:auto!important; height:auto!important; margin:0!important; padding:10px 20px; transform:none!important; border:1px solid #a88a50; border-radius:4px; background:#bda06b66; color:#61451f; font:32px/44px KaiTi,STKaiti,shousha,serif; }

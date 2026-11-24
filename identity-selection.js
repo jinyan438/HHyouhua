@@ -4,6 +4,7 @@ import { bindSelectionCardInput } from './src/ui/selectionCardInput.js';
 import { createVersusSelection } from './src/ui/versusSelection.js';
 import { preserveVersusSelection } from './src/ui/versusSelectionHandoff.js';
 import { installHappySelectionCandidates } from './src/ui/happySelectionCandidates.js';
+import { createGuozhanSelection } from './src/ui/guozhanSelection.js';
 
 // Keep the engine's real buttons, links and chooseButton event throughout selection.
 export function installIdentitySelection(lib, game, ui, get, _status) {
@@ -18,9 +19,10 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			const event = _status.event;
 			const parent = event?.name === 'chooseCharacter' ? event : event?.getParent?.('chooseCharacter');
 			const mode = get.mode();
-			if (!this._hhSelection && !this.noopen && ['identity', 'doudizhu', 'versus'].includes(mode) &&
+			if (!this._hhSelection && !this.noopen && ['identity', 'doudizhu', 'versus', 'guozhan'].includes(mode) &&
 				!_status.connectMode && !game.online && !_status.brawl &&
 				(mode !== 'versus' || _status.mode === 'two') &&
+				(mode !== 'guozhan' || _status.mode === 'free') &&
 				(mode !== 'identity' || !['purple', 'stratagem'].includes(_status.mode)) &&
 				event?.name === 'chooseButton' && event.player === game.me && parent?.name === 'chooseCharacter' && (mode !== 'identity' || parent.list) &&
 				this !== parent.dialogxx && this.buttons?.some(button => button.classList.contains('character'))) {
@@ -33,13 +35,15 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 	function mount(dialog, event, parent, mode) {
 		const doudizhu = mode === 'doudizhu';
 		const versus = mode === 'versus';
-		const fixedChoices = versus || (doudizhu && !Array.isArray(parent.list));
+		const guozhan = mode === 'guozhan';
+		const fixedChoices = versus || guozhan || (doudizhu && !Array.isArray(parent.list));
 		const viewport = document.createElement('div');
 		viewport.className = 'hh-identity-viewport';
 		const root = document.createElement('div');
 		root.className = 'hh-identity-selection';
 		root.classList.toggle('hh-doudizhu-selection', doudizhu);
 		root.classList.toggle('hh-versus-selection', versus);
+		root.classList.toggle('hh-guozhan-selection', guozhan);
 		root.dataset.mode = mode;
 		root.innerHTML = '<header class="hh-selection-title">选将</header><aside class="hh-selection-side"><div class="hh-seat-map"></div><div class="hh-my-identity"></div><div class="hh-identity-goal"></div><div class="hh-lord"></div></aside><main class="hh-selection-main"></main><div class="hh-selection-prompt">请选择武将</div><div class="hh-selection-progress"><i></i></div><footer class="hh-selection-footer"></footer>';
 		viewport.appendChild(root);
@@ -50,8 +54,9 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			if (versus) return;
 			const player = playerTemplate();
 			if (!player?.node?.campWrap) return;
+			if (guozhan && (!player.offsetWidth || !player.offsetHeight)) return;
 			const scale = root.getBoundingClientRect().width / 2760;
-			const layout = captureSelectionPlayerLayout(player, scale);
+			const layout = guozhan ? { width: 380 * player.offsetWidth / player.offsetHeight, height: 380, playerWidth: player.offsetWidth, playerHeight: player.offsetHeight, playerScale: 380 / player.offsetHeight } : captureSelectionPlayerLayout(player, scale);
 			if (!layout) return;
 			// Preserve the exact opening card dimensions for the catalog later in this game.
 			game.hhSelectionCardLayout = layout;
@@ -123,7 +128,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const pointEntry = document.createElement('button');
 		pointEntry.type = 'button'; pointEntry.className = 'hh-point-entry'; pointEntry.textContent = '点将';
 		pointEntry.setAttribute('aria-label', '点将，任选武将');
-		pointSlot.hidden = versus;
+		pointSlot.hidden = versus || guozhan;
 		pointSlot.appendChild(pointEntry);
 		const available = name => {
 			if (!lib.character[name]) return false;
@@ -136,7 +141,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const pointFilter = function (button, ...args) {
 			return pickedButtons.has(button) ? available(button.link) : originalFilter?.call(this, button, ...args) ?? true;
 		};
-		event.filterButton = pointFilter;
+		if (!guozhan) event.filterButton = pointFilter;
 		const picker = createSelectionFreePick({ lib, ui, get }, {
 			root, available: name => available(name) && !ui.selected.buttons.some(button => source(button.link) === source(name)),
 			paintCard, onPick: pickGeneral, onPreview: showSkills, onClearPreview: closeSkills, onPosition: positionSkills,
@@ -185,6 +190,10 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 					button.style.setProperty('--hh-preview-width', `${440 * template.offsetWidth / template.offsetHeight}px`);
 				}
 			},
+		}) : null;
+		const guozhanView = guozhan ? createGuozhanSelection({ lib, game, ui, get, _status }, {
+			root, dialog, event, listen, later, cancel, isCurrent, paintCard,
+			onInspect: button => showSkills(button), onClear: closeSkills,
 		}) : null;
 
 		function paintArenaPlayer(button) {
@@ -334,6 +343,14 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			const left = (anchor.left - bounds.left) / scale;
 			const right = (anchor.right - bounds.left) / scale;
 			const width = skillPanel.offsetWidth, height = skillPanel.offsetHeight;
+			if (guozhan && !inPicker) {
+				let x = (left + right - width) / 2;
+				// Leave both top slots clickable while reading a candidate's skills.
+				if (x + width > 990 && x < 1784) x = (left + right) / 2 < 1380 ? 990 - width : 1784;
+				skillPanel.style.left = `${Math.max(16, Math.min(x, host.clientWidth - width - 16))}px`;
+				skillPanel.style.top = `${Math.max(24, (anchor.top - bounds.top) / scale - height - 42)}px`;
+				return;
+			}
 			// Keep the confirmation card clear; the reference panel sits to its left.
 			const x = left - width - 20 >= (inPicker || doudizhu ? 16 : 654) ? left - width - 20 : right + 20;
 			skillPanel.style.left = `${Math.max(16, Math.min(x, host.clientWidth - width - 16))}px`;
@@ -418,6 +435,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				button.setAttribute('aria-pressed', String(pending || selected));
 			}
 			versusView?.update(pendingButton);
+			guozhanView?.update();
 		}
 
 		function clearPending() {
@@ -429,6 +447,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		function chooseCard(button, confirm = false) {
 			// Card movement is checked by our gesture handler, independently of native drag state.
 			if (disposed || !isCurrent() || picker.isOpen || root.classList.contains('hh-revealing')) return;
+			if (guozhanView) { guozhanView.choose(button); return; }
 			closePopup();
 			if (versusView?.chooseRecommendation(button)) return;
 			const current = _status.event;
@@ -496,6 +515,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const roleNames = doudizhu ? { zhu: '地主', fan: '农民' } : { zhu: '主公', zhong: '忠臣', mingzhong: '明忠', fan: '反贼', nei: '内奸', commoner: '平民' };
 		const goals = doudizhu ? { zhu: '目标：击败两名农民', fan: '目标：与队友合力击败地主' } : { zhu: '目标：消灭反贼和内奸', zhong: '目标：保护主公，消灭反贼和内奸', mingzhong: '目标：保护主公，消灭反贼和内奸', fan: '目标：击败主公', nei: '目标：成为最后的生还者', commoner: '目标：存活到游戏结束' };
 		function updateSide() {
+			if (guozhan) { guozhanView.update(); return; }
 			if (versus) { versusView.update(pendingButton); return; }
 			const role = game.me.identity;
 			const roleName = roleNames[role] || get.translation(role);
@@ -611,7 +631,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 
 		function sync() {
 			if (disposed) return;
-			if (versus) for (const control of [ui.cheat, ui.cheat2].filter(Boolean)) {
+			if (versus || guozhan) for (const control of [ui.cheat, ui.cheat2].filter(Boolean)) {
 				control.classList.add('hh-selection-extra-control'); extraControls.add(control);
 			}
 			for (const button of dialog.buttons) decorate(button);
@@ -619,7 +639,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				container.classList.toggle('hh-general-grid', !!container.querySelector('.hh-general'));
 			}
 			const grid = dialog.content.querySelector('.hh-general-grid');
-			if (!versus && grid && pointSlot.parentNode !== grid) grid.appendChild(pointSlot);
+			if (!versus && !guozhan && grid && pointSlot.parentNode !== grid) grid.appendChild(pointSlot);
 			updateConfirmation();
 			updateSide();
 		}
@@ -687,6 +707,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			timers.forEach(clearTimeout); timers.clear();
 			animation?.cancel(); closePopup(); closeSkills();
 			versusView?.dispose();
+			guozhanView?.dispose();
 			document.removeEventListener('keydown', escape, true);
 			window.removeEventListener('resize', resize);
 			if (controls && controlParent && controls.parentNode === footer) controlParent.insertBefore(controls, controlNext?.parentNode === controlParent ? controlNext : null);
