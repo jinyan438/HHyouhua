@@ -4,6 +4,21 @@
 
 /** 基本对话框 */
 
+/* Scale cards once, independently of the container used to build the dialog. */
+#arena.decadeUI:not(.choose-character) > .dialog:not(.hh-source-move-dialog, .hh-source-reveal-dialog) .buttons:has(> .card.button) {
+	zoom: 1 !important;
+}
+
+#arena.decadeUI:not(.choose-character) > .dialog:not(.hh-source-move-dialog, .hh-source-reveal-dialog) :is(.buttons, .item-container) > .card.button {
+	zoom: var(--hh-dialog-card-scale, 1) !important;
+}
+
+/* Keep explicitly compact rows small on both large and short screens. */
+#arena.decadeUI:not(.choose-character) > .dialog:not(.hh-source-move-dialog, .hh-source-reveal-dialog) .buttons.smallzoom > .card.button,
+#arena.decadeUI:not(.choose-character) > .dialog.addNewRow:not(.hh-source-move-dialog, .hh-source-reveal-dialog) .item-container > .card.button {
+	zoom: min(0.7, var(--hh-dialog-card-scale, 1)) !important;
+}
+
 #arena.decadeUI > .dialog {
 	bottom: calc(20% + 85px);
 }

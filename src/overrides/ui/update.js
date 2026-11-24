@@ -98,6 +98,9 @@ export function uiUpdate() {
 
 	if (game.chess) return getBaseUiUpdate()?.();
 
+	// Set the card scale before measuring content, including dialogs opened before resize.
+	ui.arena?.style.setProperty("--hh-dialog-card-scale", decadeUI.getCardBestScale());
+
 	// 处理对话框样式
 	if (
 		(!ui.dialog.buttons || !ui.dialog.buttons.length) &&

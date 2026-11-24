@@ -250,9 +250,11 @@ export function createLayoutModule() {
 			const buttonsArena = ensureStyle("#arena:not(.choose-character) .buttons:not(.smallzoom)");
 
 			decadeUI.zooms.card = decadeUI.getCardBestScale();
+			ui.arena.style.setProperty("--hh-dialog-card-scale", decadeUI.zooms.card);
 			if (ui.me) ui.me.style.height = `${Math.round(decadeUI.getHandCardSize().height * decadeUI.zooms.card + 30.4)}px`;
 			if (buttonsArena) buttonsArena.zoom = decadeUI.zooms.card;
 			if (buttonsWindow) buttonsWindow.zoom = decadeUI.zooms.card;
+			if (ui.dialog) ui.update();
 			this.invalidate();
 		},
 	};
