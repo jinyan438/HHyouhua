@@ -1,4 +1,4 @@
-const dialogSelector = ".dialog, .skill-dialog, .dui-dialog, .confirm-box, .popup-container, .baby_skill_popup, [role='dialog']";
+const dialogSelector = ".dialog, .skill-dialog, .dui-dialog, .confirm-box, .popup-container";
 const legacyLabels = new Set(["隐藏窗口", "显示窗口", "隐藏弹窗", "显示弹窗"]);
 
 export function setupDialogVisibility({ game, ui, _status }, doc = document) {
@@ -45,6 +45,7 @@ export function setupDialogVisibility({ game, ui, _status }, doc = document) {
 	};
 	const closeControl = () => {
 		control?.close();
+		control?.remove();
 		control = null;
 	};
 	const release = dialog => {
@@ -55,11 +56,20 @@ export function setupDialogVisibility({ game, ui, _status }, doc = document) {
 		dialog.classList.remove("hh-dialog-toggle-host", "hh-dialog-collapsed", "hh-dialog-has-close");
 		states.delete(dialog);
 	};
+	const hasContent = dialog => {
+		if (!dialog) return false;
+		if (dialog.matches(".hh-source-move-dialog, .confirm-box.guan-xing")) return true;
+		// A dialog shell, prompt or confirmation button is not a choice area.
+		return Array.from(dialog.querySelectorAll(".card, .button, .textbutton")).some(node =>
+			!node.closest(".control, .controls") && (node.classList.contains("card") ||
+				!node.matches(".ok, .cancel, .close") && node.link !== undefined));
+	};
 	const attach = (dialog, reset = false) => {
 		const host = hostFor(dialog);
 		if (!host || host === ui.arena || host === ui.window || host === doc.body) return;
 		if (reset) closed.delete(host);
 		if (closed.has(host)) return;
+		if (!hasContent(host)) { release(host); return; }
 		let state = states.get(host);
 		if (!state) {
 			// A containing popup owns the toggle for its nested dialogs as well.
@@ -152,7 +162,8 @@ export function setupDialogVisibility({ game, ui, _status }, doc = document) {
 	};
 	const observer = view?.MutationObserver ? new view.MutationObserver(records => {
 		const active = _status.event?.dialog;
-		if ((active?.isConnected && !states.has(hostFor(active))) || records.some(record =>
+		if ((active?.isConnected && !states.has(hostFor(active)) && hasContent(hostFor(active))) || records.some(record =>
+			(record.type === "childList" && record.target.nodeType === 1 && record.target.closest(dialogSelector)) ||
 			(record.type === "attributes" && (states.has(record.target) || current && record.target.contains(current.dialog))) ||
 			(record.target === control && record.removedNodes.length > 0) ||
 			(states.get(record.target)?.collapsed && record.addedNodes.length > 0) ||
