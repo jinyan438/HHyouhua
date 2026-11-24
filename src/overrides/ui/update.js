@@ -8,6 +8,7 @@ import { lib, game, ui, get, _status } from "noname";
 import { throttle } from "../../animation/index.js";
 import { getBaseUiUpdate } from "./base.js";
 import { updateSourceLoadingDialog } from "../../ui/sourceMoveDialog.js";
+import { updateDialogCardSizing } from "../../ui/dialogCardSizing.js";
 
 /**
  * 更新控制栏位置
@@ -98,8 +99,8 @@ export function uiUpdate() {
 
 	if (game.chess) return getBaseUiUpdate()?.();
 
-	// Set the card scale before measuring content, including dialogs opened before resize.
-	ui.arena?.style.setProperty("--hh-dialog-card-scale", decadeUI.getCardBestScale());
+	// Normalize the real card nodes before measuring their dialog, including on Android.
+	updateDialogCardSizing(ui.dialog, decadeUI.getCardBestScale(), _status.event);
 
 	// 处理对话框样式
 	if (
