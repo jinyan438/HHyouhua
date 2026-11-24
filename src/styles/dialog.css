@@ -722,45 +722,38 @@ body:has(> #jindutiaopl.hh-ol-progress > .hh-ol-progress-prompt:not(:empty)) #ar
 	opacity: 1;
 }
 
-/* A shared control stays visible while its popup is temporarily transparent. */
-.hh-dialog-toggle-host > .hh-dialog-toggle,
-#window .hh-dialog-toggle-host > .hh-dialog-toggle {
-	position: absolute;
-	top: 7px;
-	right: 9px;
-	width: 52px;
-	height: 28px;
-	min-height: 28px;
-	margin: 0;
-	padding: 0;
-	border: 1px solid #a98a58;
-	border-radius: 4px;
-	background: rgba(43, 29, 16, 0.9);
-	color: #e1c58c;
-	font: 15px/26px "FZLBGBK", "shousha", serif;
-	text-align: center;
-	text-shadow: 0 1px 1px #21170d;
-	box-shadow: 0 1px 3px #21170d;
-	cursor: pointer;
-	z-index: 100;
-	pointer-events: auto;
+/* Reuse the native control and its current theme, including touch handling. */
+.hh-dialog-toggle-control {
 	touch-action: manipulation;
 }
 
-.skill-dialog.hh-dialog-toggle-host > .hh-dialog-toggle,
-#window .skill-dialog.hh-dialog-toggle-host > .hh-dialog-toggle {
-	top: -38px;
-	right: -48px;
+.control.hh-dialog-toggle-control.hh-dialog-toggle-inline {
+	position: absolute;
+	top: 7px;
+	right: 9px;
+	left: auto !important;
+	width: auto;
+	height: 38px;
+	margin: 0;
+	padding: 0;
+	font-size: 23px;
+	font-family: xinwei;
+	overflow: visible;
+	z-index: 100;
+	pointer-events: auto;
 }
 
-.hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle,
-#window .hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle {
+.hh-dialog-has-close > .control.hh-dialog-toggle-inline {
 	right: 64px;
 }
 
-.skill-dialog.hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle,
-#window .skill-dialog.hh-dialog-toggle-host.hh-dialog-has-close > .hh-dialog-toggle {
-	right: 7px;
+.control.hh-dialog-toggle-inline > .hh-dialog-toggle {
+	position: static;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 95%;
+	margin: 0 !important;
 }
 
 .hh-dialog-toggle:focus-visible {
@@ -768,8 +761,8 @@ body:has(> #jindutiaopl.hh-ol-progress > .hh-ol-progress-prompt:not(:empty)) #ar
 	outline-offset: 2px;
 }
 
-.hh-dialog-toggle-host.hidden > .hh-dialog-toggle,
-.hh-dialog-toggle-host.removing > .hh-dialog-toggle {
+.hh-dialog-toggle-host.hidden > .hh-dialog-toggle-inline,
+.hh-dialog-toggle-host.removing > .hh-dialog-toggle-inline {
 	visibility: hidden !important;
 	pointer-events: none !important;
 }
