@@ -41,7 +41,7 @@ test('native recommend entry preserves self preview, reserves the general and su
 test('recommendations can be changed and are invalidated by reroll, seat changes and own confirmed choice', () => {
 	const h = fixture({ select: 2 }), root = h.open(), [own, first, second] = h.dialog.buttons;
 	const entry = root.querySelector('.hh-versus-recommend'), controller = h.parent._hhVersusRecommendation;
-	entry.emit('click'); first.emit('click'); entry.emit('click'); second.emit('click');
+	entry.emit('click'); first.emit('click'); entry.emit('click'); entry.emit('click'); second.emit('click');
 	assert.ok(h.parent.list.includes(first.link)); assert.equal(controller.current.id, second.link);
 	second.emit('click'); second.emit('click'); assert.equal(controller.current, null);
 	assert.ok(h.parent.list.includes(second.link));
@@ -52,6 +52,41 @@ test('recommendations can be changed and are invalidated by reroll, seat changes
 	h.game.players[1].side = false; h.game.players[2].side = true;
 	h.observers[1].callback(); assert.equal(controller.current, null);
 	h.dialog.close(); h.parent.finish();
+});
+
+test('recommend entry cancels and reopens with mouse, touch and keyboard, restoring the pool and labels', () => {
+	for (const activate of [node => node.emit('click'), node => { node.emit('touchend'); node.emit('click'); }, node => node.emit('keydown', { key: 'Enter' })]) {
+		const h = fixture({ select: 2 }), pool = [...h.parent.list], root = h.open();
+		const [own, pending, recommended] = h.dialog.buttons;
+		const entry = root.querySelector('.hh-versus-recommend'), controller = h.parent._hhVersusRecommendation;
+		own.emit('click'); own.emit('click'); pending.emit('click');
+		for (let repeat = 0; repeat < 2; repeat++) {
+			activate(entry); activate(recommended);
+			assert.equal(controller.current.id, recommended.link);
+			assert.equal(recommended.querySelector('.hh-card-confirm').textContent, '推荐选择');
+			assert.equal(entry.getAttribute('aria-pressed'), 'true');
+			assert.equal(root.classList.contains('hh-versus-recommending'), false);
+			h.observers[1].callback();
+			assert.equal(recommended.querySelector('.hh-card-confirm').textContent, '推荐选择');
+			activate(entry);
+			assert.equal(controller.current, null);
+			assert.deepEqual(h.parent.list, pool);
+			assert.equal(root.classList.contains('hh-versus-recommending'), false);
+			assert.equal(entry.getAttribute('aria-pressed'), 'false');
+			assert.equal(root.querySelector('.hh-versus-recommend-portrait').style.backgroundImage, '');
+			assert.equal(root.querySelector('.hh-versus-mate')._hhButton, null);
+			assert.equal(recommended.classList.contains('hh-versus-recommended'), false);
+			assert.equal(recommended.querySelector('.hh-card-confirm').textContent, '确认选择');
+			assert.equal(own.querySelector('.hh-card-confirm').textContent, '已选择');
+			assert.equal(pending.querySelector('.hh-card-confirm').textContent, '确认选择');
+			assert.equal(root.querySelector('.hh-versus-self')._hhButton, pending);
+			assert.deepEqual([...h.ui.selected.buttons], [own]);
+			assert.equal(h.calls.ok, 0);
+		}
+		h.game.players[1].init('general20');
+		assert.equal(h.game.players[1].name1, 'general20');
+		h.dialog.close(); h.parent.finish();
+	}
 });
 
 test('recommendation does not override human seats, team assignment, unavailable generals or later games', () => {

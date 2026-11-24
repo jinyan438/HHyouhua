@@ -413,7 +413,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				button.classList.toggle('hh-confirmed', selected);
 				const label = button.querySelector('.hh-card-confirm');
 				const text = selected ? '已选择' : '确认选择';
-				if (label && label.textContent !== text) label.textContent = text;
+				if (!versus && label && label.textContent !== text) label.textContent = text;
 				button.setAttribute('aria-pressed', String(pending || selected));
 			}
 			versusView?.update(pendingButton);

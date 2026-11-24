@@ -32,6 +32,7 @@
 .hh-identity-selection.hh-versus-selection .hh-selection-dialog .hh-general.hh-versus-mate-pending::after { background-image:url('../../assets/versus-selection/select_general_kuang_self_new.png'); }
 .hh-identity-selection.hh-versus-selection .hh-selection-dialog .hh-general:not(.selectable):not(.selected) { opacity:.45; }
 .hh-identity-selection.hh-versus-selection .hh-selection-dialog .hh-card-confirm { font-size:25px; padding:5px 0; }
+.hh-identity-selection.hh-versus-selection .hh-selection-dialog .hh-versus-recommended>.hh-card-confirm { display:block; }
 .hh-versus-previews { position:absolute!important; left:990px; top:57px; display:flex; align-items:flex-start; gap:100px; height:440px; }
 .hh-versus-preview { position:relative!important; width:334px; height:440px; margin:0; padding:0; border:0; border-radius:7px; background:url('../../assets/versus-selection/countryGeneralBg.png') center/100% 100%; box-shadow:0 4px 12px #36291d8f; font:inherit; cursor:pointer; }
 .hh-versus-preview::after { content:''; position:absolute; inset:-74px -56px; z-index:7; background:url('../../assets/versus-selection/select_general_kuang_other_new.png') center/100% 100%; pointer-events:none; opacity:0; }

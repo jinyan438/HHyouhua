@@ -35,7 +35,9 @@ export function createVersusSelection({ lib, game, ui, get, _status }, { root, d
 	let recommending = false, pendingButton = null;
 	bindSelectionCardInput(recommendButton, { listen, later, cancel, activate: () => {
 		if (!isCurrent() || !recommendation?.target()) return;
-		recommending = !recommending; update(pendingButton);
+		if (recommendation.current) { recommendation.cancel(); recommending = false; }
+		else recommending = !recommending;
+		update(pendingButton);
 	} });
 	const map = root.querySelector('.hh-seat-map');
 	const prompt = root.querySelector('.hh-selection-prompt');
@@ -123,11 +125,11 @@ export function createVersusSelection({ lib, game, ui, get, _status }, { root, d
 		const canRecommend = !!recommendation?.target() && dialog.buttons.some(button => recommendation.allowed(button.link));
 		if (!canRecommend) recommending = false;
 		recommendButton.hidden = !canRecommend;
-		recommendButton.setAttribute('aria-pressed', String(recommending));
 		root.classList.toggle('hh-versus-recommending', recommending);
 		const recommended = recommendation?.current;
 		const recommendedButton = recommended && dialog.buttons.find(button => button.link === recommended.id);
-		recommendButton.setAttribute('aria-label', recommended ? `为他推荐，已推荐${get.translation(recommended.id)}` : '为他推荐');
+		recommendButton.setAttribute('aria-pressed', String(recommending || !!recommended));
+		recommendButton.setAttribute('aria-label', recommended ? `取消推荐${get.translation(recommended.id)}` : '为他推荐');
 		recommendPortrait.style.backgroundImage = recommendedButton?.style.backgroundImage || '';
 		const current = playerForIndex(chosen.length), currentMate = current !== game.me;
 		let selfButton = currentMate ? chosen[0] : pending || chosen.at(-1);
@@ -168,6 +170,9 @@ export function createVersusSelection({ lib, game, ui, get, _status }, { root, d
 		for (const button of dialog.buttons) {
 			button.classList.toggle('hh-versus-recommendable', recommending && recommendation.allowed(button.link) && !chosen.some(item => get.sourceCharacter(item.link) === get.sourceCharacter(button.link)));
 			button.classList.toggle('hh-versus-recommended', button === recommendedButton);
+			const label = button.querySelector('.hh-card-confirm');
+			const text = chosen.includes(button) ? '已选择' : button === recommendedButton ? '推荐选择' : '确认选择';
+			if (label && label.textContent !== text) label.textContent = text;
 			button.classList.toggle('hh-versus-picked', chosen.includes(button));
 			button.classList.toggle('hh-versus-mate-pending', button === pending && currentMate);
 			button.classList.toggle('hh-versus-mate-picked', chosen.includes(button) && playerForIndex(chosen.indexOf(button)) !== game.me);
