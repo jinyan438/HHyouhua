@@ -42,9 +42,10 @@ export function createVersusSelection({ lib, game, ui, get, _status }, { root, d
 	const map = root.querySelector('.hh-seat-map');
 	const prompt = root.querySelector('.hh-selection-prompt');
 	const progress = root.querySelector('.hh-selection-progress');
-	// Offline chooseCharacter has no server deadline. Only display a countdown
-	// when the owning event supplies a real timeout, rather than inventing one.
-	progress.hidden = !(Number(event.timeout) > 0);
+	// Keep the identity-style bar full while choosing. Its two-second drain only
+	// starts after confirmation; an actual server deadline still owns selection.
+	progress.hidden = false;
+	progress.firstChild.style.width = '100%';
 	let remaining = Number(event.timeout) * 1000, lastTime = Date.now(), disposed = false;
 	let animationFrame = null, effectGeneration = 0, renderer = null, model = null, effects = null;
 	const selected = () => {

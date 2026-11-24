@@ -654,7 +654,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		function cleanup() {
 			if (disposed) return;
 			if (versus && event.result?.bool !== false && event.result?.links?.length) {
-				preserveVersusSelection({ game, ui }, { viewport, parent });
+				preserveVersusSelection({ game, ui, _status }, { viewport, parent });
 			}
 			disposed = true;
 			if (versus) {
