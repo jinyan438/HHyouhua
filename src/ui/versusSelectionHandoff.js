@@ -17,11 +17,20 @@ export function preserveVersusSelection({ game, ui, _status }, { viewport, paren
 	const fill = progress.firstChild;
 	fill.style.width = '100%';
 	ui.window.appendChild(cover);
-	const started = performance.now(), images = new Set();
+	const started = performance.now(), images = new Set(), openingEvents = new Set();
+	const openingHandlers = game.globalEventHandlers;
 	let disposed = false, frame = null, preparing = false, ready = false, revealing = false, resume = null;
 	const observer = new MutationObserver(() => {
 		if (!cover.isConnected || !arena.isConnected || ui.arena !== arena || _status.over) release();
-		else if (!arena.classList.contains('choose-character') && game.players.every(player => player.name1)) prepare();
+		else {
+			const current = _status.event;
+			if (!openingHandlers?.pushHandler && !arena.classList.contains('choose-character') &&
+				game.players.every(player => player.name1)) prepare();
+			// Some opening skills need human input before the first deal completes.
+			// Uncover that prompt instead of leaving the game paused under the cover.
+			if (game.players.every(player => player.name1) && _status.paused && !_status.auto && current?.player === game.me &&
+				/^choose/.test(current.name) && current.getParent?.('chooseCharacter') !== parent) prepare();
+		}
 	});
 	observer.observe(ui.window, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
 	function release() {
@@ -36,6 +45,12 @@ export function preserveVersusSelection({ game, ui, _status }, { viewport, paren
 		Promise.resolve().then(() => {
 			const index = handlers?.indexOf(onCharacterEnd) ?? -1;
 			if (index >= 0) handlers.splice(index, 1);
+			openingHandlers?.removeHandler?.('phaseLoop', 'onPhaseLoop', onOpeningReady);
+			for (const current of openingEvents) {
+				const list = current.getHandler?.();
+				const index = list?.indexOf(onOpeningReady) ?? -1;
+				if (index >= 0) list.splice(index, 1);
+			}
 		});
 	}
 	function reveal() {
@@ -57,11 +72,14 @@ export function preserveVersusSelection({ game, ui, _status }, { viewport, paren
 	function prepare() {
 		if (disposed || preparing) return;
 		preparing = true;
-		// Pause only after character setup, so initialization can finish while the
-		// bar drains. An independent delay cannot resume another extension's pause.
+		// Let gameStart, the initial deal and gameDrawAfter finish behind the cover.
+		// Stop before the first turn; pausing at chooseCharacter left all of that
+		// Android rendering work until after the cover had already been removed.
 		_status.pauseManager?.setDelay?.(new Promise(resolve => { resume = resolve; }));
 		arena.classList.remove('choose-character');
-		const nodes = [ui.background, ...game.players.flatMap(player => [player.node?.avatar, player.node?.avatar2])].filter(Boolean);
+		const cards = game.me.getCards?.('h') || [];
+		const nodes = [ui.background, ...game.players.flatMap(player => [player.node?.avatar, player.node?.avatar2]),
+			...cards.flatMap(card => [card, ...card.children])].filter(Boolean);
 		const urls = new Set(nodes.flatMap(node => [...getComputedStyle(node).backgroundImage.matchAll(/url\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/g)].map(match => match[1] ?? match[2] ?? match[3])));
 		Promise.all([...urls].map(url => new Promise(resolve => {
 			const image = new Image();
@@ -74,9 +92,16 @@ export function preserveVersusSelection({ game, ui, _status }, { viewport, paren
 	}
 	function onCharacterEnd(current, option) {
 		if (option?.state !== 'end') return;
-		if (game.players.every(player => player.name1)) prepare();
-		else release();
+		if (game.players.every(player => player.name1)) {
+			if (!openingHandlers?.pushHandler) prepare();
+		} else release();
 	}
+	function onOpeningReady(current, option) {
+		if (disposed) return;
+		openingEvents.add(current);
+		if (option?.state === 'begin') prepare();
+	}
+	openingHandlers?.pushHandler?.('phaseLoop', onOpeningReady);
 	parent.pushHandler(onCharacterEnd);
 	frame = requestAnimationFrame(drain);
 }

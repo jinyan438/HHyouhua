@@ -3120,7 +3120,7 @@
 		"src/ui/targetDistance.js": "3c07578a9fd1625a604a9d6888224c21b4fe0d14",
 		"src/ui/versusRecommendation.js": "5d4eb0130bc003088cfe71fd1bb720a5829c2cf2",
 		"src/ui/versusSelection.js": "ab24e2c102a8e0782a56a57839189e809469226c",
-		"src/ui/versusSelectionHandoff.js": "af0a4f69b7acefab81ad1297ff93515884c65e43",
+		"src/ui/versusSelectionHandoff.js": "ab7975b6bfaedd2f5b924dc416621374581a3e0c",
 		"src/utils/bounds.js": "04634c0cf7572a86c13473bb675ebd584a62152d",
 		"src/utils/core.js": "d0d6d95a3b4e20c4459823fa1347541b43892707",
 		"src/utils/element.js": "601b1f10c751113f2bbddc0c0a93517200675667",

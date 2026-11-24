@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { selectionFixture } from './helpers/selection-dom.mjs';
 
-function fixture() {
+function fixture({ opening = false } = {}) {
 	const h = selectionFixture({ mode: 'versus', count: 12 });
 	h._status.mode = 'two';
 	h.game.players.forEach((player, index) => { player.side = index < 2; });
@@ -24,6 +24,20 @@ function fixture() {
 	h.waits = [];
 	h._status.pauseManager = { setDelay(promise) { const wait = { done: false }; h.waits.push(wait); return promise.then(() => { wait.done = true; }); } };
 	h.flush = async () => { for (let i = 0; i < 8; i++) await Promise.resolve(); };
+	if (opening) {
+		h.openingHandlers = [];
+		h.game.globalEventHandlers = {
+			pushHandler(name, handler) { assert.equal(name, 'phaseLoop'); h.openingHandlers.push(handler); },
+			removeHandler(name, type, handler) { const index = h.openingHandlers.indexOf(handler); if (index >= 0) h.openingHandlers.splice(index, 1); },
+		};
+		h.startOpening = () => {
+			const handlers = [...h.openingHandlers];
+			const event = { name: 'phaseLoop', getHandler: () => handlers };
+			h._status.event = event;
+			handlers.forEach(handler => handler(event, { state: 'begin' }));
+			return event;
+		};
+	}
 	h.frame = () => { const pending = [...frames]; frames.clear(); pending.forEach(([, callback]) => callback()); };
 	h.frames = frames;
 	h.covers = () => h.ui.window.querySelectorAll('.hh-identity-viewport');
@@ -147,4 +161,33 @@ test('leaving during portrait loading releases the independent delay without wai
 	assert.equal(h.covers().length, 0); assert.equal(h.waits[0].done, true);
 	assert.equal(h.images[0].onload, null); assert.equal(h.images[0].onerror, null);
 	assert.equal(h.frames.size, 0); assert.equal(h.parent.handlers.length, 0);
+});
+
+test('native startup and the initial deal finish before the cover can reveal or block the first turn', async () => {
+	const h = fixture({ opening: true });
+	h.open(); h.event.result = h.result; h.dialog.close(); h.initialize(); h.end(); await h.flush();
+	assert.equal(h.waits.length, 0, 'character setup must not block gameStart or gameDraw');
+	h.ui.arena.classList.remove('choose-character'); h.observers.at(-1).callback();
+	h.advance(2500); h.frame();
+	assert.equal(h.covers().length, 1, 'a finished countdown must still cover the initial deal');
+	const card = h.document.createElement('div'); card.className = 'card';
+	card.style.backgroundImage = 'url("first-hand.png")'; h.ui.arena.appendChild(card);
+	h.game.me.getCards = () => [card];
+	const phase = h.startOpening(); await h.flush();
+	assert.equal(h.waits.length, 1); assert.equal(h.waits[0].done, false);
+	assert.equal(h.images[0].src, 'first-hand.png');
+	h.frame(); assert.equal(h.covers().length, 1, 'the dealt hand must finish decoding');
+	h.images[0].onload(); await h.flush(); h.frame(); h.frame(); await h.flush();
+	assert.equal(h.covers().length, 0); assert.equal(h.waits[0].done, true);
+	assert.equal(h.openingHandlers.length, 0); assert.equal(phase.getHandler().length, 0);
+});
+
+test('a human opening-skill prompt can reveal before the first turn without resuming its native pause', async () => {
+	const h = fixture({ opening: true });
+	h.open(); h.event.result = h.result; h.dialog.close(); h.initialize(); h.end();
+	h._status.event = { name: 'chooseBool', player: h.game.me, result: { skill: 'opening-choice' }, getParent: () => ({ name: 'game' }) };
+	h._status.paused = true; h.observers.at(-1).callback(); await h.flush();
+	h.advance(2000); h.frame(); h.frame(); h.frame(); await h.flush();
+	assert.equal(h.covers().length, 0); assert.equal(h.waits[0].done, true);
+	assert.equal(h._status.paused, true); assert.equal(h.openingHandlers.length, 0);
 });
