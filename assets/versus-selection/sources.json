@@ -1,0 +1,180 @@
+{
+  "client": "E:/AI/sanguosha",
+  "logic": "sanguosha2/work/main.js: HIs (SelectGeneralHappyNewWindow), onClickGeneralCard, onYuxuanSelfGeneral, SetMineSelectId, createGridLayout",
+  "candidateFrame": {
+    "logic": "sanguosha2/work/main.js: Ngs extends w5i extends w1t; w1t.createChild, L1t.createChild",
+    "texture": "userinfo_hero_bg.png",
+    "frameSize": [
+      108,
+      108
+    ],
+    "sizeGrid": [
+      21,
+      21,
+      21,
+      21
+    ],
+    "portrait": [
+      5,
+      5,
+      98,
+      98
+    ]
+  },
+  "animation": {
+    "name": "OL_PaiJu_Xuanjiang",
+    "apk": "E:/AI/sanguosha/sanguosha2/yoka.game_g_android_4.0.2.apk",
+    "cacheDirectory": "assets/cache/https.__web.sanguosha.com_220_sgsolApp/",
+    "spineVersion": "4.0.56",
+    "tracks": [
+      "play",
+      "play2",
+      "play3"
+    ]
+  },
+  "layout": {
+    "columns": 6,
+    "cell": [
+      108,
+      108
+    ],
+    "spacing": [
+      51,
+      60
+    ],
+    "panel": [
+      1048,
+      371
+    ],
+    "padding": [
+      68,
+      68,
+      40,
+      40
+    ]
+  },
+  "files": [
+    {
+      "file": "userinfo_hero_bg.png",
+      "source": "E:/AI/sanguosha/unpacked-wg/e99e09a9a22b3992_0e278d7bdd34c067/Sprite/userinfo_hero_bg.png",
+      "sha256": "4216f2a8436e09ce6876b05b014520f102cd5d9b2a6d9cbc50177e1cf53e61a7"
+    },
+    {
+      "file": "countryGeneralBg.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\countryGeneralBg.png",
+      "sha256": "0db0cdcd4c23c5fd47cbcadd729c0d7ab3ef83d6f39a156ebd39e41071bbb9ab"
+    },
+    {
+      "file": "selectGeneral_small_bg.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\selectGeneral_small_bg.png",
+      "sha256": "7aae697c32e47cf6aaa980f56d692337a78872ddcccea1d8839a519df9968cd2"
+    },
+    {
+      "file": "select_general_kuang_other_new.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\select_general_kuang_other_new.png",
+      "sha256": "e1910f8f5cd1c80e2babf0faf3631175840f3e5a34939ff9d03410d2459775f8"
+    },
+    {
+      "file": "select_general_kuang_self_new.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\select_general_kuang_self_new.png",
+      "sha256": "b3fae4de0fc64ac947a0d477a8f44a9b3094197310cb5acab7510abb96a231ae"
+    },
+    {
+      "file": "selectGeneral_smallbg_mate.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\selectGeneral_smallbg_mate.png",
+      "sha256": "0a5e9afd5ddcb38f6a10a630c6e5e8e9846acb1ac4457d60726143aadd84b0a0"
+    },
+    {
+      "file": "selectGeneral_smallbg_enemy.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\selectGeneral_smallbg_enemy.png",
+      "sha256": "d4403f4886e527025357e35a9d0585840d7e20572987e107dba582fe34f33124"
+    },
+    {
+      "file": "general_self_PW_tip_new.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\general_self_PW_tip_new.png",
+      "sha256": "68747ec07a8e72d5c5297da8855370a113759a4c2d939793bb0cdc04e3249365"
+    },
+    {
+      "file": "select_general_mine_pre_txt_bg.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\select_general_mine_pre_txt_bg.png",
+      "sha256": "68f7eafcd3ed8ae89b6993a48ec1b746709cb0fa3b4cc72b11c4f1534bd12f58"
+    },
+    {
+      "file": "select_general_mate_txt_bg.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\select_general_mate_txt_bg.png",
+      "sha256": "9e0651c08c037c2ce8101c0cbdf0916c1665ade30f27b9873e5c6527865b5763"
+    },
+    {
+      "file": "general_pw_mate_preselect.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\general_pw_mate_preselect.png",
+      "sha256": "61cd9e039aac1c2bc8eff616311cbfec095d55367e50f06bae5634ec5724049d"
+    },
+    {
+      "file": "select_bg_white.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\select_bg_white.png",
+      "sha256": "ed5872281fc76c9cd627e5f5e737c174af2bc74f07777744b52adc4d37b2657e"
+    },
+    {
+      "file": "select_general_skill_bg.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\select_general_skill_bg.png",
+      "sha256": "df557597407c371b222f226302d91ccf201b5b6a8165d5f539d3d7bc9df15d2b"
+    },
+    {
+      "file": "recommend_mine_new.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\recommend_mine_new.png",
+      "sha256": "182db5180d12d106c56f7cc1f9dc785deb6cfe942b329660cd81bb8e03f21dcb"
+    },
+    {
+      "file": "recommend_mate_new.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\recommend_mate_new.png",
+      "sha256": "e2dff5d681807c0cdd5c87dd6fe360629c463b22d246aeb57fbd7e09080fab6c"
+    },
+    {
+      "file": "OL_PaiJu_Xuanjiang.skel",
+      "cacheKey": "b075853b",
+      "sha256": "fbf9d6b703b4be67e3b3844e6c392064f92da4b8108296b76daeadb89897979f"
+    },
+    {
+      "file": "OL_PaiJu_Xuanjiang.atlas.txt",
+      "cacheKey": "6fe9e7b8",
+      "sha256": "272055356d8cbb86f849c91446cdfa27f241acde5225545669d072f0bf023a0a"
+    },
+    {
+      "file": "OL_PaiJu_Xuanjiang.png",
+      "cacheKey": "3b484200",
+      "sha256": "d13e3fb0ca1196b4aead6f42024fb280b1512cdff2e0459da0977e56279a5b9d"
+    },
+    {
+      "file": "select_general_tips_bg.png",
+      "source": "E:\\AI\\sanguosha\\unpacked-wg\\201efc6dacf2864c_ec5630db06b5eccb\\Sprite\\select_general_tips_bg.png",
+      "sha256": "ce74919cd739102fcdc1c5f106eda971026dd8a80e5f49c1f104bca5a4d957bf"
+    },
+    {
+      "file": "pw_select_general_item_bg_new.png",
+      "source": "E:/AI/sanguosha/unpacked-wg/201efc6dacf2864c_ec5630db06b5eccb/Sprite/pw_select_general_item_bg_new.png",
+      "sha256": "9725094c695b20017e4acb818254c666943568e65ca8380f11aabb850f8031f5"
+    }
+  ],
+  "recommendation": {
+    "logic": "sanguosha2/work/main.js: QZt.initUI, HIs.onCLickSmallUI, onTabClick, OnRecommondClick",
+    "texture": "pw_select_general_item_bg_new.png",
+    "size": [
+      154,
+      59
+    ],
+    "portrait": [
+      4,
+      3,
+      45,
+      45
+    ],
+    "label": "为他推荐",
+    "behavior": "Open teammate candidates, recommend a legal general, then return to self selection.",
+    "portraitClip": [
+      10,
+      8,
+      36,
+      36
+    ]
+  }
+}

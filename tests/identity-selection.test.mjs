@@ -262,7 +262,7 @@ for (const reason of ['bidding', 'ai', 'connect', 'online', 'brawl', 'free-pick'
 	if (reason === 'online') h.game.online = true;
 	if (reason === 'brawl') h._status.brawl = {};
 	if (reason === 'free-pick') h.parent.dialogxx = h.dialog;
-	if (reason === 'other-mode') h.get.mode = () => 'versus';
+	if (reason === 'other-mode') h.get.mode = () => 'guozhan';
 	// Native getParent returns an empty object when no chooseCharacter ancestor exists.
 	if (reason === 'in-game-skill') h.event.getParent = () => ({});
 	assert.equal(h.open(), undefined); assert.equal(h.document.body.querySelector('.hh-identity-viewport'), null);

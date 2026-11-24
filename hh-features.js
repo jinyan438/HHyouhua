@@ -2017,7 +2017,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			identity_fullscreen: {
 				name: "全屏选将",
 				init: true,
-				intro: "身份及斗地主共用全屏选将界面；点击武将查看技能，再点同一张牌确认。换将遵守各玩法的候选范围，固定候选玩法保留原限制。适用于本地标准身份、明忠及斗地主，重启生效。"
+				intro: "身份、斗地主及本地对决欢乐模式使用全屏选将。对决欢乐模式默认12名候选，使用原版六列方形候选和双人预览，保留队友代选与替补；点击查看技能，再次点击确认。重启生效。"
 			},
 			disable_native_kill_effect: {
 				name: "关闭原生破敌特效",

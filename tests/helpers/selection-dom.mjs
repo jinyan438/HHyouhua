@@ -3,7 +3,7 @@ import vm from 'node:vm';
 import { domFixture } from './catalog-dom.mjs';
 
 // Minimal DOM around the real Dialog.open hook, including capture events and cleanup.
-export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role === 'zhu' ? 6 : 3, select = 1, fixed = false, teammate = false, cards = false } = {}) {
+export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role === 'zhu' ? 6 : 3, select = 1, fixed = false, teammate = false, cards = false, setup } = {}) {
 	const dom = domFixture(), { document, Element } = dom;
 	const proto = Element.prototype;
 	Object.defineProperties(proto, {
@@ -66,6 +66,8 @@ export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role
 	document.body.append(ui.control);
 	const makeButton = (id, type, parent, noclick) => { const button = new Element(); button.className = 'button character'; button.link = id; button.refresh = (_, next) => { button.link = next; }; if (!noclick) button.addEventListener('click', () => calls.nativeClicks++); parent?.appendChild(button); return button; };
 	ui.create.button = makeButton;
+	ui.create.buttons = (list, type, position, noclick) => list.map(id => makeButton(id, type, position, noclick));
+	ui.create.dialog = () => new Dialog();
 	const dialog = new Dialog();
 	function group(ids, character = true) { const box = new Element(); box.className = 'buttons'; for (const id of ids) { const button = makeButton(id); if (!character) button.className = 'button card'; dialog.buttons.push(button); box.append(button); } dialog.content.append(box); }
 	const own = Object.keys(lib.character).slice(0, count); group(own);
@@ -76,12 +78,16 @@ export function selectionFixture({ mode = 'doudizhu', role = 'zhu', count = role
 	parent._hhRevealedIdentity = game.me.identity;
 	const event = { name: 'chooseButton', player: game.me, dialog, selectButton: select, filterButton: button => typeof button.link === 'string' && (!teammate || own.includes(button.link)), getParent: name => name === 'chooseCharacter' ? parent : null };
 	const _status = { event };
-	const context = vm.createContext({ document, window, lib, game, get, ui, _status, ResizeObserver: Observer, MutationObserver: Observer, AbortController: Controller, setTimeout: dom.environment.setTimer, clearTimeout: dom.environment.clearTimer,
+	setup?.({ lib, game, ui, get, _status, event, dialog, document });
+	const context = vm.createContext({ document, window, lib, game, get, ui, _status, Date, Event, ResizeObserver: Observer, MutationObserver: Observer, AbortController: Controller, setTimeout: dom.environment.setTimer, clearTimeout: dom.environment.clearTimer,
 		findSelectionPlayerTemplate: () => null, createSelectionPlayerVisual() { throw new Error('Unexpected player initialization'); }, captureSelectionPlayerLayout() {} });
 	const source = fs.readFileSync(new URL('../../identity-selection.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export function ', 'function ');
 	const picker = fs.readFileSync(new URL('../../src/ui/selectionFreePick.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export function ', 'function ');
 	const input = fs.readFileSync(new URL('../../src/ui/selectionCardInput.js', import.meta.url), 'utf8').replace('export function ', 'function ');
-	vm.runInContext(input + '\n' + picker + '\n' + source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
+	const versus = fs.readFileSync(new URL('../../src/ui/versusSelection.js', import.meta.url), 'utf8').replace(/^import[^\n]*\n/gm, '').replace('export function ', 'function ');
+	const recommendation = fs.readFileSync(new URL('../../src/ui/versusRecommendation.js', import.meta.url), 'utf8').replace('export function ', 'function ');
+	const candidates = fs.readFileSync(new URL('../../src/ui/happySelectionCandidates.js', import.meta.url), 'utf8').replace('export function ', 'function ');
+	vm.runInContext(input + '\n' + picker + '\n' + recommendation + '\n' + versus + '\n' + candidates + '\n' + source + '\ninstallIdentitySelection(lib, game, ui, get, _status);', context);
 	lib.arenaReady.forEach(fn => fn());
 	return { ...dom, context, lib, game, get, ui, _status, parent, event, dialog, calls, observers, own, open() { dialog.open(); game.check(); return dialog._hhSelection; } };
 }

@@ -1,4 +1,5 @@
 @import "src/styles/selection-player.css";
+@import "src/styles/versus-selection.css";
 
 /* Coordinates measured on the 2760 × 1256 reference. Scale the entire stage. */
 .hh-identity-viewport { position:absolute!important; inset:0!important; z-index:90; overflow:hidden; background:#b29d70 url('assets/selection/background.png') center/cover; }

@@ -1,23 +1,27 @@
 import { createSelectionPlayerVisual, findSelectionPlayerTemplate, captureSelectionPlayerLayout } from './src/ui/selectionPlayer.js';
 import { createSelectionFreePick } from './src/ui/selectionFreePick.js';
 import { bindSelectionCardInput } from './src/ui/selectionCardInput.js';
+import { createVersusSelection } from './src/ui/versusSelection.js';
+import { installHappySelectionCandidates } from './src/ui/happySelectionCandidates.js';
 
 // Keep the engine's real buttons, links and chooseButton event throughout selection.
 export function installIdentitySelection(lib, game, ui, get, _status) {
 	if (lib._hhIdentitySelectionInstalled) return;
 	lib._hhIdentitySelectionInstalled = true;
 	lib.arenaReady.push(() => {
+		installHappySelectionCandidates({ lib, game, ui, get, _status });
 		const prototype = lib.element.Dialog.prototype;
 		const open = prototype.open;
 		prototype.open = function (...args) {
 			const result = open.apply(this, args);
 			const event = _status.event;
-			const parent = event?.getParent?.('chooseCharacter');
+			const parent = event?.name === 'chooseCharacter' ? event : event?.getParent?.('chooseCharacter');
 			const mode = get.mode();
-			if (!this._hhSelection && !this.noopen && ['identity', 'doudizhu'].includes(mode) &&
+			if (!this._hhSelection && !this.noopen && ['identity', 'doudizhu', 'versus'].includes(mode) &&
 				!_status.connectMode && !game.online && !_status.brawl &&
+				(mode !== 'versus' || _status.mode === 'two') &&
 				(mode !== 'identity' || !['purple', 'stratagem'].includes(_status.mode)) &&
-				event?.name === 'chooseButton' && event.player === game.me && parent?.name === 'chooseCharacter' && (mode === 'doudizhu' || parent.list) &&
+				event?.name === 'chooseButton' && event.player === game.me && parent?.name === 'chooseCharacter' && (mode !== 'identity' || parent.list) &&
 				this !== parent.dialogxx && this.buttons?.some(button => button.classList.contains('character'))) {
 				mount(this, event, parent, mode);
 			}
@@ -27,12 +31,14 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 
 	function mount(dialog, event, parent, mode) {
 		const doudizhu = mode === 'doudizhu';
-		const fixedChoices = doudizhu && !Array.isArray(parent.list);
+		const versus = mode === 'versus';
+		const fixedChoices = versus || (doudizhu && !Array.isArray(parent.list));
 		const viewport = document.createElement('div');
 		viewport.className = 'hh-identity-viewport';
 		const root = document.createElement('div');
 		root.className = 'hh-identity-selection';
 		root.classList.toggle('hh-doudizhu-selection', doudizhu);
+		root.classList.toggle('hh-versus-selection', versus);
 		root.dataset.mode = mode;
 		root.innerHTML = '<header class="hh-selection-title">选将</header><aside class="hh-selection-side"><div class="hh-seat-map"></div><div class="hh-my-identity"></div><div class="hh-identity-goal"></div><div class="hh-lord"></div></aside><main class="hh-selection-main"></main><div class="hh-selection-prompt">请选择武将</div><div class="hh-selection-progress"><i></i></div><footer class="hh-selection-footer"></footer>';
 		viewport.appendChild(root);
@@ -40,6 +46,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		// Use the actual arena player, including HH overrides and the game's zoom.
 		const playerTemplate = () => findSelectionPlayerTemplate(game);
 		const matchPlayerSize = () => {
+			if (versus) return;
 			const player = playerTemplate();
 			if (!player?.node?.campWrap) return;
 			const scale = root.getBoundingClientRect().width / 2760;
@@ -74,6 +81,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const timers = new Set();
 		const listeners = new AbortController();
 		const decorated = new Set();
+		const extraControls = new Set();
 		const listen = (node, type, callback, capture = false) => node.addEventListener(type, callback, { capture, signal: listeners.signal });
 		let disposed = false, popup = null, animation = null, seenIdentity = parent._hhRevealedIdentity || '';
 		let pendingButton = null, skillPanel = null, skillButton = null;
@@ -106,6 +114,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			}
 		};
 		const originalFilter = event.filterButton;
+		// Keep native candidate restrictions, including reserved teammate cards.
 		const pickedButtons = new Set();
 		let pointCard = null;
 		const pointSlot = document.createElement('div');
@@ -113,6 +122,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const pointEntry = document.createElement('button');
 		pointEntry.type = 'button'; pointEntry.className = 'hh-point-entry'; pointEntry.textContent = '点将';
 		pointEntry.setAttribute('aria-label', '点将，任选武将');
+		pointSlot.hidden = versus;
 		pointSlot.appendChild(pointEntry);
 		const available = name => {
 			if (!lib.character[name]) return false;
@@ -123,7 +133,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				source(button.link) === source(name) && !originalFilter.call(event, button, game.me));
 		};
 		const pointFilter = function (button, ...args) {
-			return pickedButtons.has(button) ? available(button.link) : originalFilter.call(this, button, ...args);
+			return pickedButtons.has(button) ? available(button.link) : originalFilter?.call(this, button, ...args) ?? true;
 		};
 		event.filterButton = pointFilter;
 		const picker = createSelectionFreePick({ lib, ui, get }, {
@@ -160,6 +170,21 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		if (controls) footer.appendChild(controls);
 		ui.cheat?.classList.add('hh-selection-extra-control');
 		ui.cheat2?.classList.add('hh-selection-extra-control');
+		const versusView = versus ? createVersusSelection({ lib, game, ui, get, _status }, {
+			root, dialog, event, parent, listen, later, cancel, isCurrent,
+			onChoose: button => chooseCard(button),
+			onInspect: button => showSkills(button),
+			paintPreview: button => {
+				paintCard(button, true);
+				const template = playerTemplate();
+				if (template?.offsetWidth && template.offsetHeight) {
+					button.style.setProperty('--hh-player-width', `${template.offsetWidth}px`);
+					button.style.setProperty('--hh-player-height', `${template.offsetHeight}px`);
+					button.style.setProperty('--hh-player-scale', 440 / template.offsetHeight);
+					button.style.setProperty('--hh-preview-width', `${440 * template.offsetWidth / template.offsetHeight}px`);
+				}
+			},
+		}) : null;
 
 		function paintArenaPlayer(button) {
 			const template = playerTemplate();
@@ -170,9 +195,13 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			return true;
 		}
 
-		function paintCard(button) {
+		function paintCard(button, preview = false) {
 			if (button._hhPainted === button.link) return;
 			button._hhPainted = button.link;
+			if (versus && !preview) {
+				versusView.paintCandidate(button);
+				return;
+			}
 			button.querySelector('.hh-card-details')?.remove();
 			button.querySelector('.hh-selection-player')?.remove();
 			if (paintArenaPlayer(button)) return;
@@ -387,6 +416,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				if (label && label.textContent !== text) label.textContent = text;
 				button.setAttribute('aria-pressed', String(pending || selected));
 			}
+			versusView?.update(pendingButton);
 		}
 
 		function clearPending() {
@@ -399,6 +429,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			// Card movement is checked by our gesture handler, independently of native drag state.
 			if (disposed || !isCurrent() || picker.isOpen || root.classList.contains('hh-revealing')) return;
 			closePopup();
+			if (versusView?.chooseRecommendation(button)) return;
 			const current = _status.event;
 			if (ui.selected.buttons.includes(button)) {
 				// In double-character games, a confirmed first general can still be changed.
@@ -408,7 +439,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 				game.check();
 				return;
 			}
-			if (!button.classList.contains('selectable')) return;
+			if (!button.classList.contains('selectable') || button.classList.contains('unselectable') || button.classList.contains('noclick')) return;
 			if (pendingButton !== button && !confirm) {
 				// Preview only. Do not touch engine selection, even when auto-confirm is enabled.
 				pendingButton = button;
@@ -418,6 +449,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			}
 			pendingButton = null;
 			closeSkills();
+			versusView?.selfChoice(button);
 			ui.selected.buttons.add(button);
 			button.classList.add('selected');
 			const ok = game.check();
@@ -463,6 +495,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const roleNames = doudizhu ? { zhu: '地主', fan: '农民' } : { zhu: '主公', zhong: '忠臣', mingzhong: '明忠', fan: '反贼', nei: '内奸', commoner: '平民' };
 		const goals = doudizhu ? { zhu: '目标：击败两名农民', fan: '目标：与队友合力击败地主' } : { zhu: '目标：消灭反贼和内奸', zhong: '目标：保护主公，消灭反贼和内奸', mingzhong: '目标：保护主公，消灭反贼和内奸', fan: '目标：击败主公', nei: '目标：成为最后的生还者', commoner: '目标：存活到游戏结束' };
 		function updateSide() {
+			if (versus) { versusView.update(pendingButton); return; }
 			const role = game.me.identity;
 			const roleName = roleNames[role] || get.translation(role);
 			root.dataset.identity = role;
@@ -577,12 +610,15 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 
 		function sync() {
 			if (disposed) return;
+			if (versus) for (const control of [ui.cheat, ui.cheat2].filter(Boolean)) {
+				control.classList.add('hh-selection-extra-control'); extraControls.add(control);
+			}
 			for (const button of dialog.buttons) decorate(button);
 			for (const container of dialog.content.querySelectorAll('.buttons')) {
 				container.classList.toggle('hh-general-grid', !!container.querySelector('.hh-general'));
 			}
 			const grid = dialog.content.querySelector('.hh-general-grid');
-			if (grid && pointSlot.parentNode !== grid) grid.appendChild(pointSlot);
+			if (!versus && grid && pointSlot.parentNode !== grid) grid.appendChild(pointSlot);
 			updateConfirmation();
 			updateSide();
 		}
@@ -593,7 +629,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		const clickAway = e => {
 			if (picker.isOpen) { picker.clearPreview(); return; }
 			if (popup && !popup.contains(e.target) && !e.target.closest('.hh-general')) closePopup();
-			if (skillPanel && !skillPanel.contains(e.target) && !e.target.closest('.hh-general')) clearPending();
+			if (skillPanel && !skillPanel.contains(e.target) && !e.target.closest('.hh-general') && !e.target.closest('.hh-versus-preview') && !e.target.closest('.hh-versus-recommend')) clearPending();
 		};
 		const escape = e => {
 			if (e.key !== 'Escape') return;
@@ -610,9 +646,22 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 		// Covers auto-selection/restart paths which delete a dialog instead of closing it.
 		const lifetime = new MutationObserver(() => { if (!root.isConnected || !root.contains(dialog)) cleanup(); });
 		lifetime.observe(ui.window, { childList: true, subtree: true });
+		const onChoiceEnd = (current, option) => {
+			if (option?.state === 'end' && current.result && current.result !== 'ai') cleanup();
+		};
+		if (versus) event.pushHandler?.(onChoiceEnd);
 		function cleanup() {
 			if (disposed) return;
 			disposed = true;
+			if (versus) {
+				const handlers = event.getHandler?.();
+				// Native dispatch iterates this array with forEach; remove after dispatch
+				// so another extension's following handler is not skipped.
+				Promise.resolve().then(() => {
+					const index = handlers?.indexOf(onChoiceEnd) ?? -1;
+					if (index >= 0) handlers.splice(index, 1);
+				});
+			}
 			listeners.abort();
 			picker.close(false);
 			if (event.filterButton === pointFilter) event.filterButton = originalFilter;
@@ -633,6 +682,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			sizeObserver.disconnect();
 			timers.forEach(clearTimeout); timers.clear();
 			animation?.cancel(); closePopup(); closeSkills();
+			versusView?.dispose();
 			document.removeEventListener('keydown', escape, true);
 			window.removeEventListener('resize', resize);
 			if (controls && controlParent && controls.parentNode === footer) controlParent.insertBefore(controls, controlNext?.parentNode === controlParent ? controlNext : null);
@@ -642,6 +692,7 @@ export function installIdentitySelection(lib, game, ui, get, _status) {
 			dialog.close = originalClose;
 			ui.cheat?.classList.remove('hh-selection-extra-control');
 			ui.cheat2?.classList.remove('hh-selection-extra-control');
+			for (const control of extraControls) control.classList.remove('hh-selection-extra-control');
 			viewport.remove();
 		}
 	}
