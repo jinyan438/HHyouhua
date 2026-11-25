@@ -43,7 +43,11 @@ test('网页无文件系统时仍能选择全部内置媒体，含开场动画�
 	assert.equal(config.backgroundVideoChoose.item.孙尚香, '孙尚香');
 	assert.equal(Object.keys(config.backgroundMusicChoose.item).length, 7);
 	for (const [folder, names] of [['video', startupVideos], ['music', startupMusic]]) {
-		for (const name of names) assert.ok((await readFile(new URL('../assets/startup/' + folder + '/' + name, import.meta.url))).length > 0, name);
+		for (const name of names) {
+			const data = await readFile(new URL('../assets/startup/' + folder + '/' + name, import.meta.url));
+			assert.ok(data.length > 0, name);
+			if (name === '孙尚香.mp4') assert.ok(data.length <= 6 * 1024 * 1024, '默认视频不能重新带入导致旧安卓更新器内存峰值过高的 54 MiB 原文件');
+		}
 	}
 });
 

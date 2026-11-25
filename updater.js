@@ -78,9 +78,9 @@ export async function showUpdater(lib, game, ui, status, localInfo) {
 			actions.replaceChildren(); progress.hidden = false; progress.removeAttribute('value');
 			message.textContent = '准备下载更新…';
 			try {
-				await installUpdate(fs, remote, { onProgress({ phase, done, total }) {
+				await installUpdate(fs, remote, { onProgress({ phase, done, total, path }) {
 					progress.max = total || 1; progress.value = done;
-					message.textContent = `${phase === 'download' ? '正在下载' : '正在安装'} ${done}/${total}`;
+					message.textContent = `${phase === 'download' ? '正在下载' : '正在安装'} ${done}/${total}\n${path.split('/').pop()}`;
 				} });
 				progress.hidden = true; message.textContent = `已更新到 ${remoteInfo.version}，重启游戏后生效。`;
 				button('重启游戏', () => game.reload()); button('稍后', close);

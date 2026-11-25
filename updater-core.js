@@ -149,19 +149,15 @@ export async function installUpdate(fs, remote, { fetcher = fetch, onProgress = 
 	const installed = await loadInstalled(fs);
 	const plan = planUpdate(installed, remote);
 	if (!plan.changed.length && !plan.removed.length) { await markInstalled(fs, remote); return plan; }
-	let completed = 0, cursor = 0, journal, committed = false;
+	let completed = 0, journal, committed = false;
 	try {
 		// Finish every download and verify its pinned Git blob before touching installed files.
-		const workers = Array.from({ length: Math.min(4, plan.changed.length) }, async () => {
-			while (cursor < plan.changed.length) {
-				const path = plan.changed[cursor++];
-				await writeVerified(fs, `.hh-update/stage/${path}`, await downloadFile(fetcher, remote, path));
-				onProgress({ phase: 'download', done: ++completed, total: plan.changed.length, path });
-			}
-		});
-		const results = await Promise.allSettled(workers);
-		const failed = results.find(result => result.status === 'rejected');
-		if (failed) throw failed.reason;
+		// Android bridges encode whole files as base64. Keep only one download/write/readback active.
+		for (const path of plan.changed) {
+			onProgress({ phase: 'download', done: completed, total: plan.changed.length, path });
+			await writeVerified(fs, `.hh-update/stage/${path}`, await downloadFile(fetcher, remote, path));
+			onProgress({ phase: 'download', done: ++completed, total: plan.changed.length, path });
+		}
 		journal = { phase: 'prepared', changes: [], hadState: await fs.exists(statePath) };
 		if (journal.hadState) await writeVerified(fs, '.hh-update/previous-state.json', await fs.read(statePath));
 		for (const path of [...plan.changed, ...plan.removed]) {

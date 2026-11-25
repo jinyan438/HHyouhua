@@ -70,6 +70,31 @@ test('只下载变化文件，删除已移除的托管文件，保留自定义�
 	assert.equal([...fs.files.keys()].some(path => path.startsWith('.hh-update/')), false);
 });
 
+test('逐文件完成下载、写入及读回校验，安卓桥接不与下一个下载重叠', async () => {
+	const contents = Object.fromEntries(Array.from({ length: 6 }, (_, i) => [`assets/startup/video/${i}.mp4`, `media-${i}`]));
+	const fs = memoryFS(), read = fs.read, write = fs.write, active = new Set(), progress = [];
+	const turn = () => new Promise(resolve => setImmediate(resolve));
+	let peak = 0;
+	fs.write = async (path, data) => { await turn(); await write(path, data); };
+	fs.read = async path => {
+		await turn();
+		const result = await read(path);
+		if (path.startsWith('.hh-update/stage/')) active.delete(path.slice('.hh-update/stage/'.length));
+		return result;
+	};
+	await installUpdate(fs, await revision(contents), { fetcher: async url => {
+		const path = decodeURIComponent(url.split('/' + 'a'.repeat(40) + '/')[1]);
+		active.add(path); peak = Math.max(peak, active.size);
+		await turn(); return transport(contents)(url);
+	}, onProgress: item => progress.push(item) });
+	assert.equal(peak, 1, '上一个文件读回校验完成后才下载下一个');
+	assert.equal(active.size, 0);
+	const downloading = progress.filter(item => item.phase === 'download');
+	assert.deepEqual(downloading[0], { phase: 'download', done: 0, total: 6, path: 'assets/startup/video/0.mp4' });
+	assert.equal(downloading.at(-1).done, 6);
+	assert.deepEqual(Object.keys(contents).map(path => text(fs.files.get(path))), Object.values(contents));
+});
+
 test('下载损坏时不修改当前扩展文件', async () => {
 	const old = await revision({ 'extension.js': 'old entry' });
 	const fs = memoryFS({ 'extension.js': 'old entry', 'update-manifest.json': JSON.stringify(old) });

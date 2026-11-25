@@ -19,7 +19,7 @@ function androidFS(initial = {}) {
 		const parts = file.split('/'); parts.pop();
 		while (parts.length) { directories.add(parts.join('/')); parts.pop(); }
 	}
-	const state = { files, fail: null, writes: [], truncates: [] };
+	const state = { files, fail: null, writes: [], truncates: [], buffers: [] };
 	const error = (action, name) => state.fail?.(action, name.slice(root.length));
 	class Directory {
 		constructor(name) { this.name = name; this.isDirectory = true; }
@@ -62,6 +62,7 @@ function androidFS(initial = {}) {
 				error: null,
 				write(data) {
 					assert.ok(data instanceof ArrayBuffer, '原生写入必须使用准确范围的 ArrayBuffer');
+					state.buffers.push(data);
 					state.writes.push(name);
 					later(() => {
 						const fail = error('write', name);
@@ -124,6 +125,18 @@ test('安卓原生接口：二进制和视图范围保持不变，长文件改�
 	assert.equal(h.truncates.length, 3);
 });
 
+test('安卓媒体写入复用完整缓冲区，子视图隔离相邻数据', async () => {
+	const h = androidFS(), media = new Uint8Array(5 * 1024 * 1024);
+	media[0] = 23; media[media.length - 1] = 81;
+	await h.fs.write('video/full.mp4', media);
+	assert.equal(h.state.buffers[0], media.buffer, '桥接写入前不额外复制整段媒体');
+	const partial = media.subarray(1, media.length - 1);
+	await h.fs.write('video/partial.mp4', partial);
+	assert.notEqual(h.state.buffers[1], media.buffer);
+	assert.equal(h.state.buffers[1].byteLength, partial.byteLength);
+	assert.deepEqual(await h.fs.read('video/partial.mp4'), partial);
+});
+
 test('安卓完整更新：下载、备份、安装、状态提交都能处理成功事件并保留二进制', async () => {
 	const old = await remote({ 'extension.js': 'long original entry' });
 	const h = androidFS({ 'extension.js': 'long original entry', '.hh-update-state.json': JSON.stringify(old) });
@@ -177,6 +190,18 @@ test('非 Cordova 客户端：直接包装回调，兼容 writeend 成功事件�
 	game.writeFile = (data, dir, name, callback) => callback({ code: 6 });
 	await assert.rejects(fs.write('a.js', 'new'), /文件不可写.*代码 6/);
 	for (const path of ['../outside', '/outside', 'C:/outside', 'a\\b', '']) await assert.rejects(fs.write(path, 'x'), /无效.*路径/);
+});
+
+test('Capacitor 文件接口同样复用完整缓冲区，保留子视图的准确范围', async () => {
+	const writes = [], game = {
+		checkFile() {}, checkDir() {}, readFile() {}, removeFile() {}, removeDir() {},
+		writeFile(data, _dir, _name, done) { writes.push(data); done(); },
+	};
+	const fs = createGameFileSystem(game, {}), media = new Uint8Array([19, 0, 128, 255, 81]);
+	await fs.write('video/full.mp4', media);
+	assert.equal(writes[0], media.buffer);
+	await fs.write('video/partial.mp4', media.subarray(1, 4));
+	assert.deepEqual(new Uint8Array(writes[1]), new Uint8Array([0, 128, 255]));
 });
 
 test('APK内置资源更新写入可写覆盖层，不尝试删除只读的内置文件', async () => {

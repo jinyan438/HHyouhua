@@ -1,6 +1,6 @@
 {
 	"schema": 1,
-	"version": "2.0.25",
+	"version": "2.0.26",
 	"files": {
 		"assets/active-skill-glow/active-skill.png": "d9722a7cea0a8f33a1f269ae3e37b867dd71bfa5",
 		"assets/active-skill-glow/frame-original.png": "6776d6d3e3187dd2cd5a4fbc83938cc1f37abd5c",
@@ -877,7 +877,7 @@
 		"assets/startup/video/佳代子.mp4": "a23f105f200e9ffd89fb85996158a7fac6aee126",
 		"assets/startup/video/开场-枫香.mp4": "2441df53b8cf64ededc26605e2c88016f5a40617",
 		"assets/startup/video/开场-忧.mp4": "b4e1fa8077c0f7f5ac4ff956a008eb58fa144b6b",
-		"assets/startup/video/孙尚香.mp4": "4284b5e6a7281d472a0dca7bb5e9d57c206464b3",
+		"assets/startup/video/孙尚香.mp4": "f69f8a55455e24498737246b1b9002ad000aa02d",
 		"assets/startup/video/伊吹.mp4": "2fde4386571ca7dcc66cac0c2c0070784d201637",
 		"assets/startup/video/优香.mp4": "ddd41810750cb4bd020c35b1a189d51fe5f477e2",
 		"assets/startup/video/忧.mp4": "09b1761fdf8bf58ca2763fed425a84f5deb283fc",
@@ -2947,10 +2947,10 @@
 		"image/ui/tnode/tnode-C2.png": "8d11a7f6a5686141b5bb9955f3c0f5dc13210940",
 		"image/ui/tnode/tnode-C3.png": "d8413810fed3364979dbfc0265996efad5a7f652",
 		"image/ui/tnode/tnode-C4.png": "5f67a27fc5b2b33d2a3af1fbb449738f671339fe",
-		"info.json": "6fc87bd1c4bd6f44754cdf76c78a9e56022a9704",
+		"info.json": "bc1a15157ef782d93295a00e75a289300512044f",
 		"LICENSE": "818433ecc0e094a4db1023c68b33f24344643ad8",
 		"preferences.js": "9fa11fa9714bc0ddfce241c00a6ac4f6c9aa8060",
-		"README.md": "0ba01f8a1652dfecea55023842193321326e70ed",
+		"README.md": "00377061eb59687e3a08a7a57c4d1e5d61264e70",
 		"src/animation/AnimationPlayer.js": "616180366d16b1ab17b67d89aacff484bf2be772",
 		"src/animation/AnimationPlayerPool.js": "46cc6e114910ea9c691a4adac941d2ecdf3cb99e",
 		"src/animation/APNode.js": "8d4ff35c277707294483c8759b53a4d814862ee6",
@@ -4290,9 +4290,9 @@
 		"ui/styles/skill/window/xinsha.css": "ac9ea05cdf738998b654293e25c117c22acf9dfd",
 		"ui/styles/skill/xinsha.css": "7eb77661ee1e95c0ba13ef395dde6925abcaa115",
 		"ui/utils.js": "3102e60e150195ab0209799a5db4134a27cce03a",
-		"updater-core.js": "d04c680a6a9d6b8face65bae45a487a3d98ddd51",
-		"updater-fs.js": "21fbc04c2add3eacff3131b46b98ac83f7cf439a",
+		"updater-core.js": "99f94a003c5d8a385b81d0dbca802e8a07db1140",
+		"updater-fs.js": "501cd9424fba24cf514735c16ab041d03f99ec2a",
 		"updater.css": "daf1ffe6ff0fdfeeb5eb11e4c59c69a72b9c186b",
-		"updater.js": "d9444dcfdecb4196da513a33a8fdc6ef23bb7f20"
+		"updater.js": "15e75d337dafaabfdd0cbdb403f8db1ff027c71a"
 	}
 }

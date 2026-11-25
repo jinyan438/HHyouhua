@@ -3,6 +3,10 @@ import { formatUpdateError } from './updater-core.js';
 const root = 'extension/HH优化/';
 const bytesOf = data => typeof data === 'string' ? new TextEncoder().encode(data) :
 	ArrayBuffer.isView(data) ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : new Uint8Array(data);
+const bufferOf = data => {
+	const bytes = bytesOf(data);
+	return bytes.byteOffset === 0 && bytes.byteLength === bytes.buffer.byteLength ? bytes.buffer : bytes.slice().buffer;
+};
 
 function path(value) {
 	if (typeof value !== 'string' || /[\\:\x00-\x1f]/.test(value) || value.split('/').some(part => !part || part === '..' || part === '.')) throw new Error('无效的更新文件路径。');
@@ -32,7 +36,7 @@ export function createGameFileSystem(game, environment = globalThis) {
 		write: (value, data) => operation('写入文件', value, async () => {
 			const target = path(value), split = target.lastIndexOf('/');
 			// 统一文件接口会替换内容；APK内置资源通过可写覆盖层更新，不能先删除。
-			const buffer = bytesOf(data).slice().buffer;
+			const buffer = bufferOf(data);
 			await new Promise((resolve, reject) => game.writeFile(buffer, target.slice(0, split), target.slice(split + 1), result => {
 				if (!result || (['write', 'writeend'].includes(result.type) && !result.target?.error)) resolve();
 				else reject(result.target?.error || result);
@@ -83,8 +87,8 @@ function createCordovaFileSystem(browser, directory, Reader) {
 				writer.onwriteend = () => writer.error ? reject(writer.error) : resolve();
 				run();
 			});
-			// FileWriter 支持 ArrayBuffer，不支持 Uint8Array；切片保留视图的准确范围。
-			await write(() => writer.write(bytes.slice().buffer));
+			// Reuse complete buffers; only subviews need a copy to preserve their exact range.
+			await write(() => writer.write(bufferOf(bytes)));
 			// 原生覆盖写入不保证截断旧尾部，必须等待 truncate 完成。
 			await write(() => writer.truncate(bytes.byteLength));
 		}),
