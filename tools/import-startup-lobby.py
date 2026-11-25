@@ -1,10 +1,11 @@
 """Import original lobby atlases and explicitly identified artwork fallbacks."""
 from pathlib import Path
 import json
+import subprocess
 from io import BytesIO
 from fontTools.ttLib import TTFont
 from fontTools import subset
-from PIL import Image
+from PIL import Image, ImageDraw, ImageChops
 from hashlib import sha256
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -93,6 +94,39 @@ def pack_light(name, key):
         'state': 'lit', 'source_sha256': sha256(source.read_bytes()).hexdigest()}, trim=False)
 
 
+def glow_sequences():
+    decoded = subprocess.check_output(['node', str(ROOT / 'tools/export-startup-glow.mjs')], encoding='utf-8')
+    for effect in json.loads(decoded):
+        source = Path(effect['source'])
+        texture = Image.open(source).convert('RGBA')
+        strip = Image.new('RGBA', (128 * len(effect['frames']), 128))
+        for index, frame in enumerate(effect['frames']):
+            points = [(64 + frame['vertices'][i], 64 - frame['vertices'][i + 1]) for i in range(0, 8, 2)]
+            uvs = [(frame['uvs'][i] * texture.width, frame['uvs'][i + 1] * texture.height) for i in range(0, 8, 2)]
+            x0, y0 = points[0]
+            dx1, dy1 = points[1][0] - x0, points[1][1] - y0
+            dx2, dy2 = points[2][0] - x0, points[2][1] - y0
+            determinant = dx1 * dy2 - dx2 * dy1
+            assert abs(determinant) > 1e-6
+            coefficients = []
+            for axis in range(2):
+                d1, d2 = uvs[1][axis] - uvs[0][axis], uvs[2][axis] - uvs[0][axis]
+                a = (d1 * dy2 - d2 * dy1) / determinant
+                b = (dx1 * d2 - dx2 * d1) / determinant
+                coefficients.extend([a, b, uvs[0][axis] - a * x0 - b * y0])
+            piece = texture.transform((128, 128), Image.Transform.AFFINE, coefficients, Image.Resampling.BICUBIC)
+            mask = Image.new('L', (128, 128))
+            ImageDraw.Draw(mask).polygon(points, fill=255)
+            piece.putalpha(ImageChops.multiply(piece.getchannel('A'), mask))
+            strip.paste(piece, (index * 128, 0))
+        write('glow-' + effect['name'], strip, {'kind': 'native-spine-sequence', 'source': str(source),
+            'source_sha256': sha256(source.read_bytes()).hexdigest(), 'atlas': effect['atlas'],
+            'atlas_sha256': sha256(Path(effect['atlas']).read_bytes()).hexdigest(), 'skeleton': effect['skeleton'],
+            'skeleton_sha256': sha256(Path(effect['skeleton']).read_bytes()).hexdigest(), 'version': effect['version'],
+            'animation': effect['animation'], 'duration_ms': effect['duration_ms'], 'fps': effect['fps'],
+            'frame_count': len(effect['frames']), 'frame_size': [128, 128], 'blend': 'additive'}, trim=False)
+
+
 # The Android cache's mainUI atlas matches the reference lobby. Its file names
 # are recovered from sanguosha2/work/rx_pathmap_full.json; do not use the
 # automatic preview index's approximate atlas/image pairings.
@@ -105,13 +139,12 @@ main = {
     'footer-officer': 'btnIcon_10021.png', 'footer-recruit': 'btnIcon_10029.png',
     'footer-bag': 'btnIcon_10034.png', 'gift': 'btnIcon_3.png', 'welfare': 'btnIcon_4.png',
     'notice-dot': 'mainui_red.png', 'notice-count': 'mainui_red2.png',
-    'date-tag': 'mainui_bottom_tag1.png',
     'carousel-idle': 'mainui_point_gray.png', 'carousel-active': 'mainui_point_light.png',
     'rank-star': 'mainui_star_new_2.png', 'button-back': 'mainui_commonbtn_di.png',
 }
 for name, filename in main.items():
     atlas(name, '1104cb4d', 'd323b5c3', filename)
-atlas('anniversary', '1104cb4d', 'd323b5c3', 'btnIcon_10172.png', crop=(0, 0, 96, 65))
+glow_sequences()
 for name, filename in {'landlord': 'mainui_mode_icon4.png', 'rank': 'mainui_mode_icon2.png',
         'classic': 'mainui_mode_icon3.png', 'activity': 'mainui_mode_icon1.png'}.items():
     atlas('mode-' + name, '1104cb4d', 'd323b5c3', filename, panel=True)

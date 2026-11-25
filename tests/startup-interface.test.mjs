@@ -16,9 +16,19 @@ test('大厅按钮和模式卡面来自原始图集，仅头像保留截图回�
         assert.equal(record.source.split(/[\\/]/).at(-1), file);
         assert.equal(record.crop, null); assert.deepEqual(record.size, [308, 112]);
     }
-    for (const name of ['mode-landlord', 'mode-rank', 'mode-classic', 'mode-activity', 'footer-general', 'footer-skin', 'footer-officer', 'footer-recruit', 'footer-bag', 'gift', 'welfare', 'anniversary', 'rank-crest']) {
+    for (const name of ['mode-landlord', 'mode-rank', 'mode-classic', 'mode-activity', 'footer-general', 'footer-skin', 'footer-officer', 'footer-recruit', 'footer-bag', 'gift', 'welfare', 'rank-crest']) {
         assert.equal(sources[name + '.webp'].kind, 'native-atlas', name);
         assert.ok(sources[name + '.webp'].atlas, name);
+    }
+    assert.equal(sources['anniversary.webp'], undefined);
+    assert.equal(sources['date-tag.webp'], undefined);
+    for (const name of ['activity', 'common']) {
+        const effect = sources['glow-' + name + '.webp'];
+        assert.equal(effect.kind, 'native-spine-sequence');
+        assert.equal(effect.version, '4.0.56'); assert.equal(effect.animation, 'play');
+        assert.equal(effect.duration_ms, 2000); assert.equal(effect.fps, 15);
+        assert.equal(effect.frame_count, 30); assert.equal(effect.blend, 'additive');
+        assert.deepEqual(effect.frame_size, [128, 128]); assert.deepEqual(effect.size, [3840, 128]);
     }
     assert.equal(sources['member-label.webp'].kind, 'native-sprite');
     assert.deepEqual(sources['member-label.webp'].source.split(/[\\/]/).slice(-2), ['mainui', 'vip.png']);
@@ -167,6 +177,12 @@ test('默认视频被阻止或解码失败时仍显示模式，预览切换和�
 	assert.equal(background.video.muted, true);
 	assert.equal(background.video.playsInline, true);
 	assert.ok(background.module1.isConnected, '无需等待视频 loadeddata 即可选模式');
+	assert.equal(background.lobby.querySelectorAll('.hh-lobby-glow-frames').length, 3);
+	assert.ok(!background.lobby.querySelectorAll('button').some(button => button.getAttribute('aria-label') === '周年庆'));
+	h.document.hidden = true; h.document.emit('visibilitychange');
+	assert.equal(background.lobby.classList.contains('hh-lobby-effects-paused'), true);
+	h.document.hidden = false; h.document.emit('visibilitychange');
+	assert.equal(background.lobby.classList.contains('hh-lobby-effects-paused'), false);
 	background.video.emit('error');
 	assert.ok(background.module1.isConnected);
 	await Promise.resolve(); await Promise.resolve();

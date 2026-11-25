@@ -776,43 +776,6 @@
     ],
     "sha256": "d433e3559a615130416fbdbe97f8924d4ac0cff8fbd9308b4b6bc57a8e200f02"
   },
-  "date-tag.webp": {
-    "kind": "native-atlas",
-    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
-    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
-    "sprite": "mainui_bottom_tag1.png",
-    "frame": {
-      "frame": {
-        "h": 30,
-        "idx": 0,
-        "w": 66,
-        "x": 1974,
-        "y": 74
-      },
-      "sourceSize": {
-        "h": 30,
-        "w": 66
-      },
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0
-      }
-    },
-    "crop": null,
-    "panel_bounds": null,
-    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
-    "alpha_crop": [
-      0,
-      0,
-      66,
-      30
-    ],
-    "size": [
-      66,
-      30
-    ],
-    "sha256": "4e2a9f173daeeddc4a7194a81956d37597a2877a4449d9c270ee17d711081d1c"
-  },
   "carousel-idle.webp": {
     "kind": "native-atlas",
     "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
@@ -961,47 +924,53 @@
     ],
     "sha256": "8a2a3ec15be11ed4b101605e3ff89f7c1bc5fe730b6922bf9b179bbe2189a109"
   },
-  "anniversary.webp": {
-    "kind": "native-atlas",
-    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
-    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
-    "sprite": "btnIcon_10172.png",
-    "frame": {
-      "frame": {
-        "h": 96,
-        "idx": 0,
-        "w": 96,
-        "x": 1012,
-        "y": 440
-      },
-      "sourceSize": {
-        "h": 96,
-        "w": 96
-      },
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0
-      }
-    },
-    "crop": [
-      0,
-      0,
-      96,
-      65
+  "glow-activity.webp": {
+    "kind": "native-spine-sequence",
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\effect\\spinecdn\\temp\\base\\mainui\\yd_dating_huodong_anniu\\yd_dating_huodong_anniu.png",
+    "source_sha256": "b8fc5277d688a99f70528c9dad0802c66993574ef0d6b1a1589122bc63d2175d",
+    "atlas": "E:/AI/sanguosha/extract/unity/text/assets/res/effect/spinecdn/temp/base/mainui/yd_dating_huodong_anniu/yd_dating_huodong_anniu.atlas.txt",
+    "atlas_sha256": "5b4a240c420cb5022cbdbdae00f9e791f6a64505930d31a72a2082439e835240",
+    "skeleton": "E:/AI/sanguosha/extract/unity/text/assets/res/effect/spinecdn/temp/base/mainui/yd_dating_huodong_anniu/yd_dating_huodong_anniu.skel.bytes",
+    "skeleton_sha256": "66a224e769b0a2427f5616c8bd3bd02bb49f8674fbeabb1a4a4eb76d124c4a19",
+    "version": "4.0.56",
+    "animation": "play",
+    "duration_ms": 2000,
+    "fps": 15,
+    "frame_count": 30,
+    "frame_size": [
+      128,
+      128
     ],
-    "panel_bounds": null,
-    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
-    "alpha_crop": [
-      13,
-      8,
-      79,
-      65
-    ],
+    "blend": "additive",
     "size": [
-      66,
-      57
+      3840,
+      128
     ],
-    "sha256": "38b489408f6af1b7ec39fda29ad0063b8119bdaa357bd69a8f53d803f0313ed1"
+    "sha256": "682f509743864fd888ae733ba77c4a0623d4b7301ddc009029bcd3ee51b8df0f"
+  },
+  "glow-common.webp": {
+    "kind": "native-spine-sequence",
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\effect\\spinecdn\\temp\\base\\mainui\\yd_dating_giftsum_anniu\\yd_dating_anniu_ty.png",
+    "source_sha256": "aac7235f761081bf423b5b2ae4933ef71b9f4b652e195afcbf23ab01373f89f1",
+    "atlas": "E:/AI/sanguosha/extract/unity/text/assets/res/effect/spinecdn/temp/base/mainui/yd_dating_giftsum_anniu/yd_dating_anniu_ty.atlas.txt",
+    "atlas_sha256": "37379c2e70fa1916e88afc9b8358a24c2e5a8120a736ecee4a3dabf66bf56253",
+    "skeleton": "E:/AI/sanguosha/extract/unity/text/assets/res/effect/spinecdn/temp/base/mainui/yd_dating_giftsum_anniu/yd_dating_anniu_ty.skel.bytes",
+    "skeleton_sha256": "f40114440e0b6191ef9e22144436224c30fc7607b23fb581a3b2d2296058cb66",
+    "version": "4.0.56",
+    "animation": "play",
+    "duration_ms": 2000,
+    "fps": 15,
+    "frame_count": 30,
+    "frame_size": [
+      128,
+      128
+    ],
+    "blend": "additive",
+    "size": [
+      3840,
+      128
+    ],
+    "sha256": "8fecf35f9dd5e3aa6526ffb0dde862a9428b5bd0027df14ae39e1cccc81246e9"
   },
   "mode-landlord.webp": {
     "kind": "native-atlas",
@@ -1984,7 +1953,7 @@
     "source": "E:\\AI\\sanguosha\\extract\\unity\\meta\\assets\\third\\textmesh pro\\fonts\\hyxlsj.ttf.json",
     "source_sha256": "012d6c4b12dbc4aa6cf391dd1aac6516df0ab3f9c49d79c47ec65ceded30b8b4",
     "subset": "startupLobby.js and printable ASCII",
-    "sha256": "0ff2f5463c43546b68e19f6a623b8b98d49fcf086d913c6623f36d3c7f7dc5b2"
+    "sha256": "2d4e5782abc80e99bf7b77fc33ddc6c95baafb196b9e141fb556b5c72f2568fe"
   },
   "FZLBGBK-digits.woff2": {
     "kind": "native-font",

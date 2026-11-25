@@ -102,10 +102,31 @@ body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
 .hh-startup-lobby .hh-lobby-currency-add { left: auto; right: 5px; top: 6px; width: 53px; height: 53px; filter: sepia(.6) hue-rotate(8deg) saturate(.55); }
 .hh-lobby-icon-art { width: 100%; height: 100%; object-fit: contain !important; }
 .hh-lobby-icon-back { left: 11px; top: 0; width: 116px; height: 116px; }
-.hh-lobby-decoration:has(.hh-lobby-icon-label) .hh-lobby-icon-art { height: 112px; }
-.hh-lobby-icon-label { text-align: center; font-size: 43px; }
-.hh-lobby-glowing { filter: drop-shadow(0 0 6px #ffae37); }
-.hh-lobby-glowing .hh-lobby-icon-art { filter: brightness(1.18) saturate(1.25); }
+.hh-lobby-glowing { isolation: isolate; }
+.hh-lobby-native-glow {
+    /* Register the visible light edges to the native diamond, accounting for
+       transparent padding and the skeleton's baked vertical offset. */
+    left: calc(50% + .75px); top: 58.75px; width: 190.6px; height: 190.6px;
+    --hh-lobby-glow-caption-mask: 46.05px;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    mix-blend-mode: plus-lighter;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--hh-lobby-glow-caption-mask) - 6px), transparent calc(100% - var(--hh-lobby-glow-caption-mask)));
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--hh-lobby-glow-caption-mask) - 6px), transparent calc(100% - var(--hh-lobby-glow-caption-mask)));
+    z-index: 1;
+}
+.hh-lobby-glowing[data-glow='rebate'] .hh-lobby-native-glow { left: calc(50% + .35px); top: 59.67px; width: 186.8px; height: 186.8px; transform: translate(-50%, -50%) scale(.95); --hh-lobby-glow-caption-mask: 56.2px; }
+.hh-lobby-glowing[data-glow='shop'] .hh-lobby-native-glow { left: 50%; top: 60.7px; width: 189.5px; height: 189.5px; --hh-lobby-glow-caption-mask: 55.45px; }
+.hh-startup-lobby .hh-lobby-glow-frames {
+    width: 3000%; height: 100%; max-width: none;
+    animation: hh-lobby-native-glow 2s steps(30) infinite;
+}
+@keyframes hh-lobby-native-glow { to { transform: translateX(-100%); } }
+.hh-lobby-effects-paused .hh-lobby-glow-frames,
+.hh-lobby-entering .hh-lobby-glow-frames,
+body.hh-startup-character-open .hh-lobby-glow-frames { animation-play-state: paused; }
 .hh-lobby-dot {
     background: url('lobby/notice-dot.webp') center/100% 100% no-repeat;
     z-index: 4;
@@ -121,8 +142,6 @@ body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
     text-shadow: none;
     z-index: 4;
 }
-.hh-lobby-date-tag { background: url('lobby/notice-count.webp') center/100% 100% no-repeat; color: #fff1ce; font: 33px Georgia, serif; text-align: center; z-index: 4; }
-.hh-lobby-date-tag { background-image: url('lobby/date-tag.webp'); font-size: 32px; transform: skewX(-8deg); }
 .hh-lobby-carousel-dots { display: flex; gap: 10px; }
 .hh-startup-lobby .hh-lobby-carousel-dot { position: relative; width: 16px; height: 16px; background: url('lobby/carousel-idle.webp') center/100% 100% no-repeat; }
 .hh-lobby-carousel-dot.active { background-image: url('lobby/carousel-active.webp'); }
@@ -161,6 +180,7 @@ body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
 .hh-lobby-bottom-separator { right: 0; top: 9px; height: 63px; width: 2px; background: linear-gradient(transparent, #b99a6e9c, transparent); }
 
 @media (prefers-reduced-motion: reduce) {
+    .hh-startup-lobby .hh-lobby-glow-frames { animation: none; }
     .hh-startup-lobby .hh-lobby-mode { transition: none; }
     .hh-lobby-feedback.hh-lobby-tapped { animation: hh-lobby-tap-fade 120ms ease-out; }
     .hh-lobby-feedback:active { transform: var(--hh-lobby-rest-transform, scale(1)); opacity: .85; }

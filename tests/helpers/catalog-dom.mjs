@@ -20,6 +20,7 @@ export function domFixture() {
 		get parentElement() { return this.parentNode; }
 		get childNodes() { return this.children; }
 		get isConnected() { let node = this; while (node) { if (node === document.body) return true; node = node.parentNode; } return false; }
+		contains(node) { while (node) { if (node === this) return true; node = node.parentNode; } return false; }
 		set textContent(value) { this._text = String(value); for (const child of this.children) child.parentNode = null; this.children = []; }
 		get textContent() { return (this._text || '') + this.children.map(child => child.textContent).join(''); }
 		set innerHTML(value) { this.textContent = value; } get innerHTML() { return this.textContent; }

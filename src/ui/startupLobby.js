@@ -118,9 +118,15 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     }
     function icon(name, label, x, y, width, height, notify = false, glow = false) {
         const item = place(feedback('decoration', label), x, y, width, height);
-        if (name === 'gift' || name === 'anniversary') image('button-back', item, 'icon-back');
+        if (name === 'gift') image('button-back', item, 'icon-back');
         image(name, item, 'icon-art');
-        if (glow) item.classList.add('hh-lobby-glowing');
+        if (glow) {
+            item.classList.add('hh-lobby-glowing');
+            item.dataset.glow = name;
+            const effect = node('native-glow', item);
+            effect.setAttribute('aria-hidden', 'true');
+            image('glow-' + (name === 'gift' ? 'activity' : 'common'), effect, 'glow-frames');
+        }
         if (notify) dot(width * 0.72, -1, undefined, item);
         return item;
     }
@@ -156,9 +162,6 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     dot(55, -17, '9', mail);
 
     icon('gift', '活动', 180, 236, 138, 143, true, true);
-    const anniversary = icon('anniversary', '周年庆', 346, 236, 139, 143, true, true);
-    place(node('icon-label', anniversary, '周年庆'), 0, 113, 139, 44);
-    place(node('date-tag', anniversary, '12.5'), 66, 65, 85, 34);
     icon('welfare', '福利', 184, 434, 136, 144, true);
     icon('task', '任务', 187, 628, 135, 146, true);
     icon('contest', '赛事', 187, 822, 134, 147);
@@ -243,12 +246,16 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
         observer.observe(background);
     }
     window.addEventListener('resize', resize);
+    const syncEffectVisibility = () => stage.classList.toggle('hh-lobby-effects-paused', document.hidden);
+    document.addEventListener('visibilitychange', syncEffectVisibility);
+    syncEffectVisibility();
     background.disposeLobby = () => {
         characterBrowser?.close();
         const resizeIndex = lib.onresize?.indexOf(afterGameResize) ?? -1;
         if (resizeIndex >= 0) lib.onresize.splice(resizeIndex, 1);
         observer?.disconnect();
         window.removeEventListener('resize', resize);
+        document.removeEventListener('visibilitychange', syncEffectVisibility);
         document.body.classList.remove('hh-startup-active');
     };
     resize();
