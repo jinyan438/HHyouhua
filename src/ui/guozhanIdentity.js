@@ -123,7 +123,10 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 		ui.window.appendChild(layer);
 		const rect = player.node.identity.getBoundingClientRect(), bounds = layer.getBoundingClientRect();
 		const scale = bounds.width / (layer.offsetWidth || bounds.width) || 1;
-		const width = menu.offsetWidth, height = menu.offsetHeight;
+		// Reference layout: the popup spans about two thirds of a general card.
+		const menuScale = Math.min(1, player.getBoundingClientRect().width / scale * (2 / 3) / menu.offsetWidth);
+		menu.style.transform = `scale(${menuScale})`;
+		const width = menu.offsetWidth * menuScale, height = menu.offsetHeight * menuScale;
 		menu.style.left = Math.max(0, Math.min((rect.right - bounds.left) / scale + 3, layer.offsetWidth - width)) + 'px';
 		menu.style.top = Math.max(0, Math.min((rect.bottom - bounds.top) / scale, layer.offsetHeight - height)) + 'px';
 		const removalObserver = new MutationObserver(() => { if (!player.isConnected) close(); });
