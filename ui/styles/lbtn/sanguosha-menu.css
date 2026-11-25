@@ -1,8 +1,8 @@
 /* Match the original reference capture, in native 1650 x 750 design units. */
 button.hh-sanguosha-menu-toggle.caidanbutton {
 	position: absolute;
-	top: calc(4 * var(--hh-menu-unit));
-	right: calc(95 * var(--hh-menu-unit));
+	top: calc(24 * var(--hh-menu-unit));
+	right: calc(75 * var(--hh-menu-unit));
 	width: calc(67 * var(--hh-menu-unit));
 	height: calc(62 * var(--hh-menu-unit));
 	margin: 0;
