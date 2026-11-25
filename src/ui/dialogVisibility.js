@@ -132,6 +132,8 @@ export function setupDialogVisibility({ game, ui, _status }, doc = document) {
 			// Native controls already choose the correct mouse/touch event.
 			for (const type of ["touchend", "click", "dblclick"]) control.addEventListener(type, event => {
 				event.stopPropagation();
+				// Keep native label/root deduplication within this event, then allow the next tap immediately.
+				event.currentTarget._doubleclick = false;
 				_status.clicked = false;
 			});
 		}
