@@ -22,7 +22,7 @@
 
 `assets/startup/lobby/` 保存大厅素材，运行时不依赖 E 盘资源目录。按钮、四个模式卡面、红点及底栏使用安卓版缓存的同版原始图集：`E:\AI\sanguosha\extract\laya\atlas_png\1104cb4d.png`（`mainUI.png`），对应帧表为 `other\d323b5c3.json`；排位徽章取自 `26eaff35.png` 的 `rk_icon_ty_6.png`。缓存文件名由 `sanguosha2\work\rx_pathmap_full.json` 还原，不能使用预览索引中按图像尺寸猜测的图集配对。卡面字幕、段位名及星数是独立文字和图标，不再烘焙在截图中。官阶字样及紫色底条改用 `officerName.png` 原始图集；银两使用 Unity 的 `baseui/yl_icon.png`，会员9使用 `mainui/vip_bg.png` 底框、`mainui/vip.png` 字样与 `viplv2` 图集的 `9.png` 数字，保留原始金色。官阶文字与会员字样、数字均保持原图比例。右上“八人匹配”使用原始 `Admode_notWeChat/mode_156_3.png`，左下“三国斗地主”使用 `mode_175.png`，均保留完整透明画布和原始比例，暂时只有点击反馈。HYXLSJ 字体来自 Unity 原始资源，按大厅用字裁剪为 WOFF2。仅头像尚未在现有缓存中找到可核实的同版原图，保留为明确标记的 `reference-fallback`。每个素材的来源、图集帧和 SHA-256 均记在 `lobby/sources.json`，可用 `tools/import-startup-lobby.py` 重新生成。界面布局与入口逻辑位于 `src/ui/startupLobby.js`，样式位于 `assets/startup/lobby.css`。
 
-右上“桃园、发财、信件”使用 Unity 原始 `mainui/btnicon_36.png`、`btnicon_161.png`、`btnicon_10026.png`；左下聊天使用完整的 `chat/hall_chat_btn.png`，原图自带菱形底框、气泡与三点。通知数字按原版 `pkgmain.js` 的 `showRed` 和聊天计数实现，使用原版 `fontApp/FZLBGBK.ttf` 数字子集，沿用 24px 字号、1px 字距与 `#F2E4C0` 颜色，按 32×22 原生红框等比缩放。通知数值及点击反馈保留。
+右上“桃园、发财、信件”使用 `mainUI.png` 原始图集的 `btnIcon_36.png`、`btnIcon_161.png`、`btnIcon_10026.png`；左下聊天使用完整的 `chat/hall_chat_btn.png`，原图自带菱形底框、气泡与三点。通知数字按原版 `pkgmain.js` 的 `showRed` 和聊天计数实现，使用原版 `fontApp/FZLBGBK.ttf` 数字子集，沿用 24px 字号、1px 字距与 `#F2E4C0` 颜色，按 32×22 原生红框等比缩放。通知数值及点击反馈保留。
 
 上方七枚将灯（将、风火林山、标、界、将谋、文武、璀）取自原版 `generalLight.png` 图集 `9c5e07a3.png` 与帧表 `810c6860.json`，组合底图、亮框和字样三层，全部显示点亮状态，保持统一画布与原图比例。原有点击反馈保留。
 

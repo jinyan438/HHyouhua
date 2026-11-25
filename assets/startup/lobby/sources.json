@@ -1,4 +1,115 @@
 {
+  "garden.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_36.png",
+    "frame": {
+      "frame": {
+        "h": 72,
+        "idx": 0,
+        "w": 54,
+        "x": 1978,
+        "y": 258
+      },
+      "sourceSize": {
+        "h": 72,
+        "w": 54
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      1,
+      5,
+      53,
+      65
+    ],
+    "size": [
+      52,
+      60
+    ],
+    "sha256": "88fe082dfe788fe069b4827cfa736af9a08febbf2e2184fd0c78f0663d03ae3f"
+  },
+  "fortune.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_161.png",
+    "frame": {
+      "frame": {
+        "h": 72,
+        "idx": 0,
+        "w": 54,
+        "x": 1978,
+        "y": 332
+      },
+      "sourceSize": {
+        "h": 72,
+        "w": 54
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      1,
+      5,
+      54,
+      65
+    ],
+    "size": [
+      53,
+      60
+    ],
+    "sha256": "16e33f7f8bd8b0b8d66f8582e57281a59741506d091c745afc2357fdd743ba6a"
+  },
+  "mail.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10026.png",
+    "frame": {
+      "frame": {
+        "h": 72,
+        "idx": 0,
+        "w": 54,
+        "x": 1978,
+        "y": 406
+      },
+      "sourceSize": {
+        "h": 72,
+        "w": 54
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      2,
+      10,
+      52,
+      65
+    ],
+    "size": [
+      50,
+      55
+    ],
+    "sha256": "ebe7931440e8e1fb70024c23233318529cd5f4873d37e714c4c80697645e6fbf"
+  },
   "task.webp": {
     "kind": "native-atlas",
     "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
@@ -1670,57 +1781,6 @@
       32
     ],
     "sha256": "5a66076576a21e4ec5980607e862a7f97d3fef70073b40d351ea3ee8aff47aab"
-  },
-  "garden.webp": {
-    "kind": "native-sprite",
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_36.png",
-    "crop": null,
-    "source_sha256": "dbcb26b48142220b0f8c8ce72365270242e9370d6ca55cd64ac8b940bf3bafb5",
-    "alpha_crop": [
-      2,
-      2,
-      54,
-      61
-    ],
-    "size": [
-      52,
-      59
-    ],
-    "sha256": "6170ef0e339b050ee2a69d3794c5c1a43befa48cd35dc9575db7fca593878167"
-  },
-  "fortune.webp": {
-    "kind": "native-sprite",
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_161.png",
-    "crop": null,
-    "source_sha256": "74f08cbc219ed4dbabb27bcfe3a182ffd38c1d4325c20b97576e8c923a38cc11",
-    "alpha_crop": [
-      1,
-      2,
-      64,
-      65
-    ],
-    "size": [
-      63,
-      63
-    ],
-    "sha256": "969dc7052b7e6535eb6f45e1408fb1746f31ad41b1e846ffa679fc373669a625"
-  },
-  "mail.webp": {
-    "kind": "native-sprite",
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_10026.png",
-    "crop": null,
-    "source_sha256": "73a711c9108f2c88005db48c6ae8836c751d995020e25ba53ced42cf2f6ff144",
-    "alpha_crop": [
-      0,
-      3,
-      60,
-      64
-    ],
-    "size": [
-      60,
-      61
-    ],
-    "sha256": "ee8fc94155b29344f98fba5f34cf1b630c4de04d8e95237df2f185717ee845bf"
   },
   "chat.webp": {
     "kind": "native-sprite",

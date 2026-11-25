@@ -31,12 +31,14 @@ test('大厅按钮和模式卡面来自原始图集，仅头像保留截图回�
         assert.deepEqual(record.sprites, ['bg', 'fra', 'icon'].map(part => 'lamp_new_' + part + '_1_' + key + '.png'));
         assert.deepEqual(record.size, [74, 74]);
     }
-    for (const [name, source] of Object.entries({ garden: 'mainui/btnicon_36.png', fortune: 'mainui/btnicon_161.png', mail: 'mainui/btnicon_10026.png', chat: 'chat/hall_chat_btn.png' })) {
+    for (const [name, sprite] of Object.entries({ garden: 'btnIcon_36.png', fortune: 'btnIcon_161.png', mail: 'btnIcon_10026.png' })) {
         const record = sources[name + '.webp'];
-        assert.equal(record.kind, 'native-sprite');
-        assert.ok(record.source.split(/[\\/]/).join('/').endsWith(source));
-        assert.equal(record.crop, null);
+        assert.equal(record.kind, 'native-atlas');
+        assert.equal(record.sprite, sprite);
+        assert.equal(record.source.split(/[\\/]/).at(-1), '1104cb4d.png');
     }
+    assert.equal(sources['chat.webp'].kind, 'native-sprite');
+    assert.ok(sources['chat.webp'].source.split(/[\\/]/).join('/').endsWith('chat/hall_chat_btn.png'));
     const noticeFont = sources['FZLBGBK-digits.woff2'];
     assert.equal(noticeFont.kind, 'native-font');
     assert.equal(noticeFont.resource, '/res/assets/fontApp/FZLBGBK.ttf');
