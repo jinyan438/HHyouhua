@@ -21,7 +21,12 @@ export function createCharacterCatalog({ lib, game, get, _status = {} }) {
 		if (!entry.packs.includes(pack.id)) entry.packs.push(pack.id);
 		if (!pack.ids.includes(id)) pack.ids.push(id);
 	}
-	for (const [id, characters] of Object.entries(lib.characterPack || {})) {
+	// Imports finish in a different order on each startup. Keep both entry points
+	// in the configured pack order instead of exposing that completion order.
+	const order = [...new Set([...(lib.config?.all?.characters || []), ...(lib.config?.extensions || [])])];
+	const rank = id => { const index = order.indexOf(id.replace(/^mode_extension_/, '')); return index < 0 ? order.length : index; };
+	const characterPacks = Object.entries(lib.characterPack || {}).sort(([a], [b]) => rank(a) - rank(b));
+	for (const [id, characters] of characterPacks) {
 		if (['mode_favourite', 'mode_banned'].includes(id) || !characters || typeof characters !== 'object') continue;
 		const pack = { id, name: plain(lib.translate?.[id + '_character_config'] || lib.translate?.[id]) || id.replace(/^mode_extension_/, ''), ids: [] };
 		for (const [name, raw] of Object.entries(characters)) add(name, raw, pack);

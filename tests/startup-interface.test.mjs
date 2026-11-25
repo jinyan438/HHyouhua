@@ -198,6 +198,9 @@ test('大厅模式保存失败时可重试，入口与视频保持可用', async
 
 test('大厅武将入口复用浏览界面，关闭返回大厅并随大厅一起清理', async t => {
 	const h = await interfaceFixture(t);
+	h.lib.config.ui_zoom = '120%';
+	h.lib.onresize = [];
+	h.game.deviceZoom = .6; h.game.documentZoom = .6;
 	window.inSplash = true;
 	const background = h.ui.beautifyStartInterface_background;
 	const button = background.lobby.querySelectorAll('button').find(button => button.getAttribute('aria-label') === '武将');
@@ -207,14 +210,25 @@ test('大厅武将入口复用浏览界面，关闭返回大厅并随大厅一�
 	await open();
 	assert.ok(h.document.body.querySelector('.hh-character-browser'));
 	assert.equal(background.lobby.inert, true);
+	assert.equal(h.document.body.classList.contains('hh-startup-character-open'), true);
+	assert.equal(Number(h.document.body.style['--hh-startup-character-zoom']), .72);
+	h.game.deviceZoom = .8; h.game.documentZoom = .8;
+	for (const resize of h.lib.onresize) resize();
+	await Promise.resolve();
+	assert.equal(Number(h.document.body.style['--hh-startup-character-zoom']), .96);
+	assert.equal(h.game.documentZoom, .8, '目录只读取缩放，不提前初始化游戏');
 	h.document.body.querySelector('.hh-character-back').emit('click');
 	assert.equal(h.document.body.querySelector('.hh-character-browser'), null);
 	assert.equal(background.lobby.inert, false);
+	assert.equal(h.document.body.classList.contains('hh-startup-character-open'), false);
+	assert.equal(h.document.body.classList.contains('hh-startup-active'), true);
 	assert.ok(background.isConnected);
 	await open();
 	h.startup.content();
 	assert.equal(h.document.body.querySelector('.hh-character-browser'), null);
+	assert.equal(h.document.body.classList.contains('hh-startup-character-open'), false);
 	assert.equal(h.ui.beautifyStartInterface_background, undefined);
+	assert.equal(h.lib.onresize.length, 0);
 	assert.equal(reloads, 0);
 	assert.equal(h.lib.config.mode, undefined);
 });

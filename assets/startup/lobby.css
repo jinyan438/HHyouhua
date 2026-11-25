@@ -4,11 +4,20 @@
     font-display: swap;
 }
 body.hh-startup-active {
+    overflow: hidden !important;
+    transition: none !important;
+}
+body.hh-startup-active:not(.hh-startup-character-open) {
+    zoom: 1 !important;
     transform: none !important;
     width: 100vw !important;
     height: 100vh !important;
-    overflow: hidden !important;
-    transition: none !important;
+}
+body.hh-startup-active.hh-startup-character-open {
+    zoom: var(--hh-startup-character-zoom, 1) !important;
+    transform: none !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
 

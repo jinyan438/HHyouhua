@@ -35,6 +35,17 @@ test('catalog includes extension packs and legacy characters, hides unseen entri
 	assert.equal(catalog.list({ query: '仁德' })[0].id, 'liubei'); assert.equal(catalog.entries.get('guanyu').group, 'shu');
 });
 
+test('武将分类顺序不受大厅和对局并行导入顺序影响', () => {
+    const h = fixture();
+    h.lib.config.all = { characters: ['standard'] };
+    h.lib.config.extensions = ['test'];
+    const normal = createCharacterCatalog(h.context).packs.map(pack => [pack.id, pack.name]);
+    h.lib.characterPack = Object.fromEntries(Object.entries(h.lib.characterPack).reverse());
+    const reversed = createCharacterCatalog(h.context).packs.map(pack => [pack.id, pack.name]);
+    assert.deepEqual(reversed, normal);
+    assert.deepEqual(normal.map(([id]) => id), ['__all', 'standard', 'mode_extension_test', '__other']);
+});
+
 test('启动大厅从待导入资料构建原生及扩展武将目录，不提前初始化游戏资料', () => {
     const h = fixture();
     const pending = ['female', 'wu', '3/4', ['pending_skill'], ['des:待加载的故事']];

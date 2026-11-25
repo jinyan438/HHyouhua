@@ -22,6 +22,27 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     let entering = false;
     let characterBrowser, openingCharacters = false;
 
+    function syncCharacterZoom() {
+        let zoom = game.documentZoom || 1;
+        if (window.inSplash) {
+            // The arena applies this setting after the splash. Use its same
+            // accepted range now, without changing the game's initialization.
+            const configured = Number.parseInt(lib.config.ui_zoom);
+            const percent = configured >= 50 && configured <= 300 ? configured : 100;
+            zoom = (game.deviceZoom || zoom) * percent / 100;
+        }
+        document.body.style.setProperty('--hh-startup-character-zoom', String(zoom));
+    }
+    function restoreLobby() {
+        document.body.classList.remove('hh-startup-character-open');
+        document.body.style.removeProperty?.('--hh-startup-character-zoom');
+        stage.inert = false;
+    }
+    const afterGameResize = () => Promise.resolve().then(() => {
+        if (stage.isConnected && document.body.classList.contains('hh-startup-character-open')) syncCharacterZoom();
+    });
+    lib.onresize?.push(afterGameResize);
+
     async function openCharacters() {
         if (entering || openingCharacters) return;
         openingCharacters = true;
@@ -30,13 +51,17 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
                 const { createStartupCharacterBrowser } = await import('./startupCharacterBrowser.js');
                 if (!stage.isConnected) return;
                 characterBrowser = createStartupCharacterBrowser({ lib, game, ui, get, _status }, {
-                    onClose: () => { stage.inert = false; },
+                    onClose: restoreLobby,
                 });
             }
+            // Use the same native body zoom as the in-game catalog. The lobby
+            // alone opts out of this zoom to keep its video and stage full-screen.
+            syncCharacterZoom();
+            document.body.classList.add('hh-startup-character-open');
             characterBrowser.open();
             stage.inert = true;
         } catch (error) {
-            characterBrowser?.close(); characterBrowser = undefined; stage.inert = false;
+            characterBrowser?.close(); characterBrowser = undefined; restoreLobby();
             console.error('[HH优化] 武将界面加载失败', error);
             game.alert?.('武将界面加载失败，请重试');
         } finally { openingCharacters = false; }
@@ -213,6 +238,8 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     window.addEventListener('resize', resize);
     background.disposeLobby = () => {
         characterBrowser?.close();
+        const resizeIndex = lib.onresize?.indexOf(afterGameResize) ?? -1;
+        if (resizeIndex >= 0) lib.onresize.splice(resizeIndex, 1);
         observer?.disconnect();
         window.removeEventListener('resize', resize);
         document.body.classList.remove('hh-startup-active');
