@@ -84,7 +84,7 @@ export function createSanguoshaMenu(context, { openBackground, addSystemItems } 
 		panel.setAttribute("aria-label", "游戏菜单");
 		layer.appendChild(panel);
 		layer.addEventListener("click", event => {
-			if (event.target === layer || event.target === shade) { event.stopPropagation(); close(); }
+			if (event.target === layer || event.target === shade || event.target === panel) { event.stopPropagation(); close(); }
 		});
 		popup = layer;
 		ui.window.appendChild(layer);

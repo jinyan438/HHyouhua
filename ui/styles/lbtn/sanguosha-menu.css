@@ -15,8 +15,6 @@ button.hh-sanguosha-menu-toggle.caidanbutton {
 	z-index: 6;
 }
 
-button.hh-sanguosha-menu-toggle[aria-expanded="true"] { z-index: 101; }
-
 .hh-sanguosha-menu {
 	position: absolute;
 	inset: 0;
