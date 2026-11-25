@@ -8,6 +8,7 @@ import { setupGuozhanIdentity } from '../src/ui/guozhanIdentity.js';
 
 function fixture(beforeArena = false) {
 	const { document, Element } = domFixture();
+	Element.prototype.removeAttribute = function (name) { delete this.attributes[name]; if (name === 'tabindex') delete this.tabIndex; };
 	const observers = [];
 	globalThis.MutationObserver = class {
 		constructor(callback) { this.callback = callback; observers.push(this); }
@@ -63,14 +64,19 @@ test('installs before arena creation; native hidden-seat rules and per-player ex
 	assert.deepEqual(other._guozhanguess, ['wu', 'qun', 'shu', 'wei']); assert.deepEqual(player._guozhanguess, ['jin']);
 });
 
-test('a public reveal overrides the guess and dismisses the popup; replay and other modes keep their native behavior', () => {
+test('a public reveal restores the HH faction display and dismisses the popup; replay and other modes keep their native behavior', () => {
 	const h = fixture(), player = h.game.players[1];
 	h.toggle(player, 'wu'); h.click(player); assert.ok(h.menu());
 	player.identity = 'wei'; player.identityShown = true; h.controller.update(player);
 	assert.equal(h.menu(), null);
-	assert.match(player.node.identity.querySelector('.hh-guozhan-force-badge').style.backgroundImage, /countrywarforceshow_wei/);
+	assert.equal(player.node.identity.querySelector('.hh-guozhan-force-badge').hidden, true);
+	assert.equal(player.node.identity.classList.contains('hh-guozhan-identity'), false);
+	assert.equal(player.node.identity.getAttribute('role'), null);
+	assert.equal(player.node.identity.getAttribute('tabindex'), null);
 	h.click(player); assert.equal(h.menu(), null);
 	player.identityShown = false; player.identity = 'unknown'; h.controller.update(player);
+	assert.equal(player.node.identity.querySelector('.hh-guozhan-force-badge').hidden, false);
+	assert.equal(player.node.identity.classList.contains('hh-guozhan-identity'), true);
 	h._status.video = true; h.click(player); assert.equal(h.menu(), null); h._status.video = false;
 	h._status.dragged = true; h.click(player); assert.equal(h.menu(), null); h._status.dragged = false;
 	h.setMode('identity'); h.controller.update(player);

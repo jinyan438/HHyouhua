@@ -17,7 +17,7 @@
 }
 .hh-guozhan-identity > div:first-child { display: none !important; }
 /* A neighboring seat's decorative dragon can extend across this badge. */
-.player:has(> .hh-guozhan-identity) > .long { pointer-events: none; }
+.player:has(> .identity:is(.hh-guozhan-identity, .guozhan-mode)) > .long { pointer-events: none; }
 .hh-guozhan-force-badge {
 	position: absolute;
 	left: 1px;
@@ -51,6 +51,12 @@
 .hh-force-quarter-3 { right: 0; bottom: 0; transform: scaleY(-1); }
 .hh-force-rim { mask-image: radial-gradient(circle at 0 100%, transparent 0 13px, #000 14px); }
 .hh-guozhan-force-layer { position: absolute; inset: 0; z-index: 1000; }
+.hh-guozhan-force-layer,
+.hh-guozhan-force-menu,
+.hh-guozhan-force-option {
+	transition: none !important;
+	animation: none !important;
+}
 .hh-guozhan-force-menu {
 	position: absolute;
 	transform-origin: top left;

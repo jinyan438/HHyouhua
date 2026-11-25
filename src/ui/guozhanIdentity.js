@@ -42,19 +42,23 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 		const state = observed.get(player);
 		if (!state) return;
 		const node = player.node.identity;
-		if (get.mode() !== 'guozhan') {
+		if (get.mode() !== 'guozhan' || shown(player)) {
 			if (node.classList.contains('hh-guozhan-identity')) node.classList.remove('hh-guozhan-identity');
 			state.badge.hidden = true;
 			state.signature = undefined;
+			for (const [name, value] of Object.entries(state.nativeAttributes)) {
+				if (value === null) node.removeAttribute(name);
+				else node.setAttribute(name, value);
+			}
 			if (active?.player === player) close();
 			return;
 		}
 		if (!node.classList.contains('hh-guozhan-identity')) node.classList.add('hh-guozhan-identity');
-		const known = shown(player), available = groups(), kept = remaining(player, available);
+		const available = groups(), kept = remaining(player, available);
 		// Only public identity data is read here. Hidden general names/groups are never consulted.
-		const group = known ? player.identity : kept.length === 1 ? kept[0] : '';
-		const signature = JSON.stringify([known, group, available, kept]);
-		if (active?.player === player && (known || !player.isConnected || player.isDead?.() || active.signature !== signature)) close();
+		const group = kept.length === 1 ? kept[0] : '';
+		const signature = JSON.stringify([group, available, kept]);
+		if (active?.player === player && (!player.isConnected || player.isDead?.() || active.signature !== signature)) close();
 		if (state.signature === signature) return;
 		state.signature = signature;
 		const badge = state.badge;
@@ -62,9 +66,9 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 		badge.textContent = '';
 		badge.style.backgroundImage = '';
 		badge.classList.toggle('hh-force-single', !!group);
-		node.setAttribute('role', known ? 'img' : 'button');
-		node.tabIndex = known ? -1 : 0;
-		node.setAttribute('aria-label', group ? `${known ? '' : '标记'}${names[group] || group}势力` : '排除势力');
+		node.setAttribute('role', 'button');
+		node.tabIndex = 0;
+		node.setAttribute('aria-label', group ? `标记${names[group] || group}势力` : '排除势力');
 		if (group && GUOZHAN_FACTIONS.includes(group)) {
 			image(badge, `countrywarforceshow_${group}`);
 		} else if (group) {
@@ -143,7 +147,8 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 		observer.observe(node, { attributes: true, attributeFilter: ['data-color', 'class'] });
 		observer.observe(node.firstChild, { childList: true, characterData: true, subtree: true });
 		observer.observe(player, { attributes: true, attributeFilter: ['class'] });
-		observed.set(player, { badge, observer });
+		const nativeAttributes = Object.fromEntries(['role', 'aria-label', 'tabindex'].map(name => [name, node.getAttribute(name)]));
+		observed.set(player, { badge, observer, nativeAttributes });
 		let lastTouch = -Infinity;
 		const click = event => {
 			if (get.mode() !== 'guozhan') return;
