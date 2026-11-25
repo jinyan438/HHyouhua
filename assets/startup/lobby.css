@@ -3,6 +3,13 @@
     src: url('lobby/HYXLSJ.woff2') format('woff2');
     font-display: swap;
 }
+@font-face {
+    font-family: hh-lobby-notice;
+    src: url('lobby/FZLBGBK-digits.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
 body.hh-startup-active {
     overflow: hidden !important;
     transition: none !important;
@@ -103,7 +110,18 @@ body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
     background: url('lobby/notice-dot.webp') center/100% 100% no-repeat;
     z-index: 4;
 }
-.hh-lobby-badge,.hh-lobby-date-tag { background: url('lobby/notice-count.webp') center/100% 100% no-repeat; color: #fff1ce; font: 33px Georgia, serif; text-align: center; z-index: 4; }
+.hh-lobby-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('lobby/notice-count.webp') center/100% 100% no-repeat;
+    color: #f2e4c0;
+    font: 36.75px/1 hh-lobby-notice, sans-serif;
+    letter-spacing: 1.53125px;
+    text-shadow: none;
+    z-index: 4;
+}
+.hh-lobby-date-tag { background: url('lobby/notice-count.webp') center/100% 100% no-repeat; color: #fff1ce; font: 33px Georgia, serif; text-align: center; z-index: 4; }
 .hh-lobby-date-tag { background-image: url('lobby/date-tag.webp'); font-size: 32px; transform: skewX(-8deg); }
 .hh-lobby-carousel-dots { display: flex; gap: 10px; }
 .hh-startup-lobby .hh-lobby-carousel-dot { position: relative; width: 16px; height: 16px; background: url('lobby/carousel-idle.webp') center/100% 100% no-repeat; }

@@ -156,5 +156,22 @@ font.flavor = 'woff2'
 font.save(OUT / 'HYXLSJ.woff2')
 records['HYXLSJ.woff2'] = {'kind': 'native-font', 'source': str(font_source), 'source_sha256': sha256(font_source.read_bytes()).hexdigest(), 'subset': 'startupLobby.js and printable ASCII', 'sha256': sha256((OUT / 'HYXLSJ.woff2').read_bytes()).hexdigest()}
 
+# Native yxt.Create labels use hB.SemiBold (fzlbgbk), registered from the
+# fontApp/FZLBGBK.ttf resource. Both showRed and the chat count use 24px,
+# #F2E4C0, and yxt's default 1px letter spacing on the 32x22 red badge.
+notice_font_source = LAYA / 'other/d54ce33c.bin'
+runtime_source = Path(r'E:/AI/sanguosha/sanguosha2/work/pkgmain.js')
+notice_font = TTFont(notice_font_source, recalcTimestamp=False)
+notice_subset = subset.Subsetter(options=options)
+notice_subset.populate(text='0123456789+')
+notice_subset.subset(notice_font)
+notice_font.flavor = 'woff2'
+notice_font.save(OUT / 'FZLBGBK-digits.woff2')
+records['FZLBGBK-digits.woff2'] = {'kind': 'native-font', 'source': str(notice_font_source),
+    'resource': '/res/assets/fontApp/FZLBGBK.ttf', 'source_sha256': sha256(notice_font_source.read_bytes()).hexdigest(),
+    'runtime_source': str(runtime_source), 'runtime_sha256': sha256(runtime_source.read_bytes()).hexdigest(),
+    'subset': '0123456789+', 'native_label': {'font': 'fzlbgbk', 'font_size': 24, 'letter_spacing': 1, 'color': '#F2E4C0'},
+    'sha256': sha256((OUT / 'FZLBGBK-digits.woff2').read_bytes()).hexdigest()}
+
 (OUT / 'sources.json').write_text(json.dumps(records, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
 print(f'Imported {len(records)} lobby assets')

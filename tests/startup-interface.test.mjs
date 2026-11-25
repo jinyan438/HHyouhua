@@ -37,6 +37,11 @@ test('大厅按钮和模式卡面来自原始图集，仅头像保留截图回�
         assert.ok(record.source.split(/[\\/]/).join('/').endsWith(source));
         assert.equal(record.crop, null);
     }
+    const noticeFont = sources['FZLBGBK-digits.woff2'];
+    assert.equal(noticeFont.kind, 'native-font');
+    assert.equal(noticeFont.resource, '/res/assets/fontApp/FZLBGBK.ttf');
+    assert.equal(noticeFont.subset, '0123456789+');
+    assert.deepEqual(noticeFont.native_label, { font: 'fzlbgbk', font_size: 24, letter_spacing: 1, color: '#F2E4C0' });
     for (const [name, source] of Object.entries(sources)) {
         assert.equal(createHash('sha256').update(await readFile(new URL(name, base))).digest('hex'), source.sha256, name);
     }

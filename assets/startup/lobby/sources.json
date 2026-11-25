@@ -1925,5 +1925,21 @@
     "source_sha256": "012d6c4b12dbc4aa6cf391dd1aac6516df0ab3f9c49d79c47ec65ceded30b8b4",
     "subset": "startupLobby.js and printable ASCII",
     "sha256": "0ff2f5463c43546b68e19f6a623b8b98d49fcf086d913c6623f36d3c7f7dc5b2"
+  },
+  "FZLBGBK-digits.woff2": {
+    "kind": "native-font",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\other\\d54ce33c.bin",
+    "resource": "/res/assets/fontApp/FZLBGBK.ttf",
+    "source_sha256": "19e6426eee18e655f4d247976a73fd51cefc03e599667e224497c73d598762b8",
+    "runtime_source": "E:\\AI\\sanguosha\\sanguosha2\\work\\pkgmain.js",
+    "runtime_sha256": "dfd781ab2ed667c2576da52f77170244704a525ab28daf3139a2c1a50e4440ad",
+    "subset": "0123456789+",
+    "native_label": {
+      "font": "fzlbgbk",
+      "font_size": 24,
+      "letter_spacing": 1,
+      "color": "#F2E4C0"
+    },
+    "sha256": "acb05190a74558737ae9fde0a49c67c8834da406c11fac9eb82bb5c95a59a9ad"
   }
 }

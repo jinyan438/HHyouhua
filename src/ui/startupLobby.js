@@ -112,7 +112,7 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
         return button;
     }
     function dot(x, y, count, parent = stage) {
-        const red = place(node(count ? 'badge' : 'dot', parent), x, y, count ? 49 : 32, count ? 35 : 32);
+        const red = place(node(count ? 'badge' : 'dot', parent), x, y, count ? 49 : 32, count ? 49 * 22 / 32 : 32);
         red.setAttribute('aria-hidden', 'true');
         if (count) red.textContent = count;
     }
