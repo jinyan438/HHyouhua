@@ -176,6 +176,7 @@ export function createPlayerInit(base) {
 		}
 
 		this.decadeUI_updateShowCards();
+		game.hhGuozhanHidden?.observe(this);
 
 		// 应用露头头像
 		const outcropStyle = lib.config.extension_HH优化_outcropSkin;

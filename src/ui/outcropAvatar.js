@@ -218,7 +218,7 @@ export async function applyOutcropAvatar(characterName, node, outcropStyle) {
 
 	// 检查是否处于隐匿状态
 	const isVice = node.classList.contains("avatar2");
-	if (isPlayerUnseen(node, isVice)) {
+	if (isPlayerUnseen(node, isVice) && !game.hhGuozhanHidden?.canView(node.parentElement)) {
 		const hiddenPath = `${lib.assetURL}extension/HH优化/image/character/${subdir}/hidden_image.jpg`;
 		if (await checkImageExists(hiddenPath)) {
 			node.style.setProperty("background-image", `url("${hiddenPath}")`, "important");

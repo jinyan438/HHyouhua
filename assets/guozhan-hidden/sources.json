@@ -1,0 +1,98 @@
+{
+  "client": "E:\\AI\\sanguosha",
+  "logic": {
+    "source": "E:\\AI\\sanguosha\\sanguosha2\\work\\main.js",
+    "unknownBack": {
+      "class": "iTs",
+      "methods": [
+        "initUnkownBg",
+        "UpdateUnknowBg",
+        "layout"
+      ],
+      "nativeSize": [
+        72,
+        226
+      ],
+      "mainX": 26,
+      "viceX": "26 + ZP.AVATAR_SEAT_SIZE.width / 2"
+    },
+    "localMask": {
+      "class": "Tns",
+      "methods": [
+        "SetGeneralState",
+        "createZhuGeneralState",
+        "createFuGeneralState",
+        "removeZhuGeneralState",
+        "removeFuGeneralState",
+        "layout"
+      ],
+      "maskSize": [
+        "ZP.AVATAR_SEAT_SIZE.width / 2",
+        227
+      ],
+      "mainPosition": [
+        26,
+        2
+      ],
+      "vicePosition": [
+        "26 + ZP.AVATAR_SEAT_SIZE.width / 2",
+        2
+      ],
+      "latentImageSize": [
+        75,
+        43
+      ],
+      "latentPosition": "Centered in the corresponding mask; native half-shown skills may suppress the latent label."
+    },
+    "localSeat": {
+      "class": "N5i",
+      "methods": [
+        "General_CardChanged",
+        "updateCountry",
+        "updateIsHalfShow"
+      ],
+      "behavior": "Owner keeps main/vice portraits; spectator sees unknown back unless permission allows the portrait. Face-up removes only the corresponding mask/label."
+    },
+    "otherSeat": {
+      "class": "k1t",
+      "methods": [
+        "createBottom",
+        "General_CardChanged"
+      ]
+    },
+    "names": {
+      "class": "dCs",
+      "methods": [
+        "initCountry",
+        "ShowCountry",
+        "ShowFuGeneralName",
+        "layoutFuGeneralName"
+      ],
+      "unknownMain": "主将",
+      "unknownVice": "副将"
+    }
+  },
+  "adaptation": "Use native unseen/unseen2 classes per slot; local portraits only for the current player outside replay/observer mode. Split the portrait area after the faction strip equally between main and vice, with the same top and height. Render the right 70x215 sprite on the same 69x214 pixel scale as the left without changing original PNG bytes. Public names, HP, borders, faction display and gameplay stay owned by the engine.",
+  "files": [
+    {
+      "file": "general_unkown_l.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seatbottom\\general_unkown_l.png",
+      "sha256": "f67ea910d2cdb17d536821836353ab072fb5abb961019801ab3c62e79bfd8295"
+    },
+    {
+      "file": "general_unkown_r.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seatbottom\\general_unkown_r.png",
+      "sha256": "fc82ff7b1afe439919a9d873c66658a5c8bfc7c53dbaf876e76563c323bc926f"
+    },
+    {
+      "file": "general_luck_mask_l.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\general_luck_mask_l.png",
+      "sha256": "7ae35d665c5c3354f96ff2394b86b1f01b890c39de0882efdcbd07926a9e4b2e"
+    },
+    {
+      "file": "general_luck_mask.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\general_luck_mask.png",
+      "sha256": "e92b99ca2638c888757e89a79814f83c00298a45781c52d8b5a4020611dcbd1f"
+    }
+  ]
+}

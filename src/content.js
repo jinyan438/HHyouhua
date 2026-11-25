@@ -46,6 +46,7 @@ import { setupCardDistribution } from "./features/cardDistribution.js";
 import { setupTargetDistance } from "./ui/targetDistance.js";
 import { setupDialogVisibility } from "./ui/dialogVisibility.js";
 import { setupGuozhanIdentity } from "./ui/guozhanIdentity.js";
+import { setupGuozhanHidden } from "./ui/guozhanHidden.js";
 
 // 技能模块
 import { initSkills } from "./skills/index.js";
@@ -75,6 +76,7 @@ export const finalizeDecadeUICore = (decadeUI, config) => {
 
 	decadeUI.init();
 	setupGuozhanIdentity({ lib, game, ui, get, _status });
+	setupGuozhanHidden({ lib, game, ui, get, _status });
 	setupDialogVisibility({ game, ui, _status });
 	setupDoudizhuLayout({ lib, game, ui, get });
 	setupEquipmentEntry({ lib, game });
@@ -159,6 +161,7 @@ export async function content(config) {
 
 	enhanceDecadeUIRuntime(decadeUI);
 	finalizeDecadeUICore(decadeUI, decadeUI.config);
+	await game.hhGuozhanHidden.ready;
 	registerLegacyModules(decadeUI.config);
 	await loadUIPlugins();
 	game.hhPlayerActionTimer?.check(false);

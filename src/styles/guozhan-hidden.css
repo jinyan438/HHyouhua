@@ -1,0 +1,110 @@
+.hh-guozhan-hidden-face,
+.hh-guozhan-latent,
+.hh-guozhan-vice-label { display: none !important; }
+
+.hh-guozhan-hidden-face {
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background-color: #d8d8d6;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	pointer-events: none;
+	z-index: 1;
+	transition: none !important;
+}
+/* The faction strip has its own width; split the remaining portrait area evenly. */
+#arena > .hh-guozhan-hidden.fullskin2 > .primary-avatar,
+#arena > .hh-guozhan-hidden.fullskin2 > .deputy-avatar {
+	width: calc((100% - var(--hh-guozhan-portrait-inset, 0px)) / 2) !important;
+}
+#arena > .hh-guozhan-hidden.fullskin2 > .deputy-avatar {
+	left: calc((100% + var(--hh-guozhan-portrait-inset, 0px)) / 2) !important;
+}
+#arena > .hh-guozhan-hidden.fullskin2 > .name.name2 {
+	left: calc((100% + var(--hh-guozhan-portrait-inset, 0px)) / 2 + 4%) !important;
+}
+#arena > .hh-guozhan-hidden > .dynamic-wrap {
+	left: var(--hh-guozhan-portrait-inset, 0px) !important;
+	width: calc(100% - var(--hh-guozhan-portrait-inset, 0px)) !important;
+}
+#arena > .hh-guozhan-hidden > .dynamic-wrap > .animation-player,
+#arena > .hh-guozhan-hidden > .dynamic-wrap > .animation-player > canvas { width: 100% !important; }
+.hh-guozhan-hidden-main { background-image: url('../../assets/guozhan-hidden/general_unkown_l.png'); }
+/* The original right sprite includes an extra pixel on its right and bottom. */
+.hh-guozhan-hidden-vice {
+	background-image: url('../../assets/guozhan-hidden/general_unkown_r.png');
+	background-size: 101.4493% 100.4673%;
+}
+
+#arena > .player.hh-guozhan-hidden.unseen > .primary-avatar,
+#arena > .player.hh-guozhan-hidden.unseen2 > .deputy-avatar {
+	opacity: 1 !important;
+	visibility: visible !important;
+	top: 0 !important;
+	bottom: 0 !important;
+	height: 100% !important;
+	clip-path: none !important;
+	-webkit-clip-path: none !important;
+}
+#arena > .hh-guozhan-hidden.unseen > .primary-avatar > .hh-guozhan-hidden-face,
+#arena > .hh-guozhan-hidden.unseen2 > .deputy-avatar > .hh-guozhan-hidden-face {
+	display: block !important;
+}
+
+#arena:not(.observe):not(.video) > .hh-guozhan-hidden.hh-guozhan-local .hh-guozhan-hidden-face {
+	background-color: transparent;
+	background-image: url('../../assets/guozhan-hidden/general_luck_mask_l.png');
+	background-size: 100% 100%;
+}
+.hh-guozhan-latent {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 105.6338%;
+	height: auto;
+	aspect-ratio: 75 / 43;
+	transform: translate(-50%, -50%);
+	background: url('../../assets/guozhan-hidden/general_luck_mask.png') center / 100% 100% no-repeat;
+	pointer-events: none;
+	transition: none !important;
+}
+#arena:not(.observe):not(.video) > .hh-guozhan-hidden.hh-guozhan-local .hh-guozhan-latent {
+	display: block !important;
+}
+
+/* Owner names stay readable; public hidden names remain the engine's placeholders. */
+#arena:not(.observe):not(.video) > .hh-guozhan-local.unseen > .camp-wrap > .avatar-name,
+#arena:not(.observe):not(.video) > .hh-guozhan-local.unseen2 > .name.name2:not(.hh-guozhan-vice-label) {
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+#arena:not(.observe):not(.video) > .hh-guozhan-local > .camp-wrap > .avatar-name-default {
+	visibility: hidden !important;
+}
+#arena > .hh-guozhan-hidden.unseen2 > .hh-guozhan-vice-label {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	top: 13.2159%;
+	pointer-events: none;
+}
+#arena:not(.observe):not(.video) > .hh-guozhan-local > .hh-guozhan-vice-label {
+	display: none !important;
+}
+
+/* One dynamic canvas can contain both portraits; expose only its public half. */
+#arena > .hh-guozhan-hidden:not(.hh-guozhan-local).unseen.unseen2 > .dynamic-wrap,
+#arena.observe > .hh-guozhan-hidden.unseen.unseen2 > .dynamic-wrap,
+#arena.video > .hh-guozhan-hidden.unseen.unseen2 > .dynamic-wrap { visibility: hidden !important; }
+#arena > .hh-guozhan-hidden:not(.hh-guozhan-local).unseen:not(.unseen2) > .dynamic-wrap,
+#arena.observe > .hh-guozhan-hidden.unseen:not(.unseen2) > .dynamic-wrap,
+#arena.video > .hh-guozhan-hidden.unseen:not(.unseen2) > .dynamic-wrap { clip-path: inset(0 0 0 50%); }
+#arena > .hh-guozhan-hidden:not(.hh-guozhan-local).unseen2:not(.unseen) > .dynamic-wrap,
+#arena.observe > .hh-guozhan-hidden.unseen2:not(.unseen) > .dynamic-wrap,
+#arena.video > .hh-guozhan-hidden.unseen2:not(.unseen) > .dynamic-wrap { clip-path: inset(0 50% 0 0); }
+#arena:not(.observe):not(.video) > .hh-guozhan-local.unseen.d-skin > .primary-avatar,
+#arena:not(.observe):not(.video) > .hh-guozhan-local.unseen2.d-skin2 > .deputy-avatar {
+	background-image: none !important;
+	background-color: transparent !important;
+}
