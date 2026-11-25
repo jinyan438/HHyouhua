@@ -1,0 +1,72 @@
+{
+  "files": [
+    {
+      "file": "btn_menu3_0.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\gamebase\\btn_menu3_0.png",
+      "bytes": 2454,
+      "sha256": "b2c26328e915a7cd4f37cbff7640f1d1382d70880bdc7e8e03e7a04437d3e460"
+    },
+    {
+      "file": "btn_setting2_0.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\gamebase\\btn_setting2_0.png",
+      "bytes": 3562,
+      "sha256": "0dfc7ae24d69434b9e2ae8d0addb231f233a4949b8072cbe87fae825083ed18a"
+    },
+    {
+      "file": "btn_background2_0.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\gamebase\\btn_background2_0.png",
+      "bytes": 2705,
+      "sha256": "e472133a1b1b67f463c098ffb6cebb27138d5125c3a77981dbe7ded84af76aa5"
+    },
+    {
+      "file": "tool_trusteeship_0.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\gamebase\\tool_trusteeship_0.png",
+      "bytes": 3665,
+      "sha256": "c4dc7c86683ff4b6577780a51907f5816f191f6bbf54c68d870ed616b047c4e3"
+    },
+    {
+      "file": "btn_back2_0.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\gamebase\\btn_back2_0.png",
+      "bytes": 3008,
+      "sha256": "4dc023618f9f0da39304aa9a992c1b549f753394ec13cb1f3be95b34bc478b65"
+    },
+    {
+      "file": "pop_list_btn_bg.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\gamebase\\pop_list_btn_bg.png",
+      "bytes": 535,
+      "sha256": "3af02d25783b87da088851eccbc1b5a538c9846e62bdf95750c19fd4f988ed0a"
+    },
+    {
+      "file": "general_btn_normal.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\general_btn_normal.png",
+      "bytes": 3100,
+      "sha256": "772259c21c7ee1d29cf792a3f2cc985fc9cf1a1f9b435fbf9fdebb0a69711865"
+    },
+    {
+      "file": "general_head_w.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\baseui\\general_head_w.png",
+      "bytes": 8189,
+      "sha256": "95294aec3abe699eaa550f8519cc587ede5c40de516e3404101df1f9e0554235"
+    }
+  ],
+  "logic": {
+    "source": "E:\\AI\\sanguosha\\sanguosha2\\work\\main.js",
+    "sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+    "class": "$rs extends lki",
+    "offset": 19231853,
+    "method": "moveBtns",
+    "duration": 150,
+    "stagger": 45,
+    "distance": 300,
+    "easing": "Laya.Ease.sineOut"
+  },
+  "characters": {
+    "icon": "general_head_w.png",
+    "label": "general_btn_normal.png",
+    "tint": {
+      "icon": "Original toolbar copper-gold gradient",
+      "label": "Original caption with -8deg hue and 75% saturation"
+    },
+    "action": "Existing HH character browser"
+  }
+}

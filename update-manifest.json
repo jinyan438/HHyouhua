@@ -4241,7 +4241,7 @@
 		"ui/lbtn/skins/base.js": "cd13d8a00aca6c0a4e9cfd511a0efbd8eb91c11a",
 		"ui/lbtn/skins/codename.js": "b44e1488ea54785ea203aa02ee8af2b1f02034fd",
 		"ui/lbtn/skins/index.js": "d9e47d871dd2cfe3435b747caee5270bc9347cb4",
-		"ui/lbtn/skins/online.js": "6ec85628fd76034e467b6ba7f0700bb1d72c77d2",
+		"ui/lbtn/skins/online.js": "4e1d44519e9ad46e5d526896c8d99d39fc7ff610",
 		"ui/lbtn/skins/shizhounian.js": "af6a997cf2c5975cd1c170b2241bd35f84e07432",
 		"ui/lbtn/skins/shousha.js": "fda9ab663c954ec10274d4940926445ed6b6b347",
 		"ui/lbtn/skins/xinsha.js": "f5f377a113bad9f35a6b4c3e93febd6dd0779307",
@@ -4267,7 +4267,7 @@
 		"ui/styles/fonts.css": "496504714bc9e35aeba82cb2b468794fa7cef17c",
 		"ui/styles/lbtn/baby.css": "5fd45f34182309eb354d06bf05976a894a4ed5cf",
 		"ui/styles/lbtn/codename.css": "e3cbcda0535cf2223a5a337b2f5cd80184061969",
-		"ui/styles/lbtn/online.css": "bbff983ff1cf81f6e7d5a085209da323ee853d20",
+		"ui/styles/lbtn/online.css": "f2e6defd14063cf89e5a8589609230889cbb1ae9",
 		"ui/styles/lbtn/shizhounian.css": "376998be8d51893f23bcde1e3306581082f11ed1",
 		"ui/styles/lbtn/shousha.css": "eb3fe29461489a74b2a110b0a33261088285c7c4",
 		"ui/styles/lbtn/window/baby.css": "f3bbf6a6472bf90ce25018ca9cd9dbdabd598cce",
@@ -4293,6 +4293,17 @@
 		"updater-core.js": "99f94a003c5d8a385b81d0dbca802e8a07db1140",
 		"updater-fs.js": "501cd9424fba24cf514735c16ab041d03f99ec2a",
 		"updater.css": "daf1ffe6ff0fdfeeb5eb11e4c59c69a72b9c186b",
-		"updater.js": "15e75d337dafaabfdd0cbdb403f8db1ff027c71a"
+		"updater.js": "15e75d337dafaabfdd0cbdb403f8db1ff027c71a",
+		"ui/lbtn/sanguoshaMenu.js": "12a55b7b358ae9236a49607d6d1cf42aea58fe20",
+		"ui/styles/lbtn/sanguosha-menu.css": "4e2982596b0bdc2f87b7c4cad55f6b6efb6b8f38",
+		"ui/assets/lbtn/sanguosha/btn_back2_0.png": "f30a292e2a221c5d0adc321c8b9944517b2ae814",
+		"ui/assets/lbtn/sanguosha/btn_background2_0.png": "3979f8d01e0c536acdea2d3728b2c7395fd9d7b4",
+		"ui/assets/lbtn/sanguosha/btn_menu3_0.png": "4a345258e0c6338fdce7073de13b81b2482cddc6",
+		"ui/assets/lbtn/sanguosha/btn_setting2_0.png": "7553982d4be08c7b13d914262c901fe4aaeee6c9",
+		"ui/assets/lbtn/sanguosha/general_btn_normal.png": "af4e971aef9ad9f7b6a8049002dbeefb2607ece1",
+		"ui/assets/lbtn/sanguosha/general_head_w.png": "6625495ddf5e4a8da96c2cc3825f8399a0f81587",
+		"ui/assets/lbtn/sanguosha/pop_list_btn_bg.png": "b348b57b9422d9fe8024637eadcad7f36cd6bc04",
+		"ui/assets/lbtn/sanguosha/sources.json": "ab8d8e0f7fea8b93a02afae3b766fc8736ce2ad6",
+		"ui/assets/lbtn/sanguosha/tool_trusteeship_0.png": "f556a11b6024686a3768af6ea49a0371da6e1f60"
 	}
 }

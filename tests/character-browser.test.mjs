@@ -6,6 +6,7 @@ import vm from 'node:vm';
 import { createCharacterCatalog, bindCharacterPress } from '../src/ui/characterCatalog.js';
 import { createCharacterBrowser } from '../src/ui/characterBrowser.js';
 import { addCharacterCatalogMenu } from '../src/ui/characterBrowserMenu.js';
+import { createSanguoshaMenu } from '../ui/lbtn/sanguoshaMenu.js';
 import { createSelectionPlayerVisual, captureSelectionPlayerLayout, selectionPlayerSize } from '../src/ui/selectionPlayer.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
 import { refreshCharacterSettingsMenus } from '../src/ui/characterSettingsMenu.js';
@@ -165,7 +166,7 @@ test('all six actual menu themes receive one working catalog button', async () =
 	for (const [skin, creator, method] of [['online', 'Online', 'createMenuButton'], ['shousha', 'Shousha', 'showMenu'], ['xinsha', 'Xinsha', 'createMainMenu'], ['shizhounian', 'Shizhounian', 'createTopRightMenu'], ['baby', 'Baby', 'createTopRightMenu'], ['codename', 'Codename', 'createTopRightMenu']]) {
 		const h = fixture(); let opens = 0; h.game.hhCharacterBrowser = { open() { opens++; } };
 		h.context.ui.create = { node: tag => h.document.createElement(tag), div(...args) { const node = h.document.createElement('div'); for (const arg of args) { if (typeof arg === 'string' && arg.startsWith('.')) node.className = arg.split('.').filter(Boolean).join(' '); else if (arg?.appendChild) arg.appendChild(node); else if (typeof arg === 'object') Object.assign(node.style, arg); } return node; } };
-		const realm = vm.createContext({ ...h.context, document: h.document, window: {}, addCharacterCatalogMenu, queueMicrotask, initChatSystem() {}, console });
+		const realm = vm.createContext({ ...h.context, document: h.document, window: {}, addCharacterCatalogMenu, createSanguoshaMenu, queueMicrotask, initChatSystem() {}, console });
 		for (const name of ['base', skin]) { const text = fs.readFileSync(new URL('../ui/lbtn/skins/' + name + '.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, ''); vm.runInContext(text, realm); }
 		const plugin = realm['create' + creator + 'LbtnPlugin'](h.lib, h.game, h.context.ui, h.get, {}, h.context._status, {});
 		plugin[method]();
@@ -175,6 +176,43 @@ test('all six actual menu themes receive one working catalog button', async () =
 		const button = h.document.body.querySelector('.hh-character-menu-button'); assert.ok(button, skin);
 		assert.equal(h.document.body.querySelectorAll('.hh-character-menu-button').length, 1, skin);
 		button.emit('click'); await flush(); assert.equal(opens, 1, skin);
+	}
+});
+
+test('the default side menu preserves its five actions and releases the overlay before opening another view', async () => {
+	const h = fixture(), calls = [];
+	h.document.defaultView = { innerWidth: 1650, innerHeight: 750, location: { reload: () => calls.push('leave') } };
+	h.context.ui.click = { configMenu: () => calls.push('settings'), auto: () => calls.push('auto') };
+	h.game.hhCharacterBrowser = { open() { calls.push('characters'); } };
+	const menu = createSanguoshaMenu(h.context, { openBackground: () => calls.push('background') });
+	for (const action of ['settings', 'background', 'auto', 'characters', 'leave']) {
+		menu.button.onclick();
+		const items = h.document.body.querySelectorAll('.hh-sanguosha-menu-item');
+		assert.deepEqual(items.map(item => item.dataset.action), ['settings', 'background', 'auto', 'characters', 'leave']);
+		assert.deepEqual(items.map(item => item.getAttribute('aria-label')), ['设置', '背景', '托管', '武将', '离开']);
+		items.find(item => item.dataset.action === action).emit('click');
+		assert.equal(menu.button.getAttribute('aria-expanded'), 'false');
+		assert.equal(h.document.body.querySelector('.hh-sanguosha-menu').inert, true);
+		await flush();
+		assert.equal(h.document.body.querySelector('.hh-sanguosha-menu'), null);
+	}
+	assert.deepEqual(calls, ['settings', 'background', 'auto', 'characters', 'leave']);
+	assert.equal(h.calls.pause, 1);
+	menu.open(); h.document.emit('keydown', { key: 'Escape' }); await flush();
+	assert.equal(h.document.body.querySelector('.hh-sanguosha-menu'), null);
+	assert.equal(h.document.listeners.get('keydown').length, 0);
+	menu.destroy();
+	assert.equal(h.document.body.querySelector('.hh-sanguosha-menu-toggle'), null);
+});
+
+test('the side menu uses unmodified original toolbar and general images', () => {
+	const root = new URL('../ui/assets/lbtn/sanguosha/', import.meta.url);
+	const manifest = JSON.parse(fs.readFileSync(new URL('sources.json', root), 'utf8'));
+	assert.equal(manifest.files.length, 8);
+	for (const file of manifest.files) {
+		const bytes = fs.readFileSync(new URL(file.file, root));
+		assert.equal(bytes.length, file.bytes);
+		assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256);
 	}
 });
 

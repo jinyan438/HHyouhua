@@ -4,6 +4,7 @@
  */
 import { lib, game, ui, get, ai, _status } from "noname";
 import { createBaseLbtnPlugin } from "./base.js";
+import { createSanguoshaMenu } from "../sanguoshaMenu.js";
 import { getBackgroundImage } from "../../../src/ui/backgrounds.js";
 import { renderLLMRecords } from "../../../src/llm/records.js";
 import { bindDialogButton } from "../../../src/llm/dialog.js";
@@ -435,56 +436,12 @@ export function createOnlineLbtnPlugin(lib, game, ui, get, ai, _status, app) {
 
 		// 创建菜单按钮
 		createMenuButton() {
-			const self = this;
-			ui.caidanbutton = ui.create.div(".ui.caidanbutton", ui.window);
-			ui.caidanbutton.onclick = () => {
-				game.playAudio(`../${assetPath}CD/click.mp3`);
-				const container = ui.create.div(".popup-container", ui.window);
-				container.addEventListener("click", e => {
-					game.playAudio(`../${assetPath}CD/back.mp3`);
-					e.stopPropagation();
-					container.delete(200);
-				});
-				const home = ui.create.div(".caidanopen", container);
-
-				// 菜单按钮
-				const caidan2 = ui.create.div(".controls", home);
-				caidan2.setBackgroundImage(`${assetPath}OL_line/uibutton/caidan2.png`);
-
-				// 设置
-				const szBtn = ui.create.div(".controls", home);
-				szBtn.setBackgroundImage(`${assetPath}OL_line/uibutton/shezhi.png`);
-				szBtn.addEventListener("click", () => {
-					game.playAudio(`../${assetPath}CD/button.mp3`);
-					game.closePopped?.();
-					game.pause2?.();
-					ui.click.configMenu?.();
-					ui.system1?.classList.remove("shown");
-					ui.system2?.classList.remove("shown");
-				});
-
-				// 背景
-				const bjBtn = ui.create.div(".controls", home);
-				bjBtn.setBackgroundImage(`${assetPath}OL_line/uibutton/beijing.png`);
-				bjBtn.addEventListener("click", () => {
-					game.playAudio(`../${assetPath}CD/button.mp3`);
-					self.openBackgroundSelector();
-				});
-
-				// 托管
-				const tgBtn = ui.create.div(".controls", home);
-				tgBtn.setBackgroundImage(`${assetPath}OL_line/uibutton/tuoguan.png`);
-				tgBtn.addEventListener("click", () => ui.click.auto());
-
-				// 离开
-				const tcBtn = ui.create.div(".controls", home);
-				tcBtn.setBackgroundImage(`${assetPath}OL_line/uibutton/likai.png`);
-				tcBtn.addEventListener("click", () => window.location.reload());
-
-				// 动态添加系统菜单项
-				self.addSystemMenuItems(home);
-				self.addCharacterCatalogButton(home, { popup: container });
-			};
+			this.topRightMenu?.destroy();
+			this.topRightMenu = createSanguoshaMenu({ lib, game, ui, get, ai, _status }, {
+				openBackground: () => this.openBackgroundSelector(),
+				addSystemItems: parent => this.addSystemMenuItems(parent),
+			});
+			ui.caidanbutton = this.topRightMenu.button;
 		},
 
 		// 添加系统菜单项
