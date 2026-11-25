@@ -1,3 +1,5 @@
+@import url("./leave-dialog.css");
+
 /* Match the original reference capture, in native 1650 x 750 design units. */
 button.hh-sanguosha-menu-toggle.caidanbutton {
 	position: absolute;

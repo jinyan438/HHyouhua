@@ -1,0 +1,94 @@
+.hh-leave-dialog-backdrop,
+.hh-leave-dialog-backdrop * { box-sizing: border-box; transition: none; }
+
+.hh-leave-dialog-backdrop {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, .5);
+	z-index: 200;
+}
+
+.hh-leave-dialog {
+	position: relative;
+	width: calc(688 * var(--hh-leave-unit));
+	height: calc(362 * var(--hh-leave-unit));
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: url("../../../assets/leave-dialog/wnd_bg_small.png") center / 100% 100% no-repeat;
+	color: #42331e;
+	font-family: "hh-source-general", "FZLBJW", shousha, serif;
+	text-shadow: none;
+}
+
+.hh-leave-title {
+	position: absolute;
+	top: calc(12 * var(--hh-leave-unit));
+	left: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	color: #fff7b1;
+	font: 400 calc(36 * var(--hh-leave-unit)) / calc(40 * var(--hh-leave-unit)) "hh-source-general", "FZLBJW", shousha, serif;
+	text-align: center;
+	text-shadow: calc(2 * var(--hh-leave-unit)) calc(2 * var(--hh-leave-unit)) calc(5 * var(--hh-leave-unit)) #000a;
+}
+
+.hh-leave-message {
+	position: absolute;
+	top: calc(120 * var(--hh-leave-unit));
+	left: calc(44 * var(--hh-leave-unit));
+	width: calc(600 * var(--hh-leave-unit));
+	margin: 0;
+	font: 400 calc(30 * var(--hh-leave-unit)) / calc(38 * var(--hh-leave-unit)) "hh-source-general", "FZLBJW", shousha, serif;
+	letter-spacing: calc(1 * var(--hh-leave-unit));
+	text-align: center;
+	white-space: pre-line;
+}
+
+.hh-leave-dialog > button {
+	position: absolute;
+	top: calc(254 * var(--hh-leave-unit));
+	width: calc(204 * var(--hh-leave-unit));
+	height: calc(68 * var(--hh-leave-unit));
+	margin: 0;
+	padding: 0 0 calc(4 * var(--hh-leave-unit));
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	background: center / 100% 100% no-repeat;
+	color: #f4ddb4;
+	font: 400 calc(30 * var(--hh-leave-unit)) / 1 "hh-source-general", "FZLBJW", shousha, serif;
+	letter-spacing: calc(3 * var(--hh-leave-unit));
+	text-shadow: none;
+	cursor: pointer;
+}
+
+.hh-leave-dialog > .hh-leave-cancel {
+	left: calc(104 * var(--hh-leave-unit));
+	background-image: url("../../../assets/leave-dialog/secbtn_sub.png");
+}
+
+.hh-leave-dialog > .hh-leave-confirm {
+	left: calc(380 * var(--hh-leave-unit));
+	background-image: url("../../../assets/leave-dialog/secbtn_nrm.png");
+	color: #7e5b0c;
+}
+
+.hh-leave-dialog > .hh-leave-close {
+	top: calc(6.5 * var(--hh-leave-unit));
+	left: calc(635 * var(--hh-leave-unit));
+	width: calc(36 * var(--hh-leave-unit));
+	height: calc(35 * var(--hh-leave-unit));
+	padding: 0;
+	background-image: url("../../../assets/leave-dialog/wnd_cls.png");
+}
+
+.hh-leave-dialog > button:hover { filter: brightness(1.1); }
+.hh-leave-dialog > button:active { filter: brightness(.9); }
+.hh-leave-dialog > button:focus-visible { outline: 2px solid #8b6729; outline-offset: -6px; }

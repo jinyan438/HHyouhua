@@ -1,4 +1,5 @@
 import { addCharacterCatalogMenu } from "../../src/ui/characterBrowserMenu.js";
+import { createLeaveDialog } from "./leaveDialog.js";
 
 // Original toolbar: $rs.moveBtns in sanguosha2/work/main.js.
 // Each item moves 300 design pixels in 150 ms, staggered by 45 ms.
@@ -16,6 +17,7 @@ export function createSanguoshaMenu(context, { openBackground, addSystemItems } 
 	button.setAttribute("aria-controls", "hh-sanguosha-menu-panel");
 	ui.window.appendChild(button);
 	let popup, retiring, items = [], motions = [], scale = 1;
+	const leaveDialog = createLeaveDialog(context, { returnFocus: button, onConfirm: () => close(false, false) });
 
 	function resize() {
 		const width = ui.window.clientWidth || win.innerWidth || 1650;
@@ -90,7 +92,7 @@ export function createSanguoshaMenu(context, { openBackground, addSystemItems } 
 		ui.window.appendChild(layer);
 		resize();
 
-		function item(id, label, image, action) {
+		function item(id, label, image, action, closeMenu = true) {
 			const node = doc.createElement("button");
 			node.type = "button";
 			node.className = "hh-sanguosha-menu-item";
@@ -104,7 +106,7 @@ export function createSanguoshaMenu(context, { openBackground, addSystemItems } 
 			node.addEventListener("click", event => {
 				event.stopPropagation();
 				if (popup !== layer) return;
-				close(false, false);
+				if (closeMenu) close(false, false);
 				game.playAudio(`${audio}button.mp3`);
 				action();
 			});
@@ -123,7 +125,7 @@ export function createSanguoshaMenu(context, { openBackground, addSystemItems } 
 		character.classList.add("hh-sanguosha-menu-item");
 		character.dataset.action = "characters";
 		character.addEventListener("click", () => game.playAudio(`${audio}button.mp3`));
-		item("leave", "离开", "btn_back2_0.png", () => win.location.reload());
+		item("leave", "离开", "btn_back2_0.png", () => leaveDialog.open(), false);
 		// Preserve menu entries supplied by other extensions.
 		addSystemItems?.(panel);
 		items = Array.from(panel.children);
@@ -144,6 +146,7 @@ export function createSanguoshaMenu(context, { openBackground, addSystemItems } 
 	return {
 		button, open, close,
 		destroy() {
+			leaveDialog.destroy();
 			doc.removeEventListener("keydown", keydown);
 			win.removeEventListener?.("resize", resize);
 			observer?.disconnect();

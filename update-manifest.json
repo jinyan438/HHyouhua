@@ -4294,8 +4294,8 @@
 		"updater-fs.js": "501cd9424fba24cf514735c16ab041d03f99ec2a",
 		"updater.css": "daf1ffe6ff0fdfeeb5eb11e4c59c69a72b9c186b",
 		"updater.js": "15e75d337dafaabfdd0cbdb403f8db1ff027c71a",
-		"ui/lbtn/sanguoshaMenu.js": "563873a2ebf4967db771325eb62362d7c2d28cb9",
-		"ui/styles/lbtn/sanguosha-menu.css": "6e1cd381ddba0fb561bbdbfa85ef1344fc5831b8",
+		"ui/lbtn/sanguoshaMenu.js": "89143d705998726103f0c62afd6609ad6579a68d",
+		"ui/styles/lbtn/sanguosha-menu.css": "375085c014fff722e342388ef54ba7a275cb747e",
 		"ui/assets/lbtn/sanguosha/btn_back2_0.png": "f30a292e2a221c5d0adc321c8b9944517b2ae814",
 		"ui/assets/lbtn/sanguosha/btn_background2_0.png": "3979f8d01e0c536acdea2d3728b2c7395fd9d7b4",
 		"ui/assets/lbtn/sanguosha/btn_menu3_0.png": "4a345258e0c6338fdce7073de13b81b2482cddc6",
@@ -4304,6 +4304,13 @@
 		"ui/assets/lbtn/sanguosha/general_head_w.png": "6625495ddf5e4a8da96c2cc3825f8399a0f81587",
 		"ui/assets/lbtn/sanguosha/pop_list_btn_bg.png": "b348b57b9422d9fe8024637eadcad7f36cd6bc04",
 		"ui/assets/lbtn/sanguosha/sources.json": "ab8d8e0f7fea8b93a02afae3b766fc8736ce2ad6",
-		"ui/assets/lbtn/sanguosha/tool_trusteeship_0.png": "f556a11b6024686a3768af6ea49a0371da6e1f60"
+		"ui/assets/lbtn/sanguosha/tool_trusteeship_0.png": "f556a11b6024686a3768af6ea49a0371da6e1f60",
+		"ui/lbtn/leaveDialog.js": "857d8728a8c573b840b4f61b92d1810fc2723294",
+		"ui/styles/lbtn/leave-dialog.css": "fa9591c5764581227922ea6621c67c8dcd57ac3b",
+		"assets/leave-dialog/secbtn_nrm.png": "3f7e71eb636e97f31542cf853d0b0a75972b1785",
+		"assets/leave-dialog/secbtn_sub.png": "9b5ac06dee76bef02cc839edf149cf26ea20b57c",
+		"assets/leave-dialog/sources.json": "34c477fd890e8d91e2efff3ea33abea25ac20ffc",
+		"assets/leave-dialog/wnd_bg_small.png": "b12824afc6677282df46f8ecd53cde95d5f98f60",
+		"assets/leave-dialog/wnd_cls.png": "c00588299c951757710ccf0195e8658d46e01e1f"
 	}
 }

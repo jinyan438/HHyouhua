@@ -1,0 +1,58 @@
+{
+  "client": "E:\\AI\\sanguosha",
+  "logic": "sanguosha2/work/main.js: Svi (ConfirmWindow), getBtn, layout, applyWindowSizeStyle",
+  "window": [
+    688,
+    362
+  ],
+  "files": [
+    {
+      "file": "wnd_bg_small.png",
+      "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\eb530a35.png",
+      "descriptor": "E:\\AI\\sanguosha\\extract\\laya\\other\\d8a64e4c.json",
+      "frame": [
+        0,
+        533,
+        688,
+        361
+      ],
+      "sha256": "d0a33cb1f535b852af5edb4963695422125a2b87785e9fbb2a86397c6a1ced08"
+    },
+    {
+      "file": "wnd_cls.png",
+      "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\eb530a35.png",
+      "descriptor": "E:\\AI\\sanguosha\\extract\\laya\\other\\d8a64e4c.json",
+      "frame": [
+        0,
+        932,
+        36,
+        35
+      ],
+      "sha256": "2f3eb30b63d20b7d5f3bf41dbfe889799cf10374649d711e18edcd4bcb9946c6"
+    },
+    {
+      "file": "secbtn_nrm.png",
+      "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\8723e84d.png",
+      "descriptor": "E:\\AI\\sanguosha\\extract\\laya\\other\\71445296.json",
+      "frame": [
+        1186,
+        490,
+        204,
+        68
+      ],
+      "sha256": "f3202c77e3b62a8c15ceeba3991459a29620aabc6bd0469253a1ce60e9a1f0b6"
+    },
+    {
+      "file": "secbtn_sub.png",
+      "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\8723e84d.png",
+      "descriptor": "E:\\AI\\sanguosha\\extract\\laya\\other\\71445296.json",
+      "frame": [
+        1598,
+        570,
+        204,
+        68
+      ],
+      "sha256": "20503cdce350ac1794f85e88271a7dd6b724ea905975a911aa2f4289d9e6d41c"
+    }
+  ]
+}

@@ -191,6 +191,12 @@ test('the default side menu preserves its five actions and releases the overlay 
 		assert.deepEqual(items.map(item => item.dataset.action), ['settings', 'background', 'auto', 'characters', 'leave']);
 		assert.deepEqual(items.map(item => item.getAttribute('aria-label')), ['设置', '背景', '托管', '武将', '离开']);
 		items.find(item => item.dataset.action === action).emit('click');
+		if (action === 'leave') {
+			assert.equal(menu.button.getAttribute('aria-expanded'), 'true');
+			assert.equal(calls.includes('leave'), false);
+			h.document.body.querySelector('.hh-leave-confirm').emit('click');
+			assert.equal(h.context._status.reloading, true);
+		}
 		assert.equal(menu.button.getAttribute('aria-expanded'), 'false');
 		assert.equal(h.document.body.querySelector('.hh-sanguosha-menu').inert, true);
 		await flush();
