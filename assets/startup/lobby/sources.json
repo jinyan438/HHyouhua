@@ -1295,6 +1295,496 @@
     ],
     "sha256": "37c5140f1d8417ece584da8a46fc8e3fc830292e4bd636e626c8c8a06958b6be"
   },
+  "pack-jiang.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\9c5e07a3.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\810c6860.json",
+    "sprites": [
+      "lamp_new_bg_1_3.png",
+      "lamp_new_fra_1_3.png",
+      "lamp_new_icon_1_3.png"
+    ],
+    "frames": {
+      "lamp_new_bg_1_3.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1216,
+          "y": 76
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_fra_1_3.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1672,
+          "y": 456
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_icon_1_3.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 152,
+          "y": 912
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "state": "lit",
+    "source_sha256": "bd7a073fe7c8455da94c1c94830ea20520846a5da3b1d83b9c82cbf438fae789",
+    "size": [
+      74,
+      74
+    ],
+    "sha256": "76068725a173f76301b9e884689b6db66a8d2dadc849c64d44c7e57b5afc60fd"
+  },
+  "pack-fenghuo.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\9c5e07a3.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\810c6860.json",
+    "sprites": [
+      "lamp_new_bg_1_2_1.png",
+      "lamp_new_fra_1_2_1.png",
+      "lamp_new_icon_1_2_1.png"
+    ],
+    "frames": {
+      "lamp_new_bg_1_2_1.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1292,
+          "y": 76
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_fra_1_2_1.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1748,
+          "y": 456
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_icon_1_2_1.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 228,
+          "y": 0
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "state": "lit",
+    "source_sha256": "bd7a073fe7c8455da94c1c94830ea20520846a5da3b1d83b9c82cbf438fae789",
+    "size": [
+      74,
+      74
+    ],
+    "sha256": "c52a131985dc030b80885cac827dea97b5bee6ab788208ddbc3270ba570b9510"
+  },
+  "pack-standard.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\9c5e07a3.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\810c6860.json",
+    "sprites": [
+      "lamp_new_bg_1_1.png",
+      "lamp_new_fra_1_1.png",
+      "lamp_new_icon_1_1.png"
+    ],
+    "frames": {
+      "lamp_new_bg_1_1.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 988,
+          "y": 684
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_fra_1_1.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1520,
+          "y": 912
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_icon_1_1.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 0,
+          "y": 532
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "state": "lit",
+    "source_sha256": "bd7a073fe7c8455da94c1c94830ea20520846a5da3b1d83b9c82cbf438fae789",
+    "size": [
+      74,
+      74
+    ],
+    "sha256": "2e9662173f316315bedbf68fe8d153fc58482196afcb31e8ec3ec6524b1eceaf"
+  },
+  "pack-jie.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\9c5e07a3.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\810c6860.json",
+    "sprites": [
+      "lamp_new_bg_1_5.png",
+      "lamp_new_fra_1_5.png",
+      "lamp_new_icon_1_5.png"
+    ],
+    "frames": {
+      "lamp_new_bg_1_5.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1064,
+          "y": 912
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_fra_1_5.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1520,
+          "y": 456
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_icon_1_5.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 152,
+          "y": 760
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "state": "lit",
+    "source_sha256": "bd7a073fe7c8455da94c1c94830ea20520846a5da3b1d83b9c82cbf438fae789",
+    "size": [
+      74,
+      74
+    ],
+    "sha256": "2486d73be414659d1d9f6da3f4f4483f84b6a0f71aab9d41919b98cebdbabc5b"
+  },
+  "pack-jiangmou.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\9c5e07a3.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\810c6860.json",
+    "sprites": [
+      "lamp_new_bg_1_13.png",
+      "lamp_new_fra_1_13.png",
+      "lamp_new_icon_1_13.png"
+    ],
+    "frames": {
+      "lamp_new_bg_1_13.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1596,
+          "y": 76
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_fra_1_13.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1520,
+          "y": 608
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_icon_1_13.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 0,
+          "y": 228
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "state": "lit",
+    "source_sha256": "bd7a073fe7c8455da94c1c94830ea20520846a5da3b1d83b9c82cbf438fae789",
+    "size": [
+      74,
+      74
+    ],
+    "sha256": "6fadd6dcd52e549189f922b7d4505eebc6587ffe3e3e5e34b9bdd37ec0af64f3"
+  },
+  "pack-wenwu.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\9c5e07a3.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\810c6860.json",
+    "sprites": [
+      "lamp_new_bg_1_8.png",
+      "lamp_new_fra_1_8.png",
+      "lamp_new_icon_1_8.png"
+    ],
+    "frames": {
+      "lamp_new_bg_1_8.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1064,
+          "y": 684
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_fra_1_8.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1292,
+          "y": 912
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_icon_1_8.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 152,
+          "y": 532
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "state": "lit",
+    "source_sha256": "bd7a073fe7c8455da94c1c94830ea20520846a5da3b1d83b9c82cbf438fae789",
+    "size": [
+      74,
+      74
+    ],
+    "sha256": "5dfca2a0c92ece21072270af7673e0ccea2c311cd0a668e8c62c3e6654f34ccf"
+  },
+  "pack-cui.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\9c5e07a3.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\810c6860.json",
+    "sprites": [
+      "lamp_new_bg_1_6.png",
+      "lamp_new_fra_1_6.png",
+      "lamp_new_icon_1_6.png"
+    ],
+    "frames": {
+      "lamp_new_bg_1_6.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1064,
+          "y": 836
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_fra_1_6.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 1444,
+          "y": 912
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "lamp_new_icon_1_6.png": {
+        "frame": {
+          "h": 74,
+          "idx": 0,
+          "w": 74,
+          "x": 152,
+          "y": 684
+        },
+        "sourceSize": {
+          "h": 74,
+          "w": 74
+        },
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "state": "lit",
+    "source_sha256": "bd7a073fe7c8455da94c1c94830ea20520846a5da3b1d83b9c82cbf438fae789",
+    "size": [
+      74,
+      74
+    ],
+    "sha256": "3df3225b2dce1bb600ffaedb536cd5f07709202c9eacc5eea66873a79d23c42e"
+  },
   "officer.webp": {
     "kind": "native-sprite",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\big\\b_7.png",
@@ -1514,6 +2004,6 @@
     "source": "E:\\AI\\sanguosha\\extract\\unity\\meta\\assets\\third\\textmesh pro\\fonts\\hyxlsj.ttf.json",
     "source_sha256": "012d6c4b12dbc4aa6cf391dd1aac6516df0ab3f9c49d79c47ec65ceded30b8b4",
     "subset": "startupLobby.js and printable ASCII",
-    "sha256": "da9b5e9352ff29c2b9d3609882e836fa088c2e1c4478df010c45cbe5d7f9af04"
+    "sha256": "7e48db99db33091d9ed3e7298c6181efb59fbd0cdf5e73b4755d0aa4d2a85ff1"
   }
 }

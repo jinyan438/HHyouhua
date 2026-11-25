@@ -134,9 +134,10 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     place(image('officer-ribbon', officer), 12, 15, 265, 62);
     place(image('officer', officer), 0, 0, 88, 88);
     place(image('officer-title', officer), 89, 22, 164, 44);
-    ['将', '风火', '标', '界', '谋', '武', '璀'].forEach((label, index) => {
-        const tag = place(feedback('pack-tag', label + '武将包'), 616 + index * 52, 96, 37, 38);
-        node('pack-label', tag, label);
+    [['jiang', '将'], ['fenghuo', '风火林山'], ['standard', '标'], ['jie', '界'],
+        ['jiangmou', '将谋'], ['wenwu', '文武'], ['cui', '璀']].forEach(([name, label], index) => {
+        const tag = place(feedback('pack-tag', label + '武将包'), 608.5 + index * 52, 83, 52, 64);
+        image('pack-' + name, tag, 'pack-art');
         tag.dataset.pack = String(index);
     });
     function currency(name, value, x) {

@@ -72,6 +72,27 @@ def unity_atlas(name, atlas_name, filename):
         'sprite': filename, 'frame': item, 'source_sha256': sha256(source.read_bytes()).hexdigest()}, trim=False)
 
 
+def pack_light(name, key):
+    source = LAYA / 'atlas_png/9c5e07a3.png'
+    metadata = LAYA / 'other/810c6860.json'
+    frames = json.loads(metadata.read_text(encoding='utf-8'))['frames']
+    sprites = ['lamp_new_' + part + '_1_' + key + '.png' for part in ['bg', 'fra', 'icon']]
+    sheet = Image.open(source).convert('RGBA')
+    image = Image.new('RGBA', (74, 74))
+    for filename in sprites:
+        item = frames[filename]
+        f = item['frame']
+        assert f.get('idx', 0) == 0 and not item.get('rotated'), filename
+        assert item['sourceSize'] == {'w': 74, 'h': 74}, filename
+        layer = sheet.crop((f['x'], f['y'], f['x'] + f['w'], f['y'] + f['h']))
+        offset = item['spriteSourceSize']
+        image.alpha_composite(layer, (offset['x'], offset['y']))
+    # Keep the common canvas so each native glyph and illuminated frame align.
+    write('pack-' + name, image, {'kind': 'native-atlas', 'source': str(source),
+        'atlas': str(metadata), 'sprites': sprites, 'frames': {key: frames[key] for key in sprites},
+        'state': 'lit', 'source_sha256': sha256(source.read_bytes()).hexdigest()}, trim=False)
+
+
 # The Android cache's mainUI atlas matches the reference lobby. Its file names
 # are recovered from sanguosha2/work/rx_pathmap_full.json; do not use the
 # automatic preview index's approximate atlas/image pairings.
@@ -98,6 +119,9 @@ for name, filename in {'landlord': 'mainui_mode_icon4.png', 'rank': 'mainui_mode
 atlas('rank-crest', '26eaff35', '15718566', 'rk_icon_ty_6.png')
 atlas('officer-ribbon', 'ac794659', '6e842076', 'officer_namebg_2.png')
 atlas('officer-title', 'ac794659', '6e842076', 'officer_name_7.png')
+for name, key in {'jiang': '3', 'fenghuo': '2_1', 'standard': '1', 'jie': '5',
+        'jiangmou': '13', 'wenwu': '8', 'cui': '6'}.items():
+    pack_light(name, key)
 
 for name, relative in {
     'officer': 'officer/big/b_7.png', 'member-bg': 'mainui/vip_bg.png',

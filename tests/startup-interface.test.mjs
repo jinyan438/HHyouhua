@@ -25,6 +25,12 @@ test('大厅按钮和模式卡面来自原始图集，仅头像保留截图回�
     assert.equal(sources['member-level.webp'].kind, 'native-atlas');
     assert.equal(sources['member-level.webp'].sprite, '9.png');
     assert.deepEqual(sources['member-level.webp'].atlas.split(/[\\/]/).slice(-2), ['viplv2', 'viplv2.json']);
+    for (const [name, key] of Object.entries({ jiang: '3', fenghuo: '2_1', standard: '1', jie: '5', jiangmou: '13', wenwu: '8', cui: '6' })) {
+        const record = sources['pack-' + name + '.webp'];
+        assert.equal(record.kind, 'native-atlas'); assert.equal(record.state, 'lit');
+        assert.deepEqual(record.sprites, ['bg', 'fra', 'icon'].map(part => 'lamp_new_' + part + '_1_' + key + '.png'));
+        assert.deepEqual(record.size, [74, 74]);
+    }
     for (const [name, source] of Object.entries(sources)) {
         assert.equal(createHash('sha256').update(await readFile(new URL(name, base))).digest('hex'), source.sha256, name);
     }
