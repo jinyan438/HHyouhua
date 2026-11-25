@@ -1,13 +1,14 @@
 {
 	"name": "HH优化",
-	"version": "2.0.24",
+	"version": "2.0.25",
 	"diskURL": "https://github.com/jinyan438/HHyouhua",
 	"minNonameVersion": "1.11.1",
 	"replaces": [
-		"十周年UI"
+		"十周年UI",
+		"启动界面美化"
 	],
-	"author": "HH优化；十周年UI：短歌、萌新、点点；手杀UI：橙续缘",
-	"intro": "整合界面美化、游戏优化和身份、斗地主及对决欢乐模式全屏选将。",
+	"author": "HH优化；十周年UI：短歌、萌新、点点；手杀UI：橙续缘；启动界面美化：缘伴随行",
+	"intro": "整合启动界面美化、游戏优化和身份、斗地主及对决欢乐模式全屏选将。",
 	"importConfig": [
 		{
 			"name": "骨骼包",
