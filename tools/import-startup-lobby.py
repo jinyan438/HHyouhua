@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path(r'E:/AI/sanguosha/extract/unity')
 PICTURE = SOURCE / 'sprite/assets/res/picture'
 LAYA = Path(r'E:/AI/sanguosha/extract/laya')
+BANNERS = Path(r'E:/AI/sanguosha/logged-in-game/220/u3d/AppResData/UpPng/activity/Admode_notWeChat')
 OUT = ROOT / 'assets/startup/lobby'
 OUT.mkdir(parents=True, exist_ok=True)
 records = {}
@@ -27,12 +28,12 @@ def write(name, image, record, trim=True):
     records[name + '.webp'] = record
 
 
-def save(name, source, crop=None, kind='native-sprite'):
+def save(name, source, crop=None, kind='native-sprite', trim=True):
     image = Image.open(source).convert('RGBA')
     if crop:
         image = image.crop(crop)
     write(name, image, {'kind': kind, 'source': str(source), 'crop': crop,
-        'source_sha256': sha256(source.read_bytes()).hexdigest()})
+        'source_sha256': sha256(source.read_bytes()).hexdigest()}, trim=trim)
 
 
 def atlas(name, image_key, atlas_key, filename, crop=None, panel=False):
@@ -80,17 +81,19 @@ for name, filename in {'landlord': 'mainui_mode_icon4.png', 'rank': 'mainui_mode
         'classic': 'mainui_mode_icon3.png', 'activity': 'mainui_mode_icon1.png'}.items():
     atlas('mode-' + name, '1104cb4d', 'd323b5c3', filename, panel=True)
 atlas('rank-crest', '26eaff35', '15718566', 'rk_icon_ty_6.png')
+atlas('officer-ribbon', 'ac794659', '6e842076', 'officer_namebg_2.png')
+atlas('officer-title', 'ac794659', '6e842076', 'officer_name_7.png')
 
 for name, relative in {
-    'officer': 'officer/big/b_7.png', 'officer-ribbon': 'officer/officername/mainofficer_bg2.png',
-    'officer-title': 'officer/officername/mainofficer7.png',
+    'officer': 'officer/big/b_7.png', 'member-bg': 'mainui/vip_bg.png',
+    'silver': 'baseui/yl_icon.png',
     'currency-bg': 'baseui/coin_bg.png', 'currency-add': 'baseui/add_new.png',
 }.items():
     save(name, PICTURE / relative)
 
 money = SOURCE / 'texture/assets/res/fontassets/spriteassets/money/money.png'
 money_meta = json.loads((SOURCE / 'text/assets/res/fontassets/spriteassets/money/money.json').read_text(encoding='utf-8'))
-for name, filename in [('silver', 'yl_icon.png'), ('gold', 'yb_icon_tongyong.png')]:
+for name, filename in [('gold', 'yb_icon_tongyong.png')]:
     item = next(item for item in money_meta['frames'] if item['filename'] == filename)
     f = item['frame']
     image = Image.open(money).convert('RGBA')
@@ -101,12 +104,15 @@ for name, filename in [('silver', 'yl_icon.png'), ('gold', 'yb_icon_tongyong.png
     image.save(OUT / (name + '.webp'), lossless=True)
     records[name + '.webp'] = {'kind': 'native-atlas', 'source': str(money), 'frame': item, 'size': list(image.size), 'source_sha256': sha256(money.read_bytes()).hexdigest(), 'sha256': sha256((OUT / (name + '.webp')).read_bytes()).hexdigest()}
 
-# These account/event pictures have no verified same-version original in the
-# available caches. Retain and explicitly identify just these three fallbacks.
+# Preserve the original transparent banner canvases, including the figures
+# extending above their rectangular artwork. Never crop these from a contact sheet.
+save('promotion', BANNERS / 'mode_156_3.png', trim=False)
+save('nostalgia', BANNERS / 'mode_175.png', trim=False)
+
+# The account avatar has no verified same-version original in the available
+# caches. Keep this sole reference fallback explicitly identified.
 reference = Path(r'E:/.cache/TEMP/codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg')
 save('avatar', reference, (172, 17, 313, 157), kind='reference-fallback')
-save('promotion', reference, (2105, 243, 2588, 371), kind='reference-fallback')
-save('nostalgia', reference, (380, 1092, 819, 1220), kind='reference-fallback')
 
 font_source = SOURCE / 'meta/assets/third/textmesh pro/fonts/hyxlsj.ttf.json'
 font = TTFont(BytesIO(bytes(json.loads(font_source.read_text(encoding='utf-8'))['m_FontData'])), recalcTimestamp=False)

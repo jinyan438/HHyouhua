@@ -6,10 +6,16 @@ import { createStartupInterface } from '../src/ui/startup.js';
 import { migrateStartupPreferences, loadStartupMedia, startupVideos, startupMusic, disposeStartupBackground, defaultStartupMusic, startupMusicFile } from '../src/ui/startupMedia.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
 
-test('大厅按钮和模式卡面来自原始图集，截图回退明确限制在头像及两张横幅', async () => {
+test('大厅按钮和模式卡面来自原始图集，仅头像保留截图回退', async () => {
     const base = new URL('../assets/startup/lobby/', import.meta.url);
     const sources = JSON.parse(await readFile(new URL('sources.json', base), 'utf8'));
-    assert.deepEqual(Object.keys(sources).filter(name => sources[name].kind === 'reference-fallback'), ['avatar.webp', 'promotion.webp', 'nostalgia.webp']);
+    assert.deepEqual(Object.keys(sources).filter(name => sources[name].kind === 'reference-fallback'), ['avatar.webp']);
+    for (const [name, file] of [['promotion', 'mode_156_3.png'], ['nostalgia', 'mode_175.png']]) {
+        const record = sources[name + '.webp'];
+        assert.equal(record.kind, 'native-sprite');
+        assert.equal(record.source.split(/[\\/]/).at(-1), file);
+        assert.equal(record.crop, null); assert.deepEqual(record.size, [308, 112]);
+    }
     for (const name of ['mode-landlord', 'mode-rank', 'mode-classic', 'mode-activity', 'footer-general', 'footer-skin', 'footer-officer', 'footer-recruit', 'footer-bag', 'gift', 'welfare', 'anniversary', 'rank-crest']) {
         assert.equal(sources[name + '.webp'].kind, 'native-atlas', name);
         assert.ok(sources[name + '.webp'].atlas, name);

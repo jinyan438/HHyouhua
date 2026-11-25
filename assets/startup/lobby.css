@@ -73,6 +73,7 @@ body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
     overflow: visible;
 }
 .hh-lobby-feedback-art { width: 100%; height: 100%; }
+.hh-startup-lobby .hh-lobby-banner-art { top: auto; bottom: 0; width: 100%; height: auto; }
 .hh-lobby-feedback:focus-visible { outline: 3px solid #fff1b9; outline-offset: 5px; }
 .hh-lobby-feedback:active { transform: var(--hh-lobby-rest-transform, scale(1)) scale(.94); }
 .hh-lobby-feedback.hh-lobby-tapped { animation: hh-lobby-tap 180ms ease-out; }
@@ -82,9 +83,8 @@ body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
 }
 .hh-lobby-nickname { font-size: 46px; color: #f3ebd5; }
 .hh-lobby-member {
-    background: linear-gradient(#55534b, #302f29);
-    clip-path: polygon(15% 0,85% 0,100% 50%,85% 100%,15% 100%,0 50%);
-    border: 2px solid #aba796;
+    background: url('lobby/member-bg.webp') center/100% 100% no-repeat;
+    filter: grayscale(1);
 }
 .hh-lobby-member-label { left: 14px; top: 4px; width: 95px; text-align: center; font-size: 36px; color: #c6c5bc; }
 .hh-lobby-pack-tag {

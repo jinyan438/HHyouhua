@@ -106,9 +106,9 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
         parent.appendChild(button);
         return button;
     }
-    function artButton(name, label, x, y, width, height) {
+    function artButton(name, label, x, y, width, height, nativeBanner = false) {
         const button = place(feedback(name + '-button', label), x, y, width, height);
-        image(name, button, 'feedback-art');
+        image(name, button, nativeBanner ? 'banner-art' : 'feedback-art');
         return button;
     }
     function dot(x, y, count, parent = stage) {
@@ -161,7 +161,7 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     icon('task', '任务', 187, 628, 135, 146, true);
     icon('contest', '赛事', 187, 822, 134, 147);
 
-    artButton('promotion', '武将返场', 2105, 243, 483, 128);
+    artButton('promotion', '八人匹配', 2105, 243, 483, 128, true);
     const dots = place(node('carousel-dots'), 2312, 371, 70, 19);
     for (let i = 0; i < 3; i++) feedback(i === 2 ? 'carousel-dot active' : 'carousel-dot', '活动轮播' + (i + 1), dots);
 
@@ -217,7 +217,7 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     place(image('chat-bubble', chatButton, 'chat-bubble-native'), 20, 27, 62, 49);
     place(node('chat-dots', chatButton, '•••'), 25, 28, 52, 31);
     dot(63, -3, '11', chatButton);
-    artButton('nostalgia', '怀旧身份', 380, 1092, 439, 128);
+    artButton('nostalgia', '三国斗地主', 380, 1092, 439, 128, true);
     const bottomItems = [
         ['武将', 'general', 1278, true], ['皮肤', 'skin', 1529, true],
         ['官阶', 'officer', 1780, true], ['招募', 'recruit', 2033, true],

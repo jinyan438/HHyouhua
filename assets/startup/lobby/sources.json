@@ -1221,6 +1221,80 @@
     ],
     "sha256": "4b70d0701f7a745dacfbec9581a661da4674f205d50cd4cf952e533294389c39"
   },
+  "officer-ribbon.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\ac794659.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\6e842076.json",
+    "sprite": "officer_namebg_2.png",
+    "frame": {
+      "frame": {
+        "h": 36,
+        "idx": 0,
+        "w": 161,
+        "x": 326,
+        "y": 0
+      },
+      "sourceSize": {
+        "h": 36,
+        "w": 161
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "de81d636854f49915c59d089f9bc36097146ee56424abb30fa3d67e333d124c2",
+    "alpha_crop": [
+      0,
+      0,
+      161,
+      36
+    ],
+    "size": [
+      161,
+      36
+    ],
+    "sha256": "085408f8bb78cef9b9d462fc15b69f0e6da89b7b7030ed3a3bb6add1beac03cb"
+  },
+  "officer-title.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\ac794659.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\6e842076.json",
+    "sprite": "officer_name_7.png",
+    "frame": {
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 104,
+        "x": 0,
+        "y": 224
+      },
+      "sourceSize": {
+        "h": 30,
+        "w": 104
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "de81d636854f49915c59d089f9bc36097146ee56424abb30fa3d67e333d124c2",
+    "alpha_crop": [
+      13,
+      1,
+      92,
+      29
+    ],
+    "size": [
+      79,
+      28
+    ],
+    "sha256": "37c5140f1d8417ece584da8a46fc8e3fc830292e4bd636e626c8c8a06958b6be"
+  },
   "officer.webp": {
     "kind": "native-sprite",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\big\\b_7.png",
@@ -1238,39 +1312,39 @@
     ],
     "sha256": "eaf13824d516da8b267c8fff8d49cb33011fff373f954403af328f06f9f4ed1c"
   },
-  "officer-ribbon.webp": {
+  "member-bg.webp": {
     "kind": "native-sprite",
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\officername\\mainofficer_bg2.png",
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\vip_bg.png",
     "crop": null,
-    "source_sha256": "edc7eebbed185f18f7ebac1f04726f128cfc0e8877547f86c045752bcaf32a18",
+    "source_sha256": "2a1e2889bae04a3f1cece896ecd623a154f1ce553746583eed9ac7c072c2b059",
     "alpha_crop": [
       0,
       0,
-      161,
-      36
+      88,
+      32
     ],
     "size": [
-      161,
-      36
+      88,
+      32
     ],
-    "sha256": "af8c9c2dfa634ae01cdc08c71805bd7f9ac5d05812d8947dbb1814c749f6c93d"
+    "sha256": "5a66076576a21e4ec5980607e862a7f97d3fef70073b40d351ea3ee8aff47aab"
   },
-  "officer-title.webp": {
+  "silver.webp": {
     "kind": "native-sprite",
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\officername\\mainofficer7.png",
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\baseui\\yl_icon.png",
     "crop": null,
-    "source_sha256": "37b136d88f3a7c4432c516d4a87c13ae98774a572f0e3d77b93c07b1632e1a93",
+    "source_sha256": "53d2ff18c328a7ce572eefc87686bb13a65a10c84b12fd86d7a4bb01a64dee06",
     "alpha_crop": [
-      0,
-      0,
-      77,
-      24
+      2,
+      2,
+      46,
+      33
     ],
     "size": [
-      77,
-      24
+      44,
+      31
     ],
-    "sha256": "8a6098958cfa3ebd57798997e96a004903ca37f4c22cf80c271439d7f730d206"
+    "sha256": "395ea88a33d35eb671c36944636e95afe090a44b8433ac26ca0231de05020e00"
   },
   "currency-bg.webp": {
     "kind": "native-sprite",
@@ -1305,41 +1379,6 @@
       57
     ],
     "sha256": "453a02ef4a10efb48f77a33103b2ff7bed6c9ff2f6bef65950bf7f0390753be2"
-  },
-  "silver.webp": {
-    "kind": "native-atlas",
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\fontassets\\spriteassets\\money\\money.png",
-    "frame": {
-      "filename": "yl_icon.png",
-      "frame": {
-        "x": 1,
-        "y": 1,
-        "w": 47,
-        "h": 43
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 4,
-        "y": 0,
-        "w": 47,
-        "h": 43
-      },
-      "sourceSize": {
-        "w": 55,
-        "h": 43
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "size": [
-      47,
-      43
-    ],
-    "source_sha256": "3f15d7d2bd26bb1e819af0807ccd5f829f5e493eca1534ed1c171b6c7899c5e4",
-    "sha256": "296775ecc61921dd39424e336e0ffa8971dbec391d270a67f42481b6548f7f5d"
   },
   "gold.webp": {
     "kind": "native-atlas",
@@ -1376,6 +1415,28 @@
     "source_sha256": "3f15d7d2bd26bb1e819af0807ccd5f829f5e493eca1534ed1c171b6c7899c5e4",
     "sha256": "3fdf9f1bb4e8ce9dd030e08d75cdbeb128d9ef801ffd288f579b67119c77e759"
   },
+  "promotion.webp": {
+    "kind": "native-sprite",
+    "source": "E:\\AI\\sanguosha\\logged-in-game\\220\\u3d\\AppResData\\UpPng\\activity\\Admode_notWeChat\\mode_156_3.png",
+    "crop": null,
+    "source_sha256": "61c8a63be3522ca3d5e0ec484d76a891e44ec99e7391e977452d200654a265a8",
+    "size": [
+      308,
+      112
+    ],
+    "sha256": "e8814c61e82b8fbf44da06dd92006a080a8454be58d08890f575e9f526b992e4"
+  },
+  "nostalgia.webp": {
+    "kind": "native-sprite",
+    "source": "E:\\AI\\sanguosha\\logged-in-game\\220\\u3d\\AppResData\\UpPng\\activity\\Admode_notWeChat\\mode_175.png",
+    "crop": null,
+    "source_sha256": "c5bb77db21fa49604f1d403679d8ffe0520bfe1349d30b2a8f3c759a5c230b38",
+    "size": [
+      308,
+      112
+    ],
+    "sha256": "79e5608588fc2850056dbca4abb1cbb995bda7f734523a6775dc77319aae62b4"
+  },
   "avatar.webp": {
     "kind": "reference-fallback",
     "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
@@ -1398,55 +1459,11 @@
     ],
     "sha256": "da2eff359ea57039e10b781430fc7951ff09ae118f0edb7c6ec2b598c3160964"
   },
-  "promotion.webp": {
-    "kind": "reference-fallback",
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      2105,
-      243,
-      2588,
-      371
-    ],
-    "source_sha256": "49ea16bb1a6e77600e1615cb99bf33ff8eb5b33d89522e486f8f2acfe04a3ca6",
-    "alpha_crop": [
-      0,
-      0,
-      483,
-      128
-    ],
-    "size": [
-      483,
-      128
-    ],
-    "sha256": "9ba9b78d3e122f05e975da9da1376b1fef627080a8a967562c634196ef56836d"
-  },
-  "nostalgia.webp": {
-    "kind": "reference-fallback",
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      380,
-      1092,
-      819,
-      1220
-    ],
-    "source_sha256": "49ea16bb1a6e77600e1615cb99bf33ff8eb5b33d89522e486f8f2acfe04a3ca6",
-    "alpha_crop": [
-      0,
-      0,
-      439,
-      128
-    ],
-    "size": [
-      439,
-      128
-    ],
-    "sha256": "2f8f144fcc40fe80128013b70a9f1d043445649db5fecaf56f950ab24b112b03"
-  },
   "HYXLSJ.woff2": {
     "kind": "native-font",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\meta\\assets\\third\\textmesh pro\\fonts\\hyxlsj.ttf.json",
     "source_sha256": "012d6c4b12dbc4aa6cf391dd1aac6516df0ab3f9c49d79c47ec65ceded30b8b4",
     "subset": "startupLobby.js and printable ASCII",
-    "sha256": "e83904556efcd00cb2463383d4bb74407e34e3bae1691a1bd7211e76dc88dfa9"
+    "sha256": "da9b5e9352ff29c2b9d3609882e836fa088c2e1c4478df010c45cbe5d7f9af04"
   }
 }
