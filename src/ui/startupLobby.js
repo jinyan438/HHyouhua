@@ -118,6 +118,7 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     }
     function icon(name, label, x, y, width, height, notify = false, glow = false) {
         const item = place(feedback('decoration', label), x, y, width, height);
+        if (name === 'gift' || name === 'anniversary') image('button-back', item, 'icon-back');
         image(name, item, 'icon-art');
         if (glow) item.classList.add('hh-lobby-glowing');
         if (notify) dot(width * 0.72, -1, undefined, item);
@@ -152,13 +153,11 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     const mail = icon('mail', '信件', 2512, 76, 91, 89);
     dot(55, -17, '9', mail);
 
-    const gift = icon('gift', '活动', 180, 236, 138, 143, true, true);
-    place(node('icon-label', gift, '活动'), 0, 113, 138, 44);
+    icon('gift', '活动', 180, 236, 138, 143, true, true);
     const anniversary = icon('anniversary', '周年庆', 346, 236, 139, 143, true, true);
     place(node('icon-label', anniversary, '周年庆'), 0, 113, 139, 44);
     place(node('date-tag', anniversary, '12.5'), 66, 65, 85, 34);
-    const welfare = icon('welfare', '福利', 184, 434, 136, 144, true);
-    place(node('icon-label', welfare, '福利'), 0, 111, 136, 43);
+    icon('welfare', '福利', 184, 434, 136, 144, true);
     icon('task', '任务', 187, 628, 135, 146, true);
     icon('contest', '赛事', 187, 822, 134, 147);
 
@@ -177,6 +176,14 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
         stage.appendChild(button);
         background['module' + (index + 1)] = button;
         image('mode-' + entry.className, button, 'mode-art');
+        if (entry.className === 'rank') {
+            image('rank-crest', button, 'rank-crest');
+            node('rank-title', button, '枭雄');
+            const stars = node('rank-stars', button);
+            image('rank-star', stars, 'rank-star');
+            node('rank-star-count', stars, '×3');
+        }
+        node('mode-caption', button, { landlord: '赢大奖', rank: '首胜奖励就绪', classic: '身份 国战', activity: '山河图' }[entry.className]);
         button.onclick = async () => {
             if (entering || button.disabled) return;
             entering = true;
@@ -206,8 +213,9 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
 
     node('bottom-shade');
     const chatButton = place(feedback('chat-button', '聊天'), 189, 1108, 102, 102);
-    const chat = place(node('chat', chatButton), 0, 0, 102, 102);
-    node('chat-bubble', chat, '•••');
+    place(node('chat', chatButton), 15, 15, 72, 72);
+    place(image('chat-bubble', chatButton, 'chat-bubble-native'), 20, 27, 62, 49);
+    place(node('chat-dots', chatButton, '•••'), 25, 28, 52, 31);
     dot(63, -3, '11', chatButton);
     artButton('nostalgia', '怀旧身份', 380, 1092, 439, 128);
     const bottomItems = [
@@ -217,8 +225,7 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
     ];
     for (const [label, name, x] of bottomItems) {
         const item = place(feedback('bottom-item', label), x, 1137, 226, 80);
-        node('bottom-icon ' + name, item);
-        node('bottom-label', item, label);
+        image('footer-' + name, item, 'bottom-art');
         if (name !== 'bag') node('bottom-separator', item);
         if (name === 'officer' || name === 'recruit') dot(168, -7, undefined, item);
         if (name === 'general') item.addEventListener('click', openCharacters);

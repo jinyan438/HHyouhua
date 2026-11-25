@@ -1,9 +1,23 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { createStartupInterface } from '../src/ui/startup.js';
 import { migrateStartupPreferences, loadStartupMedia, startupVideos, startupMusic, disposeStartupBackground, defaultStartupMusic, startupMusicFile } from '../src/ui/startupMedia.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
+
+test('大厅按钮和模式卡面来自原始图集，截图回退明确限制在头像及两张横幅', async () => {
+    const base = new URL('../assets/startup/lobby/', import.meta.url);
+    const sources = JSON.parse(await readFile(new URL('sources.json', base), 'utf8'));
+    assert.deepEqual(Object.keys(sources).filter(name => sources[name].kind === 'reference-fallback'), ['avatar.webp', 'promotion.webp', 'nostalgia.webp']);
+    for (const name of ['mode-landlord', 'mode-rank', 'mode-classic', 'mode-activity', 'footer-general', 'footer-skin', 'footer-officer', 'footer-recruit', 'footer-bag', 'gift', 'welfare', 'anniversary', 'rank-crest']) {
+        assert.equal(sources[name + '.webp'].kind, 'native-atlas', name);
+        assert.ok(sources[name + '.webp'].atlas, name);
+    }
+    for (const [name, source] of Object.entries(sources)) {
+        assert.equal(createHash('sha256').update(await readFile(new URL(name, base))).digest('hex'), source.sha256, name);
+    }
+});
 
 function preferences(config = {}) {
 	const writes = [];

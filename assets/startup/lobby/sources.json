@@ -1,158 +1,1313 @@
 {
   "fortune.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_161.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_161.png",
+    "frame": {
+      "frame": {
+        "h": 72,
+        "idx": 0,
+        "w": 54,
+        "x": 1978,
+        "y": 332
+      },
+      "sourceSize": {
+        "h": 72,
+        "w": 54
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      1,
+      5,
+      54,
+      65
+    ],
     "size": [
-      63,
-      63
-    ]
+      53,
+      60
+    ],
+    "sha256": "16e33f7f8bd8b0b8d66f8582e57281a59741506d091c745afc2357fdd743ba6a"
   },
   "garden.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_36.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_36.png",
+    "frame": {
+      "frame": {
+        "h": 72,
+        "idx": 0,
+        "w": 54,
+        "x": 1978,
+        "y": 258
+      },
+      "sourceSize": {
+        "h": 72,
+        "w": 54
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      1,
+      5,
+      53,
+      65
+    ],
     "size": [
       52,
-      59
-    ]
+      60
+    ],
+    "sha256": "88fe082dfe788fe069b4827cfa736af9a08febbf2e2184fd0c78f0663d03ae3f"
   },
   "mail.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\mail_btn_normal.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10026.png",
+    "frame": {
+      "frame": {
+        "h": 72,
+        "idx": 0,
+        "w": 54,
+        "x": 1978,
+        "y": 406
+      },
+      "sourceSize": {
+        "h": 72,
+        "w": 54
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
-    "size": [
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      2,
+      10,
       52,
-      54
-    ]
+      65
+    ],
+    "size": [
+      50,
+      55
+    ],
+    "sha256": "ebe7931440e8e1fb70024c23233318529cd5f4873d37e714c4c80697645e6fbf"
   },
   "task.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\task_btn_normal.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_2.png",
+    "frame": {
+      "frame": {
+        "h": 100,
+        "idx": 0,
+        "w": 100,
+        "x": 324,
+        "y": 546
+      },
+      "sourceSize": {
+        "h": 100,
+        "w": 100
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      12,
+      6,
+      94,
+      97
+    ],
     "size": [
       82,
-      89
-    ]
+      91
+    ],
+    "sha256": "8293635cf85a3172b2f4da53835931dcdacd4e8e0bee84cf0d888890e0adc3c0"
   },
   "contest.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\match_btn_normal.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10060.png",
+    "frame": {
+      "frame": {
+        "h": 100,
+        "idx": 0,
+        "w": 100,
+        "x": 216,
+        "y": 84
+      },
+      "sourceSize": {
+        "h": 100,
+        "w": 100
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      12,
+      6,
+      94,
+      97
+    ],
     "size": [
       82,
-      89
-    ]
+      91
+    ],
+    "sha256": "08f68444e8698b06e1307ce2cdd87f727aa889f037c8c1cbb6644f0def1146b8"
   },
   "bless.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\bless_btn_normal.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_24.png",
+    "frame": {
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 1844,
+        "y": 482
+      },
+      "sourceSize": {
+        "h": 106,
+        "w": 106
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
-    "size": [
-      89,
-      91
-    ]
-  },
-  "treasure.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\xbg_btn_normal.png",
-    "crop": null,
-    "polygon": null,
-    "size": [
-      84,
-      86
-    ]
-  },
-  "wish.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_178.png",
-    "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      14,
+      11,
+      92,
+      100
+    ],
     "size": [
       78,
-      83
-    ]
+      89
+    ],
+    "sha256": "6680b688b880f35a34b1707b4538c531769283c0b6e79608f3e3ebe8b4344af8"
+  },
+  "treasure.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_75.png",
+    "frame": {
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 1870,
+        "y": 374
+      },
+      "sourceSize": {
+        "h": 106,
+        "w": 106
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      13,
+      11,
+      92,
+      99
+    ],
+    "size": [
+      79,
+      88
+    ],
+    "sha256": "54fbd74d0a4b950cb5a0a1cacbf0d52d8fa8640001e3e30176a2949291a4667c"
+  },
+  "wish.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_59.png",
+    "frame": {
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 1412,
+        "y": 402
+      },
+      "sourceSize": {
+        "h": 106,
+        "w": 106
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      13,
+      11,
+      94,
+      98
+    ],
+    "size": [
+      81,
+      87
+    ],
+    "sha256": "f6cbeccc54b5305e862b85417d055cf9b0f8c774da2df1659eb4f2d270be3c1f"
   },
   "scroll.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_179.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_51.png",
+    "frame": {
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 1628,
+        "y": 402
+      },
+      "sourceSize": {
+        "h": 106,
+        "w": 106
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      11,
+      106,
+      99
+    ],
     "size": [
-      111,
-      81
-    ]
+      106,
+      88
+    ],
+    "sha256": "35668cfa65c079a5ea01f3a5dfc32452ba28ef9f6a19387757ded6055a2f524d"
   },
   "rebate.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_56_new.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_56_new.png",
+    "frame": {
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 1520,
+        "y": 402
+      },
+      "sourceSize": {
+        "h": 106,
+        "w": 106
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      10,
+      106,
+      102
+    ],
     "size": [
-      121,
-      79
-    ]
+      106,
+      92
+    ],
+    "sha256": "bd15e298826aa9edc51aa0de3d196c09c6083ed0012b76b8647847d7f7408fc4"
   },
   "shop.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\shop_btn_normal2.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10031.png",
+    "frame": {
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 216,
+        "y": 570
+      },
+      "sourceSize": {
+        "h": 106,
+        "w": 106
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      14,
+      10,
+      92,
+      101
+    ],
     "size": [
-      89,
+      78,
       91
-    ]
+    ],
+    "sha256": "77479fdb274792f6fa6d45436a7c2bca05d3e669dc16ee8e6586405bf10799b4"
   },
   "more.webp": {
-    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\more_menu_btn_normal.png",
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_btn_more.png",
+    "frame": {
+      "frame": {
+        "h": 80,
+        "idx": 0,
+        "w": 80,
+        "x": 1632,
+        "y": 217
+      },
+      "sourceSize": {
+        "h": 80,
+        "w": 80
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
     "crop": null,
-    "polygon": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      10,
+      10,
+      69,
+      70
+    ],
     "size": [
-      61,
+      59,
+      60
+    ],
+    "sha256": "5c53a4cab3a557b91dd3af666710c3552f82d117adf83e5bb823a9579aba7f32"
+  },
+  "footer-general.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10014.png",
+    "frame": {
+      "frame": {
+        "h": 50,
+        "idx": 0,
+        "w": 120,
+        "x": 338,
+        "y": 288
+      },
+      "sourceSize": {
+        "h": 50,
+        "w": 120
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      7,
+      3,
+      120,
+      47
+    ],
+    "size": [
+      113,
+      44
+    ],
+    "sha256": "f9a5bbd3100187826bba033dce11de155e3133224a446c41bbf4299a8134527b"
+  },
+  "footer-skin.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10041.png",
+    "frame": {
+      "frame": {
+        "h": 50,
+        "idx": 0,
+        "w": 120,
+        "x": 216,
+        "y": 288
+      },
+      "sourceSize": {
+        "h": 50,
+        "w": 120
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      7,
+      3,
+      120,
+      47
+    ],
+    "size": [
+      113,
+      44
+    ],
+    "sha256": "c5387169c09f9dcae796090fe002d33635da6b3ae13c756725672ad25385d924"
+  },
+  "footer-officer.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10021.png",
+    "frame": {
+      "frame": {
+        "h": 50,
+        "idx": 0,
+        "w": 120,
+        "x": 522,
+        "y": 280
+      },
+      "sourceSize": {
+        "h": 50,
+        "w": 120
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      7,
+      3,
+      120,
+      47
+    ],
+    "size": [
+      113,
+      44
+    ],
+    "sha256": "096fab92607a51811b576b4fd1045422c636927da37d363b12d98bae38235b8c"
+  },
+  "footer-recruit.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10029.png",
+    "frame": {
+      "frame": {
+        "h": 50,
+        "idx": 0,
+        "w": 120,
+        "x": 1714,
+        "y": 217
+      },
+      "sourceSize": {
+        "h": 50,
+        "w": 120
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      7,
+      3,
+      120,
+      47
+    ],
+    "size": [
+      113,
+      44
+    ],
+    "sha256": "4d2fc9531d01f47d345ae24a399a0539041c8b1897c5361309e1f0a129d5fdd8"
+  },
+  "footer-bag.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10034.png",
+    "frame": {
+      "frame": {
+        "h": 50,
+        "idx": 0,
+        "w": 120,
+        "x": 723,
+        "y": 626
+      },
+      "sourceSize": {
+        "h": 50,
+        "w": 120
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      7,
+      3,
+      120,
+      47
+    ],
+    "size": [
+      113,
+      44
+    ],
+    "sha256": "f8611ac4028b55277850c8c73e2ddeb4e51ae57ddc2597310c46a87058c0d132"
+  },
+  "gift.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_3.png",
+    "frame": {
+      "frame": {
+        "h": 100,
+        "idx": 0,
+        "w": 100,
+        "x": 318,
+        "y": 84
+      },
+      "sourceSize": {
+        "h": 100,
+        "w": 100
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      20,
+      15,
+      80,
+      97
+    ],
+    "size": [
+      60,
+      82
+    ],
+    "sha256": "f882ee57b3d5a2bbd11750843b4594f787df56d060e680075305fc3c8e2df9c3"
+  },
+  "welfare.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_4.png",
+    "frame": {
+      "frame": {
+        "h": 100,
+        "idx": 0,
+        "w": 100,
+        "x": 318,
+        "y": 444
+      },
+      "sourceSize": {
+        "h": 100,
+        "w": 100
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      12,
+      6,
+      94,
+      97
+    ],
+    "size": [
+      82,
+      91
+    ],
+    "sha256": "e6565c5878821f397fd8a91a3f134a24c9713eec45d9edc464c11dc86fdbe535"
+  },
+  "notice-dot.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_red.png",
+    "frame": {
+      "frame": {
+        "h": 23,
+        "idx": 0,
+        "w": 23,
+        "x": 689,
+        "y": 538
+      },
+      "sourceSize": {
+        "h": 23,
+        "w": 23
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      0,
+      23,
+      23
+    ],
+    "size": [
+      23,
+      23
+    ],
+    "sha256": "394455cafa27274842b53db1bdd2d923443e4e62d5865bf40d3df296c2c99695"
+  },
+  "notice-count.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_red2.png",
+    "frame": {
+      "frame": {
+        "h": 22,
+        "idx": 0,
+        "w": 32,
+        "x": 282,
+        "y": 546
+      },
+      "sourceSize": {
+        "h": 22,
+        "w": 32
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      0,
+      32,
+      22
+    ],
+    "size": [
+      32,
+      22
+    ],
+    "sha256": "d433e3559a615130416fbdbe97f8924d4ac0cff8fbd9308b4b6bc57a8e200f02"
+  },
+  "date-tag.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_bottom_tag1.png",
+    "frame": {
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 66,
+        "x": 1974,
+        "y": 74
+      },
+      "sourceSize": {
+        "h": 30,
+        "w": 66
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      0,
+      66,
+      30
+    ],
+    "size": [
+      66,
+      30
+    ],
+    "sha256": "4e2a9f173daeeddc4a7194a81956d37597a2877a4449d9c270ee17d711081d1c"
+  },
+  "chat-bubble.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_bottom_tag2.png",
+    "frame": {
+      "frame": {
+        "h": 36,
+        "idx": 0,
+        "w": 44,
+        "x": 157,
+        "y": 300
+      },
+      "sourceSize": {
+        "h": 36,
+        "w": 44
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      0,
+      44,
+      35
+    ],
+    "size": [
+      44,
+      35
+    ],
+    "sha256": "f99cbc51a705ec19bd6b43a02d2bb16f354ac50e1108aaa167a614416a0406e5"
+  },
+  "carousel-idle.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_point_gray.png",
+    "frame": {
+      "frame": {
+        "h": 10,
+        "idx": 0,
+        "w": 10,
+        "x": 203,
+        "y": 300
+      },
+      "sourceSize": {
+        "h": 10,
+        "w": 10
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      0,
+      10,
+      10
+    ],
+    "size": [
+      10,
+      10
+    ],
+    "sha256": "deb91c7dc18ecebf0dfaae7867fe259ada8250b59b54e7529eb29aaa1dce9388"
+  },
+  "carousel-active.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_point_light.png",
+    "frame": {
+      "frame": {
+        "h": 10,
+        "idx": 0,
+        "w": 10,
+        "x": 203,
+        "y": 312
+      },
+      "sourceSize": {
+        "h": 10,
+        "w": 10
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      1,
+      1,
+      9,
+      9
+    ],
+    "size": [
+      8,
+      8
+    ],
+    "sha256": "222f4919f41b5dd2376204395c243e3e0af5431e87ffc85552d5c26d49248f5d"
+  },
+  "rank-star.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_star_new_2.png",
+    "frame": {
+      "frame": {
+        "h": 32,
+        "idx": 0,
+        "w": 32,
+        "x": 460,
+        "y": 288
+      },
+      "sourceSize": {
+        "h": 32,
+        "w": 32
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      0,
+      0,
+      32,
+      31
+    ],
+    "size": [
+      32,
+      31
+    ],
+    "sha256": "bba4edd47bcfcbbc359f3edffd4a3a2d0e71a298892a66a3829bdec7d71e0f46"
+  },
+  "button-back.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_commonbtn_di.png",
+    "frame": {
+      "frame": {
+        "h": 92,
+        "idx": 0,
+        "w": 92,
+        "x": 1953,
+        "y": 108
+      },
+      "sourceSize": {
+        "h": 92,
+        "w": 92
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      4,
+      2,
+      86,
+      84
+    ],
+    "size": [
+      82,
+      82
+    ],
+    "sha256": "8a2a3ec15be11ed4b101605e3ff89f7c1bc5fe730b6922bf9b179bbe2189a109"
+  },
+  "anniversary.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "btnIcon_10172.png",
+    "frame": {
+      "frame": {
+        "h": 96,
+        "idx": 0,
+        "w": 96,
+        "x": 1012,
+        "y": 440
+      },
+      "sourceSize": {
+        "h": 96,
+        "w": 96
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": [
+      0,
+      0,
+      96,
       65
-    ]
+    ],
+    "panel_bounds": null,
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "alpha_crop": [
+      13,
+      8,
+      79,
+      65
+    ],
+    "size": [
+      66,
+      57
+    ],
+    "sha256": "38b489408f6af1b7ec39fda29ad0063b8119bdaa357bd69a8f53d803f0313ed1"
+  },
+  "mode-landlord.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_mode_icon4.png",
+    "frame": {
+      "frame": {
+        "h": 298,
+        "idx": 0,
+        "w": 214,
+        "x": 1206,
+        "y": 0
+      },
+      "sourceSize": {
+        "h": 298,
+        "w": 214
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": [
+      13,
+      10,
+      201,
+      282
+    ],
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "size": [
+      188,
+      272
+    ],
+    "sha256": "53142e67a85bd2b1f805443279a96d9774650b741c9c6c12cf017c2db82d5207"
+  },
+  "mode-rank.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_mode_icon2.png",
+    "frame": {
+      "frame": {
+        "h": 340,
+        "idx": 0,
+        "w": 214,
+        "x": 990,
+        "y": 0
+      },
+      "sourceSize": {
+        "h": 340,
+        "w": 214
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": [
+      13,
+      10,
+      200,
+      325
+    ],
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "size": [
+      187,
+      315
+    ],
+    "sha256": "58b1b24c277d3f5b483cf5cd9d8831a997bdbd9df6951dff28f70179eeab1da9"
+  },
+  "mode-classic.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_mode_icon3.png",
+    "frame": {
+      "frame": {
+        "h": 156,
+        "idx": 0,
+        "w": 220,
+        "x": 1422,
+        "y": 0
+      },
+      "sourceSize": {
+        "h": 156,
+        "w": 220
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": [
+      13,
+      10,
+      207,
+      140
+    ],
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "size": [
+      194,
+      130
+    ],
+    "sha256": "0154a59a4bc853a6203cf34e2d6b5e91532ea6ceb9fddb91e13e6a9b1d36e997"
+  },
+  "mode-activity.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\1104cb4d.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\d323b5c3.json",
+    "sprite": "mainui_mode_icon1.png",
+    "frame": {
+      "frame": {
+        "h": 156,
+        "idx": 0,
+        "w": 220,
+        "x": 1644,
+        "y": 0
+      },
+      "sourceSize": {
+        "h": 156,
+        "w": 220
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": [
+      13,
+      10,
+      207,
+      140
+    ],
+    "source_sha256": "eb2b28d7d4e8dfe81c2dafa3ab365a35df171242715d40a82098818f076516dc",
+    "size": [
+      194,
+      130
+    ],
+    "sha256": "a25b4d825f49c675af56d3e1f0407204423eaeafbb531bfbd7e84e3342cc80b0"
+  },
+  "rank-crest.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\laya\\atlas_png\\26eaff35.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\laya\\other\\15718566.json",
+    "sprite": "rk_icon_ty_6.png",
+    "frame": {
+      "frame": {
+        "h": 338,
+        "idx": 0,
+        "w": 312,
+        "x": 0,
+        "y": 522
+      },
+      "sourceSize": {
+        "h": 338,
+        "w": 312
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crop": null,
+    "panel_bounds": null,
+    "source_sha256": "c06a586aee89aa1456d7f5f1b977bf485b3e863274370688e9feebee601787ba",
+    "alpha_crop": [
+      0,
+      0,
+      312,
+      331
+    ],
+    "size": [
+      312,
+      331
+    ],
+    "sha256": "4b70d0701f7a745dacfbec9581a661da4674f205d50cd4cf952e533294389c39"
   },
   "officer.webp": {
+    "kind": "native-sprite",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\big\\b_7.png",
     "crop": null,
-    "polygon": null,
+    "source_sha256": "54c3f7046c835bf6f206b89dfb1319726b39f2f2f7a72932893a56dc8c241db3",
+    "alpha_crop": [
+      0,
+      0,
+      330,
+      330
+    ],
     "size": [
       330,
       330
-    ]
+    ],
+    "sha256": "eaf13824d516da8b267c8fff8d49cb33011fff373f954403af328f06f9f4ed1c"
   },
   "officer-ribbon.webp": {
+    "kind": "native-sprite",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\officername\\mainofficer_bg2.png",
     "crop": null,
-    "polygon": null,
+    "source_sha256": "edc7eebbed185f18f7ebac1f04726f128cfc0e8877547f86c045752bcaf32a18",
+    "alpha_crop": [
+      0,
+      0,
+      161,
+      36
+    ],
     "size": [
       161,
       36
-    ]
+    ],
+    "sha256": "af8c9c2dfa634ae01cdc08c71805bd7f9ac5d05812d8947dbb1814c749f6c93d"
   },
   "officer-title.webp": {
+    "kind": "native-sprite",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\officername\\mainofficer7.png",
     "crop": null,
-    "polygon": null,
+    "source_sha256": "37b136d88f3a7c4432c516d4a87c13ae98774a572f0e3d77b93c07b1632e1a93",
+    "alpha_crop": [
+      0,
+      0,
+      77,
+      24
+    ],
     "size": [
       77,
       24
-    ]
+    ],
+    "sha256": "8a6098958cfa3ebd57798997e96a004903ca37f4c22cf80c271439d7f730d206"
   },
   "currency-bg.webp": {
+    "kind": "native-sprite",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\baseui\\coin_bg.png",
     "crop": null,
-    "polygon": null,
+    "source_sha256": "20efbd26c1e1fe24a49ab7e59e77d34bff8805ebcfad50623910756c69d085c2",
+    "alpha_crop": [
+      0,
+      0,
+      174,
+      39
+    ],
     "size": [
       174,
       39
-    ]
+    ],
+    "sha256": "b68b3abaa53fb912325ba273d2c5f1d21d61453a9939b4d3bcee487535aa369e"
   },
   "currency-add.webp": {
+    "kind": "native-sprite",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\baseui\\add_new.png",
     "crop": null,
-    "polygon": null,
+    "source_sha256": "b291acecda3229da55d2eb5b96b1244bc546bf65fd8c2e48db302ff95890ee2f",
+    "alpha_crop": [
+      0,
+      0,
+      58,
+      57
+    ],
     "size": [
       58,
       57
-    ]
+    ],
+    "sha256": "453a02ef4a10efb48f77a33103b2ff7bed6c9ff2f6bef65950bf7f0390753be2"
   },
   "silver.webp": {
+    "kind": "native-atlas",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\fontassets\\spriteassets\\money\\money.png",
     "frame": {
       "filename": "yl_icon.png",
@@ -178,9 +1333,16 @@
         "x": 0.5,
         "y": 0.5
       }
-    }
+    },
+    "size": [
+      47,
+      43
+    ],
+    "source_sha256": "3f15d7d2bd26bb1e819af0807ccd5f829f5e493eca1534ed1c171b6c7899c5e4",
+    "sha256": "296775ecc61921dd39424e336e0ffa8971dbec391d270a67f42481b6548f7f5d"
   },
   "gold.webp": {
+    "kind": "native-atlas",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\fontassets\\spriteassets\\money\\money.png",
     "frame": {
       "filename": "yb_icon_tongyong.png",
@@ -206,9 +1368,16 @@
         "x": 0.5,
         "y": 0.5
       }
-    }
+    },
+    "size": [
+      49,
+      40
+    ],
+    "source_sha256": "3f15d7d2bd26bb1e819af0807ccd5f829f5e493eca1534ed1c171b6c7899c5e4",
+    "sha256": "3fdf9f1bb4e8ce9dd030e08d75cdbeb128d9ef801ffd288f579b67119c77e759"
   },
   "avatar.webp": {
+    "kind": "reference-fallback",
     "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
     "crop": [
       172,
@@ -216,13 +1385,21 @@
       313,
       157
     ],
-    "polygon": null,
+    "source_sha256": "49ea16bb1a6e77600e1615cb99bf33ff8eb5b33d89522e486f8f2acfe04a3ca6",
+    "alpha_crop": [
+      0,
+      0,
+      141,
+      140
+    ],
     "size": [
       141,
       140
-    ]
+    ],
+    "sha256": "da2eff359ea57039e10b781430fc7951ff09ae118f0edb7c6ec2b598c3160964"
   },
   "promotion.webp": {
+    "kind": "reference-fallback",
     "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
     "crop": [
       2105,
@@ -230,13 +1407,21 @@
       2588,
       371
     ],
-    "polygon": null,
+    "source_sha256": "49ea16bb1a6e77600e1615cb99bf33ff8eb5b33d89522e486f8f2acfe04a3ca6",
+    "alpha_crop": [
+      0,
+      0,
+      483,
+      128
+    ],
     "size": [
       483,
       128
-    ]
+    ],
+    "sha256": "9ba9b78d3e122f05e975da9da1376b1fef627080a8a967562c634196ef56836d"
   },
   "nostalgia.webp": {
+    "kind": "reference-fallback",
     "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
     "crop": [
       380,
@@ -244,351 +1429,24 @@
       819,
       1220
     ],
-    "polygon": null,
+    "source_sha256": "49ea16bb1a6e77600e1615cb99bf33ff8eb5b33d89522e486f8f2acfe04a3ca6",
+    "alpha_crop": [
+      0,
+      0,
+      439,
+      128
+    ],
     "size": [
       439,
       128
-    ]
-  },
-  "mode-landlord.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      1607,
-      398,
-      1924,
-      855
     ],
-    "polygon": null,
-    "size": [
-      317,
-      457
-    ]
-  },
-  "mode-rank.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      1941,
-      398,
-      2254,
-      925
-    ],
-    "polygon": [
-      [
-        0,
-        0
-      ],
-      [
-        312,
-        0
-      ],
-      [
-        312,
-        457
-      ],
-      [
-        157,
-        526
-      ],
-      [
-        0,
-        457
-      ]
-    ],
-    "size": [
-      313,
-      527
-    ]
-  },
-  "mode-classic.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      2275,
-      398,
-      2602,
-      618
-    ],
-    "polygon": null,
-    "size": [
-      327,
-      220
-    ]
-  },
-  "mode-activity.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      2275,
-      634,
-      2602,
-      854
-    ],
-    "polygon": null,
-    "size": [
-      327,
-      220
-    ]
-  },
-  "footer-general.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      1286,
-      1136,
-      1355,
-      1211
-    ],
-    "polygon": [
-      [
-        34,
-        0
-      ],
-      [
-        68,
-        37
-      ],
-      [
-        34,
-        74
-      ],
-      [
-        0,
-        37
-      ]
-    ],
-    "size": [
-      69,
-      75
-    ]
-  },
-  "footer-skin.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      1530,
-      1136,
-      1614,
-      1215
-    ],
-    "polygon": [
-      [
-        42,
-        0
-      ],
-      [
-        83,
-        39
-      ],
-      [
-        42,
-        78
-      ],
-      [
-        0,
-        39
-      ]
-    ],
-    "size": [
-      84,
-      79
-    ]
-  },
-  "footer-officer.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      1782,
-      1137,
-      1861,
-      1214
-    ],
-    "polygon": [
-      [
-        39,
-        0
-      ],
-      [
-        78,
-        38
-      ],
-      [
-        39,
-        76
-      ],
-      [
-        0,
-        38
-      ]
-    ],
-    "size": [
-      79,
-      77
-    ]
-  },
-  "footer-recruit.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      2033,
-      1136,
-      2112,
-      1214
-    ],
-    "polygon": [
-      [
-        39,
-        0
-      ],
-      [
-        78,
-        39
-      ],
-      [
-        39,
-        77
-      ],
-      [
-        0,
-        39
-      ]
-    ],
-    "size": [
-      79,
-      78
-    ]
-  },
-  "footer-bag.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      2287,
-      1140,
-      2368,
-      1212
-    ],
-    "polygon": [
-      [
-        40,
-        0
-      ],
-      [
-        80,
-        36
-      ],
-      [
-        40,
-        71
-      ],
-      [
-        0,
-        36
-      ]
-    ],
-    "size": [
-      81,
-      72
-    ]
-  },
-  "welfare.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      184,
-      433,
-      320,
-      542
-    ],
-    "polygon": [
-      [
-        68,
-        0
-      ],
-      [
-        135,
-        68
-      ],
-      [
-        98,
-        108
-      ],
-      [
-        38,
-        108
-      ],
-      [
-        0,
-        68
-      ]
-    ],
-    "size": [
-      136,
-      109
-    ]
-  },
-  "gift.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      181,
-      235,
-      319,
-      350
-    ],
-    "polygon": [
-      [
-        68,
-        0
-      ],
-      [
-        137,
-        68
-      ],
-      [
-        94,
-        114
-      ],
-      [
-        44,
-        114
-      ],
-      [
-        0,
-        68
-      ]
-    ],
-    "size": [
-      138,
-      115
-    ]
-  },
-  "anniversary.webp": {
-    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
-    "crop": [
-      346,
-      235,
-      485,
-      350
-    ],
-    "polygon": [
-      [
-        68,
-        0
-      ],
-      [
-        138,
-        68
-      ],
-      [
-        94,
-        114
-      ],
-      [
-        44,
-        114
-      ],
-      [
-        0,
-        68
-      ]
-    ],
-    "size": [
-      139,
-      115
-    ]
+    "sha256": "2f8f144fcc40fe80128013b70a9f1d043445649db5fecaf56f950ab24b112b03"
   },
   "HYXLSJ.woff2": {
+    "kind": "native-font",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\meta\\assets\\third\\textmesh pro\\fonts\\hyxlsj.ttf.json",
-    "subset": "startupLobby.js and printable ASCII"
+    "source_sha256": "012d6c4b12dbc4aa6cf391dd1aac6516df0ab3f9c49d79c47ec65ceded30b8b4",
+    "subset": "startupLobby.js and printable ASCII",
+    "sha256": "e83904556efcd00cb2463383d4bb74407e34e3bae1691a1bd7211e76dc88dfa9"
   }
 }
