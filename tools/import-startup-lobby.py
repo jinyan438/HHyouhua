@@ -57,6 +57,21 @@ def atlas(name, image_key, atlas_key, filename, crop=None, panel=False):
         'source_sha256': sha256(source.read_bytes()).hexdigest()}, trim=not panel)
 
 
+def unity_atlas(name, atlas_name, filename):
+    relative = Path('assets/res/fontassets/spriteassets') / atlas_name
+    source = SOURCE / 'texture' / relative / (atlas_name + '.png')
+    metadata = SOURCE / 'text' / relative / (atlas_name + '.json')
+    frames = json.loads(metadata.read_text(encoding='utf-8'))['frames']
+    item = next(item for item in frames if item['filename'] == filename)
+    f = item['frame']
+    width, height = (f['h'], f['w']) if item['rotated'] else (f['w'], f['h'])
+    image = Image.open(source).convert('RGBA').crop((f['x'], f['y'], f['x'] + width, f['y'] + height))
+    if item['rotated']:
+        image = image.transpose(Image.Transpose.ROTATE_90)
+    write(name, image, {'kind': 'native-atlas', 'source': str(source), 'atlas': str(metadata),
+        'sprite': filename, 'frame': item, 'source_sha256': sha256(source.read_bytes()).hexdigest()}, trim=False)
+
+
 # The Android cache's mainUI atlas matches the reference lobby. Its file names
 # are recovered from sanguosha2/work/rx_pathmap_full.json; do not use the
 # automatic preview index's approximate atlas/image pairings.
@@ -91,18 +106,9 @@ for name, relative in {
 }.items():
     save(name, PICTURE / relative)
 
-money = SOURCE / 'texture/assets/res/fontassets/spriteassets/money/money.png'
-money_meta = json.loads((SOURCE / 'text/assets/res/fontassets/spriteassets/money/money.json').read_text(encoding='utf-8'))
-for name, filename in [('gold', 'yb_icon_tongyong.png')]:
-    item = next(item for item in money_meta['frames'] if item['filename'] == filename)
-    f = item['frame']
-    image = Image.open(money).convert('RGBA')
-    width, height = (f['h'], f['w']) if item['rotated'] else (f['w'], f['h'])
-    image = image.crop((f['x'], f['y'], f['x'] + width, f['y'] + height))
-    if item['rotated']:
-        image = image.transpose(Image.Transpose.ROTATE_90)
-    image.save(OUT / (name + '.webp'), lossless=True)
-    records[name + '.webp'] = {'kind': 'native-atlas', 'source': str(money), 'frame': item, 'size': list(image.size), 'source_sha256': sha256(money.read_bytes()).hexdigest(), 'sha256': sha256((OUT / (name + '.webp')).read_bytes()).hexdigest()}
+save('member-label', PICTURE / 'mainui/vip.png', trim=False)
+unity_atlas('member-level', 'viplv2', '9.png')
+unity_atlas('gold', 'money', 'yb_icon_tongyong.png')
 
 # Preserve the original transparent banner canvases, including the figures
 # extending above their rectangular artwork. Never crop these from a contact sheet.

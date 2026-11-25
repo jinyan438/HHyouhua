@@ -1380,9 +1380,59 @@
     ],
     "sha256": "453a02ef4a10efb48f77a33103b2ff7bed6c9ff2f6bef65950bf7f0390753be2"
   },
+  "member-label.webp": {
+    "kind": "native-sprite",
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\vip.png",
+    "crop": null,
+    "source_sha256": "a73e9c00326d13cf9d70cf4d059df517e340af65d65eb08f9c4a5eb9ec9a2471",
+    "size": [
+      42,
+      22
+    ],
+    "sha256": "c380a765b2318a1f9c592796a8dd99217d8c79bbfc1d639116c2467d81496292"
+  },
+  "member-level.webp": {
+    "kind": "native-atlas",
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\fontassets\\spriteassets\\viplv2\\viplv2.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\unity\\text\\assets\\res\\fontassets\\spriteassets\\viplv2\\viplv2.json",
+    "sprite": "9.png",
+    "frame": {
+      "filename": "9.png",
+      "frame": {
+        "x": 69,
+        "y": 23,
+        "w": 15,
+        "h": 20
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 15,
+        "h": 20
+      },
+      "sourceSize": {
+        "w": 15,
+        "h": 20
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "source_sha256": "4bc5be0ab6926195ff30848937461760b5c678f7fe6b5a8e3b9520a0c5b089aa",
+    "size": [
+      15,
+      20
+    ],
+    "sha256": "9f9a8cd30e213f13b023e7d5213d11015e50853f8b6a156b2539abf5179846b1"
+  },
   "gold.webp": {
     "kind": "native-atlas",
     "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\fontassets\\spriteassets\\money\\money.png",
+    "atlas": "E:\\AI\\sanguosha\\extract\\unity\\text\\assets\\res\\fontassets\\spriteassets\\money\\money.json",
+    "sprite": "yb_icon_tongyong.png",
     "frame": {
       "filename": "yb_icon_tongyong.png",
       "frame": {
@@ -1408,11 +1458,11 @@
         "y": 0.5
       }
     },
+    "source_sha256": "3f15d7d2bd26bb1e819af0807ccd5f829f5e493eca1534ed1c171b6c7899c5e4",
     "size": [
       49,
       40
     ],
-    "source_sha256": "3f15d7d2bd26bb1e819af0807ccd5f829f5e493eca1534ed1c171b6c7899c5e4",
     "sha256": "3fdf9f1bb4e8ce9dd030e08d75cdbeb128d9ef801ffd288f579b67119c77e759"
   },
   "promotion.webp": {

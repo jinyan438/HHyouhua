@@ -127,8 +127,9 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
 
     artButton('avatar', '头像', 172, 17, 141, 140);
     text('红薯', 'nickname', 340, 20, 250, 52);
-    const member = place(feedback('member', '会员'), 612, 25, 124, 42);
-    node('member-label', member, '会员0');
+    const member = place(feedback('member', '会员9'), 612, 25, 132, 48);
+    place(image('member-label', member), 23.25, 7.5, 63, 33);
+    place(image('member-level', member), 86.25, 9, 22.5, 30);
     const officer = place(feedback('officer-badge', '国护军'), 333, 76, 277, 88);
     place(image('officer-ribbon', officer), 12, 15, 265, 62);
     place(image('officer', officer), 0, 0, 88, 88);

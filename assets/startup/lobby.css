@@ -84,9 +84,10 @@ body.hh-startup-active #splash { visibility: hidden; pointer-events: none; }
 .hh-lobby-nickname { font-size: 46px; color: #f3ebd5; }
 .hh-lobby-member {
     background: url('lobby/member-bg.webp') center/100% 100% no-repeat;
-    filter: grayscale(1);
 }
-.hh-lobby-member-label { left: 14px; top: 4px; width: 95px; text-align: center; font-size: 36px; color: #c6c5bc; }
+.hh-startup-lobby .hh-lobby-member-label,
+.hh-startup-lobby .hh-lobby-member-level,
+.hh-startup-lobby .hh-lobby-officer-title { object-fit: contain; }
 .hh-lobby-pack-tag {
     --hh-lobby-rest-transform: rotate(45deg);
     display: grid;
