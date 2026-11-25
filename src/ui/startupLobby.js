@@ -9,7 +9,7 @@ export const startupLobbyModes = [
 
 // Coordinates follow the reference's 2760 × 1256 stage. A single transform
 // preserves the original spacing, image aspect ratios and touch targets.
-export function createStartupLobby({ lib, game, ui, background }) {
+export function createStartupLobby({ lib, game, ui, get, _status, background }) {
     background.disposeLobby?.();
     background.lobby?.remove();
     background.classList.add('hh-startup-background');
@@ -20,6 +20,27 @@ export function createStartupLobby({ lib, game, ui, background }) {
     background.appendChild(stage);
     background.lobby = stage;
     let entering = false;
+    let characterBrowser, openingCharacters = false;
+
+    async function openCharacters() {
+        if (entering || openingCharacters) return;
+        openingCharacters = true;
+        try {
+            if (!characterBrowser) {
+                const { createStartupCharacterBrowser } = await import('./startupCharacterBrowser.js');
+                if (!stage.isConnected) return;
+                characterBrowser = createStartupCharacterBrowser({ lib, game, ui, get, _status }, {
+                    onClose: () => { stage.inert = false; },
+                });
+            }
+            characterBrowser.open();
+            stage.inert = true;
+        } catch (error) {
+            characterBrowser?.close(); characterBrowser = undefined; stage.inert = false;
+            console.error('[HH优化] 武将界面加载失败', error);
+            game.alert?.('武将界面加载失败，请重试');
+        } finally { openingCharacters = false; }
+    }
 
     function node(className, parent = stage, text) {
         const div = document.createElement('div');
@@ -175,6 +196,7 @@ export function createStartupLobby({ lib, game, ui, background }) {
         node('bottom-label', item, label);
         if (name !== 'bag') node('bottom-separator', item);
         if (name === 'officer' || name === 'recruit') dot(168, -7, undefined, item);
+        if (name === 'general') item.addEventListener('click', openCharacters);
     }
     icon('more', '更多', 2495, 1127, 96, 99, true);
 
@@ -190,6 +212,7 @@ export function createStartupLobby({ lib, game, ui, background }) {
     }
     window.addEventListener('resize', resize);
     background.disposeLobby = () => {
+        characterBrowser?.close();
         observer?.disconnect();
         window.removeEventListener('resize', resize);
         document.body.classList.remove('hh-startup-active');

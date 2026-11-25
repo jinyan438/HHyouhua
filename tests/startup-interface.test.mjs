@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { createStartupInterface } from '../src/ui/startup.js';
-import { migrateStartupPreferences, loadStartupMedia, startupVideos, startupMusic, disposeStartupBackground } from '../src/ui/startupMedia.js';
+import { migrateStartupPreferences, loadStartupMedia, startupVideos, startupMusic, disposeStartupBackground, defaultStartupMusic, startupMusicFile } from '../src/ui/startupMedia.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
 
 function preferences(config = {}) {
@@ -41,7 +41,10 @@ test('网页无文件系统时仍能选择全部内置媒体，含开场动画�
 	assert.equal(Object.keys(config.backgroundVideoChoose.item).length, 6);
 	assert.equal(config.backgroundVideoChoose.item.忧, '忧(含开场动画)');
 	assert.equal(config.backgroundVideoChoose.item.孙尚香, '孙尚香');
-	assert.equal(Object.keys(config.backgroundMusicChoose.item).length, 7);
+	assert.equal(Object.keys(config.backgroundMusicChoose.item).length, 8);
+	assert.equal(config.backgroundMusicChoose.item[defaultStartupMusic], '原版大厅');
+	assert.equal(startupMusicFile(lib), '原版大厅.m4a');
+	assert.equal(startupMusicFile(lib, 'Aira'), 'Aira.mp3');
 	for (const [folder, names] of [['video', startupVideos], ['music', startupMusic]]) {
 		for (const name of names) {
 			const data = await readFile(new URL('../assets/startup/' + folder + '/' + name, import.meta.url));
@@ -53,11 +56,32 @@ test('网页无文件系统时仍能选择全部内置媒体，含开场动画�
 
 test('扫描合并目录中的自定义媒体，去重并忽略其它文件', async () => {
 	const config = { backgroundVideoChoose: {}, backgroundMusicChoose: {} }, lib = {}, paths = [];
-	await loadStartupMedia(lib, { getFileList(path, done) { paths.push(path); done([], path.endsWith('video') ? ['孙尚香.mp4', '自定义.mp4', '开场-自定义.mp4', 'README.txt'] : ['自定义.mp3']); } }, config);
+	await loadStartupMedia(lib, { getFileList(path, done) { paths.push(path); done([], path.endsWith('video') ? ['孙尚香.mp4', '自定义.mp4', '开场-自定义.mp4', 'README.txt'] : ['自定义.mp3', '自定义AAC.m4a', 'sources.json']); } }, config);
 	assert.deepEqual(paths, ['extension/HH优化/assets/startup/video', 'extension/HH优化/assets/startup/music']);
 	assert.equal(config.backgroundVideoChoose.item.自定义, '自定义(含开场动画)');
 	assert.equal(config.backgroundMusicChoose.item.自定义, '自定义');
+	assert.equal(config.backgroundMusicChoose.item.自定义AAC, '自定义AAC');
+	assert.equal(startupMusicFile(lib, '自定义AAC'), '自定义AAC.m4a');
+	assert.equal(config.backgroundMusicChoose.item.sources, undefined);
 	assert.equal(lib.allBackgroundVideos.filter(name => name === '孙尚香.mp4').length, 1);
+});
+
+test('原版大厅成为新默认，旧 Aira 默认只迁移一次，之后尊重主动选择', async () => {
+	const fresh = preferences();
+	await migrateStartupPreferences(fresh.lib, fresh.game);
+	assert.equal(fresh.lib.config.extension_HH优化_backgroundMusicChoose, defaultStartupMusic);
+	const upgraded = preferences({ extension_HH优化_startupMergedVersion: 1, extension_HH优化_backgroundMusicChoose: 'Aira' });
+	await migrateStartupPreferences(upgraded.lib, upgraded.game);
+	assert.equal(upgraded.lib.config.extension_HH优化_backgroundMusicChoose, defaultStartupMusic);
+	assert.equal(upgraded.lib.config.extension_HH优化_startupMusicDefaultVersion, 1);
+	upgraded.lib.config.extension_HH优化_backgroundMusicChoose = 'Aira';
+	const count = upgraded.writes.length;
+	await migrateStartupPreferences(upgraded.lib, upgraded.game);
+	assert.equal(upgraded.lib.config.extension_HH优化_backgroundMusicChoose, 'Aira');
+	assert.equal(upgraded.writes.length, count);
+	const legacy = preferences({ extension_启动界面美化_backgroundMusicChoose: 'Aira' });
+	await migrateStartupPreferences(legacy.lib, legacy.game);
+	assert.equal(legacy.lib.config.extension_HH优化_backgroundMusicChoose, defaultStartupMusic);
 });
 
 async function interfaceFixture(t, enabled = true) {
@@ -90,6 +114,12 @@ test('默认视频被阻止或解码失败时仍显示模式，预览切换和�
 	window.inSplash = true;
 	let background = h.ui.beautifyStartInterface_background;
 	assert.equal(background.video.src, '/extension/HH优化/assets/startup/video/孙尚香.mp4');
+	assert.equal(background.music.src, '/extension/HH优化/assets/startup/music/原版大厅.m4a');
+	assert.equal(h.startup.config.backgroundMusicChoose.init, defaultStartupMusic);
+	h.startup.config.backgroundMusicChoose.onclick('Hue');
+	assert.equal(background.music.src, '/extension/HH优化/assets/startup/music/Hue.mp3');
+	h.startup.config.backgroundMusicChoose.onclick(defaultStartupMusic);
+	assert.equal(background.music.src, '/extension/HH优化/assets/startup/music/原版大厅.m4a');
 	assert.equal(background.video.muted, true);
 	assert.equal(background.video.playsInline, true);
 	assert.ok(background.module1.isConnected, '无需等待视频 loadeddata 即可选模式');
@@ -164,4 +194,27 @@ test('大厅模式保存失败时可重试，入口与视频保持可用', async
 	h.game.promises.saveConfig = async (key, value) => { h.lib.config[key] = value; };
 	await button.onclick();
 	assert.equal(reloads, 1);
+});
+
+test('大厅武将入口复用浏览界面，关闭返回大厅并随大厅一起清理', async t => {
+	const h = await interfaceFixture(t);
+	window.inSplash = true;
+	const background = h.ui.beautifyStartInterface_background;
+	const button = background.lobby.querySelectorAll('button').find(button => button.getAttribute('aria-label') === '武将');
+	const open = button.listeners.get('click')[0];
+	let reloads = 0;
+	h.game.reload = () => reloads++;
+	await open();
+	assert.ok(h.document.body.querySelector('.hh-character-browser'));
+	assert.equal(background.lobby.inert, true);
+	h.document.body.querySelector('.hh-character-back').emit('click');
+	assert.equal(h.document.body.querySelector('.hh-character-browser'), null);
+	assert.equal(background.lobby.inert, false);
+	assert.ok(background.isConnected);
+	await open();
+	h.startup.content();
+	assert.equal(h.document.body.querySelector('.hh-character-browser'), null);
+	assert.equal(h.ui.beautifyStartInterface_background, undefined);
+	assert.equal(reloads, 0);
+	assert.equal(h.lib.config.mode, undefined);
 });

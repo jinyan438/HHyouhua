@@ -5,6 +5,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 import { createCharacterCatalog, bindCharacterPress } from '../src/ui/characterCatalog.js';
 import { createCharacterBrowser } from '../src/ui/characterBrowser.js';
+import { createStartupCharacterContext, createStartupCharacterBrowser } from '../src/ui/startupCharacterBrowser.js';
 import { addCharacterCatalogMenu } from '../src/ui/characterBrowserMenu.js';
 import { createSanguoshaMenu } from '../ui/lbtn/sanguoshaMenu.js';
 import { createSelectionPlayerVisual, captureSelectionPlayerLayout, selectionPlayerSize } from '../src/ui/selectionPlayer.js';
@@ -32,6 +33,46 @@ test('catalog includes extension packs and legacy characters, hides unseen entri
 	assert.equal(catalog.list({ pack: 'mode_extension_test' }).length, 2);
 	assert.equal(catalog.list({ query: '刘 备' })[0].id, 'liubei'); assert.equal(catalog.list({ query: 'GUANYU' })[0].id, 'guanyu');
 	assert.equal(catalog.list({ query: '仁德' })[0].id, 'liubei'); assert.equal(catalog.entries.get('guanyu').group, 'shu');
+});
+
+test('启动大厅从待导入资料构建原生及扩展武将目录，不提前初始化游戏资料', () => {
+    const h = fixture();
+    const pending = ['female', 'wu', '3/4', ['pending_skill'], ['des:待加载的故事']];
+    const extension = ['male', 'shu', 4, ['extension_skill'], []];
+    h.lib.imported = { character: { pending: { name: 'pending', character: { pending }, translate: { pending: '待加载武将', pending_skill: '待加载技能', pending_skill_info: '技能说明。' } } } };
+    h.lib.extensions = [['test', null, {}, false, { character: { character: { extension }, translate: { extension: '扩展武将' } }, skill: { skill: { extension_skill: { audio: 2 } }, translate: { extension_skill: '扩展技能' } } }]];
+    const preview = createStartupCharacterContext(h.context), catalog = createCharacterCatalog(preview);
+    assert.equal(catalog.entries.get('pending').name, '待加载武将');
+    assert.equal(catalog.entries.get('extension').name, '扩展武将');
+    assert.equal(preview.get.skillInfoTranslation('pending_skill'), '技能说明。');
+    assert.equal(preview.get.characterIntro('pending'), '待加载的故事');
+    assert.equal(preview.lib.skill.extension_skill.audio, 'ext:test:2');
+    assert.ok(preview.lib.character.extension[4].includes('ext:test/extension.jpg'));
+    assert.deepEqual(extension[4], []);
+    assert.equal(h.lib.extensions[0][4].skill.skill.extension_skill.audio, 2);
+    assert.equal(h.lib.character.pending, undefined);
+    assert.equal(h.lib.characterPack.pending, undefined);
+    assert.equal(h.lib.translate.pending_skill_info, undefined);
+    assert.equal(preview.lib.config, h.lib.config);
+    assert.deepEqual(h.calls.saves, []);
+});
+
+test('启动大厅复用武将列表及详情，关闭后回到原焦点且不暂停或启动对局', () => {
+    const h = fixture();
+    const entry = h.document.createElement('button'); h.document.body.appendChild(entry); entry.focus();
+    let closes = 0;
+    const browser = createStartupCharacterBrowser(h.context, { ...h.environment, onClose() { closes++; } });
+    const root = browser.open();
+    assert.equal(root.querySelectorAll('.hh-general-card').length, 4);
+    root.querySelector('[data-character="liubei"]').emit('click');
+    assert.equal(root.querySelector('.hh-character-title').textContent, '武将详情');
+    assert.equal(root.querySelector('.hh-general-skill-text').innerHTML, '可以将手牌交给其他角色。');
+    browser.close();
+    assert.equal(closes, 1);
+    assert.equal(h.document.activeElement, entry);
+    assert.equal(h.calls.pause, 0); assert.equal(h.calls.resume, 0);
+    assert.equal(h.lib.config.mode, 'identity');
+    assert.deepEqual(h.calls.saves, []);
 });
 
 test('ban changes persist to the native current-mode key, retain other bans and survive catalog reconstruction', async () => {

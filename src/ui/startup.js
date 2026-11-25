@@ -1,5 +1,5 @@
 // Adapted from 启动界面美化 1.2.1 by 缘伴随行 (GPL-3.0).
-import { startupAssetPath, loadStartupMedia, disposeStartupBackground, prepareStartupVideo, playStartupMedia } from './startupMedia.js';
+import { startupAssetPath, loadStartupMedia, disposeStartupBackground, prepareStartupVideo, playStartupMedia, defaultStartupMusic, startupMusicFile } from './startupMedia.js';
 import { createStartupLobby } from './startupLobby.js';
 
 export function createStartupInterface(lib, game, ui, get, ai, _status) {
@@ -203,7 +203,7 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
                     background.videoName = list.video;
                 }
                 // Four native lobby entries share the existing media lifecycle.
-                var main = list.zone ? () => createStartupLobby({ lib, game, ui, background }) : undefined;
+                var main = list.zone ? () => createStartupLobby({ lib, game, ui, get, _status, background }) : undefined;
                 background.mainFun = main;
                 const showModes = () => {
                     if (main) { main(); main = undefined; }
@@ -265,7 +265,7 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
                     if (!newValue) { disposeStartupBackground(ui); this._inSplashValue = newValue; return; }
                     //当window.inSplash被赋值时，执行效果（即美化启动界面）
                     ui.beautifyStartInterface({
-                        music: (lib.config.extension_HH优化_backgroundMusicChoose || "Aira") + ".mp3",
+                        music: startupMusicFile(lib, lib.config.extension_HH优化_backgroundMusicChoose || defaultStartupMusic),
                         volume: lib.config.volumn_background / 8,
                         video: (lib.config.extension_HH优化_backgroundVideoChoose || "孙尚香") + ".mp4",
                         zone: true,
@@ -311,7 +311,7 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
                         return;
                     }
                     var data = {
-                        music: (lib.config.extension_HH优化_backgroundMusicChoose || "Aira") + ".mp3",
+                        music: startupMusicFile(lib, lib.config.extension_HH优化_backgroundMusicChoose || defaultStartupMusic),
                         volume: lib.config.volumn_background / 8,
                         video: (lib.config.extension_HH优化_backgroundVideoChoose || "孙尚香") + ".mp4",
                         zone: true,
@@ -325,16 +325,16 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
             "backgroundMusicChoose": {
                 name: "背景音乐选择",
                 intro: "<li>选择一个你喜欢的音乐，于背景中循环播放（自行导入文件请放置于HH优化的【assets/startup/music】文件夹内）<br><li>注：音乐音量与本体的背景音量保持一致",
-                init: "Aira",
+                init: defaultStartupMusic,
                 item: {
-                    "Aira": "Aira",
+                    [defaultStartupMusic]: defaultStartupMusic,
                 },
                 onclick: function(item) {
                     game.saveConfig("extension_HH优化_backgroundMusicChoose", item);
                     //动态修正
                     if (ui.beautifyStartInterface_background?.music) {
                         const background = ui.beautifyStartInterface_background;
-                        background.music.src = lib.assetURL + startupAssetPath + "music/" + item + ".mp3";
+                        background.music.src = lib.assetURL + startupAssetPath + "music/" + startupMusicFile(lib, item);
                         playStartupMedia(background.music, background);
                     }
                 },
@@ -351,7 +351,7 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
                     //重新启动
                     if (ui.beautifyStartInterface_background) {
                         var data = {
-                            music: (lib.config.extension_HH优化_backgroundMusicChoose || "Aira") + ".mp3",
+                            music: startupMusicFile(lib, lib.config.extension_HH优化_backgroundMusicChoose || defaultStartupMusic),
                             volume: lib.config.volumn_background / 8,
                             video: (item || "孙尚香") + ".mp4",
                             zone: true,

@@ -1,0 +1,14 @@
+{
+  "原版大厅.m4a": {
+    "source": "E:/AI/sanguosha/extract/unity/audio/assets/res/sound/bgm/backgroundmusic01.ogg.m4a",
+    "asset": "Assets/Res/Sound/bgm/BackGroundMusic01.ogg",
+    "bundle": "f8aaf18b2b17e6c5_c018db4c89710bff.wg",
+    "client": "E:/AI/sanguosha/sanguosha2/work/main.js",
+    "selection": "MainBgmUrl: GetSceneBgmByType(fx.Main), fallback voice/bgm/BackGroundMusic01",
+    "codec": "AAC",
+    "durationSeconds": 154.157256,
+    "bytes": 2493781,
+    "sha256": "51ba67bd1b5f8b8acb6f26943f1828b618946f28e224f6d213a0f9236ba5f86d",
+    "conversion": "Copied unchanged from the extracted native audio."
+  }
+}

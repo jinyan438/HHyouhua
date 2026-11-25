@@ -300,7 +300,7 @@ export function createCharacterBrowser(context, environment = {}) {
 		if (root) { root.focus?.(); return root; }
 		if (!doc?.createElement) return null;
 		model = createCharacterCatalog(context); if (!model.packs.some(item => item.id === pack)) pack = allCharactersPack;
-		previousFocus = doc.activeElement; pausedHere = !_status.connectMode && !_status.paused2 && typeof game.pause2 === 'function';
+		previousFocus = doc.activeElement; pausedHere = env.pauseGame !== false && !_status.connectMode && !_status.paused2 && typeof game.pause2 === 'function';
 		if (pausedHere) game.pause2();
 		root = node('div', 'hh-character-browser', undefined, doc.body || ui.window); root.tabIndex = -1;
 		root.setAttribute('role', 'dialog'); root.setAttribute('aria-modal', 'true'); root.setAttribute('aria-label', '武将');
@@ -345,6 +345,7 @@ export function createCharacterBrowser(context, environment = {}) {
 		doc.removeEventListener('pointerdown', outsideFilter, true); doc.removeEventListener('click', outsideFilter, true);
 		root.remove(); root = null; model = null; detailId = null; packButtons.clear();
 		if (pausedHere) game.resume2?.(); pausedHere = false;
+		env.onClose?.();
 		if (previousFocus?.isConnected) previousFocus.focus?.({ preventScroll: true }); previousFocus = null;
 	}
 	lib.onover?.push(close);
