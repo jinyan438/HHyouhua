@@ -1,0 +1,120 @@
+{
+  "client": "E:\\AI\\sanguosha",
+  "logic": {
+    "source": "E:\\AI\\sanguosha\\sanguosha2\\work\\main.js",
+    "class": "y5i",
+    "methods": [
+      "ShowForceOperate",
+      "showNormalForce",
+      "showOperateForce",
+      "onSureClick"
+    ],
+    "popupClass": "drs",
+    "offset": 18406703,
+    "popup": {
+      "width": 125,
+      "height": 139,
+      "tile": [
+        57,
+        63
+      ],
+      "origin": [
+        5,
+        5
+      ],
+      "step": [
+        59,
+        65
+      ]
+    },
+    "behavior": "Toggle excluded factions per seat, gray excluded sectors, show the remaining faction when only one remains; stage click dismisses popup."
+  },
+  "adaptation": "Five factions by default, native four quadrants when one faction is banned. Five-sector colors sample native min textures; popup tiles and single-faction circles remain original PNGs. Five tiles flow in two columns with Jin at bottom left and a stepped polygon frame; four tiles use the original rectangular frame. Guess state uses _guozhanguess; no gameplay identity mutation.",
+  "files": [
+    {
+      "file": "countrywarforce_jin1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforce_jin1.png",
+      "sha256": "2ac806c506e9683debaf9be6c3dead8a7161a39ba1e0e2ea23d9ed6d46d21b0c"
+    },
+    {
+      "file": "countrywarforce_qun1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforce_qun1.png",
+      "sha256": "b5aac13e08c9a1c98e862dbd31197be08f180857409936836c785c293eed313e"
+    },
+    {
+      "file": "countrywarforce_shu1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforce_shu1.png",
+      "sha256": "cf1bf3b95b22d2dda60f94f1969435557a2ea7ff8c3febb990fcbcafe55cb251"
+    },
+    {
+      "file": "countrywarforce_wei1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforce_wei1.png",
+      "sha256": "e268a2bdf3fdea3e661b7420040a65c8b6d10fb164d2fa746499567fcf18f3bb"
+    },
+    {
+      "file": "countrywarforce_wu1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforce_wu1.png",
+      "sha256": "de01ff7fc282ceed106e6233188a375876c4c5263f662f65a855b6b5f43bf4ae"
+    },
+    {
+      "file": "countrywarforcebg.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforcebg.png",
+      "sha256": "b4ce3c94b298a8ee88707bfe1970dd81e42d18d2fd65c9cb233a33d8c0ca06b6"
+    },
+    {
+      "file": "countrywarforcemin_jin1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforcemin_jin1.png",
+      "sha256": "85bb798e08bbf0605fdefc70efd3756ace7cf1583203378edfc3555e9bc23b37"
+    },
+    {
+      "file": "countrywarforcemin_no.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforcemin_no.png",
+      "sha256": "ee3a3131baa3b06445b042791293282ff204d42889862a8ac786edec95c1b7b6"
+    },
+    {
+      "file": "countrywarforcemin_qun1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforcemin_qun1.png",
+      "sha256": "cfc85dda6f4910de38dcd667f6ab25a256f8b86adc69d0fd2a0e4fff2038864a"
+    },
+    {
+      "file": "countrywarforcemin_shu1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforcemin_shu1.png",
+      "sha256": "dc8716fad6d8ff1830662b4b7a554cdc9f9d0025551a81164b308131f775b5bf"
+    },
+    {
+      "file": "countrywarforcemin_wei1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforcemin_wei1.png",
+      "sha256": "e80d45382e231c58e5443744f0ccf1b5b427552791494690ff253324eed55dd7"
+    },
+    {
+      "file": "countrywarforcemin_wu1.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforcemin_wu1.png",
+      "sha256": "6e8f26e05134e5860bffe037c778764e410ea6f1e111267a4bb64fd7a34e55cd"
+    },
+    {
+      "file": "countrywarforceshow_jin.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforceshow_jin.png",
+      "sha256": "d669bc754de437b0b838a56b7d28d9f997554398b59df9fabdf004142ed016a7"
+    },
+    {
+      "file": "countrywarforceshow_qun.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforceshow_qun.png",
+      "sha256": "4d030811ae0c2b45e27a485381b9650e47f29fa68be67cd1cd7d8eec224a2663"
+    },
+    {
+      "file": "countrywarforceshow_shu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforceshow_shu.png",
+      "sha256": "fb68b59587ffa664eb293ab76b4146f4b55b4d7a6a52d53e023da5b581e8fd63"
+    },
+    {
+      "file": "countrywarforceshow_wei.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforceshow_wei.png",
+      "sha256": "aa081db9f89f8209e5899e8f38e0f9f32a29393bf1fc27041c129e8ea6fa1155"
+    },
+    {
+      "file": "countrywarforceshow_wu.png",
+      "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\game\\seat\\countrywarforceshow_wu.png",
+      "sha256": "50efb5f9b35cda8edba6f576212e2b4b61d19669da9615153dd604c93f4802ac"
+    }
+  ]
+}

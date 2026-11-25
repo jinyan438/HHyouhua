@@ -375,5 +375,6 @@ export function createPlayerElement(position, noclick) {
 	};
 
 	decadeUI.get.extend(player.node, node);
+	game.hhGuozhanIdentity?.observe(player);
 	return player;
 }
