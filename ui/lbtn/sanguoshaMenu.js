@@ -20,9 +20,9 @@ export function createSanguoshaMenu(context, { openBackground, addSystemItems } 
 	function resize() {
 		const width = ui.window.clientWidth || win.innerWidth || 1650;
 		const height = ui.window.clientHeight || win.innerHeight || 750;
-		// The game scales its entire window on narrow screens; keep touch targets readable after that scale.
-		const zoom = ui.window.clientWidth ? (ui.window.getBoundingClientRect().width || width) / width : 1;
-		scale = Math.max(0.65 / zoom, Math.min(width / 1650, height / 750));
+		// Follow the native 1650 x 750 canvas, including the game's document zoom.
+		// A CSS-pixel minimum enlarges this toolbar on high-density phone screens.
+		scale = Math.min(width / 1650, height / 750);
 		for (const node of [button, popup, retiring]) node?.style.setProperty("--hh-menu-unit", `${scale}px`);
 	}
 	resize();

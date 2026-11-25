@@ -1,14 +1,15 @@
+/* Match the original reference capture, in native 1650 x 750 design units. */
 button.hh-sanguosha-menu-toggle.caidanbutton {
 	position: absolute;
 	top: calc(4 * var(--hh-menu-unit));
-	right: calc(6 * var(--hh-menu-unit));
-	width: calc(68 * var(--hh-menu-unit));
-	height: calc(64 * var(--hh-menu-unit));
+	right: calc(95 * var(--hh-menu-unit));
+	width: calc(67 * var(--hh-menu-unit));
+	height: calc(62 * var(--hh-menu-unit));
 	margin: 0;
 	padding: 0;
 	border: 0;
 	border-radius: 0;
-	background: url("../../assets/lbtn/sanguosha/btn_menu3_0.png") center / contain no-repeat;
+	background: url("../../assets/lbtn/sanguosha/btn_menu3_0.png") center / 100% 100% no-repeat;
 	box-shadow: none;
 	cursor: pointer;
 	z-index: 6;
@@ -40,7 +41,7 @@ button.hh-sanguosha-menu-toggle[aria-expanded="true"] { z-index: 101; }
 .hh-sanguosha-menu-panel {
 	position: absolute;
 	top: 0;
-	right: 0;
+	right: calc(72 * var(--hh-menu-unit));
 	display: flex;
 	flex-direction: column;
 	width: calc(196 * var(--hh-menu-unit));
@@ -89,6 +90,16 @@ button.hh-sanguosha-menu-toggle[aria-expanded="true"] { z-index: 101; }
 	object-fit: contain;
 	object-position: left center;
 	pointer-events: none;
+}
+
+.hh-sanguosha-menu-item[data-action="background"] > img {
+	width: calc(118 * var(--hh-menu-unit));
+	height: calc(39 * var(--hh-menu-unit));
+	transform: translate(calc(4.5 * var(--hh-menu-unit)), calc(3 * var(--hh-menu-unit)));
+}
+
+.hh-sanguosha-menu-item[data-action="leave"] > img {
+	transform: translateX(calc(7 * var(--hh-menu-unit)));
 }
 
 .hh-sanguosha-menu-panel .hh-character-menu-icon {

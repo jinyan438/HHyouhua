@@ -205,6 +205,21 @@ test('the default side menu preserves its five actions and releases the overlay 
 	assert.equal(h.document.body.querySelector('.hh-sanguosha-menu-toggle'), null);
 });
 
+test('the side menu keeps native physical dimensions on dense phone displays at different game zoom levels', () => {
+	for (const zoom of [.6, 1, 1.5]) {
+		const h = fixture(), screenWidth = 2760, screenHeight = 1256, density = 4;
+		h.document.defaultView = { innerWidth: screenWidth / density, innerHeight: screenHeight / density, devicePixelRatio: density };
+		h.context.ui.window.clientWidth = screenWidth / density / zoom;
+		h.context.ui.window.clientHeight = screenHeight / density / zoom;
+		h.context.ui.window.getBoundingClientRect = () => ({ width: screenWidth / density, height: screenHeight / density });
+		const menu = createSanguoshaMenu(h.context);
+		const unit = parseFloat(menu.button.style['--hh-menu-unit']) * zoom * density;
+		assert.ok(Math.abs(unit * 67 - 112.07) < .1, `native toggle width at game zoom ${zoom}`);
+		assert.ok(Math.abs(unit * 80 - 133.82) < .1, `native row spacing at game zoom ${zoom}`);
+		menu.destroy();
+	}
+});
+
 test('the side menu uses unmodified original toolbar and general images', () => {
 	const root = new URL('../ui/assets/lbtn/sanguosha/', import.meta.url);
 	const manifest = JSON.parse(fs.readFileSync(new URL('sources.json', root), 'utf8'));
