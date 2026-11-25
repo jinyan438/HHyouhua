@@ -97,7 +97,6 @@ def pack_light(name, key):
 # are recovered from sanguosha2/work/rx_pathmap_full.json; do not use the
 # automatic preview index's approximate atlas/image pairings.
 main = {
-    'fortune': 'btnIcon_161.png', 'garden': 'btnIcon_36.png', 'mail': 'btnIcon_10026.png',
     'task': 'btnIcon_2.png', 'contest': 'btnIcon_10060.png', 'bless': 'btnIcon_24.png',
     'treasure': 'btnIcon_75.png', 'wish': 'btnIcon_59.png', 'scroll': 'btnIcon_51.png',
     'rebate': 'btnIcon_56_new.png', 'shop': 'btnIcon_10031.png', 'more': 'mainui_btn_more.png',
@@ -106,7 +105,6 @@ main = {
     'footer-bag': 'btnIcon_10034.png', 'gift': 'btnIcon_3.png', 'welfare': 'btnIcon_4.png',
     'notice-dot': 'mainui_red.png', 'notice-count': 'mainui_red2.png',
     'date-tag': 'mainui_bottom_tag1.png',
-    'chat-bubble': 'mainui_bottom_tag2.png',
     'carousel-idle': 'mainui_point_gray.png', 'carousel-active': 'mainui_point_light.png',
     'rank-star': 'mainui_star_new_2.png', 'button-back': 'mainui_commonbtn_di.png',
 }
@@ -125,6 +123,8 @@ for name, key in {'jiang': '3', 'fenghuo': '2_1', 'standard': '1', 'jie': '5',
 
 for name, relative in {
     'officer': 'officer/big/b_7.png', 'member-bg': 'mainui/vip_bg.png',
+    'garden': 'mainui/btnicon_36.png', 'fortune': 'mainui/btnicon_161.png',
+    'mail': 'mainui/btnicon_10026.png', 'chat': 'chat/hall_chat_btn.png',
     'silver': 'baseui/yl_icon.png',
     'currency-bg': 'baseui/coin_bg.png', 'currency-add': 'baseui/add_new.png',
 }.items():

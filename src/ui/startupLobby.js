@@ -215,9 +215,7 @@ export function createStartupLobby({ lib, game, ui, get, _status, background }) 
 
     node('bottom-shade');
     const chatButton = place(feedback('chat-button', '聊天'), 189, 1108, 102, 102);
-    place(node('chat', chatButton), 15, 15, 72, 72);
-    place(image('chat-bubble', chatButton, 'chat-bubble-native'), 20, 27, 62, 49);
-    place(node('chat-dots', chatButton, '•••'), 25, 28, 52, 31);
+    image('chat', chatButton, 'feedback-art');
     dot(63, -3, '11', chatButton);
     artButton('nostalgia', '三国斗地主', 380, 1092, 439, 128, true);
     const bottomItems = [
