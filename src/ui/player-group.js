@@ -11,6 +11,7 @@ import { lib, game, ui, get, ai, _status } from "noname";
  */
 function handleGroupStyleV2(group) {
 	if (!decadeUI.config.campIdentityImageMode) {
+		this._finalGroup = group;
 		if (!this._finalGroup) {
 			this.node.campWrap.node.campName.innerHTML = "";
 		} else {
@@ -89,6 +90,34 @@ function handleGroupStyleV2(group) {
  * 为玩家元素添加势力属性的getter和setter
  */
 export function definePlayerGroupProperty() {
+	const displays = new WeakMap();
+	let previousOwner;
+	function refreshDisplay(player, force = false) {
+		const wrap = player.node?.campWrap;
+		let group = player._group;
+		if (!wrap || !group) return;
+		let character = player.name;
+		// Resolve only the owner's private faction; keep the engine's public group unchanged.
+		if (group === "unknown" && game.hhGuozhanHidden?.canView(player)
+			&& lib.character[player.name1] && lib.character[player.name2]) {
+			group = player.getGuozhanGroup(2);
+			character = player.name1;
+		}
+		const camp = get.character(character)?.groupBorder || group;
+		const next = [wrap, group, camp, decadeUI.config.newDecadeStyle, decadeUI.config.campIdentityImageMode];
+		const previous = displays.get(player);
+		if (!force && previous && next.every((value, index) => value === previous[index])) return;
+		displays.set(player, next);
+		wrap.dataset.camp = camp;
+		handleGroupStyleV2.call(player, group);
+	}
+	// Selection, hidden replacement, replay and control changes can update the view without setting group.
+	ui.updates.push(() => {
+		const owner = get.mode() === "guozhan" ? game.me : undefined;
+		if (previousOwner && previousOwner !== owner) refreshDisplay(previousOwner);
+		if (owner) refreshDisplay(owner);
+		previousOwner = owner;
+	});
 	Object.defineProperties(lib.element.player, {
 		group: {
 			configurable: true,
@@ -101,9 +130,7 @@ export function definePlayerGroupProperty() {
 			set(group) {
 				if (!group) return;
 				this._group = group;
-				this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-
-				handleGroupStyleV2.call(this, group);
+				refreshDisplay(this, true);
 			},
 		},
 	});
