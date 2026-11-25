@@ -9,7 +9,7 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 	const document = ui.window?.ownerDocument || globalThis.document;
 	const base = `${lib.assetURL || ''}extension/HH优化/assets/guozhan-force/`;
 	const observed = new WeakMap();
-	let active;
+	let active, view;
 	function groups() {
 		const banned = _status.bannedGroup?.replace(/^group_/, '');
 		if (!GUOZHAN_FACTIONS.includes(banned)) return [...GUOZHAN_FACTIONS];
@@ -42,7 +42,7 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 		const state = observed.get(player);
 		if (!state) return;
 		const node = player.node.identity;
-		if (get.mode() !== 'guozhan' || shown(player)) {
+		if (get.mode() !== 'guozhan' || player === game.me || shown(player)) {
 			if (node.classList.contains('hh-guozhan-identity')) node.classList.remove('hh-guozhan-identity');
 			state.badge.hidden = true;
 			state.signature = undefined;
@@ -151,7 +151,7 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 		observed.set(player, { badge, observer, nativeAttributes });
 		let lastTouch = -Infinity;
 		const click = event => {
-			if (get.mode() !== 'guozhan') return;
+			if (get.mode() !== 'guozhan' || player === game.me) return;
 			event.preventDefault(); event.stopImmediatePropagation(); event.stopPropagation();
 			_status.clicked = true;
 			if (event.type === 'click' && Date.now() - lastTouch < 500) return;
@@ -161,14 +161,21 @@ export function setupGuozhanIdentity({ lib, game, ui, get, _status }) {
 		node.addEventListener('click', click, true);
 		node.addEventListener('touchend', click, { capture: true, passive: false });
 		node.addEventListener('keydown', event => {
-			if (get.mode() === 'guozhan' && (event.key === 'Enter' || event.key === ' ')) {
+			if (get.mode() === 'guozhan' && player !== game.me && (event.key === 'Enter' || event.key === ' ')) {
 				event.preventDefault(); event.stopPropagation(); open(player);
 			}
 		});
 		update(player);
 	}
 	const refresh = () => { for (const player of [...game.players, ...game.dead]) { observe(player); update(player); } };
+	function refreshView() {
+		const next = [get.mode(), game.me];
+		if (view && next.every((value, index) => value === view[index])) return;
+		view = next;
+		refresh();
+	}
 	lib.arenaReady.push(refresh);
+	ui.updates?.push(refreshView);
 	lib.onover.push(close);
 	globalThis.addEventListener?.('resize', close);
 	return game.hhGuozhanIdentity = { observe, update, refresh, close };
