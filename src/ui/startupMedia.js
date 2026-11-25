@@ -46,6 +46,7 @@ export async function loadStartupMedia(lib, game, config) {
 export function disposeStartupBackground(ui) {
 	const background = ui.beautifyStartInterface_background;
 	if (!background) return;
+    background.disposeLobby?.();
 	background.disposeMedia?.();
 	background.remove();
 	delete ui.beautifyStartInterface_background;

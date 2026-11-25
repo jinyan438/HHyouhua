@@ -1,0 +1,594 @@
+{
+  "fortune.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_161.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      63,
+      63
+    ]
+  },
+  "garden.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_36.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      52,
+      59
+    ]
+  },
+  "mail.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\mail_btn_normal.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      52,
+      54
+    ]
+  },
+  "task.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\task_btn_normal.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      82,
+      89
+    ]
+  },
+  "contest.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\match_btn_normal.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      82,
+      89
+    ]
+  },
+  "bless.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\bless_btn_normal.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      89,
+      91
+    ]
+  },
+  "treasure.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\xbg_btn_normal.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      84,
+      86
+    ]
+  },
+  "wish.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_178.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      78,
+      83
+    ]
+  },
+  "scroll.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_179.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      111,
+      81
+    ]
+  },
+  "rebate.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\btnicon_56_new.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      121,
+      79
+    ]
+  },
+  "shop.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\shop_btn_normal2.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      89,
+      91
+    ]
+  },
+  "more.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\mainui\\more_menu_btn_normal.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      61,
+      65
+    ]
+  },
+  "officer.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\big\\b_7.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      330,
+      330
+    ]
+  },
+  "officer-ribbon.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\officername\\mainofficer_bg2.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      161,
+      36
+    ]
+  },
+  "officer-title.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\officer\\officername\\mainofficer7.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      77,
+      24
+    ]
+  },
+  "currency-bg.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\baseui\\coin_bg.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      174,
+      39
+    ]
+  },
+  "currency-add.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\sprite\\assets\\res\\picture\\baseui\\add_new.png",
+    "crop": null,
+    "polygon": null,
+    "size": [
+      58,
+      57
+    ]
+  },
+  "silver.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\fontassets\\spriteassets\\money\\money.png",
+    "frame": {
+      "filename": "yl_icon.png",
+      "frame": {
+        "x": 1,
+        "y": 1,
+        "w": 47,
+        "h": 43
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 4,
+        "y": 0,
+        "w": 47,
+        "h": 43
+      },
+      "sourceSize": {
+        "w": 55,
+        "h": 43
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "gold.webp": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\texture\\assets\\res\\fontassets\\spriteassets\\money\\money.png",
+    "frame": {
+      "filename": "yb_icon_tongyong.png",
+      "frame": {
+        "x": 182,
+        "y": 1,
+        "w": 49,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 3,
+        "y": 0,
+        "w": 49,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 55,
+        "h": 43
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "avatar.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      172,
+      17,
+      313,
+      157
+    ],
+    "polygon": null,
+    "size": [
+      141,
+      140
+    ]
+  },
+  "promotion.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      2105,
+      243,
+      2588,
+      371
+    ],
+    "polygon": null,
+    "size": [
+      483,
+      128
+    ]
+  },
+  "nostalgia.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      380,
+      1092,
+      819,
+      1220
+    ],
+    "polygon": null,
+    "size": [
+      439,
+      128
+    ]
+  },
+  "mode-landlord.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      1607,
+      398,
+      1924,
+      855
+    ],
+    "polygon": null,
+    "size": [
+      317,
+      457
+    ]
+  },
+  "mode-rank.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      1941,
+      398,
+      2254,
+      925
+    ],
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        312,
+        0
+      ],
+      [
+        312,
+        457
+      ],
+      [
+        157,
+        526
+      ],
+      [
+        0,
+        457
+      ]
+    ],
+    "size": [
+      313,
+      527
+    ]
+  },
+  "mode-classic.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      2275,
+      398,
+      2602,
+      618
+    ],
+    "polygon": null,
+    "size": [
+      327,
+      220
+    ]
+  },
+  "mode-activity.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      2275,
+      634,
+      2602,
+      854
+    ],
+    "polygon": null,
+    "size": [
+      327,
+      220
+    ]
+  },
+  "footer-general.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      1286,
+      1136,
+      1355,
+      1211
+    ],
+    "polygon": [
+      [
+        34,
+        0
+      ],
+      [
+        68,
+        37
+      ],
+      [
+        34,
+        74
+      ],
+      [
+        0,
+        37
+      ]
+    ],
+    "size": [
+      69,
+      75
+    ]
+  },
+  "footer-skin.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      1530,
+      1136,
+      1614,
+      1215
+    ],
+    "polygon": [
+      [
+        42,
+        0
+      ],
+      [
+        83,
+        39
+      ],
+      [
+        42,
+        78
+      ],
+      [
+        0,
+        39
+      ]
+    ],
+    "size": [
+      84,
+      79
+    ]
+  },
+  "footer-officer.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      1782,
+      1137,
+      1861,
+      1214
+    ],
+    "polygon": [
+      [
+        39,
+        0
+      ],
+      [
+        78,
+        38
+      ],
+      [
+        39,
+        76
+      ],
+      [
+        0,
+        38
+      ]
+    ],
+    "size": [
+      79,
+      77
+    ]
+  },
+  "footer-recruit.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      2033,
+      1136,
+      2112,
+      1214
+    ],
+    "polygon": [
+      [
+        39,
+        0
+      ],
+      [
+        78,
+        39
+      ],
+      [
+        39,
+        77
+      ],
+      [
+        0,
+        39
+      ]
+    ],
+    "size": [
+      79,
+      78
+    ]
+  },
+  "footer-bag.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      2287,
+      1140,
+      2368,
+      1212
+    ],
+    "polygon": [
+      [
+        40,
+        0
+      ],
+      [
+        80,
+        36
+      ],
+      [
+        40,
+        71
+      ],
+      [
+        0,
+        36
+      ]
+    ],
+    "size": [
+      81,
+      72
+    ]
+  },
+  "welfare.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      184,
+      433,
+      320,
+      542
+    ],
+    "polygon": [
+      [
+        68,
+        0
+      ],
+      [
+        135,
+        68
+      ],
+      [
+        98,
+        108
+      ],
+      [
+        38,
+        108
+      ],
+      [
+        0,
+        68
+      ]
+    ],
+    "size": [
+      136,
+      109
+    ]
+  },
+  "gift.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      181,
+      235,
+      319,
+      350
+    ],
+    "polygon": [
+      [
+        68,
+        0
+      ],
+      [
+        137,
+        68
+      ],
+      [
+        94,
+        114
+      ],
+      [
+        44,
+        114
+      ],
+      [
+        0,
+        68
+      ]
+    ],
+    "size": [
+      138,
+      115
+    ]
+  },
+  "anniversary.webp": {
+    "source": "E:\\.cache\\TEMP\\codex-clipboard-adeffdf0-32f4-4e94-9d7c-198ce9c33908.jpg",
+    "crop": [
+      346,
+      235,
+      485,
+      350
+    ],
+    "polygon": [
+      [
+        68,
+        0
+      ],
+      [
+        138,
+        68
+      ],
+      [
+        94,
+        114
+      ],
+      [
+        44,
+        114
+      ],
+      [
+        0,
+        68
+      ]
+    ],
+    "size": [
+      139,
+      115
+    ]
+  },
+  "HYXLSJ.woff2": {
+    "source": "E:\\AI\\sanguosha\\extract\\unity\\meta\\assets\\third\\textmesh pro\\fonts\\hyxlsj.ttf.json",
+    "subset": "startupLobby.js and printable ASCII"
+  }
+}

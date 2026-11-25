@@ -118,3 +118,50 @@ test('禁用时沿用原启动页，仍可从 HH 设置预览并关闭', async t
 	assert.equal(h.ui.beautifyStartInterface_background, undefined);
 	disposeStartupBackground(h.ui);
 });
+
+test('大厅仅接入四个指定入口，保存模式后才清理视频并重启', async t => {
+	const h = await interfaceFixture(t);
+	let reloads = 0;
+	h.game.reload = () => reloads++;
+	for (const [label, mode] of [['斗地主', 'doudizhu'], ['排位赛', 'versus'], ['经典场', 'identity'], ['活动场', 'guozhan']]) {
+		window.inSplash = true;
+		const background = h.ui.beautifyStartInterface_background;
+        const buttons = background.lobby.querySelectorAll('.hh-lobby-mode');
+		assert.equal(buttons.length, 4);
+		assert.deepEqual(buttons.map(button => button.getAttribute('aria-label')), ['斗地主', '排位赛', '经典场', '活动场']);
+		const entry = buttons.find(button => button.getAttribute('aria-label') === label);
+		assert.equal(entry.dataset.mode, mode);
+		let finish;
+		h.game.promises.saveConfig = (key, value) => new Promise(resolve => { finish = () => { h.lib.config[key] = value; resolve(); }; });
+		const before = reloads;
+		const selecting = entry.onclick();
+		await entry.onclick();
+		assert.equal(reloads, before, '存储完成前不能重启，重复点击不能多次提交');
+		assert.ok(background.isConnected);
+		finish(); await selecting;
+		assert.equal(h.lib.config.mode, mode);
+		assert.equal(reloads, before + 1);
+		assert.equal(h.ui.beautifyStartInterface_background, undefined);
+		assert.equal(background.video.paused, true);
+		assert.equal(h.document.body.classList.contains('hh-startup-active'), false);
+	}
+});
+
+test('大厅模式保存失败时可重试，入口与视频保持可用', async t => {
+	const h = await interfaceFixture(t);
+	window.inSplash = true;
+	const background = h.ui.beautifyStartInterface_background;
+	const button = background.module1;
+	let reloads = 0;
+	h.game.reload = () => reloads++;
+	h.game.promises.saveConfig = async () => { throw Error('storage unavailable'); };
+	const error = console.error;
+	console.error = () => {};
+	try { await button.onclick(); } finally { console.error = error; }
+	assert.equal(reloads, 0);
+	assert.ok(background.isConnected);
+	assert.equal(background.lobby.classList.contains('hh-lobby-entering'), false);
+	h.game.promises.saveConfig = async (key, value) => { h.lib.config[key] = value; };
+	await button.onclick();
+	assert.equal(reloads, 1);
+});
