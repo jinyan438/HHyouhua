@@ -4,14 +4,14 @@ import test from 'node:test';
 import vm from 'node:vm';
 import { defaultSettings } from '../defaults.js';
 import { originalCardStylePriority } from '../src/ui/originalCards.js';
-import { getPlayerStyleSizing, playerStyleBaseline, playerFrameGeometry, playerGlowGeometry } from '../src/ui/playerStyleSizing.js';
+import { getPlayerStyleSizing, getPlayerStyleCss, playerStyleBaseline, playerFrameGeometry, playerGlowGeometry } from '../src/ui/playerStyleSizing.js';
 import { selectionPlayerSize } from '../src/ui/selectionPlayer.js';
 
 const source = fs.readFileSync(new URL('../hh-features.js', import.meta.url), 'utf8');
 const removed = ['player_border_width', 'glow_border_width', 'glow_border_left', 'hp_right_offset', 'border_left_offset', 'faction_left_offset', 'name_left_offset'];
 function configuration() {
 	const calls = [], lib = { config: { extension_HH优化_player_width: '136', extension_HH优化_player_height: '180' } }, game = { hhSelectionCardLayout: { width: 136 }, saveConfig: (...args) => calls.push(args) }, window = { _speedControlUpdateStyle() { calls.push(['refresh']); } };
-	const realm = vm.createContext({ lib, game, window, get: {}, ui: {}, ai: {}, _status: {}, getPlayerStyleSizing, originalCardStylePriority });
+	const realm = vm.createContext({ lib, game, window, get: {}, ui: {}, ai: {}, _status: {}, getPlayerStyleSizing, getPlayerStyleCss, originalCardStylePriority });
 	vm.runInContext(source.replace(/^import .*;\r?\n/gm, '').replace('export function ', 'function ') + '\nglobalThis.options = createHHFeatures(lib, game, ui, get, ai, _status).config;', realm);
 	return { ...realm, calls };
 }
@@ -25,7 +25,7 @@ function rendered(width, height, theme) {
 	const start = source.indexOf('const updateCustomStyle = function() {');
 	const end = source.indexOf('// 初始化时应用样式', start);
 	const code = source.slice(start, end) + '\nupdateCustomStyle();';
-	vm.runInNewContext(code, { lib, document, window, customStyleEl: style, getPlayerStyleSizing, playerGlowGeometry, originalCardStylePriority, console });
+	vm.runInNewContext(code, { lib, document, window, customStyleEl: style, getPlayerStyleSizing, getPlayerStyleCss, playerGlowGeometry, originalCardStylePriority, console });
 	return { css: style.textContent, glow: sheet.cssRules };
 }
 

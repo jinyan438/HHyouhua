@@ -86,6 +86,25 @@ test('启动大厅复用武将列表及详情，关闭后回到原焦点且不�
     assert.deepEqual(h.calls.saves, []);
 });
 
+test('大厅在对局初始化前使用配置的卡牌位置，台词离开详情后释放且不创建游戏窗口', async () => {
+    const h = fixture();
+    Object.assign(h.lib.config, { extension_HH优化_player_width: '160', extension_HH优化_player_height: '210', volumn_audio: 6 });
+    delete h.context.ui.window;
+    h.game.playAudio = () => assert.fail('不能使用尚未初始化的对局音频');
+    h.get.Audio = { skill: () => ({ audioList: [{ file: 'skill/rende1.mp3' }] }) };
+    const browser = createStartupCharacterBrowser(h.context, h.environment), root = browser.open();
+    const style = root.querySelector('.hh-startup-character-style');
+    assert.ok(style.textContent.includes('--hh-configured-player-width: 160px;'));
+    assert.ok(style.textContent.includes('--hh-configured-hp-right: 158px;'));
+    assert.ok(style.textContent.includes('.hh-character-browser .player > .camp-wrap > .avatar-name'));
+    browser.openCharacter('liubei'); root.querySelector('.hh-general-voice').emit('click'); await flush();
+    const audio = h.document.body.querySelector('audio');
+    assert.equal(audio.src, '/noname/audio/skill/rende1.mp3'); assert.equal(audio.volume, .75);
+    root.querySelector('.hh-character-back').emit('click'); assert.equal(audio.isConnected, false);
+    browser.close(); assert.equal(style.isConnected, false); assert.equal(h.context.ui.window, undefined);
+    assert.equal(h.calls.pause, 0); assert.equal(h.calls.resume, 0); assert.deepEqual(h.calls.saves, []);
+});
+
 test('ban changes persist to the native current-mode key, retain other bans and survive catalog reconstruction', async () => {
 	const h = fixture(), catalog = createCharacterCatalog(h.context);
 	assert.equal(await catalog.toggle('liubei'), true); assert.deepEqual(h.lib.config.identity_banned, ['already_banned', 'liubei']);

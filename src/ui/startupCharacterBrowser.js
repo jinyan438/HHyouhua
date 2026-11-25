@@ -1,4 +1,6 @@
 import { createCharacterBrowser } from './characterBrowser.js';
+import { createCharacterPreviewAudio } from './characterPreviewAudio.js';
+import { getPlayerStyleSizing, getPlayerStyleCss } from './playerStyleSizing.js';
 
 // The splash runs before loadCharacter/loadExtension. Read the already imported
 // metadata through a separate library view instead of running game initialization.
@@ -68,8 +70,10 @@ export function createStartupCharacterContext(context) {
 
 export function createStartupCharacterBrowser(context, options = {}) {
     const preview = createStartupCharacterContext(context);
-    return createCharacterBrowser(preview, {
+    const doc = options.document || globalThis.document;
+    const browser = createCharacterBrowser(preview, {
         pauseGame: false,
+        playAudio: createCharacterPreviewAudio(preview, doc),
         ...options,
         setPortrait(element, entry) {
             const id = entry.id;
@@ -87,4 +91,16 @@ export function createStartupCharacterBrowser(context, options = {}) {
             else element.setBackgroundImage(path);
         },
     });
+    const open = browser.open;
+    browser.open = () => {
+        const root = open();
+        if (!root) return root;
+        let style = root.querySelector('.hh-startup-character-style');
+        if (!style) { style = doc.createElement('style'); style.className = 'hh-startup-character-style'; root.appendChild(style); }
+        const config = preview.lib.config;
+        style.textContent = getPlayerStyleCss(getPlayerStyleSizing(config.extension_HH优化_player_width,
+            config.extension_HH优化_newDecadeStyle, config.extension_HH优化_player_height), '.hh-character-browser');
+        return root;
+    };
+    return browser;
 }

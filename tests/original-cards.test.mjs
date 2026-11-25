@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import test from 'node:test';
 import ts from 'typescript';
 import { applyOriginalCardFace, applyOriginalGlyphs, originalCardNames, originalCardFilename, originalHandRow, originalCentralRow, originalHandScale, originalDiscardScale, migrateOriginalCardLayout, originalCardLayout, originalCardStylePriority, originalCardConfig, prioritizeOriginalCardMenu } from '../src/ui/originalCards.js';
-import { getPlayerStyleSizing } from '../src/ui/playerStyleSizing.js';
+import { getPlayerStyleSizing, getPlayerStyleCss } from '../src/ui/playerStyleSizing.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
 
 const read = file => fs.readFileSync(new URL(file, import.meta.url), 'utf8');
@@ -155,7 +155,7 @@ test('actual feature CSS cannot replace or move original glyphs even with every 
 	const source = variableFunction('../hh-features.js', 'updateCustomStyle');
 	for (const priority of [false, true]) {
 		const customStyleEl = {}, glow = { sheet: { cssRules: [], insertRule(rule) { this.cssRules.push(rule); } } };
-		const context = { lib: { config, assetURL: '/' }, originalCardStylePriority: priority, getPlayerStyleSizing, customStyleEl, window: {}, document: { getElementById: () => glow } };
+		const context = { lib: { config, assetURL: '/' }, originalCardStylePriority: priority, getPlayerStyleSizing, getPlayerStyleCss, customStyleEl, window: {}, document: { getElementById: () => glow } };
 		vm.runInNewContext('(' + source + ')()', context);
 		assert.ok(customStyleEl.textContent.includes('--hh-configured-player-width'), 'unrelated player styling still runs');
 		for (const token of ['suit-num', 'tempsuitnum', 'card suit/', 'card shuzi/', 'margin-top: 40px']) assert.equal(customStyleEl.textContent.includes(token), !priority, token);

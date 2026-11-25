@@ -5,7 +5,7 @@ import { setupRescueFlow } from './src/features/rescueFlow.js';
 import { setupLordBlindShot } from './src/features/lordBlindShot.js';
 import { setupEquipMove } from './src/features/equipMove.js';
 import { setupSettlementOptimization } from './src/features/settlementOptimization.js';
-import { getPlayerStyleSizing } from './src/ui/playerStyleSizing.js';
+import { getPlayerStyleSizing, getPlayerStyleCss } from './src/ui/playerStyleSizing.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
 	const HH_finishSkill = function(skill) {
@@ -611,14 +611,6 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 					return isNaN(parsed) ? defaultVal : parsed;
 				};
 				const sizing = getPlayerStyleSizing(lib.config.extension_HH优化_player_width, lib.config.extension_HH优化_newDecadeStyle, lib.config.extension_HH优化_player_height);
-				const { width: widthValue, height: heightValue, borderWidth: borderWidthValue, hpRight: hpRightValue,
-					borderLeft: borderLeftValue, factionLeft: factionLeftValue, nameInset: nameInsetValue } = sizing;
-				
-
-				
-				// 护甲保留右侧间距
-				const hujiaLeftValue = sizing.armorLeft;
-				
 				let css = '';
 				
 				// 始终应用所有样式（不再判断是否等于默认值）
@@ -627,95 +619,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				const cropLeft = getConfigValue('crop_left', 0);
 				const cropRight = getConfigValue('crop_right', 0);
 
-				css += `
-					.player {
-						--hh-configured-player-width: ${widthValue}px;
-						--hh-configured-player-height: ${heightValue}px;
-						--hh-source-glow-width: ${sizing.sourceGlowWidth}px;
-						--hh-source-glow-left: ${sizing.sourceGlowLeft}px;
-						--hh-source-glow-height: ${sizing.sourceGlowHeight}px;
-						--hh-source-glow-top: ${sizing.sourceGlowTop}px;
-						--hh-target-glow-height: ${sizing.targetGlowHeight}px;
-						--hh-target-glow-top: ${sizing.targetGlowTop}px;
-						--hh-configured-hp-right: ${hpRightValue}px;
-					}
-					/* 覆盖HH优化所有样式的武将宽度 */
-					#arena[data-new-decade-style="onlineUI"] > .player {
-						--w: ${widthValue}px !important;
-					}
-					#arena[data-new-decade-style="on"] > .player,
-					#arena[data-new-decade-style="off"] > .player,
-					#arena[data-new-decade-style="othersOff"] > .player,
-					#arena[data-new-decade-style="babysha"] > .player,
-					#arena[data-new-decade-style="codename"] > .player {
-						--w: ${widthValue}px !important;
-					}
-					/* 武将牌宽高独立设置，覆盖各主题及人数布局 */
-					#arena.fewplayer > .player:not(.minskin),
-					#arena:not(.fewplayer) > .player:not(.minskin),
-					#arena:not(.fewplayer):not(*[data-player_height=""]) > .player:not(.minskin) {
-						width: ${widthValue}px !important;
-						height: ${heightValue}px !important;
-					}
-					/* 武将头像使用cover填充，保持图片不变形 */
-					.player > .primary-avatar,
-					.player > .deputy-avatar {
-						background-size: cover !important;
-						background-position: center top !important;
-						background-repeat: no-repeat !important;
-					}
-					/* Fixed portrait insets; percentage widths otherwise leave a gap when widened. */
-					.player:not(.fullskin2):not(.double-character):not(.double):not([data-double="1"]):not([data-mode="guozhan"]) > .primary-avatar {
-						width: auto !important;
-						right: ${sizing.portraitRight}px !important;
-					}
-					/* 调整HP勾玉位置 */
-					.player > .hp-wrap {
-						right: ${hpRightValue}px !important;
-					}
-					.player[data-position="0"] > .hp-wrap {
-						right: ${hpRightValue}px !important;
-					}
-					/* 调整护甲位置 */
-					.hujia {
-						left: ${hujiaLeftValue}px !important;
-					}
-					/* 覆盖HH优化 online样式的边框图片宽度和位置 */
-					.player > .camp-wrap > .camp-border {
-						width: calc(${borderWidthValue}% + ${sizing.borderGrow}px) !important;
-						left: ${borderLeftValue + sizing.borderShift}px !important;
-						transform: scaleY(${sizing.frameHeightScale}) !important;
-						transform-origin: 0 ${sizing.frameHeightOrigin}px !important;
-					}
-					body[data-style="onlineUI"] .player > .camp-wrap > .camp-back {
-						bottom: calc(1% - ${sizing.heightDelta}px) !important;
-					}
-					#arena.decadeUI[data-border-level="one"] .player > .camp-wrap > .camp-border,
-					#arena.decadeUI[data-border-level="two"] .player > .camp-wrap > .camp-border,
-					#arena.decadeUI[data-border-level="three"] .player > .camp-wrap > .camp-border,
-					#arena.decadeUI[data-border-level="four"] .player > .camp-wrap > .camp-border {
-						width: calc(${borderWidthValue}% + ${sizing.borderGrow}px) !important;
-						left: ${borderLeftValue + sizing.borderShift}px !important;
-					}
-					/* 调整势力标志位置 */
-					.player > .camp-wrap > .camp-name {
-						left: ${factionLeftValue}px !important;
-					}
-					/* Share the same text column; image-based factions keep their theme geometry. */
-					body[data-style="onlineUI"] .player > .camp-wrap > .camp-name,
-					.player > .camp-wrap > .avatar-name,
-					.player > .camp-wrap > .avatar-name-default {
-						left: ${nameInsetValue}% !important;
-						right: ${nameInsetValue}% !important;
-						width: auto !important;
-						align-items: center !important;
-						writing-mode: vertical-rl !important;
-					}
-					.player > .camp-wrap > .avatar-name,
-					.player > .camp-wrap > .avatar-name-default {
-						transform: none !important;
-					}
-				`;
+				css += getPlayerStyleCss(sizing);
 
 				// 卡牌花色颜色加深样式
 				if (!originalCardStylePriority && lib.config.extension_HH优化_enable_card_suit_color) {

@@ -10,7 +10,7 @@ export function createCharacterBrowser(context, environment = {}) {
 	const doc = environment.document || globalThis.document, win = environment.window || doc?.defaultView || globalThis;
 	const assetRoot = `${lib.assetURL || ''}extension/HH优化/assets/character-browser/`;
 	const env = { setTimer: (fn, ms) => setTimeout(fn, ms), clearTimer: id => clearTimeout(id), now: Date.now, ...environment };
-	const skins = createCharacterSkins(context), voice = createCharacterVoice(context);
+	const skins = createCharacterSkins(context), voice = createCharacterVoice(context, env);
 	let detailSession = 0;
 	let root, model, workspace, detail, grid, search, status, title, back, feedback, sidebar;
 	let filterButton, filterMenu, filterOptions = [], filterValue = 'all';

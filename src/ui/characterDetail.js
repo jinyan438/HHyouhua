@@ -90,8 +90,9 @@ export function createCharacterSkins({ lib, game, get, _status = {} }) {
 }
 
 // Preview locally: no skill activation, broadcast, or replay entry.
-export function createCharacterVoice({ lib, game, get }) {
+export function createCharacterVoice({ lib, game, get }, environment = {}) {
 	let audio, sequence = 0;
+	const playAudio = environment.playAudio || (options => game.playAudio(options));
 	const positions = new Map();
 	function stop() { sequence++; audio?.pause?.(); audio?.remove?.(); audio = null; }
 	function play(skill, id, skin = id) {
@@ -108,7 +109,7 @@ export function createCharacterVoice({ lib, game, get }) {
 		function attempt(offset) {
 			if (current !== sequence || offset >= list.length) return;
 			const item = list[(index + offset) % list.length];
-			audio = game.playAudio({ path: item.file, addVideo: false, onError: () => attempt(offset + 1) });
+			audio = playAudio({ path: item.file, addVideo: false, onError: () => attempt(offset + 1) });
 		}
 		attempt(0); return list[index];
 	}

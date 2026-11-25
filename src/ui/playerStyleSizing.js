@@ -43,3 +43,97 @@ export function getPlayerStyleSizing(value, style = 'onlineUI', heightValue) {
 		armorLeft: 120 + delta,
 	};
 }
+
+// Shared by live players and the splash catalog before gameplay styles initialize.
+export function getPlayerStyleCss(sizing, scope = '') {
+	const player = `${scope ? scope + ' ' : ''}.player`;
+	return `
+	${player} {
+		--hh-configured-player-width: ${sizing.width}px;
+		--hh-configured-player-height: ${sizing.height}px;
+		--hh-source-glow-width: ${sizing.sourceGlowWidth}px;
+		--hh-source-glow-left: ${sizing.sourceGlowLeft}px;
+		--hh-source-glow-height: ${sizing.sourceGlowHeight}px;
+		--hh-source-glow-top: ${sizing.sourceGlowTop}px;
+		--hh-target-glow-height: ${sizing.targetGlowHeight}px;
+		--hh-target-glow-top: ${sizing.targetGlowTop}px;
+		--hh-configured-hp-right: ${sizing.hpRight}px;
+	}
+	/* 覆盖HH优化所有样式的武将宽度 */
+	#arena[data-new-decade-style="onlineUI"] > ${player} {
+		--w: ${sizing.width}px !important;
+	}
+	#arena[data-new-decade-style="on"] > ${player},
+	#arena[data-new-decade-style="off"] > ${player},
+	#arena[data-new-decade-style="othersOff"] > ${player},
+	#arena[data-new-decade-style="babysha"] > ${player},
+	#arena[data-new-decade-style="codename"] > ${player} {
+		--w: ${sizing.width}px !important;
+	}
+	/* 武将牌宽高独立设置，覆盖各主题及人数布局 */
+	#arena.fewplayer > ${player}:not(.minskin),
+	#arena:not(.fewplayer) > ${player}:not(.minskin),
+	#arena:not(.fewplayer):not(*[data-player_height=""]) > ${player}:not(.minskin) {
+		width: ${sizing.width}px !important;
+		height: ${sizing.height}px !important;
+	}
+	/* 武将头像使用cover填充，保持图片不变形 */
+	${player} > .primary-avatar,
+	${player} > .deputy-avatar {
+		background-size: cover !important;
+		background-position: center top !important;
+		background-repeat: no-repeat !important;
+	}
+	/* Fixed portrait insets; percentage widths otherwise leave a gap when widened. */
+	${player}:not(.fullskin2):not(.double-character):not(.double):not([data-double="1"]):not([data-mode="guozhan"]) > .primary-avatar {
+		width: auto !important;
+		right: ${sizing.portraitRight}px !important;
+	}
+	/* 调整HP勾玉位置 */
+	${player} > .hp-wrap {
+		right: ${sizing.hpRight}px !important;
+	}
+	${player}[data-position="0"] > .hp-wrap {
+		right: ${sizing.hpRight}px !important;
+	}
+	/* 调整护甲位置 */
+	${scope ? scope + ' ' : ''}.hujia {
+		left: ${sizing.armorLeft}px !important;
+	}
+	/* 覆盖HH优化 online样式的边框图片宽度和位置 */
+	${player} > .camp-wrap > .camp-border {
+		width: calc(${sizing.borderWidth}% + ${sizing.borderGrow}px) !important;
+		left: ${sizing.borderLeft + sizing.borderShift}px !important;
+		transform: scaleY(${sizing.frameHeightScale}) !important;
+		transform-origin: 0 ${sizing.frameHeightOrigin}px !important;
+	}
+	body[data-style="onlineUI"] ${player} > .camp-wrap > .camp-back {
+		bottom: calc(1% - ${sizing.heightDelta}px) !important;
+	}
+	#arena.decadeUI[data-border-level="one"] ${player} > .camp-wrap > .camp-border,
+	#arena.decadeUI[data-border-level="two"] ${player} > .camp-wrap > .camp-border,
+	#arena.decadeUI[data-border-level="three"] ${player} > .camp-wrap > .camp-border,
+	#arena.decadeUI[data-border-level="four"] ${player} > .camp-wrap > .camp-border {
+		width: calc(${sizing.borderWidth}% + ${sizing.borderGrow}px) !important;
+		left: ${sizing.borderLeft + sizing.borderShift}px !important;
+	}
+	/* 调整势力标志位置 */
+	${player} > .camp-wrap > .camp-name {
+		left: ${sizing.factionLeft}px !important;
+	}
+	/* Share the same text column; image-based factions keep their theme geometry. */
+	body[data-style="onlineUI"] ${player} > .camp-wrap > .camp-name,
+	${player} > .camp-wrap > .avatar-name,
+	${player} > .camp-wrap > .avatar-name-default {
+		left: ${sizing.nameInset}% !important;
+		right: ${sizing.nameInset}% !important;
+		width: auto !important;
+		align-items: center !important;
+		writing-mode: vertical-rl !important;
+	}
+	${player} > .camp-wrap > .avatar-name,
+	${player} > .camp-wrap > .avatar-name-default {
+		transform: none !important;
+	}
+	`;
+}
