@@ -1,6 +1,7 @@
 import { originalCardStylePriority } from "./src/ui/originalCards.js";
 import { createKillComboPlayer } from './src/effects/killCombo.js';
 import { createMvpSettlement } from './src/ui/mvpSettlement.js';
+import { prepareSettlementLobby } from './src/ui/settlementLobby.js';
 import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 import { setupRescueFlow } from './src/features/rescueFlow.js';
 import { setupLordBlindShot } from './src/features/lordBlindShot.js';
@@ -1664,6 +1665,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			}
 		},
 		precontent: async function () {
+			prepareSettlementLobby(lib);
 			if (HH_getConfig(null, 'identity_fullscreen', true)) {
 				const selection = await import(/* @vite-ignore */ new URL(lib.assetURL + 'extension/HH优化/identity-selection.js', document.baseURI).href);
 				lib.init.css(lib.assetURL + 'extension/HH优化', 'identity-selection');
@@ -1803,7 +1805,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_mvp: {
 				name: "启用MVP结算画面",
 				init: false,
-				intro: "游戏结束后显示客户端全屏MVP结算、循环火焰边框、全场最佳扫光及原版音效。点击继续返回战绩，可通过全场最佳再次查看。"
+				intro: "游戏结束后依次显示原版胜负动画和全屏MVP结算；胜负画面点击继续进入MVP，MVP点击继续返回大厅。"
 			},
 			enable_dead_image_override: {
 				name: "覆盖阵亡图片",

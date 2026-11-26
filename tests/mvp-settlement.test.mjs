@@ -55,7 +55,7 @@ test('final ranking includes the dead without mutating scores or replacing the l
 });
 
 function harness({ failingEffects = false } = {}) {
-	const dom = domFixture(), controls = [], sounds = [], saves = [], effects = [];
+	const dom = domFixture(), controls = [], sounds = [], saves = [], effects = [], resultEffects = [], lobby = [];
 	const window = new dom.Element('window');
 	const lib = { assetURL: '/', config: { connect_nickname: '<红薯>' }, onover: [], skill: { test: { audio: true } } };
 	const self = player('caocao', 7), game = { players: [self], dead: [], me: self,
@@ -66,54 +66,65 @@ function harness({ failingEffects = false } = {}) {
 	const _status = {}, ui = { create: { control(name, callback) { controls.push({ name, callback }); } } };
 	const get = { translation: value => value === 'caocao' ? '曹操' : value };
 	const context = { lib, game, ui, get, _status };
-	const settlement = createMvpSettlement(context, { ...dom.environment, window,
+	const settlement = createMvpSettlement(context, { ...dom.environment, window, returnToLobby() { lobby.push(true); },
+		resultEnvironment: { createEffects(canvas, path, outcome, layout) {
+			const effect = { canvas, path, outcome, layout, start: () => Promise.resolve(true), stop() { this.stopped = true; } }; resultEffects.push(effect); return effect;
+		} },
 		createEffects(canvas, path, layout) {
 			if (failingEffects) throw new Error('no WebGL');
 			const effect = { canvas, path, layout, start: () => Promise.resolve(true), stop() { this.stopped = true; } }; effects.push(effect); return effect;
 		},
 	});
-	return { ...dom, context, window, controls, sounds, saves, effects, settlement };
+	function beginMvp(outcome = true) { settlement.onover(outcome); dom.advance(1800); dom.document.body.querySelector('.hh-game-result')?.emit('click'); }
+	return { ...dom, context, window, controls, sounds, saves, effects, resultEffects, lobby, settlement, beginMvp };
 }
 
-test('automatic end screen, safe close, local count, restored focus and repeat viewing', async () => {
-	const h = harness(); const focus = h.document.createElement('button'); h.document.body.appendChild(focus); focus.focus();
-	h.context.lib.onover[0](); assert.equal(h.saves.length, 1); assert.equal(h.controls.length, 1);
-	h.advance(500); const screen = h.document.body.querySelector('.hh-mvp-screen'); assert.ok(screen);
+test('game end requires result continue, then MVP continue returns to lobby exactly once', async () => {
+	const h = harness();
+	h.context.lib.onover[0](true); assert.equal(h.saves.length, 1); assert.equal(h.controls.length, 0);
+	const outcome = h.document.body.querySelector('.hh-game-result'); assert.ok(outcome);
+	assert.equal(outcome.getAttribute('aria-label'), '胜利'); assert.equal(h.document.body.querySelector('.hh-mvp-portrait'), null);
+	outcome.emit('click'); assert.equal(h.document.body.querySelector('.hh-mvp-portrait'), null);
+	h.advance(1800); outcome.emit('click'); outcome.emit('click');
+	assert.equal(h.effects.length, 1); assert.ok(h.resultEffects[0].stopped);
+	const screen = h.document.body.querySelector('.hh-mvp-screen');
 	assert.equal(screen.querySelector('.hh-mvp-score-value').textContent, '10.7');
 	assert.equal(screen.querySelector('.hh-mvp-name').textContent, '<红薯>');
 	assert.equal(screen.querySelector('.hh-mvp-portrait').style.backgroundImage, 'url("caocao.jpg")');
 	assert.equal(h.settlement.show(), false); screen.emit('click'); assert.equal(h.context._status.showHHMvp, true);
-	h.advance(1400); assert.equal(h.sounds.length, 2);
-	h.advance(100); screen.emit('keydown', { key: 'Escape' });
+	h.advance(1400); assert.equal(h.sounds.length, 3); assert.equal(h.lobby.length, 0);
+	h.advance(100); screen.emit('keydown', { key: 'Escape' }); screen.emit('click');
 	assert.equal(h.document.body.querySelector('.hh-mvp-screen'), null); assert.equal(h.context._status.showHHMvp, false);
-	assert.equal(h.document.activeElement, focus); assert.equal(h.effects[0].stopped, true);
+	assert.equal(h.lobby.length, 1); assert.equal(h.effects[0].stopped, true);
 	assert.ok(h.sounds.every(audio => audio.paused && audio.removed)); assert.equal(h.timers.size, 0);
-	h.controls[0].callback(); assert.ok(h.document.body.querySelector('.hh-mvp-screen'));
-	assert.equal(h.saves.length, 1); assert.equal(h.context.game.me.局势分数, 100);
-	h.settlement.close(); await flush();
-	assert.equal(h.window.listeners.get('resize').length, 0);
+	assert.equal(h.settlement.show(), false); assert.equal(h.saves.length, 1); assert.equal(h.context.game.me.局势分数, 100);
+	await flush(); assert.equal(h.window.listeners.get('resize').length, 0);
 });
 
-test('early manual viewing cancels auto-open, close during loading stays closed, new matches reset counts', () => {
-	const h = harness(); h.settlement.onover(); h.controls[0].callback();
-	assert.equal(h.effects.length, 1); h.advance(500); assert.equal(h.effects.length, 1);
-	h.settlement.close(); h.advance(5000); assert.equal(h.sounds.length, 1);
-	h.settlement.onover(); assert.equal(h.saves.length, 1); h.settlement.close();
-	h.settlement.reset(); h.settlement.onover(); assert.equal(h.saves.length, 2); h.settlement.close();
+test('loss and draw use their own cue; duplicate game-over cannot repeat scores or skip phases', () => {
+	for (const [outcome, label, sound] of [[false, '失败', 'shibai'], [null, '平局', 'pingju']]) {
+		const h = harness(); h.settlement.onover(outcome); h.settlement.onover(outcome);
+		const root = h.document.body.querySelector('.hh-game-result'); assert.equal(root.getAttribute('aria-label'), label);
+		assert.equal(h.saves.length, 1); assert.equal(h.sounds.length, 1); assert.ok(h.sounds[0].options.path.endsWith(`ui_zhandou${sound}.ogg`));
+		assert.equal(h.settlement.show(), false); h.advance(1800); root.emit('click');
+		assert.equal(h.effects.length, 1); h.settlement.onover(outcome); assert.equal(h.effects.length, 1);
+		h.settlement.close(); h.advance(5000); assert.equal(h.sounds.length, 2); assert.equal(h.lobby.length, 0);
+		h.settlement.reset(); h.settlement.onover(true); assert.equal(h.saves.length, 2); h.settlement.close();
+	}
 });
 
-test('empty games, other players and replays never invent a local monthly count', () => {
-	const h = harness(); h.context.game.me = null; h.settlement.onover(); h.advance(500);
+test('empty games continue to lobby; other players and replays never invent a local monthly count', () => {
+	const h = harness(); h.context.game.me = null; h.beginMvp();
 	assert.equal(h.saves.length, 0); assert.equal(h.document.body.querySelector('.hh-mvp-month'), null); h.settlement.close();
-	h.settlement.reset(); h.context.game.players = []; h.settlement.onover(); assert.equal(h.timers.size, 0);
-	const replay = harness(); replay.context._status.video = true; replay.settlement.onover(); assert.equal(replay.saves.length, 0); replay.settlement.close();
+	h.settlement.reset(); h.context.game.players = []; h.beginMvp(); assert.equal(h.lobby.length, 1); assert.equal(h.timers.size, 0);
+	const replay = harness(); replay.context._status.video = true; replay.beginMvp(); assert.equal(replay.saves.length, 0); replay.settlement.close();
 });
 
-test('static artwork and continue remain usable if the effects cannot initialize', () => {
-	const h = harness({ failingEffects: true }); h.settlement.onover(); h.advance(2000);
+test('static MVP artwork and continue remain usable if its effects cannot initialize', () => {
+	const h = harness({ failingEffects: true }); h.beginMvp(); h.advance(1500);
 	const screen = h.document.body.querySelector('.hh-mvp-screen');
 	assert.ok(screen.querySelector('.hh-mvp-border-fallback')); assert.ok(screen.querySelector('.hh-mvp-title-fallback'));
-	screen.emit('click'); assert.equal(h.context._status.showHHMvp, false);
+	screen.emit('click'); assert.equal(h.context._status.showHHMvp, false); assert.equal(h.lobby.length, 1);
 });
 
 test('source proportions remain inside desktop, wide, mobile landscape and portrait screens', () => {
@@ -137,7 +148,7 @@ test('DOM positions use local CSS dimensions even when body zoom changes the dis
 			node.getBoundingClientRect = () => ({ width: 2760, height: 1256 });
 			return node;
 		};
-		h.settlement.onover(); h.advance(500);
+		h.beginMvp();
 		const screen = h.document.body.querySelector('.hh-mvp-screen');
 		const card = screen.querySelector('.hh-mvp-portrait'), score = screen.querySelector('.hh-mvp-score'), info = screen.querySelector('.hh-mvp-user');
 		const expected = mvpLayout(2760, 1256), actual = h.effects[0].layout();

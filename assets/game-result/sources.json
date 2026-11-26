@@ -1,0 +1,90 @@
+{
+  "source": "E:\\AI\\sanguosha",
+  "code": "sanguosha2/work/main.js: class aps (ResultBeforeMVPWindow), JudgeWinLose / showResultEff / resultEffectShowComplete",
+  "files": [
+    {
+      "file": "FX_PaiJu_JieSuan_Shengli_new.atlas.txt",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_Shengli_new.atlas.txt",
+      "cache_key": "b7ad12e6",
+      "bytes": 4436,
+      "sha256": "10f8d1eb43663782cd993d04cf2d01ae196b6d2922d9a802845c3162148cb5d7"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_Shengli_new.skel",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_Shengli_new.skel",
+      "cache_key": "7c8ba576",
+      "bytes": 5801,
+      "sha256": "249a48881938b90b5ef112a1b41167311ba5359f5b651dfcdbed91b6f00193fa"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_Shengli_new.png",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_Shengli_new.png",
+      "cache_key": "c91f9ab4",
+      "bytes": 2695470,
+      "sha256": "d4b7a66c16f01008360497245621fb03fd31b0fbda6d81973b571f869dc3f403"
+    },
+    {
+      "file": "ui_zhandoushengli.ogg",
+      "original_path": "/res/local/voice/ui/ui_zhandoushengli.ogg",
+      "cache_key": "f30c7a54",
+      "bytes": 12929,
+      "sha256": "4660122f3387df34a3a315276ad421f3fe2aee7cf08c52e6d65577588681c8bf"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_ShiBai_new.atlas.txt",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_ShiBai_new.atlas.txt",
+      "cache_key": "a9329ffe",
+      "bytes": 1408,
+      "sha256": "ba268ec186bb945a45e17ebdc6a35d03ffd90751b6c79e3e447f00408ab70574"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_ShiBai_new.skel",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_ShiBai_new.skel",
+      "cache_key": "70669ff7",
+      "bytes": 2257,
+      "sha256": "7d9d551376dd59c477c7ac1e3ec9ee146744759213c2137aabc64692a2500d40"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_ShiBai_new.png",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_ShiBai_new.png",
+      "cache_key": "923e237f",
+      "bytes": 571282,
+      "sha256": "6b33b5a7f6ee649d351d77e37eff8cf0d10c676aca29dcd10c2601bd15e0b54e"
+    },
+    {
+      "file": "ui_zhandoushibai.ogg",
+      "original_path": "/res/local/voice/ui/ui_zhandoushibai.ogg",
+      "cache_key": "8b95727e",
+      "bytes": 12796,
+      "sha256": "e6f67a8bcc9542d62ebb9b13ddb6f2f2c5c815d7f3474b852a344b669a30c5f5"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_PingJu_new.atlas.txt",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_PingJu_new.atlas.txt",
+      "cache_key": "a629e015",
+      "bytes": 4170,
+      "sha256": "225b9c7216517b662e28461ad792a73c486e49882b222bf14c183d2189259221"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_PingJu_new.skel",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_PingJu_new.skel",
+      "cache_key": "99dad7bd",
+      "bytes": 5554,
+      "sha256": "414fa51e21b5efbe3f8aed46d4c9a17a83e9160c1581507b92f7b46d67d15eaf"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_PingJu_new.png",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_PingJu_new.png",
+      "cache_key": "4dd35c79",
+      "bytes": 1850908,
+      "sha256": "ec2148404bee278c8f9513b0ac38d3fd1fe310aea1be7dc1f1d8d3cabc5f1bbe"
+    },
+    {
+      "file": "ui_zhandoupingju.ogg",
+      "original_path": "/res/local/voice/ui/ui_zhandoupingju.ogg",
+      "cache_key": "e0f371c0",
+      "bytes": 11678,
+      "sha256": "17b16c3d3fff21d415e096769806d0eb104fe547eff2f091999774ee87961f92"
+    }
+  ]
+}

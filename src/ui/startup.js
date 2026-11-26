@@ -263,12 +263,15 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
             Object.defineProperty(window, "inSplash", {
                 set: function(newValue) {
                     if (!newValue) { disposeStartupBackground(ui); this._inSplashValue = newValue; return; }
+                    const returningFromSettlement = this.hhSettlementLobby;
+                    delete this.hhSettlementLobby;
                     //当window.inSplash被赋值时，执行效果（即美化启动界面）
                     ui.beautifyStartInterface({
                         music: startupMusicFile(lib, lib.config.extension_HH优化_backgroundMusicChoose || defaultStartupMusic),
                         volume: lib.config.volumn_background / 8,
                         video: (lib.config.extension_HH优化_backgroundVideoChoose || "孙尚香") + ".mp4",
                         zone: true,
+                        ...(returningFromSettlement ? { preview: "style2" } : {}),
                     });
                     this._inSplashValue = newValue;
                 },

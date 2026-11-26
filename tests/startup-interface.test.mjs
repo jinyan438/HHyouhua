@@ -237,6 +237,16 @@ test('大厅仅接入四个指定入口，保存模式后才清理视频并重�
 	}
 });
 
+test('结算返回仅本次跳过开场视频，后续正常启动仍遵守原配置', async t => {
+	const h = await interfaceFixture(t), displays = [];
+	h.ui.beautifyStartInterface = options => displays.push(options);
+	window.hhSettlementLobby = true;
+	window.inSplash = true;
+	assert.equal(displays[0].preview, 'style2'); assert.equal(window.hhSettlementLobby, undefined);
+	window.inSplash = false; window.inSplash = true;
+	assert.equal(displays[1].preview, undefined);
+});
+
 test('大厅模式保存失败时可重试，入口与视频保持可用', async t => {
 	const h = await interfaceFixture(t);
 	window.inSplash = true;

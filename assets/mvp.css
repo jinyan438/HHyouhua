@@ -36,3 +36,7 @@
 @keyframes hh-mvp-continue { 0%, 100% { opacity: .45; } 50% { opacity: .9; } }
 @media (prefers-reduced-motion: reduce) { .hh-mvp-continue { animation: none; } }
 @media (max-aspect-ratio: 1/1) { .hh-mvp-month { top: 1.5%; right: 4%; } }
+.hh-mvp-screen.hh-game-result { background: rgba(25, 12, 5, .78); }
+.hh-result-fallback { left: 50%; top: 30%; transform: translate(-50%, -50%); font-size: calc(130 * var(--mvp-unit)); color: #fff2ac; text-shadow: 0 0 calc(16 * var(--mvp-unit)) #d48124; }
+.hh-result-lose .hh-result-fallback { color: #c8c8c8; text-shadow: 0 0 calc(12 * var(--mvp-unit)) #777; }
+.hh-result-animated .hh-result-fallback { visibility: hidden; }

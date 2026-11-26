@@ -1,4 +1,6 @@
 import { createMvpEffects } from '../effects/mvpEffects.js';
+import { createGameResultFlow } from './gameResultFlow.js';
+import { returnToSettlementLobby } from './settlementLobby.js';
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 
@@ -38,14 +40,23 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		createEffects: createMvpEffects, ...environment,
 	};
 	const assetPath = `${lib.assetURL || ''}extension/HH优化/assets/mvp-fullscreen/`;
-	let session = null, pending, result;
+	let session = null, result;
+	let leaving = false;
+	function returnToLobby() {
+		if (leaving) return;
+		leaving = true;
+		try { (env.returnToLobby || returnToSettlementLobby)({ lib, game, ui, _status }, env.window); }
+		catch (error) { leaving = false; console.error('[HH优化] 返回大厅失败', error); show(); }
+	}
+	const resultFlow = createGameResultFlow({ lib, game, ui, _status }, {
+		onContinue() { if (!show()) returnToLobby(); }, onGameOver: onover,
+	}, { document: env.document, window: env.window, now: env.now, ...environment.resultEnvironment });
 	function element(tag, className, parent, text) {
 		const node = env.document.createElement(tag); node.className = className;
 		if (text !== undefined) node.textContent = text;
 		parent?.appendChild(node); return node;
 	}
 	function close() {
-		if (pending !== undefined) { env.clearTimer(pending); pending = undefined; }
 		if (!session) { _status.showHHMvp = false; return; }
 		const current = session; session = null;
 		env.clearTimer(current.voiceTimer); current.effects?.stop();
@@ -64,8 +75,7 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		return count;
 	}
 	function show() {
-		if (session || _status.showHHMvp || !result) return false;
-		if (pending !== undefined) { env.clearTimer(pending); pending = undefined; }
+		if (session || _status.showHHMvp || !result || resultFlow.active || leaving) return false;
 		const { player, rating } = result;
 		const focus = env.document.activeElement;
 		const root = element('div', 'hh-mvp-screen', env.document.body);
@@ -108,8 +118,9 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		current.resize(); env.window?.addEventListener('resize', current.resize);
 		const continueGame = event => {
 			event.stopPropagation();
+			if (session !== current || leaving) return;
 			if (event.type === 'keydown' && !['Escape', 'Enter', ' '].includes(event.key)) return;
-			if (env.now() - current.opened >= 1500) { event.preventDefault(); close(); }
+			if (env.now() - current.opened >= 1500) { event.preventDefault(); close(); returnToLobby(); }
 		};
 		root.addEventListener('click', continueGame); root.addEventListener('keydown', continueGame); root.focus?.({ preventScroll: true });
 		try {
@@ -124,15 +135,13 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		}, 1400);
 		return true;
 	}
-	function onover() {
-		close();
-		if (result?.player && [...(game.players || []), ...(game.dead || [])].includes(result.player)) return show();
+	function onover(outcome) {
+		if (lib.config.test_game) return;
+		if (result?.player && [...(game.players || []), ...(game.dead || [])].includes(result.player)) return false;
 		result = collectMvpResult(game);
-		if (!result) return;
-		result.monthlyCount = updateMonthlyCount(result.player);
-		ui.create.control('全场最佳', show);
-		pending = env.setTimer(() => { pending = undefined; show(); }, 500);
+		if (result) result.monthlyCount = updateMonthlyCount(result.player);
+		return resultFlow.show(outcome);
 	}
 	lib.onover.push(onover);
-	return { show, close, onover, reset() { close(); result = null; } };
+	return { show, close() { close(); resultFlow.stop(); }, onover, reset() { close(); resultFlow.reset(); result = null; leaving = false; } };
 }
