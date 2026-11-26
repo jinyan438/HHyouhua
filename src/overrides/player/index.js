@@ -62,6 +62,7 @@ export {
 	playerLine,
 	playerDieAfter,
 	playerSkill,
+	playerTrySkillAnimate,
 	playerQueueCssAnimation,
 } from "./animations.js";
 

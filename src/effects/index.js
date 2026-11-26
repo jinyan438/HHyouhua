@@ -18,6 +18,7 @@ export { setupCardGhost, addGhostTrail, setGhostEffectEnabled, GHOST_CONFIG } fr
 import { drawLine } from "./line.js";
 import { playKillEffect } from "./kill.js";
 import { playSkillEffect } from "./skill.js";
+import { setupActivationReplay } from './sourceSkillActivation.js';
 import { setupCardGhost, addGhostTrail, setGhostEffectEnabled } from "./cardGhost.js";
 
 /**
@@ -44,4 +45,5 @@ export function setupEffects() {
 	};
 
 	setupCardGhost();
+	setupActivationReplay({ game });
 }

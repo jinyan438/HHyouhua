@@ -8,6 +8,7 @@ import { lib, game, ui, get, ai, _status } from "noname";
 import { getDui, getBasePlayerMethods } from "./base.js";
 import { createSourceSkillPopup } from "../../effects/sourceSkillPopup.js";
 import { setupSourceDamageEffects } from "../../effects/sourceDamageEffects.js";
+import { activationKind, resolveActivationSkill } from '../../effects/sourceSkillActivation.js';
 
 /**
  * 伤害弹出覆写
@@ -276,23 +277,26 @@ function getDeathImageUrl(style, identity, player) {
 	return basePath + "shousha/dead2_me.png";
 }
 
-/**
- * 技能特效覆写
- * @description 显示技能发动的全屏特效
- * @param {string} name - 技能名
- * @param {string} [type="legend"] - 特效类型
- * @param {string} [color] - 颜色
- * @param {*} [avatar] - 头像
- * @returns {void}
- * @this {Object} 玩家对象
- */
-export function playerSkill(name, type, color, avatar) {
-	if (typeof type !== "string") type = "legend";
+// Preserve the exact skill ID before translated labels enter the fullscreen route.
+export function playerTrySkillAnimate(name, popname, checkShow) {
+	const info = lib.skill[name];
+	if (game.online || lib.config.skill_animation_type === 'off' || !activationKind(info)) {
+		return getBasePlayerMethods().trySkillAnimate.apply(this, arguments);
+	}
+	game.callHook('checkSkillAnimate', [this, name, popname]);
+	const avatar = lib.config.skill_animation_type === 'default' && !info.textAnimation ? checkShow || 'main' : false;
+	return this.$skill(info.animationStr || lib.translate[name], info.skillAnimation, info.animationColor, avatar, name);
+}
 
-	game.addVideo("skill", this, [name, type, color, avatar]);
+/** 显示技能发动特效，并记录技能 ID 与主副将参数。 */
+export function playerSkill(name, type, color, avatar, skill) {
+	if (typeof type !== "string") type = "legend";
+	const id = resolveActivationSkill({ lib, get, _status }, this, name, skill);
+
+	game.addVideo(id ? "hhSkillActivation" : "skill", this, id ? [name, type, color, avatar, id] : [name, type, color, avatar]);
 
 	game.broadcastAll(
-		(player, type, name, color, avatar) => {
+		(player, type, name, color, avatar, skill) => {
 			const decadeUI = window.decadeUI;
 			if (!decadeUI) {
 				game.delay(2.5);
@@ -301,13 +305,14 @@ export function playerSkill(name, type, color, avatar) {
 			}
 
 			decadeUI.delay(2500);
-			if (name) decadeUI.effect.skill(player, name, avatar);
+			if (name) decadeUI.effect.skill(player, name, avatar, skill);
 		},
 		this,
 		type,
 		name,
 		color,
-		avatar
+		avatar,
+		id
 	);
 }
 

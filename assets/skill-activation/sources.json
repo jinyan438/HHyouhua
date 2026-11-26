@@ -1,0 +1,108 @@
+{
+  "files": [
+    {
+      "file": "xiyou_jineng.atlas.txt",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/xiyou_jineng.atlas.txt",
+      "cache_key": "95ffbedc",
+      "bytes": 2443,
+      "sha256": "210de9ee5d49b2ec02efb933a6e79a5c3f4c9dd8eab292f81f1e11a541831966"
+    },
+    {
+      "file": "xiyou_jineng.skel",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/xiyou_jineng.skel",
+      "cache_key": "6fa42670",
+      "bytes": 37097,
+      "sha256": "0e9a05685a27c1bea4cf7aa23e1f68589fe2a9f142f026e0e47b78cf1066fa99"
+    },
+    {
+      "file": "xiyou_jineng.png",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/xiyou_jineng.png",
+      "cache_key": "8a04caac",
+      "bytes": 213254,
+      "sha256": "ac7ce15b8fc855c584d7791740189bf68451d84ba6b1fa706e6d92fc2ae362f2"
+    },
+    {
+      "file": "shishi_jineng.atlas.txt",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/shishi_jineng.atlas.txt",
+      "cache_key": "652fd6d7",
+      "bytes": 2535,
+      "sha256": "f7ec69b183eca4132bf4e757ed74f1c6e11d6ef0b80329f9c01907471f116036"
+    },
+    {
+      "file": "shishi_jineng.skel",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/shishi_jineng.skel",
+      "cache_key": "364f9be0",
+      "bytes": 67724,
+      "sha256": "dbf320c30acf9f43ad8cb2bcb4ca427086e2212c87bf6eb846ded858f9bda939"
+    },
+    {
+      "file": "shishi_jineng.png",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/shishi_jineng.png",
+      "cache_key": "d2844dd0",
+      "bytes": 239593,
+      "sha256": "ed44c61d020d1f6f4d8230d84fc3467be864647aea2a7477c68ed0b8ef683bc6"
+    },
+    {
+      "file": "chuanshuo_jineng.atlas.txt",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/chuanshuo_jineng.atlas.txt",
+      "cache_key": "0e20eff3",
+      "bytes": 2516,
+      "sha256": "6e7c45047553906acaa90f4e20c03610def942dfe77817437d8dcfb8492605ab"
+    },
+    {
+      "file": "chuanshuo_jineng.skel",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/chuanshuo_jineng.skel",
+      "cache_key": "abcabaf8",
+      "bytes": 118148,
+      "sha256": "80deeffa3920efd242320d80f05c5effd3038f75218d48b65e7388b4b684545a"
+    },
+    {
+      "file": "chuanshuo_jineng.png",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/chuanshuo_jineng.png",
+      "cache_key": "85d2fa55",
+      "bytes": 265901,
+      "sha256": "21cd4528ee6ecd98f60cc01e98f99e23e2f7c5bae6cdf2a98023cb9d9b5f8d7c"
+    },
+    {
+      "file": "xianding_jineng.atlas.txt",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/xianding_jineng.atlas.txt",
+      "cache_key": "5a29a54b",
+      "bytes": 4034,
+      "sha256": "d2638cf9685a641e04bd09cb9db6c3dba94222c0fd165952aa1223fe85e2bbde"
+    },
+    {
+      "file": "xianding_jineng.skel",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/xianding_jineng.skel",
+      "cache_key": "2abb4da8",
+      "bytes": 169833,
+      "sha256": "517f93eab53c179a37a1748137abc8cab8cb306ea52bd76404f8bf70fd3b622f"
+    },
+    {
+      "file": "xianding_jineng.png",
+      "original_path": "/res/assets/animate/game/skinskillXdJx/xianding_jineng.png",
+      "cache_key": "4a336781",
+      "bytes": 437931,
+      "sha256": "86f7a9a607d896afceb8e2fbd0e4155201065371a29ed88744bbbddfd92029f8"
+    }
+  ],
+  "source_code": {
+    "file": "source-logic.txt",
+    "original_path": "E:\\AI\\sanguosha\\sanguosha2\\work\\main.js",
+    "sha256": "4930d1126d75e93ef090301a60eb13dca683da8238f42eefca95df02763bf257",
+    "methods": [
+      "playXDJXSkillEffect",
+      "skinHasXDJXSkill",
+      "loadSkinHasSkillComplete",
+      "setSkinSkillSlot",
+      "skinSkillAnimStopped"
+    ]
+  },
+  "audio": {
+    "events": [],
+    "independent_activation_audio": false,
+    "character_voice_route": [
+      "GetGeneralSkillSound",
+      "getSkillSoundUrl"
+    ]
+  }
+}

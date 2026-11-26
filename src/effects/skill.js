@@ -8,6 +8,7 @@ import { lib, game, ui, get, ai, _status } from "noname";
 import { CONFIG, GENERAL_NAME_STYLE } from "./config.js";
 import { isPlayer, getName, toKebab, getDefaultAvatar } from "./utils.js";
 import { getOutcropStyle, getOutcropImagePath, checkImageExists } from "../ui/outcropAvatar.js";
+import { activationKind, createSourceSkillActivation, resolveActivationSkill } from './sourceSkillActivation.js';
 
 /**
  * 播放技能特效
@@ -16,8 +17,25 @@ import { getOutcropStyle, getOutcropImagePath, checkImageExists } from "../ui/ou
  * @param {string} [vice] - 是否为副将，值为"vice"表示副将
  * @returns {void}
  */
-export function playSkillEffect(player, skillName, vice) {
+export function playSkillEffect(player, skillName, vice, skill) {
 	if (!isPlayer(player)) return;
+	const id = resolveActivationSkill({ lib, get, _status }, player, skillName, skill);
+	if (id) {
+		game.hhSkillActivation ||= createSourceSkillActivation({ lib, game, ui });
+		const manager = game.hhSkillActivation, generation = manager.generation;
+		const character = vice === 'vice' ? player.name2 : player.name;
+		return (async () => {
+			try {
+				const path = await getCharacterImagePath(character);
+				const image = await loadImage(path, player, character);
+				if (generation !== manager.generation) return;
+				const rarity = get.rarity?.(character) || 'rare';
+				if (await manager.play(player, skillName, activationKind(lib.skill[id]), image, rarity)) return;
+			} catch (error) { console.warn('[HH优化] 觉醒/限定技头像加载失败', error); }
+			// Keep a readable fallback without restoring the superseded animation.
+			if (!document.hidden && generation === manager.generation) player.$fullscreenpop(skillName, lib.skill[id].animationColor, vice);
+		})();
+	}
 
 	const anim = decadeUI.animation;
 	const asset = anim.spine.assets.effect_xianding;
