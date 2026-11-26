@@ -1,5 +1,7 @@
 # MVP 结算
 
+2.0.31 在胜负画面与 MVP 画面增加“查看战绩”，打开原版风格的全屏表格；点击空白或按 Esc 返回打开前的画面，不跳过原有的两次继续。战绩与 MVP 共用结束时的一份评分快照，重复查看不会加分或重复记录 MVP 次数。详见 [战绩说明](battle-record.md)。
+
 开启“扩展 → HH优化 → 启用MVP结算画面”，游戏结束后先显示原版胜利、失败或平局动画。点击“继续”进入全屏 MVP，展示当前对局 MVP 的武将皮肤、昵称及总评分；再次继续直接返回大厅。支持点击画面和 Esc、Enter，胜负画面保留 1.8 秒入场防误触，MVP 保留 1.5 秒防误触。
 
 2.0.29 接入用户本地客户端 `ResultBeforeMVPWindow`（`main.js` 的 `class aps`）常规胜负表现：`FX_PaiJu_JieSuan_Shengli_new`、`FX_PaiJu_JieSuan_ShiBai_new` 和 `FX_PaiJu_JieSuan_PingJu_new` 原始 Spine 4.0.56 骨骼、图集与图片，以及对应 `ui_zhandoushengli.ogg`、`ui_zhandoushibai.ogg`、`ui_zhandoupingju.ogg`。入场分别为 1.7、1.3、1.2 秒，结束后循环原始 `play2` 停留动画。12 个原始文件约 4.94 MiB，位于 `assets/game-result/`，附源路径及 SHA-256；可用 `tools/import-game-result.py` 重新提取。

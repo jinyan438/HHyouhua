@@ -1,0 +1,1067 @@
+{
+  "source": "E:\\AI\\sanguosha",
+  "code": {
+    "window": "main.js: ffs (GameZhanJiWindow) extends nZi",
+    "row": "hZi extends Zzt",
+    "entry": "Vji.clickZhanji / aps.OnOpenZhanJi",
+    "scores": "CU.ReadProto / CU.Read: signed protocol scores divided by 10; no client calculation"
+  },
+  "files": [
+    {
+      "file": "gameResult.atlas.json",
+      "original_path": "/res/assets/gameResult/gameResult.atlas",
+      "cache_key": "1a73c9e0",
+      "bytes": 27051,
+      "sha256": "65511897d5fc0cc2aed90fb048312c14a7d913bb75e1d9e71f97a4fe9fd12f3a"
+    },
+    {
+      "file": "gameResult.png",
+      "original_path": "/res/assets/gameResult/gameResult.png",
+      "cache_key": "fecbbcf6",
+      "bytes": 393170,
+      "sha256": "0d79389bbe6e93f3d069f6e6149b031fb7d7ea6cd2b3e55d914956fa0fe3fe92"
+    }
+  ],
+  "sprites": [
+    {
+      "file": "figure_0_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 300,
+        "y": 446
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "9f93038581e9c42e601ebe55bc7d1a5c600f9393c5e7aed2f2c2b15391f107a4"
+    },
+    {
+      "file": "figure_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 972,
+        "y": 186
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "74764a703b098608333f1ed69f330f1adcc5c12b472d2e8c7e56684271b30e52"
+    },
+    {
+      "file": "figure_2_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 54,
+        "idx": 0,
+        "w": 49,
+        "x": 360,
+        "y": 317
+      },
+      "size": [
+        49,
+        54
+      ],
+      "sha256": "ee29853f443093b90a38d1a2e4c65f1de6ae443485297a9ab68b63d7a30bc06f"
+    },
+    {
+      "file": "figure_2_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 50,
+        "idx": 0,
+        "w": 44,
+        "x": 686,
+        "y": 260
+      },
+      "size": [
+        44,
+        50
+      ],
+      "sha256": "76bd5c051613a5d632d09bbf10286304d4ffed7f62a598bde177331830790b21"
+    },
+    {
+      "file": "figure_3_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 54,
+        "idx": 0,
+        "w": 49,
+        "x": 108,
+        "y": 386
+      },
+      "size": [
+        49,
+        54
+      ],
+      "sha256": "3709722a8c1162b149857561a292b89ee62c41f43fc0427c8c59b3ab13599490"
+    },
+    {
+      "file": "figure_3_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 252,
+        "y": 430
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "36a7ca10fbedde191bb8c5a65b5a99c9ad21d98303a8d5b548d1406886c5461b"
+    },
+    {
+      "file": "figure_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 50,
+        "idx": 0,
+        "w": 44,
+        "x": 640,
+        "y": 260
+      },
+      "size": [
+        44,
+        50
+      ],
+      "sha256": "f0490f3569eb63e3b7216db0e8033f0bc4599742d2f8d0eac69841e36397178d"
+    },
+    {
+      "file": "figure_cardbuild_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 459,
+        "y": 357
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "6bf30e4d7531df8b80ca5c914dc4d5ba05838225f113951a52bcd532d9e8ff4f"
+    },
+    {
+      "file": "figure_cardbuild_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 411,
+        "y": 371
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "e2cc20219fea067a116e8c6da26239d55efa0e69d31c5c6a264708922227abe0"
+    },
+    {
+      "file": "figure_fightlord_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 360,
+        "y": 373
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "18745395fda21c271d8f44cce28ded2cb4ecf595bbb98c218ba0185fc205ffa5"
+    },
+    {
+      "file": "figure_fightlord_3_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 300,
+        "y": 393
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "958929d5624cfe47dbeb306d2fff95c3b146caef5611288e7dfdbff17273e418"
+    },
+    {
+      "file": "figure_m_0_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 544,
+        "y": 260
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "91bc09268fce230910a4e8f65197cb050a419e132fa73e2b9c52ba6c0dd7aa82"
+    },
+    {
+      "file": "figure_new1v1_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 52,
+        "idx": 0,
+        "w": 46,
+        "x": 972,
+        "y": 132
+      },
+      "size": [
+        46,
+        52
+      ],
+      "sha256": "b15a856a8c5c0a570c912021f509a977b2bf8e0a16e0a891edddcd7908e7fc8d"
+    },
+    {
+      "file": "figure_new1v1_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 52,
+        "idx": 0,
+        "w": 46,
+        "x": 411,
+        "y": 317
+      },
+      "size": [
+        46,
+        52
+      ],
+      "sha256": "a105b64c391221f7f551c3b563699b6eee85cd49bc9a2be56b48996d681c549e"
+    },
+    {
+      "file": "figure_nianshou_3_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 204,
+        "y": 430
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "78c0064061bf28d83496f3e7b1a26df7c8a7d44a3c33e1a9d399a1a9625bbfae"
+    },
+    {
+      "file": "figure_nianshou_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 408,
+        "y": 424
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "e16f9c123708538559eb84249de3d869230e5eb01a872d80d2cc8ab25ed71043"
+    },
+    {
+      "file": "figure_paiwei_2_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 348,
+        "y": 426
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "71ef7132d79b024df29a6200b1e71c2a657116769e8e237cbbb0284d8cf04a9e"
+    },
+    {
+      "file": "figure_paiwei_3_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 456,
+        "y": 424
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "aa522e34aad20205fd81cf52a183c46fd68de52e637af50b6d1c230849ff02ca"
+    },
+    {
+      "file": "figure_paiwei_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 504,
+        "y": 410
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "2be142e7f02592a38a9c252434183bc4c34c4f93bbe0c85cee1318f1e009b734"
+    },
+    {
+      "file": "figure_qldj_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 552,
+        "y": 398
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "3c3b23ae12cb1f319039d5e436c91f6aded42979c4dbddcaf528019c9936a850"
+    },
+    {
+      "file": "figure_qldj_2_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 592,
+        "y": 345
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "95e1083d60ce513795e03ba33ef0164de36dde521fbcabf1047edda9683db88d"
+    },
+    {
+      "file": "figure_qmbz_3_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 592,
+        "y": 260
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "75d5ddf198b1f922b931a4aeec7b650afaf23799253d600bcac607049d361521"
+    },
+    {
+      "file": "figure_qmbz_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 552,
+        "y": 451
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "94bc1ffb40142b26f9cdf17c4048ae3e7c0252818ecb661ce0fd3262e98a3d25"
+    },
+    {
+      "file": "figure_sdyl_3_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 600,
+        "y": 398
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "22939bd91c7cf8d60f80d597f508f7790992e65f25b8d552b16b948fba82bfed"
+    },
+    {
+      "file": "figure_sdyl_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 640,
+        "y": 345
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "124fbc456bc90c6229e8ec42e64a906aa38851e96aa6dae1947c04d27028b9b5"
+    },
+    {
+      "file": "figure_shouling.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 49,
+        "idx": 0,
+        "w": 46,
+        "x": 504,
+        "y": 463
+      },
+      "size": [
+        46,
+        49
+      ],
+      "sha256": "ed330f61e185aa5ea395a669e1d3cfa4b5bdad0099332895d6ed6d6c9bf63cf3"
+    },
+    {
+      "file": "figure_szsl_1_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 544,
+        "y": 345
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "b470b2eabb830a95730abb3f6363916ec21f7be4a5088431a4ea823b137bd10c"
+    },
+    {
+      "file": "figure_szsl_2_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 156,
+        "y": 442
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "7e81d13a40f65db8f5d5bdf9ab173f93e402fdf91025ee41263a20963093d9b7"
+    },
+    {
+      "file": "figure_szsl_3_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 108,
+        "y": 442
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "87632716fb2a6aaa01fe4dcbc610ecb00764c80a373b87e8222f84a8bd7aeeec"
+    },
+    {
+      "file": "figure_szsl_4_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 972,
+        "y": 292
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "60a430790daca01244bd5358bbf5663bc483df0c60d8b51a4ad29396eb9979f9"
+    },
+    {
+      "file": "figure_szsl_5_new.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 46,
+        "x": 972,
+        "y": 239
+      },
+      "size": [
+        46,
+        51
+      ],
+      "sha256": "842c7392979525a6dcc07c9be2bfcb2b26f71922c820d82cc61da43614f0c0e4"
+    },
+    {
+      "file": "get_zan_added.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 56,
+        "idx": 0,
+        "w": 54,
+        "x": 186,
+        "y": 318
+      },
+      "size": [
+        54,
+        56
+      ],
+      "sha256": "2931fa6227fbd97495d12ec0b6045654b67c99d2fb6b0dcd58524f2a6f1e73d2"
+    },
+    {
+      "file": "get_zan_zan.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 52,
+        "idx": 0,
+        "w": 51,
+        "x": 225,
+        "y": 376
+      },
+      "size": [
+        51,
+        52
+      ],
+      "sha256": "7bcb2040d2bfd69d7f2ecfdc71afcd1a1dc5bf149569bb15dcc366a157aea782"
+    },
+    {
+      "file": "get_zan_zaned.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 52,
+        "idx": 0,
+        "w": 52,
+        "x": 171,
+        "y": 376
+      },
+      "size": [
+        52,
+        52
+      ],
+      "sha256": "b3ae4aac9eab295371c87d54b328a75b515cfd2427e72935be31592f20b90677"
+    },
+    {
+      "file": "get_zan_zaned_self.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 91,
+        "idx": 0,
+        "w": 92,
+        "x": 186,
+        "y": 225
+      },
+      "size": [
+        92,
+        91
+      ],
+      "sha256": "64110e51c89a92156f76037e40056c74fbcaa7288ca832287bad0e6aa378b6a6"
+    },
+    {
+      "file": "zhanji_barBg0.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 64,
+        "idx": 0,
+        "w": 503,
+        "x": 499,
+        "y": 0
+      },
+      "size": [
+        503,
+        64
+      ],
+      "sha256": "551b3ca61ba2991d606084e5479d7c1e126a9c994f48ee9e4b0c7e2a0d00f0d5"
+    },
+    {
+      "file": "zhanji_barBg1.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 64,
+        "idx": 0,
+        "w": 503,
+        "x": 499,
+        "y": 66
+      },
+      "size": [
+        503,
+        64
+      ],
+      "sha256": "31e909067a679cdd6e6513b06d170e530b4c0a3fdb35d40d954c78d6ef1e2507"
+    },
+    {
+      "file": "zhanji_barBg2.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 62,
+        "idx": 0,
+        "w": 393,
+        "x": 499,
+        "y": 132
+      },
+      "size": [
+        393,
+        62
+      ],
+      "sha256": "ec7b91f2b37753dc2f172ffd358357c28a34e9c68ab32ecfc5550d2fc1a3f8fa"
+    },
+    {
+      "file": "zhanji_barBg_own.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 62,
+        "idx": 0,
+        "w": 393,
+        "x": 499,
+        "y": 196
+      },
+      "size": [
+        393,
+        62
+      ],
+      "sha256": "04842c19438677c2ff6e9559d1af6fb5e9350042d666dad851d746b5267a0c02"
+    },
+    {
+      "file": "zhanji_btn_save.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 78,
+        "y": 225
+      },
+      "size": [
+        106,
+        106
+      ],
+      "sha256": "7e8023792402d1790e02da398f17e65357f31971d81fb9f98386f735b5019ce7"
+    },
+    {
+      "file": "zhanji_card.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 36,
+        "idx": 0,
+        "w": 39,
+        "x": 688,
+        "y": 345
+      },
+      "size": [
+        39,
+        36
+      ],
+      "sha256": "b9656e2cd187e2bce0fb56269ccd1aa1e84b1a78d7f4b0bf3b6cb32858e67db7"
+    },
+    {
+      "file": "zhanji_left_bg_lose_big.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 177,
+        "idx": 0,
+        "w": 76,
+        "x": 894,
+        "y": 132
+      },
+      "size": [
+        76,
+        177
+      ],
+      "sha256": "6e779849350944369eee03915a250b702bee0cb6c27ca1a094c2fa22eb0d3f6c"
+    },
+    {
+      "file": "zhanji_left_bg_win_big.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 177,
+        "idx": 0,
+        "w": 76,
+        "x": 0,
+        "y": 225
+      },
+      "size": [
+        76,
+        177
+      ],
+      "sha256": "ab64494df07cc120266648bae6bdfb7f8dbf1d5d63cf6b4c81e4488334ca9334"
+    },
+    {
+      "file": "zhanji_left_img_lose.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 90,
+        "idx": 0,
+        "w": 90,
+        "x": 280,
+        "y": 225
+      },
+      "size": [
+        90,
+        90
+      ],
+      "sha256": "cc7592bbac8e721c172f3dfc8478d7f5bb06e2e33da5306a6d9b98825e663d55"
+    },
+    {
+      "file": "zhanji_left_img_win.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 90,
+        "idx": 0,
+        "w": 90,
+        "x": 372,
+        "y": 225
+      },
+      "size": [
+        90,
+        90
+      ],
+      "sha256": "3aaa2fa4d8f139a1da27a054cd1bf61f3a9e8b86a82d21720e0e7c1da412796d"
+    },
+    {
+      "file": "zhanji_mvp.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 51,
+        "idx": 0,
+        "w": 91,
+        "x": 78,
+        "y": 333
+      },
+      "size": [
+        91,
+        51
+      ],
+      "sha256": "4fb320c13ccbc4aad0b09e3a63da1d7f5456597b777d0bb77ce5bac7df770925"
+    },
+    {
+      "file": "zhanji_report_nor.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 42,
+        "idx": 0,
+        "w": 46,
+        "x": 648,
+        "y": 398
+      },
+      "size": [
+        46,
+        42
+      ],
+      "sha256": "9288dd6e16b9a7eb326db5508f56b502f0d0f8d369b74544cf983bc5cf036ce4"
+    },
+    {
+      "file": "zhanji_report_up.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 46,
+        "idx": 0,
+        "w": 47,
+        "x": 600,
+        "y": 451
+      },
+      "size": [
+        47,
+        46
+      ],
+      "sha256": "bf45138b1753c4c67f29e878df56182074ac9ff9ad10a03a800a83e791b64f50"
+    },
+    {
+      "file": "zhanji_scoreBg4.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 74,
+        "idx": 0,
+        "w": 78,
+        "x": 280,
+        "y": 317
+      },
+      "size": [
+        78,
+        74
+      ],
+      "sha256": "e94db2a0b0a3e215b23451dd4d3e628753aaec0e38d8f29844be826c554ed58b"
+    },
+    {
+      "file": "zhanji_time.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 18,
+        "idx": 0,
+        "w": 18,
+        "x": 507,
+        "y": 389
+      },
+      "size": [
+        18,
+        18
+      ],
+      "sha256": "8855928d846a82f4b5176c59a65c8ab0f5d9e35aa0881a8c2ca8f6ca3e15ce3c"
+    },
+    {
+      "file": "zhanji_title.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 223,
+        "idx": 0,
+        "w": 497,
+        "x": 0,
+        "y": 0
+      },
+      "size": [
+        497,
+        223
+      ],
+      "sha256": "80383818722c40f7253b8559a0a479f126af7ea090c39bb27f567d6bb41c2304"
+    },
+    {
+      "file": "zhanji_vs.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 95,
+        "idx": 0,
+        "w": 78,
+        "x": 464,
+        "y": 260
+      },
+      "size": [
+        78,
+        95
+      ],
+      "sha256": "cad58f9da57cb82dbfb28cfa505460ccaa03b736baad977e6c6717bb88993de1"
+    },
+    {
+      "file": "zhanji_zan_all.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 106,
+        "idx": 0,
+        "w": 106,
+        "x": 0,
+        "y": 404
+      },
+      "size": [
+        106,
+        106
+      ],
+      "sha256": "0a9c29e669a4ab9d5a93e0c5d3d71153d50e21a9eba21246057beedf8964806a"
+    },
+    {
+      "file": "zj_gz_country_1.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 464,
+        "y": 225
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "ee1c398c69a45e4fce7ca5acd1a6404aa28b85526b263a1cbd1c5c30c0d126c3"
+    },
+    {
+      "file": "zj_gz_country_106.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 507,
+        "y": 357
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "fb35e35337511eae09f36eb9dbd922d9e6fced353a599267007254f92adf4e03"
+    },
+    {
+      "file": "zj_gz_country_106_0.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 242,
+        "y": 318
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "d5d54eb98855558cfbad774b06110339da8a3b4e8ddea6ed7dd176d5f9d90dcc"
+    },
+    {
+      "file": "zj_gz_country_1_0.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 396,
+        "y": 477
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "f6dfd524926c202cea124251fc0fc64407d5697aa5eaaa1c6b5728aab15503fa"
+    },
+    {
+      "file": "zj_gz_country_2.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 348,
+        "y": 479
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "752ca1eedb6ad3dfb687a82a6a19a501169179c10e835cd88b43bc60d2610514"
+    },
+    {
+      "file": "zj_gz_country_2_0.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 428,
+        "y": 477
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "64871e2e3695281f059130ebaa12efad5f90d0eec68dccd9e2d4ff399d8da06d"
+    },
+    {
+      "file": "zj_gz_country_3.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 460,
+        "y": 477
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "091279a36cd49b4fa9e5449466abd22274e7843b5b7abdd7a291c41da918eaae"
+    },
+    {
+      "file": "zj_gz_country_3_0.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 640,
+        "y": 312
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "0039b54e7485d508c36ecbe973a65599cc5f3c3abf66e21984481fc7d4b94d98"
+    },
+    {
+      "file": "zj_gz_country_4.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 544,
+        "y": 313
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "6df57aaf706b28842f17737b3437a426ffd121fb5d6b125fcfef606a567661e6"
+    },
+    {
+      "file": "zj_gz_country_4_0.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 576,
+        "y": 313
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "24f135796b468e268f33c0dd30d4bc9f0da919af250369ab9d1a95aac7487ee0"
+    },
+    {
+      "file": "zj_gz_country_6.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 608,
+        "y": 313
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "bc82609e17c575c86edff196682dbc22bdab0a08932ea274687cb1559a85e4e5"
+    },
+    {
+      "file": "zj_gz_country_6_0.png",
+      "atlas": "gameResult.atlas.json",
+      "frame": {
+        "h": 30,
+        "idx": 0,
+        "w": 30,
+        "x": 672,
+        "y": 312
+      },
+      "size": [
+        30,
+        30
+      ],
+      "sha256": "03e35202e7228d21e1aad5ef2d1571a9ee695520818530d2a5182f9dd4540e09"
+    }
+  ]
+}

@@ -19,6 +19,11 @@ export function createGameResultFlow({ lib, game, ui, _status }, options, enviro
 		root.setAttribute('role', 'dialog'); root.setAttribute('aria-modal', 'true'); root.setAttribute('aria-label', metadata.label); root.tabIndex = -1;
 		env.document.body.appendChild(root);
 		const current = session = { root, opened: env.now() };
+		if (options.onViewRecords) {
+			const records = env.document.createElement('button'); records.className = 'hh-result-records'; records.type = 'button'; records.textContent = '查看战绩'; root.appendChild(records);
+			records.addEventListener('click', event => { event.stopPropagation(); options.onViewRecords(root); });
+			records.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') event.stopPropagation(); });
+		}
 		const fallback = env.document.createElement('div'); fallback.className = 'hh-result-fallback'; fallback.textContent = metadata.label; root.appendChild(fallback);
 		const hint = env.document.createElement('div'); hint.className = 'hh-mvp-continue'; hint.textContent = '点击继续'; root.appendChild(hint);
 		const canvas = env.document.createElement('canvas'); canvas.className = 'hh-mvp-effects'; canvas.setAttribute('aria-hidden', 'true'); root.appendChild(canvas);
@@ -31,7 +36,7 @@ export function createGameResultFlow({ lib, game, ui, _status }, options, enviro
 		current.resize(); env.window?.addEventListener('resize', current.resize);
 		const next = event => {
 			event.stopPropagation();
-			if (session !== current) return;
+			if (session !== current || root.inert) return;
 			if (event.type === 'keydown' && !['Escape', 'Enter', ' '].includes(event.key)) return;
 			if (env.now() - current.opened < 1800) return;
 			event.preventDefault(); stop(); options.onContinue();

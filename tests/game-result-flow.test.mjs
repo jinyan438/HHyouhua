@@ -99,6 +99,13 @@ test('actual native game.over preserves rewards, recorded statistics and records
 		assert.equal(h.document.body.querySelector('.dialog'), null);
 		assert.equal(h.calls.voices.length, 1); assert.ok(h.calls.voices[0][0].path.startsWith('ext:HH优化/assets/game-result/'));
 		assert.ok(h.document.body.querySelector('.hh-game-result')); assert.equal(h.document.body.querySelector('.hh-mvp-portrait'), null);
+		const resultRoot = h.document.body.querySelector('.hh-game-result');
+		resultRoot.querySelector('.hh-result-records').emit('click');
+		const records = h.document.body.querySelector('.hh-battle-record'); assert.ok(records);
+		assert.equal(records.querySelectorAll('.hh-record-row').length, 1);
+		assert.equal(records.querySelector('.hh-record-mvp').getAttribute('aria-label'), 'MVP 总评分 10.7');
+		records.emit('keydown', { key: 'Escape' }); assert.ok(resultRoot.isConnected);
+		assert.equal(h.calls.records.length, 1); assert.equal(h.calls.videos.length, 1);
 		h.game.over(result); assert.equal(h.calls.records.length, 1); h.advance(1800);
 		h.document.body.querySelector('.hh-game-result').emit('click'); assert.ok(h.document.body.querySelector('.hh-mvp-portrait'));
 		assert.equal(h.calls.lobby, 0); h.advance(1500); h.document.body.querySelector('.hh-mvp-screen').emit('click');

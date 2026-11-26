@@ -31,6 +31,7 @@ export function domFixture() {
 		remove() { if (this.parentNode) { const index = this.parentNode.children.indexOf(this); if (index >= 0) this.parentNode.children.splice(index, 1); } this.parentNode = null; }
 		delete() { this.remove(); }
 		setAttribute(key, value) { this.attributes[key] = String(value); }
+		removeAttribute(key) { delete this.attributes[key]; }
 		getAttribute(key) { if (key.startsWith('data-')) return this.dataset[key.slice(5).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] ?? null; return this.attributes[key] ?? (key === 'tabindex' && this.tabIndex !== undefined ? String(this.tabIndex) : null); }
 		querySelectorAll(selector) { const found = [], selectors = selector.split(','); function visit(parent) { for (const child of parent.children) { if (selectors.some(item => matches(child, item.trim()))) found.push(child); visit(child); } } visit(this); return found; }
 		querySelector(selector) { return this.querySelectorAll(selector)[0] || null; }

@@ -1,21 +1,14 @@
 import { createMvpEffects } from '../effects/mvpEffects.js';
 import { createGameResultFlow } from './gameResultFlow.js';
 import { returnToSettlementLobby } from './settlementLobby.js';
+import { collectMvpScores, collectBattleRecord } from './battleRecordData.js';
+import { createBattleRecord } from './battleRecord.js';
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 
 // Snapshot once at game over. Reopening never changes player scores or arrays.
 export function collectMvpResult(game) {
-	const players = [...new Set([...(game.players || []), ...(game.dead || [])])];
-	const dead = new Set(game.dead || []);
-	const rows = players.map(player => {
-		let situation = finite(player.局势分数, 100) - (dead.has(player) || player.isDead?.() ? 20 : 0);
-		for (const enemy of player.getEnemies?.(null, true) || []) if (dead.has(enemy) || enemy.isDead?.()) situation += 2;
-		for (const friend of player.getFriends?.(null, true) || []) if (dead.has(friend) || friend.isDead?.()) situation -= 2;
-		const score = finite(player.攻击分数) + finite(player.治疗分数) + finite(player.辅助分数) + situation - finite(player.惩罚扣分);
-		return { player, score, rating: (Math.max(0, score) / 10).toFixed(1) };
-	});
-	return rows.sort((a, b) => b.score - a.score)[0] || null;
+	return collectMvpScores(game).sort((a, b) => b.score - a.score)[0] || null;
 }
 
 export function mvpLayout(width, height) {
@@ -40,7 +33,8 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		createEffects: createMvpEffects, ...environment,
 	};
 	const assetPath = `${lib.assetURL || ''}extension/HH优化/assets/mvp-fullscreen/`;
-	let session = null, result;
+	let session = null, result, record, started = env.now();
+	const records = createBattleRecord({ lib, game, ui, get, _status }, { document: env.document, window: env.window });
 	let leaving = false;
 	function returnToLobby() {
 		if (leaving) return;
@@ -50,6 +44,7 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 	}
 	const resultFlow = createGameResultFlow({ lib, game, ui, _status }, {
 		onContinue() { if (!show()) returnToLobby(); }, onGameOver: onover,
+		onViewRecords(root) { records.show(record, root); },
 	}, { document: env.document, window: env.window, now: env.now, ...environment.resultEnvironment });
 	function element(tag, className, parent, text) {
 		const node = env.document.createElement(tag); node.className = className;
@@ -57,6 +52,7 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		parent?.appendChild(node); return node;
 	}
 	function close() {
+		records.close();
 		if (!session) { _status.showHHMvp = false; return; }
 		const current = session; session = null;
 		env.clearTimer(current.voiceTimer); current.effects?.stop();
@@ -81,6 +77,9 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		const root = element('div', 'hh-mvp-screen', env.document.body);
 		root.setAttribute('role', 'dialog'); root.setAttribute('aria-modal', 'true'); root.setAttribute('aria-label', '全场最佳'); root.tabIndex = -1;
 		const current = session = { root, audio: [], focus, opened: env.now() };
+		const viewRecords = element('button', 'hh-result-records', root, '查看战绩'); viewRecords.type = 'button';
+		viewRecords.addEventListener('click', event => { event.stopPropagation(); records.show(record, root); });
+		viewRecords.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') event.stopPropagation(); });
 		_status.showHHMvp = true;
 		const card = element('div', 'hh-mvp-portrait', root);
 		const id = player.name1 || player.name;
@@ -118,7 +117,7 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		current.resize(); env.window?.addEventListener('resize', current.resize);
 		const continueGame = event => {
 			event.stopPropagation();
-			if (session !== current || leaving) return;
+			if (session !== current || leaving || records.active) return;
 			if (event.type === 'keydown' && !['Escape', 'Enter', ' '].includes(event.key)) return;
 			if (env.now() - current.opened >= 1500) { event.preventDefault(); close(); returnToLobby(); }
 		};
@@ -137,11 +136,14 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 	}
 	function onover(outcome) {
 		if (lib.config.test_game) return;
-		if (result?.player && [...(game.players || []), ...(game.dead || [])].includes(result.player)) return false;
-		result = collectMvpResult(game);
+		if (record) return false;
+		const scores = collectMvpScores(game);
+		record = collectBattleRecord({ lib, game, get, _status }, outcome, env.now() - started, scores);
+		result = scores.sort((a, b) => b.score - a.score)[0] || null;
 		if (result) result.monthlyCount = updateMonthlyCount(result.player);
 		return resultFlow.show(outcome);
 	}
 	lib.onover.push(onover);
-	return { show, close() { close(); resultFlow.stop(); }, onover, reset() { close(); resultFlow.reset(); result = null; leaving = false; } };
+	return { show, close() { close(); resultFlow.stop(); }, onover,
+		reset() { close(); resultFlow.reset(); records.reset(); result = null; record = null; leaving = false; started = env.now(); } };
 }
