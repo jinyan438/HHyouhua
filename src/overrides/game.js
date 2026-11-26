@@ -53,7 +53,7 @@ export function gameSwapPlayer(player, player2) {
 	}
 
 	// 可见手牌显示
-	list.forEach(i => i.decadeUI_updateShowCards());
+	game.hhPublicHand?.refresh();
 	if (lib.refreshPlayerSkills) {
 		list.forEach(i => lib.refreshPlayerSkills(i));
 	}
@@ -92,7 +92,7 @@ export function gameSwapControl(player) {
 	}
 
 	// 可见手牌显示
-	player.decadeUI_updateShowCards();
+	game.hhPublicHand?.refresh();
 	if (lib.refreshPlayerSkills) {
 		lib.refreshPlayerSkills(player);
 		if (game.me) lib.refreshPlayerSkills(game.me);

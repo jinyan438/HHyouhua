@@ -7,6 +7,7 @@ import { setupRescueFlow } from './src/features/rescueFlow.js';
 import { setupLordBlindShot } from './src/features/lordBlindShot.js';
 import { setupEquipMove } from './src/features/equipMove.js';
 import { setupSettlementOptimization } from './src/features/settlementOptimization.js';
+import { setupPublicHand } from './src/ui/publicHand.js';
 import { getPlayerStyleSizing, getPlayerStyleCss } from './src/ui/playerStyleSizing.js';
 
 export function createHHFeatures(lib, game, ui, get, ai, _status) {
@@ -64,6 +65,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 				};
 			}
 			setupSettlementOptimization({ lib, game, get, _status }, config);
+			setupPublicHand({ lib, game, ui, get, _status });
 
 			// ========== AI模拟真人思考延迟 ==========
 			const HH_parseNumberConfig = function(key, defaultValue, min, max) {

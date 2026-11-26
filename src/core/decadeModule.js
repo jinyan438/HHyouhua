@@ -140,6 +140,7 @@ export function initDecadeModule() {
 
 		// Original card geometry follows every theme stylesheet.
 		this.css(`${decadeUIPath}src/styles/original-cards.css`);
+		this.css(`${decadeUIPath}src/styles/public-hand.css`);
 
 		// 初始化亮将钩子
 		this.prefixMark.setupShowCharacterHook();

@@ -95,56 +95,7 @@ export function createPlayerInit(base) {
 			}
 		}
 
-		// 手牌可见功能
-		if (!this.node.showCards) {
-			const player = this;
-			player.node.showCards = element.create("handdisplays", player);
-			player.node.showCards.hide();
-
-			const rect = player.getBoundingClientRect();
-			const winWidth = window.innerWidth || document.documentElement.clientWidth;
-			const showCards = player.node.showCards;
-			/** @type {number} */
-			const offset = 10;
-			const isBabysha = lib.config.extension_HH优化_newDecadeStyle === "babysha";
-			if ((isBabysha && rect.left < winWidth / 2) || (!isBabysha && rect.left >= winWidth / 2)) {
-				showCards.style.left = "";
-				showCards.style.right = player.offsetWidth + offset + "px";
-			} else {
-				showCards.style.left = player.offsetWidth + offset + "px";
-				showCards.style.right = "";
-			}
-			showCards.style.top = "90px";
-
-			player.node.showCards.onclick = function () {
-				const cards = player.getCards(
-					"h",
-					c => get.is.shownCard(c) || player.isUnderControl(true) || game.me?.hasSkillTag("viewHandcard", null, player, true)
-				);
-				if (cards.length > 0) {
-					const popup = ui.create.div(".popup-container", ui.window);
-					const handdisplay = ui.create.dialog(get.translation(player) + "的手牌", cards);
-					handdisplay.static = true;
-					popup.addEventListener("click", () => {
-						popup.delete();
-						handdisplay.close();
-						handdisplay.delete();
-					});
-				}
-			};
-
-			["handcards1", "handcards2"].forEach(zone => {
-				const observer = new MutationObserver(mutations => {
-					for (const m of mutations) {
-						if (m.type === "childList" && (m.addedNodes.length || m.removedNodes.length)) {
-							player.decadeUI_updateShowCards();
-							break;
-						}
-					}
-				});
-				observer.observe(player.node[zone], { childList: true });
-			});
-		}
+		game.hhPublicHand?.attach(this);
 
 		// 十周年角标
 		if (window.decadeModule?.prefixMark) {

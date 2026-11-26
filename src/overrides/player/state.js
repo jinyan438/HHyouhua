@@ -139,7 +139,7 @@ export function playerUninit() {
 	const hujiat = this.node.hpWrap.querySelector(".hujia");
 	if (hujiat) hujiat.remove();
 
-	this.node.showCards?.hide();
+	game.hhPublicHand?.detach(this);
 
 	const base = getBasePlayerMethods();
 	base.$uninit.apply(this, arguments);

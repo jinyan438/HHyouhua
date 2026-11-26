@@ -1,0 +1,144 @@
+{
+  "source": "E:\\AI\\sanguosha",
+  "image": {
+    "path": "/res/assets/game/seat.png",
+    "cacheKey": "db156ff2",
+    "sha256": "b083b66f6a922defd964c71416d5c0c108d8610ec109d69a75afb05640cb87b8"
+  },
+  "atlas": {
+    "path": "/res/assets/game/seat.atlas",
+    "cacheKey": "61c5aa54",
+    "sha256": "13216107810332015fe8b7875765d05e646cac00e0ebc85c04cbc1c3e1b056b1"
+  },
+  "atlases": [
+    {
+      "image": {
+        "path": "/res/assets/game/seat.png",
+        "cacheKey": "db156ff2",
+        "sha256": "b083b66f6a922defd964c71416d5c0c108d8610ec109d69a75afb05640cb87b8"
+      },
+      "atlas": {
+        "path": "/res/assets/game/seat.atlas",
+        "cacheKey": "61c5aa54",
+        "sha256": "13216107810332015fe8b7875765d05e646cac00e0ebc85c04cbc1c3e1b056b1"
+      }
+    },
+    {
+      "image": {
+        "path": "/res/assets/game/seatBottom.png",
+        "cacheKey": "b3ba4a43",
+        "sha256": "bce3ceb3b41fc490f41437476c0b10d546c188bdcc1712a07847a7ceeeda8a72"
+      },
+      "atlas": {
+        "path": "/res/assets/game/seatBottom.atlas",
+        "cacheKey": "d71f8945",
+        "sha256": "72081f8c260299cb776722e662395ca5ee03a58f6a9deb576cd07602767b533a"
+      }
+    }
+  ],
+  "files": [
+    {
+      "file": "skillTipShowBg.png",
+      "atlas": "/res/assets/game/seat.atlas",
+      "frame": {
+        "h": 248,
+        "idx": 0,
+        "w": 108,
+        "x": 52,
+        "y": 227
+      },
+      "size": [
+        108,
+        248
+      ],
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "sha256": "8f2df25214a006e7a6072c1678c2a0a189314df57302e19a0af10d1a2905b508"
+    },
+    {
+      "file": "other_hand_card_bg.png",
+      "atlas": "/res/assets/game/seatBottom.atlas",
+      "frame": {
+        "h": 12,
+        "idx": 0,
+        "w": 12,
+        "x": 0,
+        "y": 952
+      },
+      "size": [
+        12,
+        12
+      ],
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "sha256": "f39b0ba85fb9a417e44a2cdebb0f9d8b686b12be2c2d1cd5ee9e339ac324c1a5"
+    }
+  ],
+  "logic": {
+    "source": "E:\\AI\\sanguosha\\sanguosha2\\work\\main.js",
+    "sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+    "classes": [
+      "Sns (ShowHandCardTip)",
+      "Ins (teammate hand)",
+      "pns (card-count entry)",
+      "Oki (persistent hand summary)"
+    ],
+    "summary": {
+      "size": [
+        47,
+        108
+      ],
+      "grid": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "lines": 4,
+      "ellipsisFrom": 5,
+      "text": {
+        "fontFamily": "fzlbgbk",
+        "cssFamily": "hh-source-public-hand",
+        "file": "../general-font/FZLBGBK.woff2",
+        "fontSize": 20,
+        "color": "#CCB78E",
+        "bold": false,
+        "letterSpacing": 1,
+        "leading": 0,
+        "top": 5,
+        "width": 47,
+        "height": 108,
+        "moreFontSize": 22,
+        "moreTop": 78,
+        "moreHeight": 30
+      },
+      "backgroundAffectsTextLayout": false
+    },
+    "grid": [
+      30,
+      30,
+      30,
+      30
+    ],
+    "cardSize": [
+      126,
+      174
+    ],
+    "cardScale": 0.85,
+    "columns": 4,
+    "gap": 6,
+    "opening": {
+      "duration": 200,
+      "easing": "expoOut"
+    },
+    "closing": {
+      "duration": 150,
+      "easing": "quadOut"
+    },
+    "sound": null
+  }
+}
