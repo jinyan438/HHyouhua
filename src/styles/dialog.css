@@ -253,7 +253,7 @@
 	z-index: 3;
 }
 
-body:has(> #jindutiaopl.hh-ol-progress > .hh-ol-progress-prompt:not(:empty)) #arena > .hand-tip {
+body:has(#jindutiaopl.hh-ol-progress > .hh-ol-progress-prompt:not(:empty)) #arena > .hand-tip {
 	opacity: 0 !important;
 	transition: none;
 }

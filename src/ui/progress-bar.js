@@ -276,7 +276,8 @@ export function initPrecontentUI() {
 
 		Object.assign(container.style, cfg.container);
 		container.style.pointerEvents = "none";
-		container.style.zIndex = "100";
+		// Share the menu's stacking context; native menus start at layer 8.
+		container.style.zIndex = "7";
 		container.setAttribute("role", "progressbar");
 		container.setAttribute("aria-label", "操作剩余时间");
 		container.setAttribute("aria-valuemin", "0");
@@ -307,7 +308,7 @@ export function initPrecontentUI() {
 			container.appendChild(prompt);
 		}
 
-		document.body.appendChild(container);
+		(ui.window || document.body).appendChild(container);
 		boxTime.style.width ||= `${cfg.progressBar.data}px`;
 		for (const bar of [boxTime, boxTime2].filter(Boolean)) {
 			bar.style.transformOrigin = "left center";
