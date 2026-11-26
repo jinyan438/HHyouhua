@@ -43,6 +43,7 @@ import { setupEquipmentEntry } from "./ui/equipmentEntry.js";
 import { setupDrawMotion } from "./features/drawMotion.js";
 import { setupTargetHighlight } from "./features/targetHighlight.js";
 import { setupCardDistribution } from "./features/cardDistribution.js";
+import { setupHandSelection } from "./features/handSelection.js";
 import { setupTargetDistance } from "./ui/targetDistance.js";
 import { setupDialogVisibility } from "./ui/dialogVisibility.js";
 import { setupGuozhanIdentity } from "./ui/guozhanIdentity.js";
@@ -84,6 +85,7 @@ export const finalizeDecadeUICore = (decadeUI, config) => {
 	setupTargetHighlight({ lib, game, get, _status });
 	setupTargetDistance({ lib, game, ui, get, _status });
 	setupCardDistribution({ lib, game, ui, get, _status });
+	setupHandSelection({ lib, game, ui, get, _status });
 
 	setupGameAnimation(lib, game, ui, get, ai, _status);
 	setupEffects();

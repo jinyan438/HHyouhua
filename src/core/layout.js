@@ -46,33 +46,15 @@ export function createLayoutModule() {
 			const { width: pw, cardWidth: cw, cardHeight: ch, cardScale: cs } = bounds;
 			const csw = cw * cs;
 			const y = Math.round((ch * cs - ch) / 2);
-			const xMargin = originalHandRow(cards.length, pw, csw).step;
+			const selected = [...(ui.selected?.cards || []), ...(ui.selected?.buttons || [])];
+			const expanded = selected.findLast(card => cards.includes(card) && card.classList.contains("selected"))
+				|| cards.findLast(card => card.classList.contains("selected"));
+			const selectedIndex = cards.indexOf(expanded);
+			const row = originalHandRow(cards.length, pw, csw, selectedIndex);
 			const xStart = (csw - cw) / 2;
-			const totalW = cards.length * csw;
-			const limitW = pw;
-
-			let selectedIndex = -1,
-				spreadOffsetLeft = 0,
-				spreadOffsetRight = 0,
-				baseShift = 0;
-			const folded = totalW > limitW && xMargin < csw - 0.5;
-
-			if (folded && typeof ui.getSpreadOffset === "function") {
-				const spread = ui.getSpreadOffset(cards, { cardWidth: csw, currentMargin: xMargin });
-				({ spreadIndex: selectedIndex, spreadLeft: spreadOffsetLeft, spreadRight: spreadOffsetRight } = spread);
-				if (selectedIndex !== -1) {
-					const selX = xStart + selectedIndex * xMargin;
-					const maxSelX = Math.max(0, limitW - csw);
-					baseShift = Math.round(Math.max(0, Math.min(maxSelX, selX)) - selX);
-				}
-			}
 
 			cards.forEach((card, i) => {
-				let fx = xStart + i * xMargin + baseShift;
-				if (spreadOffsetLeft || spreadOffsetRight) {
-					if (i < selectedIndex) fx -= spreadOffsetLeft;
-					else if (i > selectedIndex) fx += spreadOffsetRight;
-				}
+				const fx = xStart + i * row.step + (i > selectedIndex ? row.expand : 0);
 				const x = Math.round(fx);
 				card.tx = x;
 				card.ty = y;
@@ -84,9 +66,12 @@ export function createLayoutModule() {
 			});
 
 			const container = ui.handcards1Container;
-			container.classList.remove("scrollh");
-			container.style.overflowX = container.style.overflowY = "";
-			handNode.style.width = "100%";
+			// Extremely narrow windows still expose every card rather than collapsing to one x.
+			const overflow = row.width > pw + 0.5;
+			container.classList.toggle("scrollh", overflow);
+			container.style.overflowX = overflow ? "auto" : "";
+			container.style.overflowY = overflow ? "hidden" : "";
+			handNode.style.width = overflow ? `${Math.ceil(row.width)}px` : "100%";
 			game.hhCardDistribution?.updateHandWidth(handNode.style.width);
 		},
 

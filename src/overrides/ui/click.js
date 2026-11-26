@@ -41,6 +41,7 @@ export function uiClickCard(e) {
 		return;
 	}
 
+	if (!this.classList.contains("selected")) game.hhHandSelection?.replaceOldest(this);
 	if (this.classList.contains("selectable") == false) return;
 
 	// 取消选中

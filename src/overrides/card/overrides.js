@@ -214,7 +214,8 @@ export function cardUpdateTransform(bool, delay) {
 
 	if (isInHandArea) {
 		if (bool) {
-			const offset = window.decadeUI?.isMobile?.() ? LAYOUT.CARD_SELECT_OFFSET_MOBILE : LAYOUT.CARD_SELECT_OFFSET_DESKTOP;
+			// Original NORMAL_Y (27) - SELECTED_Y (15), scaled with the card on every device.
+			const offset = LAYOUT.CARD_SELECT_OFFSET_DESKTOP;
 			this.style.transform = `${this._transform} translateY(-${offset}px)`;
 		} else {
 			this.style.transform = this._transform || "";

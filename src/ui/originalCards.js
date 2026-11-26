@@ -84,9 +84,15 @@ export function applyOriginalCardFace(element, card, assetURL = "") {
 }
 
 // CSS cards scale about their centre; layout coordinates describe the visible top-left.
-export function originalHandRow(count, width, cardWidth) {
-	const step = count > 1 ? Math.max(0, Math.min(cardWidth, (width - cardWidth) / (count - 1))) : 0;
-	return { step, width: count ? cardWidth + step * (count - 1) : 0 };
+export function originalHandRow(count, width, cardWidth, expandedIndex = -1) {
+	// xvi.invalidateLayoutHandCard reserves a full card after the most recent selection.
+	const expanded = expandedIndex >= 0 && expandedIndex < count - 1;
+	const intervals = count - 1 - Number(expanded);
+	const reserved = cardWidth * (expanded ? 2 : 1);
+	let step = intervals > 0 ? Math.max(0, Math.min(cardWidth, (width - reserved) / intervals)) : 0;
+	if (expanded && intervals > 0 && step === 0) step = Math.min(cardWidth, cardWidth / 63);
+	const expand = expanded ? cardWidth - step : 0;
+	return { step, expand, width: count ? cardWidth + step * (count - 1) + expand : 0 };
 }
 
 export function originalCentralRow(count, width, cardWidth, unit) {

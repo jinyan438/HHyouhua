@@ -63,6 +63,14 @@ body[data-style] .hand-cards > .handcards > .card {
 	left: 0;
 }
 
+.hand-cards > .handcards > .card.hh-hand-switchable {
+	cursor: pointer;
+}
+
+#arena.selecting:not(.video) .handcards > .card.hh-hand-switchable > .card-mask {
+	opacity: 0;
+}
+
 .card.hh-original-card.infohidden {
 	background-image: var(--cardback-url) !important;
 }
