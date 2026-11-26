@@ -5,7 +5,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 import { spine } from '../src/libs/spine4-core.js';
 import { decodeKillCombo, KillComboRenderer } from '../src/effects/killCombo.js';
-import { damageAssets, damageEffectName, damageNumberAction, damagePlacement, createDamageNumberModel, createSourceDamageEffects } from '../src/effects/sourceDamageEffects.js';
+import { damageAssets, damageEffectName, damageNumberAction, damagePlacement, createDamageNumberModel, createSourceDamageEffects, setupSourceDamageEffects } from '../src/effects/sourceDamageEffects.js';
 
 const root = new URL('../assets/damage-effects/', import.meta.url);
 const read = name => fs.readFileSync(new URL(name, root));
@@ -99,6 +99,23 @@ test('hit impact starts the number after 180 ms; overlapping players and indepen
 	h.advance(2000); assert.equal(h.manager.diagnostics.active, 0); assert.equal(h.frames.size, 0); assert.equal(h.parent.children.length, 0);
 });
 
+test('propagated damage uses the source ChainHurt branch: immediate shake/number, without a second attack impact or hit delay', async () => {
+	const h = harness(); assert.equal(h.manager.play(h.player, 1, 'fire', { chain: true }), true);
+	await flush(); assert.equal(h.player.motion.options.duration, 160); assert.equal(h.manager.diagnostics.active, 0); assert.equal(h.manager.diagnostics.waits, 0);
+	assert.equal(h.manager.play(h.player, 3, 'thunder', { chain: true }), true); await flush(); h.advance(1);
+	assert.equal(h.manager.diagnostics.active, 1); assert.equal(h.drawn.at(-1).model.metadata.name, 'baojishuzhi'); assert.equal(h.manager.diagnostics.waits, 0);
+	assert.ok(h.drawn.every(draw => draw.model.metadata.name === 'baojishuzhi'));
+	h.manager.stop(); assert.equal(h.timers.size + h.frames.size, 0);
+});
+
+test('damage playback retains old recordings and passes propagated-hit metadata to the player override', () => {
+	const calls = [], context = { lib: { config: {} }, ui: {}, game: { videoContent: { damagepop: (...args) => calls.push(['old', ...args]) } } };
+	setupSourceDamageEffects(context);
+	const player = { $damagepop: (...args) => calls.push(['chain', ...args]) };
+	context.game.videoContent.damagepop(player, [-2, 'fire', false, true]); assert.deepEqual(calls.at(-1), ['chain', -2, 'fire', false, false, true]);
+	context.game.videoContent.damagepop(player, [-1, 'fire', false]); assert.equal(calls.at(-1)[0], 'old');
+});
+
 test('single damage has no big number; thunder impact uses 160 ms for 2–3 damage; animation switches and cancellation suppress late loads', async () => {
 	const h = harness(); h.manager.play(h.player, 1); await flush(); h.advance(180); await flush(); assert.equal(h.manager.diagnostics.active, 1);
 	h.manager.stop(); h.manager.play(h.player, 3, 'thunder'); await flush(); h.advance(159); await flush(); assert.equal(h.manager.diagnostics.active, 1);
@@ -127,4 +144,18 @@ test('actual override records and broadcasts once, suppresses the old hit/shake,
 	status.event.unreal = true; log.length = 0; realm.playerDamagepop.call(player, -2); assert.equal(log.some(r => r[0] === 'damage'), false);
 	realm.playerDamagepop.call(player, 1, 'wood'); assert.equal(log.filter(r => r[0] === 'legacy').length, 1);
 	status.event = {}; realm.playerDamageFire.call(player); realm.playerDamageThunder.call(player); assert.equal(log.filter(r => r[0] === 'fire' || r[0] === 'thunder').length, 2);
+});
+
+test('the actual damagepop override recognizes native chain parents and serializes that choice for peers and video', () => {
+	const log = [], status = { event: { name: 'damage', notLink: () => false } };
+	const game = { addVideo: (...args) => log.push(['video', ...args]), broadcast: (...args) => log.push(['broadcast', ...args]) };
+	const source = fs.readFileSync(new URL('../src/overrides/player/animations.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
+	const realm = vm.createContext({ game, lib: {}, ui: {}, _status: status, setupSourceDamageEffects: () => ({ play: (...args) => log.push(['hit', ...args]) }) });
+	vm.runInContext(source, realm); const player = {};
+	realm.playerDamagepop.call(player, -2, 'fire');
+	assert.equal(log.find(row => row[0] === 'hit').at(-1).chain, true); assert.equal(log.find(row => row[0] === 'video')[3][3], true);
+	const broadcast = log.find(row => row[0] === 'broadcast'), remote = { $damagepop: (...args) => log.push(['peer', ...args]) };
+	broadcast[1](remote, ...broadcast.slice(3)); assert.deepEqual(log.at(-1), ['peer', -2, 'fire', undefined, false, true]);
+	log.length = 0; status.event = { name: 'damage', notLink: () => true }; realm.playerDamagepop.call(player, -1, 'fire');
+	assert.equal(log.find(row => row[0] === 'hit').at(-1).chain, false); assert.equal(log.find(row => row[0] === 'video')[3].length, 3);
 });

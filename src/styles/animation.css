@@ -4,6 +4,10 @@
 
 /** 基础动画 */
 
+.player.hh-source-chain > .chain {
+	visibility: hidden !important;
+}
+
 /* 淡入 */
 @keyframes fade-in {
 	from {

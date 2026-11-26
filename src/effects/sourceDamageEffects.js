@@ -138,9 +138,15 @@ export function createSourceDamageEffects({ lib, ui }, environment = {}) {
 		if (!(num > 1) || !enabled() || !player || player.isConnected === false) return Promise.resolve(false);
 		return Number.isInteger(num) && num <= 999 ? playAsset('baojishuzhi', player, num, token) : Promise.resolve(fallbackNumber(player, num));
 	}
-	function play(player, num, nature, { number: showNumber = true } = {}) {
+	function play(player, num, nature, { number: showNumber = true, chain = false } = {}) {
 		if (!(num > 0) || !enabled() || !player || player.isConnected === false) return false;
 		const token = generation;
+		// AMt.playHurtEffect: ChainHurt goes straight to seat_EffectDropHp.
+		// Its elemental break is the impact; do not replay the initial attack.
+		if (chain) {
+			shake(player, num); if (showNumber) number(player, num, token);
+			return true;
+		}
 		if (showNumber && Number.isInteger(num) && num > 1 && num <= 999) preload('baojishuzhi').catch(() => {});
 		// Start both parts from the same loaded hit, including the first uncached hit.
 		playAsset(damageEffectName(num, nature), player, undefined, token).then(() => {
@@ -168,5 +174,13 @@ export function createSourceDamageEffects({ lib, ui }, environment = {}) {
 }
 
 export function setupSourceDamageEffects(context) {
-	return context.game.hhDamageEffects ||= createSourceDamageEffects(context);
+	const { game } = context;
+	if (game.hhDamageEffects) return game.hhDamageEffects;
+	const effects = game.hhDamageEffects = createSourceDamageEffects(context);
+	const replay = game.videoContent?.damagepop;
+	if (replay) game.videoContent.damagepop = function (player, content) {
+		if (content?.[3] === true && player?.$damagepop) return player.$damagepop(content[0], content[1], content[2], false, true);
+		return replay.apply(this, arguments);
+	};
+	return effects;
 }

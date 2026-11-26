@@ -174,7 +174,7 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 		const anchor = trickCards.has(card?.name) ? usedCardAnchor(actor, card, event, cardNode) : actor;
 		if (silentCastCards.has(card?.name)) return true;
 		const id = sourceCardEffect(card, get);
-		if (!id || !enabled() || failed.has(id)) return false;
+		if (!id || (card.name !== 'tiesuo' && (!enabled() || failed.has(id)))) return false;
 		const token = generation;
 		const ownEvent = event && ['useCard', 'respond'].includes(event.name) && event.player === actor && event.card?.name === card.name;
 		if (ownEvent) {
@@ -183,6 +183,11 @@ export function createSourceCardPlayer({ lib, game, ui, get }, environment = {})
 			const key = card.name + ':' + sourceShaNature(card, get);
 			if (seen.has(key)) return true;
 			seen.add(key);
+		}
+		if (card.name === 'tiesuo') {
+			game.hhChainEffects?.playCast();
+			if (!enabled()) return true;
+			if (failed.has(id)) return false;
 		}
 		const screen = screenCards.has(card.name) ? (card.name === 'huogong' ? 'center' : true) : false;
 		const size = card.name === 'huogong' ? .8 : (card.name === 'juedou' || card.name === 'wuxie') ? 1.6 : 1;

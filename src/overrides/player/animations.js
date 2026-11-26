@@ -17,10 +17,11 @@ import { activationKind, resolveActivationSkill } from '../../effects/sourceSkil
  * @param {string} [nature] - 伤害属性（fire/thunder/water等）
  * @param {boolean} [font] - 是否使用普通字体
  * @param {boolean} [nobroadcast] - 是否不广播
+ * @param {boolean} [chain] - 是否为连环传导受击（联机和录像携带）
  * @returns {void}
  * @this {Object} 玩家对象
  */
-export function playerDamagepop(num, nature = "soil", font, nobroadcast) {
+export function playerDamagepop(num, nature = "soil", font, nobroadcast, chain) {
 	const player = this;
 
 	if (typeof num === "string") {
@@ -57,12 +58,13 @@ export function playerDamagepop(num, nature = "soil", font, nobroadcast) {
 		return;
 	}
 
-	game.addVideo("damagepop", player, [num, nature, font]);
+	chain ??= _status.event?.name === 'damage' && _status.event.notLink?.() === false;
+	game.addVideo("damagepop", player, chain ? [num, nature, font, true] : [num, nature, font]);
 	if (nobroadcast !== false) {
-		game.broadcast((p, n, na, f) => p.$damagepop(n, na, f), player, num, nature, font);
+		game.broadcast((p, n, na, f, chain) => p.$damagepop(n, na, f, false, chain), player, num, nature, font, chain);
 	}
 	if (num < 0 && nature !== "water" && !_status.event?.unreal) {
-		setupSourceDamageEffects({ lib, game, ui }).play(player, -num, nature);
+		setupSourceDamageEffects({ lib, game, ui }).play(player, -num, nature, { chain });
 	} else if (num > 0 && nature === "wood") {
 		getDui()?.animation?.playSpine("effect_zhiliao", { scale: 0.7, parent: player });
 	}

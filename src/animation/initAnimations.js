@@ -10,6 +10,7 @@ import { cardTriggers } from "./configs/cardTriggers.js";
 import { setupSourceCardAnimations } from "../effects/sourceCardAnimations.js";
 import { setupTargetIndicators } from "./targetIndicator.js";
 import { setupSourceDamageEffects } from "../effects/sourceDamageEffects.js";
+import { setupSourceChainEffects } from "../effects/sourceChainEffects.js";
 
 /**
  * 初始化技能动画定义和绑定
@@ -62,6 +63,7 @@ export function initSkillAnimations(animation) {
 	}
 
 	setupSourceCardAnimations({ lib, game, ui, get, ai, _status });
+	setupSourceChainEffects({ lib, game, ui, get });
 
 	// 应用卡牌触发器
 	for (const [cardName, triggers] of Object.entries(cardTriggers)) {

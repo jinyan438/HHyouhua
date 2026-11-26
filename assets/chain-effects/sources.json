@@ -1,0 +1,216 @@
+{
+  "source": "E:\\AI\\sanguosha",
+  "client": "sanguosha2/work/main.js",
+  "client_sha256": "9da2e7f5f71cd6dbd786d22015f2630661180a22eeb1195da47f26f737b9f078",
+  "evidence": [
+    {
+      "offset": 2291036,
+      "code": "Owt(FM,\"tiesuo\",{EffectPath:\"EF_Plot_TSLH1\",Sound:\"3d_85_spell1\",AutoReleaseRes:!1}),Owt(FM,\"tiesuo01\",{EffectPath:\"EF_Plot_TSLH2\",AniName:\"play2\",Sound:\"3d_85_spell2\",AutoReleaseRes:!1}),Owt(FM,\"tiesuo02H\",{EffectPath:\"EF_Plot_tiesuo_02_H\",Sound:\"3d_85_broken_fire\"}),Owt(FM,\"tiesuo02L\",{EffectPath:\"EF_Plot_tiesuo_02_L\",Sound:\"3d_85_broken_fire\"}),Owt(FM,\"tiesuo02B\",{EffectPath:\"EF_Plot_tiesuo_02_B\",Sound:\"3d_85_broken_fire\"}),Owt(FM,\"tiesuo03\",{EffectPath:\"EF_Plot_TSLH3\",AniName:\"play5\",Sound:\"3d_85_spell4\"}),Owt(FM,\"tiesuo04\",{EffectPath:\"EF_Plot_TSLH2\",AniName:\"play4\",IsLoop:!0,AutoReleaseRes:!1}),Owt(FM,\"tiesuo05\",{EffectPath:\"\",Sound:\"3d_85_spell4\"}),Owt(FM,\"taoyuan\",{EffectPath:\"EF_Plot_TYJY\",Sound:\"3d_12_spell1\"}),Owt(FM,\"taoyuan2\",{EffectPath:\"EF_Plot_TYJY\",Sound:\"3d_12_spell1\",Ani"
+    },
+    {
+      "offset": 7847479,
+      "code": "this.seatState.ID==iE.DATA_IS_CHARCARD_TAP){let i=this.seatState;if(t.y=(AMt.SEAT_HEIGHT>>1)-10,t.isOnlyOne=!0,this.clearTiesuoStayTimer(),i.Opened)t.speed=1.2,this.seatUI.ShowEffect(wM.tiesuo01,RM.RoleCardFrontEffect,t),Laya.timer.once(1800,this,this.playTiesuoStayEffect);else{let s=\"\";i.Reason==gBt.Property_Huo?s=wM.tiesuo02H:i.Reason==gBt.Property_Lei?s=wM.tiesuo02L:i.Reason==gBt.Property_Bing?s=wM.tiesuo02B:0==i.Reason&&(s=wM.tiesuo03),this.seatUI.HideEffect(wM.tiesuo04,!1),this.seatUI.HideEffect(wM.tiesuo01,!1);let e=this.seatUI;t.EndTrigger=()=>{e&&!e.destroyed&&e.HideEffect(s,!1)},this.seatUI.ShowEffect(s,RM.RoleCardFrontEffect,t)}}return void(this.seatState.ID==iE.DATA_IS_JIU_STATE&&(this.seatState.Opened?this.seatUI.ShowEffect(s,RM.RoleCardFrontEffect,t):this.seatUI.HideEffect(s,!1)))}this.visible=!0;let e=this.buildSeatStateSpineUrl(this.seatState.MAnimateUrl());if(!e)return this.animateStay=!1,void this.onComplete();this.AutoReleaseRes=this.seatState.MEffectAutoRelease,this."
+    },
+    {
+      "offset": 7848541,
+      "code": "clearTiesuoStayTimer(){Laya.timer.clear(this,this.playTiesuoStayEffect)}playTiesuoStayEffect(){if(this.destroyed||!this.seatUI||this.seatUI.destroyed)return;let t=this.seatState;if(!t||!t.Opened)return;let i={x:AMt.SEAT_WIDTH>>1,y:(AMt.SEAT_HEIGHT>>1)-10,isOnlyOne:!0};this.seatUI.ShowEffect(wM.tiesuo04,RM.RoleCardFrontEffect,i),this.seatUI.HideEffect(wM.tiesuo01,!1)}buildSeatStateSpineUrl(t){return t?t.indexOf(\".skel\")>=0?t:t.length>3&&\".sk\"==t.slice(-3)?t.slice(0,-3)+\".skel\":t+\".skel\":\"\"}removeParticleEf"
+    },
+    {
+      "offset": 7411617,
+      "code": "playHurtEffect(t,i){let s=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,e=i.DamagePoperty;if(i.ChainHurt||e==_3.Property_lose)this.seat_EffectDropHp(t,i,s);else{St.I().event(yD.CARD_ATTACK,[i.SpellID,e,t]);let h={HitTrigger:this.seat_EffectDropHp.bind(this,t,i,s)},r=Vwt.GetSeat(i.MurderSeatID);this.playHurtShaEffectWithOfficer(e,t,h,r)}}playHudongShake(){let t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:1,i=[];if(1==t?i=[{curFrame:0,offsetX:0,offsetY:"
+    },
+    {
+      "offset": 7414003,
+      "code": "seat_EffectDropHp(t,i){let s=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null;if(!this.seat)return;this.seat_DropHp(s),this.Seat_UpdateHpAfterEffect(s);let e=VUt.I();this.playHurtShake(t<=1?e.HurtShakeTime:e.HurtShakeTime2,\"left\"),t>1&&this.playBaojiHurtEffect(t),this.seat.playHpChangeSkillSound()}Seat_UpdateHpAfterEffect(t){this.hadUpdateHp=!1,this.Seat_UpdateHp(t)}playHurtShaEffect(t,i,s){let e=wM.hit;t==_3.Property_normal?e=wM.hit:t==_3.Property_fire?e=wM.hitFir"
+    },
+    {
+      "offset": 7754726,
+      "code": "ServerProxy_GsCUpdateHpNtf(t){let i=t.Protocol,s=this.GetSeat(i.SeatID);if(null==s)return;let e=this.GetSeat(i.MurderSeatID);if(e){let t=e.GetSkill(i.SpellID);t&&e.PlaySkillHurtSound(t,i)}let h=this.rm.GetRecord(0,s.Index);h.skillID=i.SpellID;let r=OP.I().GetEggByBehaviorSeat(i.isTreatment?JP.BEHAVIOR_ADD_BLOOD:JP.BEHAVIOR_LOSE_BLOOD,e,s);if(r&&r.IsMetAllConditions()&&(!r.isteam||JN.IsSameTeam1(e,s))&&(this.Ged.event(St.EASTER_EGG,[r,e,s]),Vwt.EggCntIncById(r.eggID)),i.isMaxHp){h.type=hH.RECORD_TYPE_21,h.positive=i.HP-s.MaxHp>0,h.dataCount=Math.abs(i.HP-s.MaxHp),i.isSync||(s.MaxHp>i.HP?s.MaxHpChanged&&s.PlayDropHp(i):(s.MaxHp,i.HP)),s.MaxHpChanged=!0;let t=!0;s.General||Vwt.IsCountryWar||(t=!1),t&&s.UpdateGeneralMaxHP(i.HP)}else{let t=i.HP-s.Hp>0,r=s.Hp-i.HP>0,n=Math.abs(i.HP-s.Hp);i.Damage>0?(t=!1,r=!0,n=i.Damage):i.Treatment>0&&(t=!0,r=!1,n=i.Treatment),h.type=hH.RECORD_TYPE_20,h.param=f3[i.DamagePoperty],h.positive=t,h.dataCount=n,h.skillID=i.SpellID,i.isSync||(i.isTreatment?0!=i.SpellID&&t&&s.PlayAddHp(i):r?Vwt.isShow3d||Vwt.ShowGameCardEffects?e?(h.destSeats=[e.Index],s.PlayHurt(i)):s.PlayDropHp(i):(e&&(h.destSeats=[e.Index],s.PlayHurt(i)),s.PlayDropHp(i)):t&&s.PlayAddHp(i));let l=!0;s.General||Vwt.IsCountryWar||(l=!1),l&&s.UpdateGeneralHp(i.HP,i)}s.GeneralId==this.nameLessGeneralID||h.dataCount<1||this.rm.AddRecord(h)}ServerProxy_MsgUpdateShieldNtf(t){let i=t.Protocol,s=this.GetSeat(i.seatId);if(null!=s){if(i.updateType==Zk.update_add||i.updateType==Zk.update_dec){let t"
+    }
+  ],
+  "files": [
+    {
+      "file": "EF_Plot_TSLH2/EF_Plot_TSLH2.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH2.atlas.txt",
+      "cache_key": "4eb54fdc",
+      "bytes": 5053,
+      "sha256": "09c1529e5b625e827685bb44eeae2a6f2510c0a95ef5db3b7f4aff6bee89c7c8"
+    },
+    {
+      "file": "EF_Plot_TSLH2/EF_Plot_TSLH2.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH2.skel",
+      "cache_key": "4f401c23",
+      "bytes": 23846,
+      "sha256": "01352c6b0de40b31dce3522906d17cf2cb2c25f15fcea835ad6f2012363a2e91"
+    },
+    {
+      "file": "EF_Plot_TSLH2/EF_Plot_TSLH2.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH2.png",
+      "cache_key": "01bb2ad9",
+      "bytes": 1583836,
+      "sha256": "e6763ae32f46ef3abc7593d7343dc5069726f6aa415a50bf92ec7b06aa8681be"
+    },
+    {
+      "file": "EF_Plot_TSLH3/EF_Plot_TSLH3.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH3.atlas.txt",
+      "cache_key": "8f3b901c",
+      "bytes": 3645,
+      "sha256": "0a52f557d772e52872506ccf453e098b4566e87cf9592a500bd6150f73c8efae"
+    },
+    {
+      "file": "EF_Plot_TSLH3/EF_Plot_TSLH3.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH3.skel",
+      "cache_key": "841ccf86",
+      "bytes": 19774,
+      "sha256": "b2cacd7c23df89985f8b67d6cac9f6972ba3b9ed40b179bc9539123205479365"
+    },
+    {
+      "file": "EF_Plot_TSLH3/EF_Plot_TSLH3.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_TSLH3.png",
+      "cache_key": "3cdb0369",
+      "bytes": 1063229,
+      "sha256": "57abf278d39ae8529bc604dbd1891f98c7599f0ff43d0439484304932f448d37"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_H/EF_Plot_tiesuo_02_H.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_H.atlas.txt",
+      "cache_key": "a893db31",
+      "bytes": 5708,
+      "sha256": "9fae4812957d3f96543aa9ba19518b2c36c9962d70a3b602c24d004394df8ad8"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_H/EF_Plot_tiesuo_02_H.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_H.skel",
+      "cache_key": "86622d25",
+      "bytes": 5283,
+      "sha256": "4cd5dfc62e6cb88cafbe9072550b12043fd7e11a2ec54bbdc39bbac04374c8ca"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_H/EF_Plot_tiesuo_02_H.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_H.png",
+      "cache_key": "2faaaaaa",
+      "bytes": 1149368,
+      "sha256": "13a3c218546272522d11266ba1a6a7767787300f0f247e61afe5a8ec01b6f55c"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_L/EF_Plot_tiesuo_02_L.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_L.atlas.txt",
+      "cache_key": "184aa8b3",
+      "bytes": 5620,
+      "sha256": "d9452026dc9804a68550d1be7beae6652cd1192ce9b2777f52ef1f4609eb2f5a"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_L/EF_Plot_tiesuo_02_L.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_L.skel",
+      "cache_key": "1df36f33",
+      "bytes": 5283,
+      "sha256": "391e992719b731bd4c18133701e6884381829b318c353404c911d9d1a38d8bbb"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_L/EF_Plot_tiesuo_02_L.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_L.png",
+      "cache_key": "da2a0c6a",
+      "bytes": 789074,
+      "sha256": "f836a853f04cec2bb6e7fb95b01e9b4855c793a121ef297a50c7444d4634f70f"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_B/EF_Plot_tiesuo_02_B.atlas.txt",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_B.atlas.txt",
+      "cache_key": "4a3c83b5",
+      "bytes": 5966,
+      "sha256": "7a20d5338e822a9058577603ce3b1ab803ea904f636dbcfe2156405f5a75d9dc"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_B/EF_Plot_tiesuo_02_B.skel",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_B.skel",
+      "cache_key": "27f90e43",
+      "bytes": 5300,
+      "sha256": "9ef061fcf011bb3699216642b6d7ee7e687c3b10d6f451329eb244fd3c8f73d9"
+    },
+    {
+      "file": "EF_Plot_tiesuo_02_B/EF_Plot_tiesuo_02_B.png",
+      "original_path": "/res/assets/animate/game/neweffect/EF_Plot_tiesuo_02_B.png",
+      "cache_key": "651ab20b",
+      "bytes": 1525619,
+      "sha256": "98dcbbc4bc1283cc66ce2b4834e1e54a1da2812b34d53c29348ff5cc8b31b1d4"
+    }
+  ],
+  "sounds": {
+    "3d_85_spell1": {
+      "file": "3d_85_spell1.mp3",
+      "original_url": "https://web.sanguosha.com/220/sgsolApp/res/runtime/m/voice/spelleffect/3d_85_spell1.ogg",
+      "original_file": "3d_85_spell1.ogg",
+      "original_sha256": "052946959d489849f51f87b99ad21c63c3f298a4ad63bcabdc4eb77bdf95f8dc",
+      "sha256": "41796103c71368398e0d5d65016506379822ad96404391382526e5843b739a75",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "mp3",
+          "sample_rate": "44100",
+          "channels": 2
+        }
+      ],
+      "format": {
+        "duration": "1.959184"
+      }
+    },
+    "3d_85_spell2": {
+      "file": "3d_85_spell2.mp3",
+      "original_url": "https://web.sanguosha.com/220/sgsolApp/res/runtime/m/voice/spelleffect/3d_85_spell2.ogg",
+      "original_file": "3d_85_spell2.ogg",
+      "original_sha256": "244c05ccd5cc77f0fd8cbf3aab705a912775af7ed060f8e7fd7fb7c041ff2ab3",
+      "sha256": "9a57106d376a682f52a07145b62876793fec7beafc74113a96b3e0855a24efb3",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "mp3",
+          "sample_rate": "48000",
+          "channels": 2
+        }
+      ],
+      "format": {
+        "duration": "1.200000"
+      }
+    },
+    "3d_85_spell4": {
+      "file": "3d_85_spell4.mp3",
+      "original_url": "https://web.sanguosha.com/220/sgsolApp/res/runtime/m/voice/spelleffect/3d_85_spell4.ogg",
+      "original_file": "3d_85_spell4.ogg",
+      "original_sha256": "cca9016d38dd16d98f6e3d4097caa704aaff7d99b422cbd6e61d8a92410ebbc7",
+      "sha256": "1efe01abd360a0833b8c9bcc74cbc96521d47eda64c4721eaaf01f36196a87e7",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "mp3",
+          "sample_rate": "48000",
+          "channels": 2
+        }
+      ],
+      "format": {
+        "duration": "1.464000"
+      }
+    },
+    "3d_85_broken_fire": {
+      "file": "3d_85_broken_fire.mp3",
+      "original_url": "https://web.sanguosha.com/220/sgsolApp/res/runtime/m/voice/spelleffect/3d_85_broken_fire.ogg",
+      "original_file": "3d_85_broken_fire.ogg",
+      "original_sha256": "fb6548da87751fdf68c51d286b5786310042bc240b5e0d9cbf6837216a09bcc2",
+      "sha256": "5c0e09c9a1da17d9477e889e4574ce11c79facef9a7420d374935782055fc984",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "mp3",
+          "sample_rate": "48000",
+          "channels": 2
+        }
+      ],
+      "format": {
+        "duration": "2.112000"
+      }
+    }
+  }
+}

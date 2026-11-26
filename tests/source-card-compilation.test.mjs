@@ -6,6 +6,7 @@ import ts from 'typescript';
 import { setupSourceCardAnimations } from '../src/effects/sourceCardAnimations.js';
 import { setupRescueFlow } from '../src/features/rescueFlow.js';
 import { setupLordBlindShot } from '../src/features/lordBlindShot.js';
+import { setupSourceChainEffects } from '../src/effects/sourceChainEffects.js';
 
 function engineHarness({ localAsync = false } = {}) {
 	const calls = [];
@@ -104,6 +105,22 @@ function installBatchGainUI(h) {
 	// Run the actual initializer: testing the wrapper alone misses an omitted base reference.
 	h.realm.decadeUI.initOverride();
 }
+
+test('chain state content retains its source helpers through the actual AsyncCompiler', async () => {
+	const h = engineHarness(), values = new Set(), transitions = [], videos = [];
+	h.lib.element = { content: {} };
+	h.actor.classList = { remove: value => values.delete(value), toggle: value => values.has(value) ? values.delete(value) : values.add(value), contains: value => values.has(value) };
+	h.actor.isLinked = () => values.has('linked2');
+	h.get.is = { linked2: () => true }; h.ui.updatej = h.ui.updatem = () => {};
+	h.game.log = () => {}; h.game.addVideo = (...args) => videos.push(args);
+	setupSourceChainEffects(h, { document: { hidden: false, addEventListener() {} } });
+	h.game.hhChainEffects.setLinked = (...args) => transitions.push(args);
+	h.lib.skill._hh_test_chain = { content: h.lib.element.content.link };
+	assert.equal((await h.run('_hh_test_chain', {})).type, 'async');
+	assert.equal(h.actor.isLinked(), true); assert.deepEqual(transitions.at(-1), [h.actor, true, '']);
+	await h.run('_hh_test_chain', {}); assert.equal(h.actor.isLinked(), false);
+	assert.deepEqual(videos.map(row => row[2]), [true, false]);
+});
 
 test('HH initialization keeps named batch gain compilable and preserves native two-recipient transfers', async () => {
 	for (const optimize of [false, true]) {
