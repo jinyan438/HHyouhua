@@ -21,6 +21,7 @@ export function mvpLayout(width, height) {
 	const scale = portrait ? Math.min(width / 640, height / 1020) : Math.min(width / 1450, height / 750);
 	const center = width / 2, middle = portrait ? 330 * scale : height / 2;
 	return {
+		width, height,
 		scale,
 		card: { x: center - 210.5 * scale, y: middle - 270 * scale, width: 421 * scale, height: 540 * scale },
 		border: { x: center + scale, y: middle + 7 * scale },
@@ -93,7 +94,10 @@ export function createMvpSettlement({ lib, game, ui, get, _status }, environment
 		let layout;
 		const place = (node, x, y, width, height) => Object.assign(node.style, { left: `${x}px`, top: `${y}px`, ...(width === undefined ? {} : { width: `${width}px`, height: `${height}px` }) });
 		current.resize = () => {
-			const bounds = root.getBoundingClientRect(); layout = mvpLayout(bounds.width, bounds.height); const s = layout.scale;
+			// HH scales body with CSS zoom. DOM positions use local CSS pixels,
+			// whereas getBoundingClientRect() already includes that zoom.
+			const bounds = root.getBoundingClientRect();
+			layout = mvpLayout(root.clientWidth || bounds.width, root.clientHeight || bounds.height); const s = layout.scale;
 			root.style.setProperty('--mvp-unit', `${s}px`);
 			place(card, layout.card.x, layout.card.y, layout.card.width, layout.card.height);
 			place(border, layout.border.x - 512 * s, layout.border.y - 512 * s, 1024 * s, 1024 * s);

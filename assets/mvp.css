@@ -17,6 +17,7 @@
     -webkit-tap-highlight-color: transparent;
 }
 .hh-mvp-screen > div, .hh-mvp-screen > canvas { position: absolute; box-sizing: border-box; pointer-events: none; }
+.hh-mvp-screen, .hh-mvp-screen * { transition: none; }
 .hh-mvp-portrait { background-position: center; background-size: cover; background-repeat: no-repeat; }
 .hh-mvp-border-fallback { background: url("mvp-fullscreen/border.png") center / 100% 100% no-repeat; mix-blend-mode: screen; }
 .hh-mvp-title-fallback { background: url("mvp-fullscreen/title.png") center / 100% 100% no-repeat; }

@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import test from 'node:test';
 import { collectMvpResult, createMvpSettlement, mvpLayout } from '../src/ui/mvpSettlement.js';
 import { createMvpEffects, mvpEffects } from '../src/effects/mvpEffects.js';
-import { decodeKillCombo } from '../src/effects/killCombo.js';
+import { decodeKillCombo, KillComboRenderer } from '../src/effects/killCombo.js';
 import { spine } from '../src/libs/spine4-core.js';
 import { domFixture } from './helpers/catalog-dom.mjs';
 
@@ -125,6 +125,62 @@ test('source proportions remain inside desktop, wide, mobile landscape and portr
 		assert.ok(layout.info.x >= 0 && layout.info.x + 458 * s <= width);
 		assert.ok(layout.info.y + 118 * s <= height);
 		assert.ok(layout.title.x + 161 * s <= width);
+	}
+});
+
+test('DOM positions use local CSS dimensions even when body zoom changes the displayed bounds', () => {
+	for (const zoom of [.5, .625, .8, 1, 1.5, 2, 3]) {
+		const h = harness(), create = h.document.createElement;
+		h.document.createElement = tag => {
+			const node = create(tag);
+			Object.assign(node, { clientWidth: 2760 / zoom, clientHeight: 1256 / zoom });
+			node.getBoundingClientRect = () => ({ width: 2760, height: 1256 });
+			return node;
+		};
+		h.settlement.onover(); h.advance(500);
+		const screen = h.document.body.querySelector('.hh-mvp-screen');
+		const card = screen.querySelector('.hh-mvp-portrait'), score = screen.querySelector('.hh-mvp-score'), info = screen.querySelector('.hh-mvp-user');
+		const expected = mvpLayout(2760, 1256), actual = h.effects[0].layout();
+		assert.equal(actual.width, 2760 / zoom); assert.equal(actual.height, 1256 / zoom);
+		for (const [node, placement] of [[card, expected.card], [score, expected.score], [info, expected.info]]) {
+			assert.ok(Math.abs(parseFloat(node.style.left) * zoom - placement.x) < .001, `x at zoom ${zoom}`);
+			assert.ok(Math.abs(parseFloat(node.style.top) * zoom - placement.y) < .001, `y at zoom ${zoom}`);
+		}
+		assert.ok(Math.abs(parseFloat(card.style.width) * zoom - expected.card.width) < .001);
+		h.settlement.close();
+	}
+});
+
+test('actual GPU geometry stays aligned with DOM at every game zoom, including one-shot title completion', async () => {
+	let reference;
+	for (const zoom of [1, .5, .625, .8, 1.5, 2, 3]) {
+		const dom = domFixture(), canvas = dom.document.createElement('canvas'); dom.document.body.appendChild(canvas);
+		canvas.getBoundingClientRect = () => ({ width: 2760, height: 1256 });
+		let view, pending, now = 0, frame; const painted = [];
+		const gl = new Proxy({
+			createShader: () => ({}), createProgram: () => ({}), createBuffer: () => ({}), createTexture: () => ({}),
+			getShaderParameter: () => true, getProgramParameter: () => true, getAttribLocation: () => 0,
+			getUniformLocation: (_program, name) => name,
+			uniform2f(name, width, height) { if (name === 'u_view') view = [width, height]; },
+			bufferData(_target, vertices) { pending = vertices; },
+			drawArrays() { painted.push(...Array.from(pending, (value, i) => i % 4 < 2 ? value / view[i % 4] * [2760, 1256][i % 4] : value)); },
+		}, { get: (target, key) => key in target ? target[key] : /^[A-Z_0-9]+$/.test(key) ? key : () => {} });
+		canvas.getContext = () => gl;
+		const effects = createMvpEffects(canvas, '/', () => mvpLayout(2760 / zoom, 1256 / zoom), {
+			loadSpine: async () => spine, now: () => now, requestFrame(callback) { frame = callback; return 1; }, cancelFrame() {},
+			readText: async url => read(url.split('/').at(-1)).toString(), readBinary: async url => read(url.split('/').at(-1)),
+			loadImage: async url => { const b = read(url.split('/').at(-1)); return { width: b.readUInt32BE(16), height: b.readUInt32BE(20) }; },
+			createRenderer: element => new KillComboRenderer(element),
+		});
+		assert.equal(await effects.start(), true);
+		painted.length = 0; now = 2500; frame(now);
+		assert.ok(painted.length >= 48, 'looping border and completed title both draw');
+		assert.equal(canvas.width, 2760); assert.equal(canvas.height, 1256);
+		if (reference) {
+			assert.equal(painted.length, reference.length);
+			for (let i = 0; i < painted.length; i++) assert.ok(Math.abs(painted[i] - reference[i]) < .002, `vertex ${i} at zoom ${zoom}`);
+		} else reference = painted.slice();
+		effects.stop();
 	}
 });
 

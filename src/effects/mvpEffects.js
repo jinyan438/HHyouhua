@@ -43,9 +43,10 @@ export function createMvpEffects(canvas, assetPath, getLayout, environment = {})
 				if (stopped) return;
 				try {
 					const elapsed = Math.max(0, (now - startTime) / 1000), layout = getLayout();
-					renderer.draw(models[0], elapsed % models[0].animation.duration, { ...layout.border, scale: layout.scale });
+					const viewport = { width: layout.width, height: layout.height };
+					renderer.draw(models[0], elapsed % models[0].animation.duration, { ...layout.border, scale: layout.scale, viewport });
 					// After the one-shot sweep, retain the original plain title.
-					renderer.draw(models[1], Math.min(elapsed, models[1].animation.duration), { ...layout.title, scale: layout.scale, clear: false, holdLastFrame: true });
+					renderer.draw(models[1], Math.min(elapsed, models[1].animation.duration), { ...layout.title, scale: layout.scale, viewport, clear: false, holdLastFrame: true });
 					canvas.parentNode?.classList.add('hh-mvp-animated');
 					frame = env.requestFrame(draw);
 				} catch (error) { console.warn('[HH优化] MVP 动画绘制失败', error); stop(); }

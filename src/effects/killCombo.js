@@ -110,20 +110,23 @@ export class KillComboRenderer {
 	draw(model, time, placement = {}) {
 		const gl = this.gl, canvas = this.canvas, spine = model.spine;
 		const rect = canvas.getBoundingClientRect(), dpr = Math.min(globalThis.devicePixelRatio || 1, 2);
+		// A local viewport lets DOM overlays share CSS coordinates under body zoom
+		// or transforms. Backing pixels still follow the actual displayed size.
+		const viewWidth = placement.viewport?.width ?? rect.width, viewHeight = placement.viewport?.height ?? rect.height;
 		const width = Math.max(1, Math.round(rect.width * dpr)), height = Math.max(1, Math.round(rect.height * dpr));
 		if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
 		gl.viewport(0, 0, width, height);
 		if (placement.clear !== false) { gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); }
-		if (!rect.width || !rect.height || time >= model.animation.duration && !placement.holdLastFrame) return;
+		if (!rect.width || !rect.height || !viewWidth || !viewHeight || time >= model.animation.duration && !placement.holdLastFrame) return;
 		const skeleton = model.skeleton;
 		skeleton.setToSetupPose();
 		model.animation.apply(skeleton, -1, time, false, [], 1, spine.MixBlend.setup, spine.MixDirection.mixIn);
 		skeleton.updateWorldTransform();
-		gl.useProgram(this.program); gl.uniform2f(this.view, rect.width, rect.height); gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+		gl.useProgram(this.program); gl.uniform2f(this.view, viewWidth, viewHeight); gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
 		gl.enableVertexAttribArray(this.position); gl.enableVertexAttribArray(this.uv);
 		gl.vertexAttribPointer(this.position, 2, gl.FLOAT, false, 16, 0); gl.vertexAttribPointer(this.uv, 2, gl.FLOAT, false, 16, 8);
-		const scale = placement.scale ?? Math.min(rect.width / 1920, rect.height / 1080);
-		const x = placement.x ?? rect.width / 2, y = rect.height - (placement.y ?? rect.height / 2);
+		const scale = placement.scale ?? Math.min(viewWidth / 1920, viewHeight / 1080);
+		const x = placement.x ?? viewWidth / 2, y = viewHeight - (placement.y ?? viewHeight / 2);
 		for (const slot of skeleton.drawOrder) {
 			const attachment = slot.getAttachment();
 			if (!attachment || !slot.bone.active || slot.color.a * (attachment.color?.a || 0) < .002) continue;

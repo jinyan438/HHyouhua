@@ -4,6 +4,8 @@
 
 画面采用用户本地 `E:\AI\sanguosha` 客户端的 `GameMvpWindow` 常规皮肤分支：421 × 540 武将图居中，循环播放 `FX_PaiJu_JieSuan_kuang`，右侧播放一次 `FX_PaiJu_JieSuan_QCZJ` 并保留标题，分数与资料栏按原版位置排列。宽屏、手机横屏按比例适配，竖屏改为上下排列。
 
+2.0.28 修复游戏界面缩放时武将图、评分、资料栏与火焰动画错位。布局使用结算层的本地 CSS 尺寸，WebGL 接收同一逻辑视口，画布像素分辨率继续使用实际显示尺寸。兼容 HH 的 `body.style.zoom` 与本体的 `body.style.transform`，不修改玩家的缩放设置。结算范围内禁用游戏默认 `div` 过渡，窗口变化时直接同步图像与动画。
+
 原始 Spine 4.0.56 骨骼、图集描述、图集纹理、背景及 `ui_quanchangzuijia.ogg` 直接从本地 APK 缓存提取；资料栏、静态标题和备用边框从原图集无损裁切。11 个文件约 5.52 MiB，位于 `assets/mvp-fullscreen/`，`sources.json` 记录原始路径、缓存键、裁切范围、字节数和 SHA-256。`tools/import-mvp.py` 可重复导入。
 
 原窗口代码位于 `sanguosha2/work/main.js` 的 `class T4i`，注册名为 `GameMvpWindow`；主要参考 `initUI`、`loadGeneralRes`、`playGeneralSpine`、`addImgClick` 与 `CloseWindow`。原客户端的 MVP 及分数由服务器提供，因此本地沿用 HH 原有攻击、治疗、辅助、局势和惩罚计分，显示值为技术分除以 10，保留一位小数。终局快照包括阵亡角色，敌友查询使用本体 `includeDie` 参数，不临时替换 `game.players`，重新查看不重复累计局势分。
@@ -15,3 +17,5 @@
 `src/ui/mvpSettlement.js` 负责终局快照、资料、次数和交互，`src/effects/mvpEffects.js` 使用现有独立 Spine 4 模块及 WebGL 渲染器；不替换动态皮肤的全局运行库。关闭后取消帧循环、延迟语音、音频和 resize 监听，释放纹理与 WebGL 上下文，并恢复焦点。动画加载失败或不支持 WebGL 时保留原图集的静态结算，仍可正常继续。
 
 验证命令：`node --test tests/mvp-settlement.test.mjs tests/kill-combo.test.mjs tests/native-kill-effect.test.mjs`。浏览器已检查真实 WebGL 渲染、标题结束后保留、关闭重开以及 1920 × 900、844 × 390、390 × 844 布局，控制台无错误。自动化测试验证源文件哈希、原始动画逐帧几何、终局计分、次数、资源回收、延迟加载取消和无 WebGL 降级。
+
+缩放回归：使用本体实际 `layout/default/layout.css` 和游戏两种文档缩放方式，在浏览器重现了 62.5% 缩放下的原错位，再验证修复后的 62.5%、150% 以及用户截图的 2760 × 1256 尺寸。自动化测试在 50%、62.5%、80%、100%、150%、200%、300% 下比较 DOM 位置与真实渲染器生成的屏幕几何，包含扫光结束后标题保留，防止单独预览正常而游戏内错位。
