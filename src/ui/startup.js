@@ -160,7 +160,7 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
                     background.appendChild(music);
                 }
                 //创建开头背景视频
-                if (list.video && lib.allBackgroundVideos.includes("开场-" + list.video)) {
+                if (list.video && !list.skipIntro && lib.allBackgroundVideos.includes("开场-" + list.video)) {
                     var startVideo = document.createElement("video");
                     background.startVideo = startVideo;
                     prepareStartupVideo(startVideo);
@@ -225,6 +225,10 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
                 } else showLoop();
                 playStartupMedia(music, background);
                 showModes();
+                if (!list.preview && ui.qdmh_background) {
+                    ui.qdmh_background.remove();
+                    delete ui.qdmh_background;
+                }
             };
             //——————————分割线——————————//
             if (lib.config.extension_HH优化_startupInterface === false) return;
@@ -271,7 +275,7 @@ export function createStartupInterface(lib, game, ui, get, ai, _status) {
                         volume: lib.config.volumn_background / 8,
                         video: (lib.config.extension_HH优化_backgroundVideoChoose || "孙尚香") + ".mp4",
                         zone: true,
-                        ...(returningFromSettlement ? { preview: "style2" } : {}),
+                        ...(returningFromSettlement ? { skipIntro: true } : {}),
                     });
                     this._inSplashValue = newValue;
                 },

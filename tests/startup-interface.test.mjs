@@ -238,13 +238,19 @@ test('大厅仅接入四个指定入口，保存模式后才清理视频并重�
 });
 
 test('结算返回仅本次跳过开场视频，后续正常启动仍遵守原配置', async t => {
-	const h = await interfaceFixture(t), displays = [];
-	h.ui.beautifyStartInterface = options => displays.push(options);
+	const h = await interfaceFixture(t);
+	h.lib.allBackgroundVideos.push('开场-孙尚香.mp4');
+	h.ui.background.style.zIndex = '-1';
+	const placeholder = h.ui.qdmh_background;
 	window.hhSettlementLobby = true;
 	window.inSplash = true;
-	assert.equal(displays[0].preview, 'style2'); assert.equal(window.hhSettlementLobby, undefined);
+	const background = h.ui.beautifyStartInterface_background;
+	assert.ok(background.parentNode === h.document.body, '大厅必须挂到页面，不能进入设置预览所在的背景底层');
+	assert.equal(background.lobby.querySelectorAll('.hh-lobby-mode').length, 4);
+	assert.equal(background.startVideo, undefined); assert.equal(placeholder.isConnected, false);
+	assert.equal(window.hhSettlementLobby, undefined);
 	window.inSplash = false; window.inSplash = true;
-	assert.equal(displays[1].preview, undefined);
+	assert.ok(h.ui.beautifyStartInterface_background.startVideo, '后续正常启动仍播放已配置的开场视频');
 });
 
 test('大厅模式保存失败时可重试，入口与视频保持可用', async t => {
