@@ -1,0 +1,107 @@
+{
+  "source": "E:\\AI\\sanguosha",
+  "apk": "sanguosha2/yoka.game_g_android_4.0.2.apk",
+  "code": "sanguosha2/work/main.js: class T4i (GameMvpWindow)",
+  "files": [
+    {
+      "file": "FX_PaiJu_JieSuan_kuang.skel",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_kuang.skel",
+      "cache_key": "a44ac8c0",
+      "bytes": 1800,
+      "sha256": "4e6a7ac0d7229213eb3970f72af5b23a7c5c67e38d31d7ad723813d3edfa434a"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_kuang.atlas.txt",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_kuang.atlas.txt",
+      "cache_key": "38ea73ec",
+      "bytes": 2177,
+      "sha256": "7bfcca0007e52fcf267413a18c76b615075e24c6e29411fb8bef33c09a57c09c"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_kuang.png",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_kuang.png",
+      "cache_key": "0559f61c",
+      "bytes": 4455428,
+      "sha256": "84507c4a2ba34528b4d26f41a96c8da3d47d0a6293075f8d023dbba6d0731eb5"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_QCZJ.skel",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_QCZJ.skel",
+      "cache_key": "c36cf1b7",
+      "bytes": 1056,
+      "sha256": "ac36bc2d30921b9466db3b89f3bde1c18d10bfc7a684e6aea913ff6ee9900900"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_QCZJ.atlas.txt",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_QCZJ.atlas.txt",
+      "cache_key": "e8473f2a",
+      "bytes": 966,
+      "sha256": "b28a6046bc92ab19dedb52056b5e20cd0ab2ee6236050253a4d1e69a8b7d5d3f"
+    },
+    {
+      "file": "FX_PaiJu_JieSuan_QCZJ.png",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_QCZJ.png",
+      "cache_key": "fe2a4d87",
+      "bytes": 202928,
+      "sha256": "b40f9dd04fec7ddec4b52d3e944c70363467d242b1a1f5cf689183c9e8f7e63f"
+    },
+    {
+      "file": "background.png",
+      "original_path": "/res/assets/BigBg/window_gameresult_mvp_bg.png",
+      "cache_key": "a2332c4c",
+      "bytes": 956267,
+      "sha256": "aa6bd766aa108720e916186c6bdad5f7658d8aa3dc4a040bb6d1fc4d7bb900b8"
+    },
+    {
+      "file": "ui_quanchangzuijia.ogg",
+      "original_path": "/res/local/voice/ui/ui_quanchangzuijia.ogg",
+      "cache_key": "e8917bc5",
+      "bytes": 9880,
+      "sha256": "a1f3e89a62a3d8e0711734913a0ce14574c29b037a25f9b27c7b191192faf8c8"
+    },
+    {
+      "file": "user-info.png",
+      "original_path": "/res/assets/gameResult/gameMVP.png",
+      "cache_key": "7bdac829",
+      "bytes": 2358,
+      "sha256": "a622d69b1c6d25eab7395a9411793efe0f99d85684ab3ba5372864534e2d92d1",
+      "crop": [
+        0,
+        120,
+        458,
+        238
+      ]
+    },
+    {
+      "file": "title.png",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_QCZJ.png",
+      "cache_key": "fe2a4d87",
+      "bytes": 59155,
+      "sha256": "dbdfcaf657eff8d44a8d8fb9597dbc8a6472816e23841b002ad564a0bb469d1c",
+      "crop": [
+        397,
+        97,
+        717,
+        254
+      ]
+    },
+    {
+      "file": "border.png",
+      "original_path": "/res/assets/animate/game/gameResult/FX_PaiJu_JieSuan_kuang.png",
+      "cache_key": "0559f61c",
+      "bytes": 97515,
+      "sha256": "8ee85865c77f5557a8f5555fffbf8336a29fb41ade203e824947587a386fc703",
+      "crop": [
+        388,
+        600,
+        772,
+        896
+      ],
+      "rotation": 90,
+      "original_size": [
+        512,
+        512
+      ]
+    }
+  ]
+}

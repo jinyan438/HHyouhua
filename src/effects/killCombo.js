@@ -114,7 +114,7 @@ export class KillComboRenderer {
 		if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
 		gl.viewport(0, 0, width, height);
 		if (placement.clear !== false) { gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); }
-		if (!rect.width || !rect.height || time >= model.animation.duration) return;
+		if (!rect.width || !rect.height || time >= model.animation.duration && !placement.holdLastFrame) return;
 		const skeleton = model.skeleton;
 		skeleton.setToSetupPose();
 		model.animation.apply(skeleton, -1, time, false, [], 1, spine.MixBlend.setup, spine.MixDirection.mixIn);

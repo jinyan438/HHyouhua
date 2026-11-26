@@ -1,5 +1,6 @@
 import { originalCardStylePriority } from "./src/ui/originalCards.js";
 import { createKillComboPlayer } from './src/effects/killCombo.js';
+import { createMvpSettlement } from './src/ui/mvpSettlement.js';
 import { setupSourceCardAudio } from './src/audio/sourceCardAudio.js';
 import { setupRescueFlow } from './src/features/rescueFlow.js';
 import { setupLordBlindShot } from './src/features/lordBlindShot.js';
@@ -1674,155 +1675,16 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			// 强制禁用HH优化的卡背设置，让它不添加卡背样式
 			if (!originalCardStylePriority) lib.config.extension_HH优化_cardbj = "kb1";
 			
-			// ========== 手杀MVP结算画面 ==========
+			// ========== 全屏 MVP 结算画面 ==========
 			if (lib.config.extension_HH优化_enable_mvp) {
-				const extPath = lib.assetURL + 'extension/HH优化/assets/';
-				
-				// 加载MVP样式
 				lib.init.css(lib.assetURL + 'extension/HH优化/assets', 'mvp');
-				
-				// 播放MVP音效的函数
-				game.playMvpAudio = function(file) {
-					game.playAudio('../extension/HH优化/assets/mvp/' + file);
+				game.hhMvpSettlement = createMvpSettlement({ lib, game, ui, get, _status });
+				lib.skill._HH_mvp_reset = {
+					trigger: { global: 'gameStart' }, forced: true, silent: true, popup: false,
+					content() { game.hhMvpSettlement.reset(); },
 				};
-				
-				// 注册游戏结束回调
-				lib.onover.push(resultbool => {
-					var showMVP = function () {
-						if (_status.showHHMvp) return false;
-						_status.showHHMvp = true;
-						
-						setTimeout(function() {
-							var dialog = Array.from(ui.arena.querySelectorAll(".dialog"));
-							dialog.forEach(value => value.hide());
-							
-							// 播放MVP音效
-							game.playMvpAudio('asqx.mp3');
-							
-							var players = game.players.slice(0);
-							game.players = game.players.concat(game.dead);
-							
-							// 计算局势分数
-							if (!_status.showHH局势) {
-								game.players.forEach(value => {
-									if (game.dead.includes(value)) {
-										value.局势分数 -= 20;
-									}
-									value.getEnemies().forEach(current => {
-										if (game.dead.includes(current) || current.isDead()) {
-											value.局势分数 += 2;
-										}
-									});
-									value.getFriends().forEach(current => {
-										if (current.isDead() || game.dead.includes(current)) {
-											value.局势分数 -= 2;
-										}
-									});
-								});
-							}
-							_status.showHH局势 = true;
-							game.players = players;
-							
-							// 排序找出MVP
-							var sorts = game.players.concat(game.dead).sort((a, b) => (b.mvpCount || 0) - (a.mvpCount || 0));
-							var player = sorts[0];
-							
-							// 创建MVP界面
-							var popuperContainer = ui.create.div('.popup-container', {background: "rgb(0,0,0,.7)"}, ui.window);
-							popuperContainer.addEventListener('click', event => {
-								event.stopPropagation();
-								popuperContainer.delete(200);
-								dialog.forEach(value => value.show());
-								_status.showHHMvp = false;
-							});
-							
-							// 播放MVP武将技能语音
-							var skills = player.skills.filter(value => lib.skill[value] && lib.skill[value].audio);
-							if (skills.length) game.trySkillAudio(skills.randomGet(), player, true);
-							
-							var qycontainer = ui.create.div('.qy-mvp-container', popuperContainer);
-							var backgroundRight = ui.create.div('.qy-mvp-piaodai-right', qycontainer);
-							var container = ui.create.div('.qy-center-container', qycontainer);
-							var backgroundLeft = ui.create.div('.qy-mvp-piaodai-left', qycontainer);
-							
-							var avatarbox = ui.create.div('.qy-mvp-avatarbox', container);
-							if (navigator.userAgent.match(/(Android|iPhone|SymbianOS|Windows Phone|iPad|iPod)/i) !== null) {
-								avatarbox.style.height = '120%';
-								avatarbox.style.top = '-4%';
-							}
-							
-							var avatarborder = ui.create.div('.qy-mvp-avatarborder', avatarbox);
-							avatarborder.dataset.name = get.translation(player.name);
-							avatarborder.setBackgroundImage('extension/HH优化/assets/mvp/border_' + player.group + '.png');
-							
-							// 边框图片加载失败时使用默认
-							var image = new Image();
-							image.src = extPath + 'mvp/border_' + player.group + '.png';
-							image.onerror = function () {
-								avatarborder.setBackgroundImage('extension/HH优化/assets/mvp/border_qun.png');
-							};
-							
-							// 星星评级
-							var xing = ui.create.div(avatarbox, '.qy-mvp-xing');
-							var rarity = game.getRarity ? game.getRarity(player.name) : 'common';
-							var num = 1;
-							switch (rarity) {
-								case 'legend': num = 5; break;
-								case 'epic': num = 4; break;
-								case 'rare': num = 3; break;
-								case 'junk': num = 2; break;
-								default: num = 1; break;
-							}
-							for (var i = 0; i < num; i++) ui.create.div('.item.on', xing);
-							for (var i = 0; i < 5 - num; i++) ui.create.div('.item.off', xing);
-							
-							// 武将头像
-							var avatar = ui.create.div('.qy-mvp-avatar', avatarbox);
-							avatar.style.backgroundImage = player.node.avatar.style.backgroundImage;
-							avatar.style.top = '23.6%';
-							avatar.style.height = '54%';
-							
-							// 信息面板
-							var qyInfo = ui.create.div('.qy-mvp-qyInfo', container);
-							ui.create.div('.qy-mvp-title', qyInfo);
-							var qycenter = ui.create.div('.qy-mvp-center', qyInfo);
-							ui.create.div('.qy-mvp-icon', qycenter);
-							var qyPlayerInfo = ui.create.div('.qy-player-info', qycenter);
-							ui.create.div(qyPlayerInfo, '.qy-mvp-name-title', '玩家昵称');
-							
-							var nickname = ui.create.div('.qy-mvp-player-nickname', qyPlayerInfo, 
-								player === game.me ? (lib.config.connect_nickname || get.translation(player.name)) : get.translation(player.name));
-							if (game.me === player) {
-								var meTag = ui.create.node('img', nickname);
-								meTag.src = extPath + 'mvp/mvp_me_tag.png';
-							}
-							
-							ui.create.div(qyPlayerInfo, '.qy-mvp-name-title', '技术分：' + (player.mvpCount || 0));
-							
-							// 分数详情
-							var qyScoreInfo = ui.create.div('.qy-mvp-scoreInfo', qyInfo);
-							var table = ui.create.node('table', qyScoreInfo, {width: "100%"});
-							var list = ['攻击分数', '治疗分数', '辅助分数', '局势分数', '惩罚扣分'];
-							list.forEach(value => {
-								var tr = ui.create.node('tr', table);
-								tr.style.color = 'rgb(234, 138, 76)';
-								var td = ui.create.node('td', tr, value);
-								var num = (player[value] || 0);
-								var num2 = sorts[1] ? (sorts[1][value] || 0) : 0;
-								ui.create.node('td', tr).innerHTML = num + (num - num2 >= 30 ? '(遥遥领先)' : '');
-							});
-							
-							// 分享按钮（占位）
-							ui.create.div('.qy-mvp-share-button', popuperContainer).addEventListener('click', event => {
-								event.stopPropagation();
-							});
-						}, 2000);
-					};
-					
-					ui.create.control("全场最佳", showMVP);
-					showMVP();
-				});
-				
+				HH_finishSkill('_HH_mvp_reset');
+
 				// 初始化分数属性
 				['攻击分数', '治疗分数', '辅助分数', '惩罚扣分'].forEach(value => {
 					HTMLDivElement.prototype[value] = 0;
@@ -1941,7 +1803,7 @@ export function createHHFeatures(lib, game, ui, get, ai, _status) {
 			enable_mvp: {
 				name: "启用MVP结算画面",
 				init: false,
-				intro: "开启后，游戏结束时显示手杀风格的MVP结算画面，展示全场最佳玩家及各项分数统计"
+				intro: "游戏结束后显示客户端全屏MVP结算、循环火焰边框、全场最佳扫光及原版音效。点击继续返回战绩，可通过全场最佳再次查看。"
 			},
 			enable_dead_image_override: {
 				name: "覆盖阵亡图片",
