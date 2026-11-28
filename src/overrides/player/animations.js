@@ -38,7 +38,7 @@ export function playerDamagepop(num, nature = "soil", font, nobroadcast, chain) 
 			game.broadcast((p, n, na, f) => p.$damagepop(n, na, f), player, num, nature, font);
 		}
 
-		game.hhSourceSkillPopup ||= createSourceSkillPopup({ lib });
+		game.hhSourceSkillPopup ||= createSourceSkillPopup({ lib, ui });
 		game.hhSourceSkillPopup.play(player, num);
 		return;
 	}

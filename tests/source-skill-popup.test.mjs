@@ -38,20 +38,25 @@ test('original skill resources are intact and exported timing matches the native
 
 function fixture({ animation = true } = {}) {
 	class Element {
-		constructor() { this.children = []; this.dataset = {}; this.style = {}; this.attributes = {}; this.isConnected = true; this.offsetWidth = 136; }
+		constructor(rect = { left: 100, top: 80, width: 136, height: 180 }) { this.rect = rect; this.children = []; this.dataset = {}; this.style = {}; this.attributes = {}; this.isConnected = true; this.offsetWidth = rect.width; this.offsetHeight = rect.height; }
 		appendChild(child) { child.remove(); this.children.push(child); child.parentNode = this; return child; }
 		remove() { if (this.parentNode) this.parentNode.children.splice(this.parentNode.children.indexOf(this), 1); this.parentNode = null; }
 		setAttribute(key, value) { this.attributes[key] = value; }
+		getBoundingClientRect() { return this.rect; }
 	}
-	const head = new Element(), body = new Element(), timers = new Map(), listeners = {}, calls = { videos: [], broadcasts: [], hooks: [], spine: [], fullscreen: [] };
+	const head = new Element(), body = new Element(), frames = new Map(), timers = new Map(), listeners = {}, calls = { videos: [], broadcasts: [], hooks: [], spine: [], fullscreen: [] };
 	let id = 0;
-	const document = { head, body, hidden: false, createElement: () => new Element(), getElementById: value => head.children.find(node => node.id === value), addEventListener(type, fn) { listeners[type] = fn; } };
-	const environment = { document, setTimer(fn, ms) { const handle = ++id; timers.set(handle, { fn, ms }); return handle; }, clearTimer(handle) { timers.delete(handle); } };
+	const document = { head, body, hidden: false, createElement: () => new Element({ left: 0, top: 0, width: 1000, height: 700 }), getElementById: value => head.children.find(node => node.id === value), addEventListener(type, fn) { listeners[type] = fn; } };
+	const environment = { document, requestFrame(fn) { frames.set(++id, fn); return id; }, cancelFrame(handle) { frames.delete(handle); }, setTimer(fn, ms) { const handle = ++id; timers.set(handle, { fn, ms }); return handle; }, clearTimer(handle) { timers.delete(handle); } };
 	const lib = { assetURL: '/noname/', config: { animation, skill_animation_type: 'default' }, onover: [], skill: { sanyao: {}, awakening: { skillAnimation: 'legend' } }, translate: { sanyao: '散谣', awakening: '觉醒' }, animate: { skill: {} } };
 	const game = { addVideo: (...args) => calls.videos.push(args), broadcast: (...args) => calls.broadcasts.push(args), callHook: (...args) => calls.hooks.push(args) };
 	const player = new Element(); player.getSkills = () => ['sanyao', 'awakening'];
 	const manager = createSourceSkillPopup({ lib }, environment);
-	return { Element, lib, game, player, manager, calls, document, timers, listeners, environment };
+	return { Element, lib, game, player, manager, calls, document, timers, frames, listeners, environment,
+		get layer() { return body.children.find(node => node.className === 'hh-source-skill-effects'); },
+		get popups() { return this.layer?.children || []; },
+		advanceFrame() { for (const [id, fn] of [...frames]) { frames.delete(id); fn(); } },
+	};
 }
 
 test('settlement toggle preserves skill brush CSS duration and its cleanup timer', () => {
@@ -71,24 +76,54 @@ test('settlement toggle preserves skill brush CSS duration and its cleanup timer
 test('repeated skills replace only that player’s popup and stale timers cannot remove the new one', () => {
 	const h = fixture(), other = new h.Element();
 	assert.equal(h.manager.play(h.player, '散谣'), true);
-	const original = h.player.children[0], expired = [...h.timers.values()][0];
+	const original = h.popups[0], expired = [...h.timers.values()][0];
 	assert.equal(original.children[1].children.map(node => node.textContent).join(''), '散谣');
 	assert.equal(original.attributes['aria-label'], '散谣');
 	assert.equal(expired.ms, asset.duration + 40);
 	h.manager.play(other, '制蛮'); h.manager.play(h.player, '觉醒');
 	assert.equal(h.manager.activeCount, 2); assert.equal(h.timers.size, 2);
-	assert.equal(original.parentNode, null); assert.equal(h.player.children.length, 1);
+	assert.equal(original.parentNode, null); assert.equal(h.popups.length, 2);
 	expired.fn();
-	assert.equal(h.manager.activeCount, 2); assert.equal(h.player.children[0].attributes['aria-label'], '觉醒');
+	assert.equal(h.manager.activeCount, 2); assert.equal(h.popups[1].attributes['aria-label'], '觉醒');
 	assert.equal(h.document.head.children.length, 1);
 	for (const { fn } of [...h.timers.values()]) fn();
 	assert.equal(h.manager.activeCount, 0); assert.equal(h.timers.size, 0);
 	assert.equal(h.player.children.length + other.children.length, 0);
+	assert.equal(h.frames.size, 0); assert.equal(h.layer, undefined);
+});
+
+test('skill ink and name share a window layer above chains and follow scaled, moved and resized players', () => {
+	const h = fixture(), window = new h.Element();
+	const manager = createSourceSkillPopup({ lib: h.lib, ui: { window } }, h.environment);
+	assert.equal(manager.play(h.player, '散谣'), true);
+	const layer = window.children[0], node = layer.children[0];
+	assert.equal(h.player.children.length, 0); assert.equal(h.document.body.children.length, 0);
+	assert.equal(layer.style.pointerEvents, 'none');
+	const chainSource = fs.readFileSync(new URL('../src/effects/sourceChainEffects.js', import.meta.url), 'utf8');
+	assert.ok(Number(layer.style.zIndex) > Number(chainSource.match(/zIndex: '(\d+)'/)[1]));
+	assert.equal(node.children[0].className, 'hh-source-skill-ink');
+	assert.equal(node.children[1].className, 'hh-source-skill-label');
+	assert.equal(node.style.left, '168px'); assert.equal(node.style.top, '162.8px');
+	assert.equal(node.style.transform, 'translate(-50%,-50%) scale(1,1)');
+	layer.rect = { left: 20, top: 30, width: 800, height: 560 };
+	h.player.offsetWidth = 200; h.player.offsetHeight = 240;
+	h.player.rect = { left: 300, top: 180, width: 160, height: 192 };
+	h.advanceFrame();
+	assert.equal(node.style.left, '450px'); assert.equal(node.style.top, '297.9px');
+	assert.equal(node.style.width, '320px'); assert.equal(node.style.height, '128px');
+	assert.equal(node.style.fontSize, '44px');
+	assert.equal(node.style.transform, 'translate(-50%,-50%) scale(1,1)');
+	h.player.rect.width = 80; h.player.rect.height = 96; h.advanceFrame();
+	assert.equal(node.style.transform, 'translate(-50%,-50%) scale(0.5,0.5)');
+	h.player.isConnected = false; h.advanceFrame();
+	assert.equal(manager.activeCount, 0); assert.equal(window.children.length, 0);
+	assert.equal(h.frames.size + h.timers.size, 0);
 });
 
 test('game over and hidden pages remove all popups; detached players and hidden pages do not start effects', () => {
 	const h = fixture(); h.manager.play(h.player, '散谣'); h.lib.onover.forEach(fn => fn());
 	assert.equal(h.player.children.length, 0); assert.equal(h.timers.size, 0);
+	assert.equal(h.layer, undefined); assert.equal(h.frames.size, 0);
 	h.manager.play(h.player, '散谣'); h.document.hidden = true; h.listeners.visibilitychange();
 	assert.equal(h.manager.activeCount, 0); assert.equal(h.timers.size, 0);
 	assert.equal(h.manager.play(h.player, '散谣'), false);
@@ -99,7 +134,7 @@ test('game over and hidden pages remove all popups; detached players and hidden 
 test('no-motion mode keeps the readable held frame, and long Unicode skill names remain plain complete text', () => {
 	const h = fixture({ animation: false });
 	assert.equal(h.manager.play(h.player, '<b>散谣·长技能𠮷</b>'), true);
-	const node = h.player.children[0], css = h.document.head.children[0].textContent;
+	const node = h.popups[0], css = h.document.head.children[0].textContent;
 	assert.equal(node.dataset.motion, 'false');
 	assert.equal(node.children[1].children.map(part => part.textContent).join(''), '散谣·长技能𠮷');
 	assert.ok(parseFloat(node.style.fontSize) < 32.64);
@@ -124,20 +159,20 @@ function integration(h) {
 test('native trySkillAnimate → popup reaches the replacement once, preserving broadcast and video recording', () => {
 	const h = fixture(); integration(h);
 	h.player.trySkillAnimate('sanyao', 'sanyao');
-	assert.equal(h.player.children.length, 1); assert.equal(h.player.children[0].attributes['aria-label'], '散谣');
+	assert.equal(h.popups.length, 1); assert.equal(h.popups[0].attributes['aria-label'], '散谣');
 	assert.equal(h.calls.videos.length, 1); assert.equal(h.calls.videos[0][0], 'damagepop');
 	assert.equal(h.calls.broadcasts.length, 1); assert.equal(h.calls.hooks[0][0], 'checkSkillAnimate');
 	h.player.$damagepop('散谣', 'water', true);
-	assert.equal(h.calls.broadcasts.length, 2); assert.equal(h.player.children.length, 1);
+	assert.equal(h.calls.broadcasts.length, 2); assert.equal(h.popups.length, 1);
 	h.player.$damagepop('思考中…', 'water', true);
-	assert.equal(h.calls.videos.length, 2); assert.equal(h.player.children.length, 1);
+	assert.equal(h.calls.videos.length, 2); assert.equal(h.popups.length, 1);
 	h.game.hhSourceSkillPopup.clear();
 });
 
 test('damage reaches the imported player while healing and skill effects retain their routes', () => {
 	const h = fixture(); integration(h);
 	h.player.$damagepop(-2, 'thunder'); h.player.$damagepop(1, 'wood');
-	assert.deepEqual(h.calls.damage[0], [h.player, 2, 'thunder']); assert.equal(h.calls.spine[0][0], 'effect_zhiliao');
+	assert.deepEqual(h.calls.damage[0].slice(0, 3), [h.player, 2, 'thunder']); assert.equal(h.calls.damage[0][3].chain, false); assert.equal(h.calls.spine[0][0], 'effect_zhiliao');
 	h.player.trySkillAnimate('awakening', 'awakening');
 	assert.equal(h.calls.fullscreen.length, 1); assert.equal(h.calls.fullscreen[0][0], '觉醒');
 	let custom = 0; h.lib.animate.skill.sanyao = () => custom++;
